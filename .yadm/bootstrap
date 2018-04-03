@@ -1,19 +1,27 @@
 #!/bin/bash
 
+log() {
+  echo "[yadm bootstrap] $1"
+}
+
 log_and_exit() {
-  echo "[yadm bootstrap] $1" && exit
+  log "$1" && exit
 }
 
 happy_cd() {
   cd "$1" || log_and_exit "Couldn't cd to $1"
 }
 
+command_exists() {
+  command -v "$1" >/dev/null 2>&1
+}
+
 # Checks if brew is installed, then installs if if it's missing.
 install_homebrew() {
-  echo "Installing homebrew..."
+  log "Installing homebrew..."
 
   if command -v brew >/dev/null 2>&1; then
-    echo "Homebrew already installed."
+    log "Homebrew already installed."
     return 0
   fi
 
@@ -21,21 +29,32 @@ install_homebrew() {
 }
 
 install_homebrew_packages() {
-  echo "Installing Brewfile things..."
+  log "Installing Brewfile things..."
   brew bundle --global || log_and_exit "Couldn't brew bundle"
+}
+
+install_ohmyzsh() {
+  log "Installing oh-my-zsh..."
+
+  if [ -d "$HOME/.oh-my-zsh" ]; then
+    log "oh-my-zsh already installed."
+    return 0
+  fi
+
+  sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 }
 
 install_ruby() {
   if [ -f /usr/local/bin/ruby-install ]; then
-    echo "Installing Ruby..."
+    log "Installing Ruby..."
     ruby-install ruby -- --enable-shared || log_and_exit "Couldn't ruby-install ruby"
   else
-    echo "Couldn't find ruby-install. Skipping installation of Ruby."
+    log "Couldn't find ruby-install. Skipping installation of Ruby."
     return 1
   fi
 
   if [[ -f /usr/local/opt/chruby/share/chruby/chruby.sh ]]; then
-    echo "Couldn't find chruby. Skipping installation of gems."
+    log "Couldn't find chruby. Skipping installation of gems."
     return 1
   fi
 
@@ -43,25 +62,26 @@ install_ruby() {
   chruby ruby
   gem install bundler
   bundle
-  echo "Done with Ruby."
+  log "Done with Ruby."
 }
 
 install_rust() {
-  echo "Installing Rust..."
+  log "Installing Rust..."
   curl https://sh.rustup.rs -sSf | sh
   rustup component add rls-preview rust-analysis rust-src
+  rustup completions zsh > ~/.zfunc/_rustup
   cargo install -f ripgrep
-  echo "Done with Rust."
+  log "Done with Rust."
 }
 
 setup_develop_dirs() {
   make_dir() {
-    echo "Making directory: $1"
+    log "Making directory: $1"
 
     if [ -d "$1" ]; then
       mkdir "$1"
     else
-      echo "Already exists."
+      log "Already exists."
       return 0
     fi
   }
@@ -69,6 +89,29 @@ setup_develop_dirs() {
   make_dir ~/Development
   make_dir ~/Development/projects
   make_dir ~/Development/not_my_projects
+}
+
+setup_neovim() {
+  if [ "$(command_exists \"pip3\")" ]; then
+    log "Installing neovim python-client for pip3"
+    pip3 install neovim
+  fi
+
+  if [ "$(command_exists \"pip2\")" ]; then
+    log "Installing neovim python-client for pip2"
+    pip2 install neovim
+  fi
+
+  if [ "$(command_exists \"pip\")" ]; then
+    log "Installing neovim python-client for pip"
+    pip install neovim
+  fi
+
+  # (Ruby neovim is handled in Gemfile)
+
+  log "Installing vim-plug..."
+  curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 }
 
 #------------------------------------------------------------------------------
@@ -83,6 +126,8 @@ if [ "$system_type" = "Darwin" ]; then
   install_homebrew_packages
 fi
 
+install_ohmyzsh
 install_ruby
 install_rust
 setup_develop_dirs
+setup_neovim
