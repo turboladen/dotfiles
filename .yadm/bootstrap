@@ -1,35 +1,88 @@
-#!/bin/sh
+#!/bin/bash
 
-# Install homebrew
-echo "Installing homebrew..."
+log_and_exit() {
+  echo "[yadm bootstrap] $1" && exit
+}
 
-if [ ! -d /usr/local/Cellar ]; then
+happy_cd() {
+  cd "$1" || log_and_exit "Couldn't cd to $1"
+}
+
+# Checks if brew is installed, then installs if if it's missing.
+install_homebrew() {
+  echo "Installing homebrew..."
+
+  if command -v brew >/dev/null 2>&1; then
+    echo "Homebrew already installed."
+    return 0
+  fi
+
   /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-else
-  echo "Homebrew already installed."
+}
+
+install_homebrew_packages() {
+  echo "Installing Brewfile things..."
+  brew bundle --global || log_and_exit "Couldn't brew bundle"
+}
+
+install_ruby() {
+  if [ -f /usr/local/bin/ruby-install ]; then
+    echo "Installing Ruby..."
+    ruby-install ruby -- --enable-shared || log_and_exit "Couldn't ruby-install ruby"
+  else
+    echo "Couldn't find ruby-install. Skipping installation of Ruby."
+    return 1
+  fi
+
+  if [[ -f /usr/local/opt/chruby/share/chruby/chruby.sh ]]; then
+    echo "Couldn't find chruby. Skipping installation of gems."
+    return 1
+  fi
+
+  source /usr/local/opt/chruby/share/chruby/chruby.sh
+  chruby ruby
+  gem install bundler
+  bundle
+  echo "Done with Ruby."
+}
+
+install_rust() {
+  echo "Installing Rust..."
+  curl https://sh.rustup.rs -sSf | sh
+  rustup component add rls-preview rust-analysis rust-src
+  cargo install -f ripgrep
+  echo "Done with Rust."
+}
+
+setup_develop_dirs() {
+  make_dir() {
+    echo "Making directory: $1"
+
+    if [ -d "$1" ]; then
+      mkdir "$1"
+    else
+      echo "Already exists."
+      return 0
+    fi
+  }
+
+  make_dir ~/Development
+  make_dir ~/Development/projects
+  make_dir ~/Development/not_my_projects
+}
+
+#------------------------------------------------------------------------------
+# Do the things
+#------------------------------------------------------------------------------
+system_type=$(uname -s)
+
+happy_cd "$HOME"
+
+if [ "$system_type" = "Darwin" ]; then
+  install_homebrew
+  install_homebrew_packages
 fi
 
-# Install homebrew things
-echo "Installing Brewfile things..."
-cd ~ || exit
-brew bundle || echo "Couldn't brew bundle" && exit
-
-# Install Ruby
-echo "Installing Ruby..."
-ruby-install ruby -- --enable-shared || echo "Couldn't ruby-install ruby" && exit
-source /usr/local/opt/chruby/share/chruby/chruby.sh
-chruby ruby
-gem install bundler
-bundle
-echo "Done with Ruby."
-
-# Install Rust
-echo "Installing Rust..."
-curl https://sh.rustup.rs -sSf | sh
-rustup component add rls-preview rust-analysis rust-src
-cargo install ripgrep
-echo "Done with Rust."
-
-mkdir ~/Development
-mkdir ~/Development/projects
-mkdir ~/Development/not_my_projects
+install_ruby
+install_rust
+setup_develop_dirs
