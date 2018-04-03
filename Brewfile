@@ -31,7 +31,7 @@ brew 'tmux'
 # General dev
 brew 'ctags'
 brew 'git'
-brew 'libsodioum'
+brew 'libsodium'
 brew 'postgis'
 brew 'postgresql'
 brew 'rabbitmq'
