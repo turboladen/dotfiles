@@ -26,12 +26,14 @@ brew 'zsh-syntax-highlighting'
 # Editing
 brew 'neovim'
 brew 'reattach-to-user-namespace'
+brew 'shellcheck' # Shell script linter
 brew 'tmux'
 
 # General dev
 brew 'ctags'
+brew 'gdal'
 brew 'git'
-brew 'libsodioum'
+brew 'libsodium'
 brew 'postgis'
 brew 'postgresql'
 brew 'rabbitmq'
@@ -42,6 +44,7 @@ brew 'chruby'
 brew 'ruby-install'
 
 # JS
+brew 'node'
 brew 'yarn'
 
 # vi:ft=ruby
