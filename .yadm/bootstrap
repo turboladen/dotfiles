@@ -109,9 +109,14 @@ setup_neovim() {
 
   # (Ruby neovim is handled in Gemfile)
 
-  log "Installing vim-plug..."
-  curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  if [ -d "$HOME/.config/nvim" ]; then
+    log "Installing vim-plug..."
+    curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs \
+      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+    log "Bootstraping nvim"
+    nvim '+PlugUpdate' '+PlugClean!' '+PlugUpdate' '+qall'
+  fi
 }
 
 #------------------------------------------------------------------------------
