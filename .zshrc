@@ -117,7 +117,7 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 #------------------------------------------------------------------------------
 # `brew install zsh-history-substring-search
 #------------------------------------------------------------------------------
-source /usr/local/opt/zsh-history-substring-search/zsh-history-substring-search.zsh
+# source /usr/local/opt/zsh-history-substring-search/zsh-history-substring-search.zsh
 
 # bind UP and DOWN arrow keys
 # zmodload zsh/terminfo
@@ -147,32 +147,17 @@ unalias run-help
 autoload run-help
 HELPDIR=/usr/local/share/zsh/help
 
-#--------------------------------------------------------------------
-# Ruby
-#--------------------------------------------------------------------
 source ~/.oh-my-zsh/custom/ruby.zsh
-
-#--------------------------------------------------------------------
-# Rust
-#--------------------------------------------------------------------
 source ~/.oh-my-zsh/custom/rust.zsh
-export HOMEBREW_GITHUB_API_TOKEN=d285305a2b71152ab74e89158f577d0221184804
-
-#--------------------------------------------------------------------
-# ansible
-#--------------------------------------------------------------------
+source ~/.oh-my-zsh/custom/homebrew.zsh
 source ~/.oh-my-zsh/custom/ansible.zsh
+source ~/.oh-my-zsh/custom/iterm.zsh
 
 #--------------------------------------------------------------------
 # fzf
 #--------------------------------------------------------------------
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source ~/.oh-my-zsh/custom/fzf.zsh
-
-#--------------------------------------------------------------------
-# iTerm
-#--------------------------------------------------------------------
-source ~/.oh-my-zsh/custom/iterm.zsh
 
 #--------------------------------------------------------------------
 # emscripten
