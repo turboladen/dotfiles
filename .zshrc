@@ -99,8 +99,6 @@ alias bower='noglob bower'
 #------------------------------------------------------------------------------
 source /usr/local/share/zsh/site-functions
 
-source ~/.chruby.zsh
-
 #------------------------------------------------------------------------------
 # chbundle
 #------------------------------------------------------------------------------
@@ -128,132 +126,58 @@ source /usr/local/opt/zsh-history-substring-search/zsh-history-substring-search.
 
 # bind UP and DOWN arrow keys (compatibility fallback
 # for Ubuntu 12.04, Fedora 21, and MacOSX 10.9 users)
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
+# bindkey '^[[A' history-substring-search-up
+# bindkey '^[[B' history-substring-search-down
 
 # bind k and j for VI mode
-bindkey -M vicmd 'k' history-substring-search-up
-bindkey -M vicmd 'j' history-substring-search-down
+# bindkey -M vicmd 'k' history-substring-search-up
+# bindkey -M vicmd 'j' history-substring-search-down
 
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 # Final environment settings
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
-
-# Append PWD/bin to the path for Rails projects
-# export PATH=$PATH:./bin
-
 export EDITOR=nvim
-# set -o vi
 export LC_CTYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
-
-export VMAIL_HTML_PART_READER='elinks -dump'
-
-# https://github.com/rweng/pry-rails
-export DISABLE_PRY_RAILS=1
-
-# Fix openssl related shared library builds for rust
-export OPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include
-export OPENSSL_ROOT_DIR=/usr/local/opt/openssl
-export OPENSSL_LIB_DIR=/usr/local/opt/openssl/lib
 
 # From zsh brew install
 unalias run-help
 autoload run-help
 HELPDIR=/usr/local/share/zsh/help
 
+#--------------------------------------------------------------------
+# Ruby
+#--------------------------------------------------------------------
+source ~/.oh-my-zsh/custom/ruby.zsh
+
+#--------------------------------------------------------------------
+# Rust
+#--------------------------------------------------------------------
+source ~/.oh-my-zsh/custom/rust.zsh
 export HOMEBREW_GITHUB_API_TOKEN=d285305a2b71152ab74e89158f577d0221184804
 
+#--------------------------------------------------------------------
 # ansible
-ANSIBLE_HOSTS="~/.config/ansible/hosts"
+#--------------------------------------------------------------------
+source ~/.oh-my-zsh/custom/ansible.zsh
 
 #--------------------------------------------------------------------
-# fzf things
+# fzf
 #--------------------------------------------------------------------
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source ~/.oh-my-zsh/custom/fzf.zsh
 
-# From:
-# https://medium.com/@crashybang/supercharge-vim-with-fzf-and-ripgrep-d4661fc853d2#.p7o8p2q5z
-# --files: List files that would be searched but do not search
-# --no-ignore: Do not respect .gitignore, etc...
-# --hidden: Search hidden files and folders
-# --follow: Follow symlinks
-# --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
-# export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
-# export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
-export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules,vendor/bundle,target,doc}/*" 2> /dev/null'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-# bind -x '"\C-p": vim $(fzf);'
+#--------------------------------------------------------------------
+# iTerm
+#--------------------------------------------------------------------
+source ~/.oh-my-zsh/custom/iterm.zsh
 
-# fstash - easier way to deal with stashes
-# type fstash to get a list of your stashes
-# enter shows you the contents of the stash
-# ctrl-d shows a diff of the stash against your current HEAD
-# ctrl-b checks the stash out as a branch, for easier merging
-fstash() {
-  zmodload zsh/mapfile
-
-  local out q k sha
-  while out=$(
-    git stash list --pretty="%C(yellow)%h %>(14)%Cgreen%cr %C(blue)%gs" |
-    fzf --ansi --no-sort --query="$q" --print-query \
-        --expect=ctrl-d,ctrl-b);
-  do
-    # mapfile -t out <<< "$out"
-    $mapfile[out] <<< "$out"
-    q="${out[0]}"
-    k="${out[1]}"
-    sha="${out[-1]}"
-    sha="${sha%%}"
-
-    [[ -z "$sha" ]] && continue
-    if [[ "$k" == 'ctrl-d' ]]; then
-      git diff $sha
-    elif [[ "$k" == 'ctrl-b' ]]; then
-      git stash branch "stash-$sha" $sha
-      break;
-    else
-      git stash show -p $sha
-    fi
-  done
-}
-
-unalias z 2> /dev/null
-z() {
-  if [[ -z "$*" ]]; then
-    cd "$(_z -l 2>&1 | fzf +s --tac | sed 's/^[0-9,.]* *//')"
-  else
-    _z "$@"
-  fi
-}
-
-
-# chruby integreation
-frb() {
-  local rb
-  rb=$((echo system; chruby | cut -c 4-) |
-      awk '{print $1}' |
-      fzf-tmux -l 30 +m --reverse)
-  chruby $rb
-}
-
-test -e ${HOME}/.iterm2_shell_integration.zsh && source ${HOME}/.iterm2_shell_integration.zsh
-
-PATH="/Users/sloveless/perl5/bin${PATH:+:${PATH}}"; export PATH;
-PERL5LIB="/Users/sloveless/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
-PERL_LOCAL_LIB_ROOT="/Users/sloveless/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
-PERL_MB_OPT="--install_base \"/Users/sloveless/perl5\""; export PERL_MB_OPT;
-PERL_MM_OPT="INSTALL_BASE=/Users/sloveless/perl5"; export PERL_MM_OPT;
-
-# alias ll="ls -lAG"
-alias ll="exa -la"
-export PATH="/usr/local/opt/node@6/bin:$PATH"
-
-# For rustup, completions
-fpath+=~/.zfunc
-compinit
-
-
+#--------------------------------------------------------------------
+# emscripten
+#--------------------------------------------------------------------
 PATH=$PATH:/Users/sloveless/.emsdk/emscripten/1.37.22
+
+# Keep this towards the end so other things can prep
+compinit
