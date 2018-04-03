@@ -53,7 +53,7 @@ install_ruby() {
     return 1
   fi
 
-  if [[ -f /usr/local/opt/chruby/share/chruby/chruby.sh ]]; then
+  if [[ ! -f /usr/local/opt/chruby/share/chruby/chruby.sh ]]; then
     log "Couldn't find chruby. Skipping installation of gems."
     return 1
   fi
@@ -69,7 +69,13 @@ install_rust() {
   log "Installing Rust..."
   curl https://sh.rustup.rs -sSf | sh
   rustup component add rls-preview rust-analysis rust-src
+
+  if [ ! -d "$HOME/.zfunc" ]; then
+    mkdir "$HOME/.zfunc"
+  fi
+
   rustup completions zsh > ~/.zfunc/_rustup
+
   cargo install -f ripgrep
   log "Done with Rust."
 }
