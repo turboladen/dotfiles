@@ -1,0 +1,15 @@
+--recurse=yes
+-f .tags
+--sort=foldcase
+--exclude=.git
+--exclude=doc
+--exclude=log
+--exclude=public/assets
+--exclude=tmp
+--exclude=target/
+
+--exclude=\*.tar.\*
+--exclude=\*.zip
+
+--exclude=node_modules
+--exclude=bower_components

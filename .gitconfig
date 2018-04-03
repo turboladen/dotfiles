@@ -1,0 +1,55 @@
+[user]
+  name = Steve Loveless
+  email = steve@agrian.com
+  signingkey = AB08670C
+  # email = steve.loveless@gmail.com
+[core]
+  editor = vim
+  excludesfile = /Users/sloveless/.gitignore_global
+[alias]
+  ci = commit
+  co = checkout
+  st = status
+  lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit
+  fixlast = rebase -i HEAD~2
+  local-merged-to-local = !git-local-merged-to-local-master
+  local-merged-to-remote = !git-local-merged-to-remote-merged
+  local-unmerged-to-remote = !git-local-unmerged-to-remote-unmerged
+  rspec = !bin/rspec $(git st | rg spec | grep "modified:" | cut -b 14-)
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[push]
+  default = simple
+[filter "media"]
+  required = true
+  clean = git media clean %f
+  smudge = git media smudge %f
+[merge]
+  tool = vimdiff
+[diff]
+  tool = vimdiff
+[difftool]
+  prompt = false
+[color]
+  ui = true
+[filter "hawser"]
+  clean = git hawser clean %f
+  smudge = git hawser smudge %f
+  required = true
+[credential]
+  helper = osxkeychain
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+[gui]
+  recentrepo = /Users/sloveless/Development/agrian/core
+  recentrepo = /Users/sloveless/Development/agrian/references
+[commit]
+  template = /Users/sloveless/.stCommitMsg
+  ; gpgsign = true
