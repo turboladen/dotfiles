@@ -39,10 +39,6 @@ ZSH_THEME="turboladen"         # single. left: dir | gitinfo. right: return code
 #ZSH_THEME="zhann"
 #ZSH_THEME="ys"
 
-# Example aliases
-alias zshconfig="nvim ~/.zshrc"
-alias ohmyzsh="nvim ~/.oh-my-zsh"
-
 # Set to this to use case-sensitive completion
 # CASE_SENSITIVE="true"
 
@@ -88,12 +84,6 @@ source $ZSH/oh-my-zsh.sh
 
 # Make sure homebrew commands come first
 export PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:$PATH
-
-# Get access to Sublime's executables
-export PATH=$PATH:/Applications/Sublime\ Text.app/Contents/SharedSupport/bin
-
-# Add personal tmux commands
-export PATH=$PATH:~/Development/projects/config_files/tmux
 
 # Node
 export PATH=$PATH:/usr/local/share/npm/bin
