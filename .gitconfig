@@ -5,7 +5,7 @@
   # email = steve.loveless@gmail.com
 [core]
   editor = nvim
-  excludesfile = /Users/sloveless/.gitignore_global
+	excludesfile = /Users/sloveless/.gitignore_global
 [alias]
   ci = commit
   co = checkout
@@ -17,11 +17,11 @@
   local-unmerged-to-remote = !git-local-unmerged-to-remote-unmerged
   rspec = !bin/rspec $(git st | rg spec | grep "modified:" | cut -b 14-)
 [difftool "sourcetree"]
-  cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-  path = 
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
 [mergetool "sourcetree"]
-  cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-  trustExitCode = true
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
 [push]
   default = simple
 [filter "media"]
@@ -41,7 +41,7 @@
   smudge = git hawser smudge %f
   required = true
 [credential]
-  helper = osxkeychain
+	helper = osxkeychain
 [filter "lfs"]
   required = true
   clean = git-lfs clean -- %f
@@ -51,5 +51,8 @@
   recentrepo = /Users/sloveless/Development/agrian/core
   recentrepo = /Users/sloveless/Development/agrian/references
 [commit]
-  template = /Users/sloveless/.stCommitMsg
   ; gpgsign = true
+[pager]
+	branch = false
+[status]
+	submoduleSummary = true
