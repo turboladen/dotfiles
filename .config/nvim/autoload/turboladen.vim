@@ -67,7 +67,7 @@ function! turboladen#LightLineReadonly() abort
 endfunction
 
 function! turboladen#LightLineFilename() abort
-  return ('' !=# turboladen#LightLineReadonly() ? turboladen#LightLineReadonly() . ' ' : '') .
+  return ('' !=# turboladen#LightLineReadonly() ? turboladen#LightLineReadonly() . '' : '') .
         \ (&filetype ==# 'unite' ? unite#get_status_string() :
         \ '' !=# expand('%:p:.') ? expand('%:p:.') : '[No Name]') .
         \ ('' !=# turboladen#LightLineModified() ? ' ' . turboladen#LightLineModified() : '')
