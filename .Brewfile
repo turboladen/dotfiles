@@ -45,6 +45,7 @@ brew 'redis'
 # Ruby
 brew 'chruby'
 brew 'ruby-install'
+brew 'overmind' # for Procfiles
 
 # JS
 brew 'node'
