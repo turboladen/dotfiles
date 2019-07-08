@@ -40,7 +40,7 @@ ZSH_THEME="turboladen"         # single. left: dir | gitinfo. right: return code
 #ZSH_THEME="ys"
 
 # Set to this to use case-sensitive completion
-# CASE_SENSITIVE="true"
+CASE_SENSITIVE="true"
 
 # Comment this out to disable bi-weekly auto-update checks
 # DISABLE_AUTO_UPDATE="true"
@@ -61,6 +61,8 @@ ZSH_THEME="turboladen"         # single. left: dir | gitinfo. right: return code
 # Uncomment following line if you want red dots to be displayed while waiting for completion
 COMPLETION_WAITING_DOTS="true"
 
+setopt no_share_history
+
 # Uncomment following line if you want to disable marking untracked files under
 # VCS as dirty. This makes repository status check for large repositories much,
 # much faster.
@@ -72,7 +74,23 @@ COMPLETION_WAITING_DOTS="true"
 #plugins=(git myrails brew server chruby nyan rake-fast hgrep)
 #plugins=(git rails brew server rbenv nyan rake-fast hgrep bundler gem git-hubflow redis-cli vi-mode web-search)
 # plugins=(git myrails brew server chruby nyan rake-fast hgrep gem git-hubflow redis-cli history-substring-search)
-plugins=(git myrails brew chruby rake-fast hgrep gem git-hubflow redis-cli server vi-mode mix-fast)
+plugins=(
+  brew
+  cargo
+  chruby
+  gem
+  git
+  git-hubflow
+  hgrep
+  myrails
+  rake-fast
+  redis-cli
+  rust
+  server
+  tmuxinator
+  vi-mode
+  zsh-nvm
+)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -93,6 +111,11 @@ export PATH=$PATH:~/bin
 
 # Bower
 alias bower='noglob bower'
+
+#------------------------------------------------------------------------------
+# Load chruby things
+#------------------------------------------------------------------------------
+source ~/.chruby.zsh
 
 #------------------------------------------------------------------------------
 # `brew install git`
@@ -162,7 +185,23 @@ source ~/.oh-my-zsh/custom/fzf.zsh
 #--------------------------------------------------------------------
 # emscripten
 #--------------------------------------------------------------------
-PATH=$PATH:/Users/sloveless/.emsdk/emscripten/1.37.22
+# PATH=$PATH:/Users/sloveless/.emsdk/emscripten/1.37.22
+
+#--------------------------------------------------------------------
+# overmind
+#--------------------------------------------------------------------
+export OVERMIND_PROCFILE=/Users/sloveless/.Procfile
+export OVERMIND_SOCKET=$TMPDIR/overmind.sock
+
+#---
+# nvm for node
+#---
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# "$NVM_DIR/bin/nvm -use --delete-prefix v8.14.0 --silent"
+# /usr/local/bin/npm config delete prefix
+
 
 # Keep this towards the end so other things can prep
 compinit
