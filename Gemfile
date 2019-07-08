@@ -3,8 +3,6 @@
 source 'https://rubygems.org'
 
 gem 'tmuxinator'
-gem 'foreman'
-gem 'subcontractor'
 gem 'hairballs'
 gem 'gem-ctags'
 gem 'mdl'
