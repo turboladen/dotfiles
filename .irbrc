@@ -4,10 +4,10 @@
 require 'hairballs'
 
 if Hairballs.rails?
-  # require 'hairballs/themes/turboladen_rails'
-  # Hairballs.use_theme(:turboladen_rails)
-  require 'hairballs/themes/turboladen'
-  Hairballs.use_theme(:turboladen)
+  require 'hairballs/themes/turboladen_rails'
+  Hairballs.use_theme(:turboladen_rails)
+  # require 'hairballs/themes/turboladen'
+  # Hairballs.use_theme(:turboladen)
 else
   require 'hairballs/themes/turboladen'
   Hairballs.use_theme(:turboladen)
@@ -39,3 +39,11 @@ Hairballs.load_plugin(:tab_completion_for_files)
 
 # require 'hairballs/plugins/binding_dot_irb'
 # Hairballs.load_plugin(:binding_dot_irb)
+
+def pbcopy(input)
+  str = input.to_s
+  IO.popen('pbcopy', 'w') { |f| f << str }
+  str
+end
+
+require 'irb/ext/save-history'
