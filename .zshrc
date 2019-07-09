@@ -170,17 +170,17 @@ unalias run-help
 autoload run-help
 HELPDIR=/usr/local/share/zsh/help
 
-source ~/.oh-my-zsh/custom/ruby.zsh
-source ~/.oh-my-zsh/custom/rust.zsh
-source ~/.oh-my-zsh/custom/homebrew.zsh
-source ~/.oh-my-zsh/custom/ansible.zsh
-source ~/.oh-my-zsh/custom/iterm.zsh
+source ~/.config/zsh/ruby.zsh
+source ~/.config/zsh/homebrew.zsh
+source ~/.config/zsh/rust.zsh
+source ~/.config/zsh/ansible.zsh
+source ~/.config/zsh/aliases.zsh
+source ~/.config/zsh/iterm.zsh
 
 #--------------------------------------------------------------------
 # fzf
 #--------------------------------------------------------------------
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-source ~/.oh-my-zsh/custom/fzf.zsh
 
 #--------------------------------------------------------------------
 # emscripten
