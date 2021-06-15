@@ -16,6 +16,8 @@ let g:python_host_prog = '/usr/local/bin/python2'
 let g:python3_host_prog = '/usr/local/bin/python3'
 let g:mapleader = ' '
 
+set runtimepath+=/usr/local/opt/fzf
+
 ""===========================================================================""
 " 0. Load vim-plug stuff first
 ""===========================================================================""
@@ -28,17 +30,12 @@ set pastetoggle=<F9> " For Mac
 
 ""===========================================================================""
 " 2. moving around, searching and patterns
-""===========================================================================""
+"===========================================================================""
 set noignorecase  " searches are case insensitive...
 set smartcase     " ... unless they contain at least one capital letter
 
-""===========================================================================""
-" 3. tags
-""===========================================================================""
-set tags+=.tags;$HOME;
-" set cscopetag
-autocmd BufRead *.rs :setlocal tags=./rusty-tags.vi;/
-autocmd BufWritePost *.rs :silent! exec "!rusty-tags vi --quiet --start-dir=" . expand('%:p:h') . "&" | redraw!
+map <leader>f <Plug>(easymotion-prefix)
+" map <leader>f :HopChar1<CR>
 
 ""===========================================================================""
 " 4. displaying text
@@ -51,6 +48,42 @@ set breakat=90
 set number
 set list          " Show invisibles/whitespace
 set listchars=tab:▸\ ,trail:·,nbsp:_,extends:❯,precedes:❮
+set cmdheight=2 " More room for RLS info
+
+set laststatus=2
+set showtabline=2
+"tabline
+if exists("+showtabline")
+     function MyTabLine()
+         let s = ''
+         let t = tabpagenr()
+         let i = 1
+         while i <= tabpagenr('$')
+             let buflist = tabpagebuflist(i)
+             let winnr = tabpagewinnr(i)
+             let s .= '%' . i . 'T'
+             let s .= (i == t ? '%1*' : '%2*')
+             let s .= ' '
+             let s .= '|'. i . ')'
+             let s .= ' %*'
+             let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
+             let file = bufname(buflist[winnr - 1])
+             " let file = fnamemodify(file, ':p:t')
+             let file = fnamemodify(file, ':f')
+             if file == ''
+                 let file = '[No Name]'
+             endif
+             let s .= file
+             let s .= ' '
+             let i = i + 1
+         endwhile
+         let s .= '%T%#TabLineFill#%='
+         let s .= (tabpagenr('$') > 1 ? '%999XX' : 'X')
+         return s
+     endfunction
+     set stal=2
+     set tabline=%!MyTabLine()
+endif
 
 ""===========================================================================""
 " 5. syntax, highlighting and spelling
@@ -59,7 +92,7 @@ set listchars=tab:▸\ ,trail:·,nbsp:_,extends:❯,precedes:❮
 syntax on
 syntax sync fromstart
 
-" Turn off syntax over 500 chars in a line
+" Turn off syntax over X chars in a line
 set synmaxcol=250
 
 set spell
@@ -72,19 +105,50 @@ set colorcolumn=80,120    " Show rulers
 set hlsearch              " highlight matches
 set cursorline
 
+"Credit joshdick
+"Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.
+"If you're using tmux version 2.2 or later, you can remove the outermost $TMUX check and use tmux's 24-bit color support
+"(see < http://sunaku.github.io/tmux-24bit-color.html#usage > for more information.)
+if (has('nvim'))
+  "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
+  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+endif
+
+"For Neovim > 0.1.5 and Vim > patch 7.4.1799 < https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162 >
+"Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
+" < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
+if (has('termguicolors'))
+  set termguicolors
+endif
+
+" colorscheme humanoid
+colorscheme kuroi
+" colorscheme spacecamp
+" colorscheme one
+" colorscheme seti
 " colorscheme Tomorrow-Night
 " colorscheme Tomorrow
 " colorscheme Tomorrow-Night-Eighties
-colorscheme seti
-" colorscheme apprentice
 " let g:onedark_terminal_italics = 1
 " colorscheme onedark
 " let g:seoul256_background = 234
 " colorscheme seoul256
 " set background=dark
-set termguicolors
+" set termguicolors
 
-let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+" set guicursor=n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50
+"       \,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor
+"       \,sm:block-blinkwait175-blinkoff150-blinkon175
+function! StatusLine(...)
+  return crystalline#mode() . crystalline#right_mode_sep('')
+        \ . ' %f%h%w%m%r ' . crystalline#right_sep('', 'Fill')
+        \ . get(g:, 'coc_status', '')
+        \ . '%='
+        \ . crystalline#left_sep('', 'Fill') . ' %{&ft}[%{&fenc!=#""?&fenc:&enc}][%{&ff}] %l/%L %c%V %P '
+endfunction
+let g:crystalline_enable_sep = 1
+let g:crystalline_statusline_fn = 'StatusLine'
+let g:crystalline_theme = 'onedark'
 
 ""===========================================================================""
 " 6. multiple windows
@@ -102,7 +166,6 @@ set splitright
 ""===========================================================================""
 " 8. terminal
 ""===========================================================================""
-set ttyfast
 
 ""===========================================================================""
 " 9. using the mouse
@@ -115,8 +178,6 @@ set ttyfast
 ""===========================================================================""
 " 11. messages and info
 ""===========================================================================""
-" Don't need this since it's shown in lightline.
-set noshowmode
 
 ""===========================================================================""
 " 12. selecting text
@@ -128,13 +189,18 @@ set clipboard=unnamed
 " 13. editing text
 ""===========================================================================""
 " More info for completion.
-set completeopt+=longest,preview
+" set completeopt+=longest,preview
+" set completeopt+=menuone,noinsert,noselect
+
+" https://tomjwatson.com/blog/vim-tips/
+set undodir=~/.config/nvim/undodir
+set undofile
 
 ""===========================================================================""
 " 14. tabs and indenting
 ""===========================================================================""
-filetype plugin indent on
 set smartindent
+set autoindent
 
 " Set default spacing
 set tabstop=2
@@ -142,13 +208,15 @@ set softtabstop=2
 set shiftwidth=2
 set expandtab
 
-" setlocal omnifunc=syntaxcomplete#Complete
-
 ""===========================================================================""
 " 15. folding
 ""===========================================================================""
 set foldlevelstart=10
 set foldnestmax=10      " 10 nested fold max
+
+" from https://github.com/nvim-treesitter/nvim-treesitter#folding
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
 
 ""===========================================================================""
 " 16. diff mode
@@ -157,6 +225,14 @@ set foldnestmax=10      " 10 nested fold max
 ""===========================================================================""
 " 17. mappings
 ""===========================================================================""
+" https://www.reddit.com/r/vim/comments/6h0dy7/which_autoclosing_plugin_do_you_use/diujtbd/
+" inoremap (; (<CR>);<C-c>O
+" inoremap (, (<CR>),<C-c>O
+" inoremap {; {<CR>};<C-c>O
+" inoremap {, {<CR>},<C-c>O
+" inoremap [; [<CR>];<C-c>O
+" inoremap [, [<CR>],<C-c>O
+
 "--------------------------------------
 " Leader commands
 "
@@ -173,42 +249,44 @@ nnoremap <leader>q :BufOnly<CR>
 "-----
 " Plug 'tpope/vim-dispatch'
 "-----
-nnoremap <leader>b :Dispatch bundle install<CR>
+" nnoremap <leader>b :Dispatch bundle install<CR>
 
 "-----
 " skwp/greplace.vim
 "-----
-nnoremap <leader>/ :Gsearch<SPACE>
-nnoremap <leader>\ :Greplace<CR>
+" nnoremap <leader>/ :Gsearch<SPACE>
+" nnoremap <leader>\ :Greplace<CR>
 
 "-----
 " tpope/vim-fugitive.
 " Follows mappings for the zsh git plugin.
 "-----
-noremap <leader>ga :Gwrite<CR>
-noremap <leader>gbl :Gblame<CR>
-noremap <leader>gbr :Gbrowse<CR>
-noremap <leader>gc :Gcommit<CR>
+" noremap <leader>ga :Gwrite<CR>
+" noremap <leader>gbl :Gblame<CR>
+" noremap <leader>gbr :Gbrowse<CR>
+" noremap <leader>gc :Gcommit<CR>
 noremap <leader>gd :Gvdiff<CR>
-noremap <leader>ggp :Gpush<CR>
-noremap <leader>ggr :Ggrep<SPACE>
-noremap <leader>gi :Git<SPACE>
-noremap <leader>glg :Glog<CR>
-noremap <leader>gll :Gpull<CR>
-noremap <leader>gm :Gmove<SPACE>
-noremap <leader>gr :Gremove<CR>
-noremap <leader>gs :Gstatus<CR>
+" noremap <leader>ggp :Gpush<CR>
+" noremap <leader>ggr :Ggrep<SPACE>
+" noremap <leader>gi :Git<SPACE>
+" noremap <leader>glg :Glog<CR>
+" noremap <leader>gll :Gpull<CR>
+" noremap <leader>gm :Gmove<SPACE>
+" noremap <leader>gr :Gremove<CR>
+noremap <leader>gs :Git<CR>
 
 "-----
 " janko-m/vim-test
 "-----
-nmap <silent> <leader>s :TestNearest<CR>
-nmap <silent> <leader>t :TestFile<CR>
-nmap <silent> <leader>a :TestSuite<CR>
-nmap <silent> <leader>l :TestLast<CR>
-" nmap <silent> <leader>g :TestVisit<CR>
+" augroup VimTest
+"   autocmd FileType rust nmap <silent> <leader>s :tab RustTest<CR>
+" augroup END
 
-nmap <silent> <leader>r :!bin/rubocop -a %<CR>
+nnoremap <silent> <leader>t :TestFile<CR>
+nnoremap <silent> <leader>l :TestLast<CR>
+
+nmap <silent> <leader>] <Plug>(ale_next_wrap)
+nmap <silent> <leader>[ <Plug>(ale_previous_wrap)
 
 "--------------------------------------
 " <Leader>A-G
@@ -219,39 +297,30 @@ nnoremap <silent><leader>bc :bprevious<CR>:bdelete #<CR>
 nnoremap <silent><leader>bn :bnext<CR>
 nnoremap <silent><leader>bp :bprevious<CR>
 
-" Basic options are set in ~/.ctags
-nnoremap <leader>ct :call turboladen#UpdateCTags()<CR>
-
 " Since I remap <C-l> (default redraw command), add a mapping for that.
 nnoremap <leader>dr :redraw!<CR>
 
 " eDIT MY vIMRC FILE
 nnoremap <leader>ev :vsplit $MYVIMRC<CR>
+nnoremap <leader>ep :vsplit ~/.config/nvim/plugins.vim<CR>
 
 "--------------------------------------
 " <Leader>H-L
 "--------------------------------------
-noremap <leader>h :call turboladen#SetUpTurboladenDocs()<CR>
+" noremap <leader>h :call turboladen#SetUpTurboladenDocs()<CR>
 
-" bind K to grep word under cursor
-nnoremap <leader>k :Rg "\b<C-R><C-W>\b"<CR>
+" bind r to grep word under cursor
+nnoremap <leader>r :FzfRg <C-R><C-W><CR>
 
 "--------------------------------------
 " <Leader>L-R
 "--------------------------------------
-" Output the command for manually running RSpec for that line.
-nnoremap <leader>m :call turboladen#RSpecCommandForManualRunning()<CR>
-
 " Do a TODO search
-nnoremap <leader>o :grep! -i todo<CR>
+nnoremap <silent> <leader>o :FzfRg TODO<CR>
 
 "--------------------------------------
 " <Leader>S-V
 "--------------------------------------
-" thoughtbot/vim-rspec
-" nnoremap <leader>s :call RunNearestSpec()<CR>
-" nnoremap <leader>t :call RunCurrentSpecFile()<CR>
-
 " Reload all the things!
 nnoremap <leader>v :source $MYVIMRC<CR>
 
@@ -260,9 +329,6 @@ nnoremap <leader>v :source $MYVIMRC<CR>
 "--------------------------------------
 nnoremap <leader>w :call turboladen#StripTrailingWhitespaces()<CR>
 
-" puts the caller
-nnoremap <leader>x oputs "#" * 90<c-m>puts caller<c-m>puts "#" * 90<esc>
-
 "-------------------------------------------------------------------------------
 " Other remappings
 "-------------------------------------------------------------------------------
@@ -270,15 +336,6 @@ nnoremap <leader>x oputs "#" * 90<c-m>puts caller<c-m>puts "#" * 90<esc>
 "--------------------------------------
 " F-keys
 "--------------------------------------
-" tagbar
-nnoremap <F8> :TagbarToggle<CR>
-
-" F9 is for pastemode
-
-"-------------------------
-" tpope/vim-dispatch
-"-------------------------
-nnoremap <F10> :Dispatch<CR>
 
 "------------------------------------------------------------------------------
 " Ctrl- combos
@@ -291,37 +348,16 @@ noremap <C-l> <C-w>l
 imap <C-BS> <C-W>
 
 " Center screen on Down/Up jumping
-noremap <C-d> <C-d>zz
-noremap <C-u> <C-u>zz
-
-" Omni-complete based on ctags
-inoremap <C-]> <C-x><C-]>
-" inoremap <C-x><C-]> <C-]>
+" noremap <C-d> <C-d>zz
+" noremap <C-u> <C-u>zz
+" noremap <C-D> :call smoothie#downwards()<CR>zz
+" noremap <C-U> :call smoothie#upwards()<CR>zz
 
 "------------------------------------------------------------------------------
 " Alpha character combos
 "------------------------------------------------------------------------------
 " Reindent whole file
 nnoremap <leader>= :call turboladen#KeepJumps("gg=G")<CR>
-
-" Sometimes ]m jumping for Ruby doesn't work.
-nnoremap ]rm :call turboladen#FindRubyMethod('forward')<CR>
-nnoremap [rm :call turboladen#FindRubyMethod('backward')<CR>
-nnoremap ]rM /\(\<class\>\\|\<module\>\) \u<CR>
-nnoremap [rM ?\(\<class\>\\|\<module\>\) \u<CR>
-
-" RSpec jumping
-nnoremap ]ri :call turboladen#FindRspecIts('forward')<CR>
-nnoremap [ri :call turboladen#FindRspecIts('backward')<CR>
-nnoremap ]rd /\(describe\\|context\)\s\('\\|"\)<CR>
-nnoremap [rd ?\(describe\\|context\)\s\('\\|"\)<CR>
-
-" Indent after p, gp
-" http://vim.wikia.com/wiki/Selecting_your_pasted_text
-" nnoremap <expr> p 'p`[' . strpart(getregtype(), 0, 1) . '`]=`['
-" nnoremap <expr> gp 'p`[' . strpart(getregtype(), 0, 1) . '`]=`]'
-
-inoremap jk <ESC>
 
 " Disable Ex mode
 nnoremap Q <NOP>
@@ -333,12 +369,12 @@ nnoremap Q <NOP>
 " nnoremap p p`]
 
 " No more accidentally showing up command window (Use C-f to show it)
-nnoremap q: :q
+" nnoremap q: :q
+nnoremap q: <NOP>
 
 " Split a line and remove whitespace from old line.
 " https://www.reddit.com/r/vim/comments/3g8y3r/finally_hacked_together_a_quick_split_line/ctw4b0i
 nnoremap S i<CR><ESC>^mwgk:silent! s/\v +$//<CR>:noh<CR>
-
 
 ""===========================================================================""
 " 18. reading and writing files
@@ -350,6 +386,7 @@ set nowritebackup
 " 19. the swap file
 ""===========================================================================""
 set noswapfile
+set updatetime=300    " for coc.vim
 
 ""===========================================================================""
 " 20. command line editing
@@ -357,8 +394,7 @@ set noswapfile
 " Only remember this many commands
 set history=300
 
-" shell-like tab completion for command line
-set wildmode=longest,list,full
+set wildmode=longest,full
 set wildmenu
 
 " Disable output and VCS files
@@ -368,7 +404,7 @@ set wildignore+=*.o,*.out,*.obj,*.rbc,*.rbo
 set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz
 
 " Ignore bundler and sass cache
-set wildignore+=*/vendor/gems/*,*/vendor/cache/*,*/.bundle/*,*/.sass-cache/*
+" set wildignore+=*/vendor/gems/*,*/vendor/cache/*,*/.bundle/*,*/.sass-cache/*
 
 " Ignore rails temporary asset caches
 set wildignore+=*/tmp/cache/assets/*/sprockets/*,*/tmp/cache/assets/*/sass/*
@@ -383,7 +419,7 @@ set wildignore+=coverage/*
 set wildignore+=.idea/*
 
 " Ignore Rust stuff
-set wildignore+=/target
+" set wildignore+=/target
 
 ""===========================================================================""
 " 21. executing external commands
@@ -392,15 +428,7 @@ set wildignore+=/target
 ""===========================================================================""
 " 22. running make and jumping to errors
 ""===========================================================================""
-" Programs that use :grep will use these; these don't affect the output of
-" :Ag.
-" if executable('sift')
-"   set grepprg=sift\ --line-number\ --binary-skip\ --no-color\ --exclude-dirs\ '.git'
-"   set grepformat=%f:%l:%m
-" elseif executable('ag')
-"   set grepprg=ag\ --vimgrep\ --column
-"   set grepformat=%f:%l:%c:%m
-" endif
+" set grepprg=rg\ --files\ --vimgrep
 set grepprg=rg\ --vimgrep
 
 ""===========================================================================""
@@ -410,7 +438,6 @@ set grepprg=rg\ --vimgrep
 ""===========================================================================""
 " 24. multi-byte characters
 ""===========================================================================""
-set termencoding=utf-8
 
 ""===========================================================================""
 " 25. various
@@ -418,27 +445,21 @@ set termencoding=utf-8
 " Default search/replace to work globally.
 set gdefault
 
-" Use different cursor for insert mode.
-" https://gist.github.com/andyfowler/1195581
-if exists('$TMUX')
-  let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-  let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-else
-  let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-  let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-endif
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+" set signcolumn=number " only works with neovim >= 0.5
+set signcolumn=yes
+
+" Show (git) signs next to numbers instead of on top of numbers
+set signcolumn=yes
 
 ""===========================================================================""
 " XX. No :options section
 ""===========================================================================""
-set lazyredraw
-
 runtime macros/matchit.vim
 
 augroup vimrc
   autocmd!
-
-  autocmd! BufReadPost,BufWritePost * Neomake
 
   " Delete the buffer once I'm done with it.
   autocmd BufReadPost fugitive://* set bufhidden=delete
@@ -456,216 +477,240 @@ augroup FTOptions " {{{2
   autocmd FileType haproxy setlocal commentstring=#\ %s
   autocmd FileType help nnoremap  q :q
   autocmd FileType html setlocal softtabstop=4
+  autocmd FileType markdown setlocal textwidth=100
+  autocmd FileType markdown setlocal colorcolumn=100
+  autocmd FileType markdown setlocal formatoptions-=l
   autocmd FileType qf setlocal nospell
+
+  autocmd FileType ruby setlocal foldexpr=turboladen#RubyMethodFold(v:lnum)
+  autocmd FileType ruby setlocal foldmethod=expr
+  autocmd FileType ruby nnoremap <leader>b :Dispatch bundle install<CR>
+  autocmd FileType ruby nmap <silent> <leader>r :!bin/rubocop -a %<CR>
+  " Output the command for manually running RSpec for that line.
+  autocmd FileType ruby nnoremap <leader>m :call turboladen#RSpecCommandForManualRunning()<CR>
+  " puts the caller
+  autocmd FileType ruby nnoremap <leader>x oputs "#" * 90<c-m>puts caller<c-m>puts "#" * 90<esc>
+
+  autocmd FileType rust setlocal colorcolumn=100
+  autocmd FileType rust setlocal foldmethod=expr
+  autocmd FileType rust setlocal foldexpr=GetRustFold(v:lnum)
+  " autocmd FileType rust nmap <silent> <leader>s :TestNearest<CR>
+  " autocmd FileType rust inoremap S( Some()<esc>ha
+  autocmd FileType rust nnoremap <leader>cc :Dispatch cargo check --all-features<CR>
+  autocmd FileType rust nmap <silent> gO :CocCommand rust-analyzer.openDocs<cr>
+
   autocmd FileType vim-plug setlocal nospell
   autocmd FileType vimwiki setlocal ts=4 sts=4 sw=4 expandtab
   autocmd FileType vim setlocal ts=2 sts=2 sw=2 expandtab
-  autocmd FileType yaml setlocal ts=2 sts=2 sw=2 cursorcolumn indentkeys-=<:>
+  autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab cursorcolumn indentkeys-=<:>
   autocmd FileType zsh setlocal ts=2 sts=2 sw=2 expandtab
-  autocmd FileType ruby nnoremap <expr> p 'p`[' . strpart(getregtype(), 0, 1) . '`]=`['
-  autocmd FileType ruby nnoremap <expr> gp 'p`[' . strpart(getregtype(), 0, 1) . '`]=`['
-  autocmd FileType rust setlocal colorcolumn=100
+
+  autocmd BufNewFile,BufRead *.rs.hbs setlocal ft=rust.handlebars
 augroup END "}}}2
 
-" augroup Tags
-"   autocmd BufWritePost * GenCtags
-"   autocmd BufWritePost * GenGTAGS
-" augroup END
+augroup coc
+" Highlight the symbol and its references when holding the cursor.
+  autocmd CursorHold * silent call CocActionAsync('highlight')
+augroup END
 
 ""===========================================================================""
 " YY. Plugin options that must be here.
 ""===========================================================================""
 "-------------------------
-" ag.vim
-" https://robots.thoughtbot.com/faster-grepping-in-vim
-" https://www.reddit.com/r/vim/comments/3mtevg/sift_grep_on_steroids/cvhyy8e
+" ale
 "-------------------------
-let g:ag_prg='ag --vimgrep --only-matching --silent'
-let g:ag_highlight=1            " highlight term after search
-let g:ag_working_path_mode='r'  " Search from project root
+" let g:ale_cursor_detail = 1
+let g:ale_fix_on_save = 1
+let g:ale_sign_error = '✘'
+let g:ale_sign_warning = '⚠'
+let g:ale_disable_lsp = 1
 
-"-------------------------
-" deoplete
-"-------------------------
-let g:deoplete#enable_at_startup = 1
+" Only run linters named in ale_linters settings.
+let g:ale_linters_explicit = 1
 
-" let g:monster#completion#rcodetools#backend = 'async_rct_complete'
-" let g:deoplete#sources#omni#input_patterns = {
-" \   'ruby' : '[^. *\t]\.\w*\|\h\w*::',
-" \}
+let g:ale_linters = {
+  \ 'markdown': ['proselint', 'writegood'],
+  \ 'vim': ['vint'],
+  \ }
 
-" function! Multiple_cursors_before()
-"     let b:deoplete_disable_auto_complete = 1
-" endfunction
-
-" function! Multiple_cursors_after()
-"     let b:deoplete_disable_auto_complete = 0
-" endfunction
-
-" deoplete tab-complete
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+let g:ale_fixers = {
+  \ '*': ['remove_trailing_lines', 'trim_whitespace'],
+  \ 'ruby': ['rubocop'],
+  \ 'rust': ['rustfmt']
+  \ }
 
 "-------------------------
 " fzf
 " https://github.com/junegunn/dotfiles/blob/da378217ad008d422bc5b577802cad237a2930e1/vimrc#L1197
 "-------------------------
-set runtimepath+=/usr/local/opt/fzf
+let $FZF_DEFAULT_COMMAND='rg --files --vimgrep'
+let $FZF_DEFAULT_OPTS='--layout=reverse --inline-info --border=horizontal --height=5'
+"
+" set runtimepath+=/usr/local/opt/fzf
 let g:fzf_command_prefix = 'Fzf'
+
+" An action can be a reference to a function that processes selected lines
+function! s:build_quickfix_list(lines)
+  call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+  copen
+  cc
+endfunction
+
+let g:fzf_action = {
+  \ 'ctrl-q': function('s:build_quickfix_list'),
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
 " nnoremap <silent> <leader><leader> :FzfGitFiles<CR>
 nnoremap <silent> <leader><leader> :FzfFiles<CR>
+" nnoremap <silent> <leader><leader> :Clap files<CR>
+" nnoremap <silent> <leader><leader> :FzfSearch<CR>
 nnoremap <silent> <leader><CR> :FzfBuffers<CR>
+" nnoremap <silent> <leader><CR> :Clap buffers<CR>
 " nnoremap <silent> <leader><C-m> :Maps<CR>
 
-nnoremap <silent> <leader>fs :call fzf#run({ 'tmux_height': winheight('.') / 4, 'sink': 'botright split' })<CR>
-nnoremap <silent> <leader>fv :call fzf#run({ 'tmux_width': winwidth('.') / 4, 'sink': 'vertical botright split' })<CR>
-nnoremap <leader>fu :FzfBTags<CR>
-
-" --column: Show column number
-" --line-number: Show line number
-" --no-heading: Do not show file headings in results
-" --fixed-strings: Search term as a literal string
-" --ignore-case: Case insensitive search
-" --no-ignore: Do not respect .gitignore, etc...
-" --hidden: Search hidden files and folders
-" --follow: Follow symlinks
-" --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
-" --color: Search color options
-command! -bang -nargs=* FzfFind
-      \ call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --glob "!vendor/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
-
-" nnoremap <leader>. :FzfFind!<SPACE>
 nnoremap <leader>. :Rg<SPACE>
+" nnoremap <leader>s :Clap grep<CR>
+let g:rg_command = 'rg --vimgrep --ignore-vcs'
 
 "-------------------------
-" skwp/greplace.vim
+" coc.vim
 "-------------------------
-if executable('sift')
-  let g:grep_cmd_opts = '--line-number --no-color --no-conf --binary-skip'
-endif
+let g:coc_node_path = '/usr/local/bin/node'
+
+" coc-dictionary: Words from files in &dictionary.
+" coc-git: Somewhat replaces gitgutter; kinda depends on vim-fugitive.
+" coc-html: HTML language server.
+" coc-lists: Some basic list sources
+" coc-prettier: Code reformatting--initially got for markdown
+"
+let g:coc_global_extensions = [
+  \ 'coc-dictionary',
+  \ 'coc-git',
+  \ 'coc-html',
+  \ 'coc-lists',
+  \ 'coc-markdownlint',
+  \ 'coc-prettier',
+  \ 'coc-rust-analyzer',
+  \ 'coc-solargraph',
+  \ 'coc-snippets',
+  \ 'coc-toml',
+  \ 'coc-yaml'
+\ ]
+
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" https://kimpers.com/vim-intelligent-autocompletion/
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gD <Plug>(coc-declaration)
+" nmap <silent> <leader>] <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+nmap <silent> [G <Plug>(coc-diagnostic-prev-error)
+nmap <silent> ]G <Plug>(coc-diagnostic-next-error)
+nmap <silent> g= <Plug>(coc-format)
+
+" Remap for rename current word
+nmap <silent> rn <Plug>(coc-rename)
+nmap gA <Plug>(coc-codeaction-line)
+vmap gA <Plug>(coc-codeaction-selected)
+nmap gB <Plug>(coc-codeaction-cursor)
+vmap gB <Plug>(coc-codeaction)
+nmap gF <Plug>(coc-fix-current)
+nmap <silent> gR <Plug>(coc-refactor)
+
+" Show all diagnostics.
+nnoremap <silent><nowait> <leader>a  :<C-u>CocList diagnostics<cr>
+" Show commands.
+nnoremap <silent><nowait> <leader>cc  :<C-u>CocList commands<cr>
+" Find symbol of current document.
+" nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols.
+nnoremap <silent><nowait> <leader>cs  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list.
+nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+
+nnoremap <leader>/ :CocSearch<SPACE>
+
+" Use K for show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Introduce function text object
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+xmap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap if <Plug>(coc-funcobj-i)
+omap af <Plug>(coc-funcobj-a)
+
+"--
+" For coc-snippets
+"--
+" https://github.com/neoclide/coc-snippets
+" Use <C-l> for trigger snippet expand.
+imap <C-l> <Plug>(coc-snippets-expand)
+
+" Use <C-j> for select text for visual placeholder of snippet.
+vmap <C-j> <Plug>(coc-snippets-select)
+
+" Use <C-j> for jump to next placeholder, it's default of coc.nvim
+let g:coc_snippet_next = '<c-j>'
+
+" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+let g:coc_snippet_prev = '<c-k>'
+
+" Use <C-j> for both expand and jump (make expand higher priority.)
+imap <C-j> <Plug>(coc-snippets-expand-jump)
 
 "-------------------------
-" joereynolds/gtags-scope
+" neoclide/coc-git
 "-------------------------
-"" To use the default key/mouse mapping:
-" let g:GtagsCscope_Auto_Map = 1
-
-" To ignore letter case when searching:
-" let g:GtagsCscope_Ignore_Case = 1
-
-" To use absolute path name:
-"       let g:GtagsCscope_Absolute_Path = 1
-
-" To deterring interruption:
-" let g:GtagsCscope_Keep_Alive = 1
-
-" If you hope auto loading:
-" let g:GtagsCscope_Auto_Load = 1
-
-" To use 'vim -t ', ':tag' and '<C-]>'
-" set cscopetag
+set signcolumn=yes
+nmap [c <Plug>(coc-git-prevchunk)
+nmap ]c <Plug>(coc-git-nextchunk)
 
 "-------------------------
-" indentLine
+" neoclide/coc-prettier
 "-------------------------
-let g:indentLine_color_term = 239
-let g:indentLine_char = '︙'
-let g:indentLine_enabled = 0
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
-
-"-------------------------
-" autozimu/LanguageClient-neovim
-"-------------------------
-" Required for operations modifying multiple buffers like rename.
-" set hidden
-
-let g:LanguageClient_serverCommands = {
-        \ 'rust': ['rls']
-    \ }
-
-" \ 'ruby': ['language_server-ruby'],
-
-" Automatically start language servers.
-let g:LanguageClient_autoStart = 1
-
-nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
-
-"-------------------------
-" lightline
-"-------------------------
-let g:lightline = {
-        \ 'active': {
-        \   'left': [ [ 'mode', 'paste' ],
-        \             [ 'fugitive', 'filename'] ]
-        \ },
-        \ 'component_function': {
-        \   'fugitive': 'turboladen#LightLineFugitive',
-        \   'readonly': 'turboladen#LightLineReadonly',
-        \   'modified': 'turboladen#LightLineModified',
-        \   'filename': 'turboladen#LightLineFilename',
-        \   'fileformat': 'turboladen#LightLineFileformat',
-        \   'filetype': 'turboladen#LightLineFiletype',
-        \   'fileencoding': 'turboladen#LightLineFileencoding',
-        \   'mode': 'turboladen#LightLineMode'
-        \ }
-      \ }
-
-      " \ 'separator': { 'left': '', 'right': '' },
-      " \ 'subseparator': { 'left': '', 'right': '' }
-
-
-"-------------------------
-" limelight
-"-------------------------
-" nmap <Leader>l <Plug>(Limelight)
-" xmap <Leader>l <Plug>(Limelight)
-
-"-------------------------
-" neomake
-"-------------------------
-let g:neomake_ruby_rubocop_maker = {
-      \ 'exe': 'bundle',
-      \ 'args': ['exec', 'rubocop', '--format', 'emacs', '--parallel', '--force-exclusion', '--rails', '--display-cop-names'],
-      \ 'errorformat': '%f:%l:%c: %t: %m,%E%f:%l: %m',
-      \ 'postprocess': function('neomake#makers#ft#ruby#RubocopEntryProcess')
-      \ }
-
-let g:yard_error_format =
-     \ '%W[warn]:\ %m\ in\ file\ `%f`\ near\ line\ %l,%Z,'.
-      \ '%E[error]:\ %m\ in\ file\ `%f`\ near\ line\ %l,%Z,'.
-      \ '%-G%.%.#'
-
-let g:neomake_ruby_yard_maker = {
-     \ 'exe': 'yard',
-     \ 'args': ['stats'],
-     \ 'errorformat': g:yard_error_format
-     \ }
-
-let g:neomake_coffee_checkers = ['coffeelint']        " npm install -g coffeelint
-let g:neomake_css_checkers = ['csslint']              " npm install -g csslint
-let g:neomake_elixir_checkers = ['elixirc']
-let g:neomake_haml_checkers = ['hamllint']
-let g:neomake_html_checkers = ['tidy']
-let g:neomake_javascript_checkers = ['jshint']
-let g:neomake_json_checkers = ['jsonlint']            " npm install -g jsonlint
-let g:neomake_markdown_checkers = ['mdl']             " gem install mdl
-let g:neomake_ruby_enabled_makers = ['mri', 'rubocop', 'yard']
-let g:neomake_rust_checkers = ['rustc']
-let g:neomake_sh_checkers = ['shellcheck']            " brew install shellcheck
-let g:neomake_scss_checkers = ['scsslint']            " brew install shellcheck
-let g:neomake_sql_checkers = ['sqlint']               " gem install sqlint
-let g:neomake_vimscript_checkers = ['vint']           " pip install vim-vint
-let g:neomake_yaml_checkers = ['yamllint']            " pip install yamllint
-
-let g:neomake_place_signs = 1
-let g:neomake_open_list = 0
-" call neomake#configure#automake('nw', 750)
+"------------------------
+" junegunn/limelight.vim
+"------------------------
+" Number of preceding/following paragraphs to include (default: 0)
+let g:limelight_paragraph_span = 1
 
 "-------------------------
 " tmuxline.vim
 "-------------------------
-let g:tmuxline_preset = 'full'
+let g:tmuxline_preset = 'nightly_fox'
 " let g:tmuxline_powerline_separators = 0
 
 "-------------------------
@@ -676,7 +721,7 @@ let g:cargo_command = 'Dispatch cargo {cmd}'
 "-------------------------
 " idanarye/vim-casetrate
 "-------------------------
-" let g:casetrate_leader = '\c'
+let g:casetrate_leader = '\c'
 
 "-------------------------
 " airblade/vim-gitgutter
@@ -686,7 +731,8 @@ let g:cargo_command = 'Dispatch cargo {cmd}'
 " let g:gitgutter_sign_removed = '✖'
 " let g:gitgutter_sign_removed_first_line = '^^'
 " let g:gitgutter_sign_modified_removed = '⟪⟫'
-let g:gitgutter_sign_modified_removed = '⇄'
+" let g:gitgutter_sign_modified_removed = '⇄'
+" navigate chunks of current buffer
 
 "-------------------------
 " elzr/vim-json
@@ -694,9 +740,20 @@ let g:gitgutter_sign_modified_removed = '⇄'
 let g:vim_json_syntax_conceal = 0
 
 "-------------------------
-" gabrieleana/vim-markdown
+" iamcco/vim-language-server
 "-------------------------
-let g:markdown_mapping_switch_status = '<leader>ms'
+let g:markdown_fenced_languages = [
+      \ 'vim',
+      \ 'help'
+      \]
+
+"-------------------------
+" plasticpoy/vim-markdown
+"-------------------------
+let g:vim_markdown_no_default_key_mappings = 1
+let g:vim_markdown_fenced_languages = ['c++=cpp', 'viml=vim', 'bash=sh', 'ini=dosini', 'rust=rust']
+let g:vim_markdown_strikethrough = 1
+let g:vim_markdown_new_list_item_indent = 2
 
 "-------------------------
 " jremmen/vim-ripgrep
@@ -704,35 +761,36 @@ let g:markdown_mapping_switch_status = '<leader>ms'
 let g:rg_highlight = 1
 
 "-------------------------
-" thoughtbot/vim-rspec
+" 'psliwka/vim-smoothie'
 "-------------------------
-" let g:rspec_runner = 'os_x_iterm2'
-" let g:rspec_command = turboladen#RSpecVimCommand()
-
-"-------------------------
-" SirVer/ultisnips
-"-------------------------
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger = '<tab>'
-let g:UltiSnipsJumpForwardTrigger = '<c-b>'
-let g:UltiSnipsJumpBackwardTrigger = '<c-z>'
-
-"-------------------------
-" vim-ruby-doc
-"-------------------------
-let g:ruby_doc_command='open'
-let g:ruby_doc_ruby_mapping='<leader>rb'
-let g:ruby_doc_rails_mapping='<leader>rr'
-let g:ruby_doc_rspec_mapping='<leader>rs'
+let g:smoothie_enabled = 1
+let g:smoothie_no_default_mappings = 0
 
 "-------------------------
 " janko-m/vim-test
 "-------------------------
 let g:test#strategy = 'dispatch'
-" let g:test#strategy = 'tslime'
 let g:test#preserve_screen = 1
+let test#enabled_runners = ['rust#cargotest', 'ruby#rspec']
 
 "-------------------------
-" vimwiki
+" junegunn/goyo.vim
 "-------------------------
-let g:vimwiki_list = [{'path': '$HOME/Development/projects/vimwiki'}]
+let g:goyo_width = 101
+
+"-------------------------
+" nvim-treesitter
+"-------------------------
+" lua <<EOF
+" require'nvim-treesitter.configs'.setup {
+  " ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  " highlight = {
+    " enable = { "bash", "c", "cpp", "html", "javascript", "json", "lua", "python", "rust", "ruby", "toml", "typescript" },
+  " },
+" }
+" EOF
+
+"-------------------------
+" liuchengxu/vim-clap
+"-------------------------
+let g:clap_layout = { 'relative': 'editor' }

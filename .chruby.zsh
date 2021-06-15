@@ -6,7 +6,7 @@
 #------------------------------------------------------------------------------
 if [[ -f /usr/local/opt/chruby/share/chruby/chruby.sh ]]; then
   source /usr/local/opt/chruby/share/chruby/chruby.sh
-  chruby "2.6.2"
+  chruby "2.7.3"
   source /usr/local/opt/chruby/share/chruby/auto.sh
 else
   echo "chruby not found."

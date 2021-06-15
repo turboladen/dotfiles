@@ -44,55 +44,6 @@ function! turboladen#FindRubyMethod(direction) abort
   endif
 endfunction
 
-function! turboladen#LightLineModified() abort
-  if &filetype ==# 'help'
-    return ''
-  elseif &modified
-    return '✹'
-  elseif &modifiable
-    return ''
-  else
-    return ''
-  endif
-endfunction
-
-function! turboladen#LightLineReadonly() abort
-  if &filetype ==# 'help'
-    return ''
-  elseif &readonly
-    return ''
-  else
-    return ''
-  endif
-endfunction
-
-function! turboladen#LightLineFilename() abort
-  return ('' !=# turboladen#LightLineReadonly() ? turboladen#LightLineReadonly() . '' : '') .
-        \ (&filetype ==# 'unite' ? unite#get_status_string() :
-        \ '' !=# expand('%:p:.') ? expand('%:p:.') : '[No Name]') .
-        \ ('' !=# turboladen#LightLineModified() ? ' ' . turboladen#LightLineModified() : '')
-endfunction
-
-function! turboladen#LightLineFugitive() abort
-  return exists('*fugitive#head') ? ' ' . fugitive#head() : ''
-endfunction
-
-function! turboladen#LightLineFileformat() abort
-  return winwidth(0) > 70 ? &fileformat : ''
-endfunction
-
-function! turboladen#LightLineFiletype() abort
-  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
-endfunction
-
-function! turboladen#LightLineFileencoding() abort
-  return winwidth(0) > 70 ? (strlen(&fileencoding) ? &fileencoding : &encoding) : ''
-endfunction
-
-function! turboladen#LightLineMode() abort
-  return winwidth(0) > 60 ? lightline#mode() : ''
-endfunction
-
 function! turboladen#RubyMethodFold(line) abort
   let l:stack = synstack(a:line, (match(getline(a:line), '^\s*\zs'))+1)
 
@@ -145,9 +96,9 @@ function! turboladen#RSpecVimCommand() abort
 endfunction
 
 function! turboladen#SetUpTurboladenDocs() abort
-  !cp '/Users/sloveless/Development/projects/config_files/vim/doc/turboladen.txt' '/Users/sloveless/.vim/doc/turboladen.txt'
+  !cp '/Users/steve.loveless/Development/projects/config_files/vim/doc/turboladen.txt' '/Users/steve.loveless/.vim/doc/turboladen.txt'
   " :helptags l:vim_doc_dir
-  :helptags /Users/sloveless/.vim/doc
+  :helptags /Users/steve.loveless/.vim/doc
 endfunction
 
 ""

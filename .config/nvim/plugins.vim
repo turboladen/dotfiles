@@ -1,3 +1,5 @@
+scriptencoding utf-8
+
 ""------------------------------------------------""
 "" vim-plug setup
 ""------------------------------------------------""
@@ -10,48 +12,41 @@ call plug#begin('~/.config/nvim/plugged')
 " Enable repeating supported plugin maps with '.'
 Plug 'tpope/vim-repeat'
 
-" Project configuration
-Plug 'tpope/vim-projectionist'
-
-Plug 'vim-scripts/visSum.vim'
-
 ""----------------------------------------------------------------------------
 " UI tweaks
 ""----------------------------------------------------------------------------
-" A light and configurable statusline/tabline
-Plug 'itchyny/lightline.vim'
-
-" Simple tmux statusline generator with support for powerline symbols and
-" statusline / airline / lightline integration
-Plug 'edkolev/tmuxline.vim'
-
-" A simple, vimscript only, command runner for sending commands from vim to
-" tmux.
-" Plug 'christoomey/vim-tmux-runner'
-
-" Shows a git diff in the gutter and stages/undoes hunks.
-Plug 'airblade/vim-gitgutter'
-
-" Tmux scripting made easy.
-" Plug 'junegunn/heytmux'
-
 " Enhanced terminal integration for Vim
 Plug 'wincent/terminus'
 
 " vim-signature is a plugin to place, toggle and display marks.
 Plug 'kshenoy/vim-signature'
 
+" Vim plugin that shows keybindings in popup
+" Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
+
+" Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
+" Distraction-free writing in Vim.
+Plug 'junegunn/goyo.vim'
+
+" Plug 'joeytwiddle/sexy_scroller.vim'
+" Plug 'yuttie/comfortable-motion.vim'
+
 ""===========================================================================""
 " 2. moving around, searching and patterns
 ""===========================================================================""
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
 " Use RipGrep in Vim and display results in a quickfix list
 Plug 'jremmen/vim-ripgrep'
 
 " Project-wide search/replace with :Gsearch and :Greplace
-Plug 'skwp/greplace.vim'
+" Plug 'skwp/greplace.vim'
+
+" An ack/ag/pt/rg powered code search and view tool, takes advantage of Vim 8's
+" power to support asynchronous searching, and lets you edit file in-place with
+" Edit Mode.
+Plug 'dyng/ctrlsf.vim'
 
 " combine with netrw to create a delicious salad dressing.
 Plug 'tpope/vim-vinegar'
@@ -60,7 +55,9 @@ Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-unimpaired'
 
 " Directory viewer for Vim
-Plug 'justinmk/vim-dirvish'
+Plug 'justinmk/vim-dirvish' | Plug 'kristijanhusak/vim-dirvish-git'
+
+Plug 'airblade/vim-gitgutter'
 
 " extended % matching for HTML, LaTeX and many other languages
 Plug 'tmhedberg/matchit'
@@ -69,70 +66,47 @@ Plug 'tmhedberg/matchit'
 " blocks.
 Plug 'kana/vim-textobj-user' | Plug 'nelstrom/vim-textobj-rubyblock'
 
-" "Open a quickfix item in a window you choose
-" Plug 'yssl/QFEnter'
-
-" Language Server Protocol support for nvim
-Plug 'autozimu/LanguageClient-neovim', {
-      \ 'branch': 'next',
-      \ 'do': 'bash install.sh',
-    \ }
-
-" (Optional) Showing function signature and inline doc.
-Plug 'Shougo/echodoc.vim'
+" Conquer of Completion
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Change code right in the quickfix window
 Plug 'stefandtw/quickfix-reflector.vim'
 
-""===========================================================================""
-" 3. tags
-""===========================================================================""
-" A Completion Framework for Neovim
-Plug 'roxma/nvim-completion-manager'
-Plug 'roxma/ncm-rct-complete'
-Plug 'roxma/nvim-cm-racer'
-Plug 'Shougo/neco-vim'
-Plug 'Shougo/neoinclude.vim'
+" Modern performant generic finder and dispatcher for Vim and NeoVim
+" Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary' }
 
-" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-" Plug 'fishbullet/deoplete-ruby'
-" Plug 'Shougo/vimproc.vim'
-
-" tab completion for ruby things. Requires:
-"   gem install rcodetools fastri
-" Plug 'osyo-manga/vim-monster',      { 'for': ['ruby', 'eruby'] }
-
-" a collection of Ruby code manipulation tools
-" Plug 'tnoda/rcodetools-x'
-
-" deoplete rcodetools source for Ruby
-Plug 'Shougo/deoplete-rct'
-
-" Perform all your vim insert mode completions with Tab
-Plug 'ervandew/supertab'
-
-" Sidebar of methods/functions
-Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
-
-" An up-to-date version of gtags-cscope.vim from GNU global
-" Plug 'joereynolds/gtags-scope'
-
-" Async plugin for Vim/NeoVim to ease the use of ctags/gtags.
-" Plug 'jsfaint/gen_tags.vim'
+" Vim motion on speed!
+Plug 'easymotion/vim-easymotion'
+" Plug 'phaazon/hop.nvim'
 
 ""===========================================================================""
 " 5. syntax, highlighting and spelling
 ""===========================================================================""
+" Color schema
+Plug 'humanoid-colors/vim-humanoid-colorscheme'
+
+" Color scheme
+Plug 'aonemd/kuroi.vim'
+
 " Color Scheme
 Plug 'trusktr/seti.vim'
 
-Plug 'fenetikm/falcon'
+" Adaptation of one-light and one-dark colorschemes for Vim
+Plug 'rakr/vim-one'
+
+" 🔭 Vim colors for the final frontier.
+Plug 'jaredgorski/SpaceCamp'
 
 " Hyperfocus-writing in Vim
-" Plug 'junegunn/limelight.vim'
+Plug 'junegunn/limelight.vim'
 
 " Show vertical line for indentation level
 " Plug 'Yggdroot/indentLine'
+
+" Toast! A colorful, medium-contrast theme with full Vim and Neovim support,
+" true color and 256-color support, and automatic light and dark variants. Easy
+" to read without frying your retinae.
+Plug 'jsit/toast.vim'
 
 " Define a different filetype syntax on regions of a buffer
 " Plug 'vim-scripts/SyntaxRange'
@@ -146,20 +120,23 @@ Plug 'vim-scripts/BufOnly.vim'
 ""===========================================================================""
 " 11. messages and info
 ""===========================================================================""
-" Adds :HLT commands for viewing the hilight setting for the cursor position.
-Plug 'gerw/vim-HiLinkTrace'       " For syntax highlighting help
 
 ""===========================================================================""
 " 12. selecting text
 ""===========================================================================""
-" True Sublime Text style multiple selections for Vim
-Plug 'terryma/vim-multiple-cursors'
+" It's called vim-visual-multi in analogy with visual-block, but the plugin
+" works mostly from normal mode.
+" Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
 ""===========================================================================""
 " 13. editing text
 ""===========================================================================""
 " wisely add 'end' in ruby, endfucntion/endif/more in vimscript, etc.
 Plug 'tpope/vim-endwise'
+
+" Closes brackets. Perfect companion to vim-endwise. Basically, a more
+" conservative version of auto-pairs that only works when you press Enter.
+Plug 'rstacruz/vim-closer'
 
 " comment stuff out
 Plug 'tpope/vim-commentary'
@@ -177,16 +154,19 @@ Plug 'tommcdo/vim-exchange'
 Plug 'vim-utils/vim-troll-stopper'
 
 " Plug 'SirVer/ultisnips'
-" Plug 'honza/vim-snippets'
+Plug 'honza/vim-snippets'
 
 " For case swapping
 Plug 'idanarye/vim-casetrate'
+
+" Vim script for text filtering and alignment
+Plug 'godlygeek/tabular'
 
 ""===========================================================================""
 " 15. folding
 ""===========================================================================""
 " Speed up Vim by updating folds only when called-for
-Plug 'Konfekt/FastFold'
+" Plug 'Konfekt/FastFold'
 
 ""===========================================================================""
 " 21. executing external commands
@@ -195,27 +175,15 @@ Plug 'Konfekt/FastFold'
 " tmux pane.
 Plug 'tpope/vim-dispatch'
 
-" Vim plugin to execute Ruby into an output buffer, similar to cmd-R in
-" TextMate.
-" Plug 'henrik/vim-ruby-runner', { 'for': ['ruby'] }
-
-" Plug 'kassio/neoterm'
-" let g:neoterm_rspec_lib_cmd=turboladen#RSpecShellCommand()
-
 " Vim sugar for the UNIX shell commands that need it the most
 Plug 'tpope/vim-eunuch'
 
 " run your tests at the speed of thought
 Plug 'janko-m/vim-test'
 
-" Send command from vim to a running tmux session
-Plug 'jgdavey/tslime.vim'
-
 ""===========================================================================""
 " 22. running make and jumping to errors
 ""===========================================================================""
-" Linting
-Plug 'benekastah/neomake'
 
 ""===========================================================================""
 " 23. language specific
@@ -225,13 +193,7 @@ Plug 'benekastah/neomake'
 " CSS
 "----------------
 " Cutting-edge vim css syntax file
-Plug 'JulesWang/css.vim', { 'for': 'css' }
-
-"----------------
-" CoffeeScript
-"----------------
-" Covers syntax, indenting, compiling, and more.
-Plug 'kchmck/vim-coffee-script',          { 'for': 'coffee' }
+" Plug 'JulesWang/css.vim', { 'for': 'css' }
 
 "----------------
 " dockerfile
@@ -241,18 +203,13 @@ Plug 'kchmck/vim-coffee-script',          { 'for': 'coffee' }
 "----------------
 " Elixir
 "----------------
-Plug 'elixir-lang/vim-elixir', { 'for': ['elixir', 'eelixir'] }
-Plug 'avdgaag/vim-phoenix'
+" Plug 'elixir-lang/vim-elixir', { 'for': ['elixir', 'eelixir'] }
+" Plug 'avdgaag/vim-phoenix', { 'for': ['elixir', 'eelixir'] }
 
 "----------------
 " Elm
 "----------------
-Plug 'elmcast/elm-vim'
-
-"----------------
-" Emblem
-"----------------
-Plug 'heartsentwined/vim-emblem',         { 'for': 'emblem' }
+" Plug 'elmcast/elm-vim', { 'for': 'elm' }
 
 "----------------
 " Git
@@ -261,25 +218,22 @@ Plug 'heartsentwined/vim-emblem',         { 'for': 'emblem' }
 Plug 'tpope/vim-git'
 
 " a Git wrapper so awesome, it should be illegal
-Plug 'tpope/vim-fugitive' | Plug 'tommcdo/vim-fubitive'
+Plug 'tpope/vim-fugitive'
+
+" If fugitive.vim is the Git, rhubarb.vim is the Hub.
+Plug 'tpope/vim-rhubarb'
 
 " Git commit browser
-Plug 'junegunn/gv.vim'
+" Plug 'junegunn/gv.vim'
 
 " A Vim plugin for more pleasant editing on commit messages
 Plug 'rhysd/committia.vim'
 
 "----------------
-" HAML
-"----------------
-" Vim runtime files for Haml, Sass, and SCSS
-Plug 'tpope/vim-haml'
-
-"----------------
 " HTML
 "----------------
 " emmet for vim
-Plug 'mattn/emmet-vim'
+Plug 'mattn/emmet-vim', { 'for': ['html', 'html.*'] }
 
 "----------------
 " Handlebars
@@ -291,13 +245,14 @@ Plug 'mustache/vim-mustache-handlebars',  { 'for': ['mustache', 'html.handlebars
 " haproxy
 "----------------
 " Plug 'sclo/haproxy.vim'
-Plug 'vim-scripts/haproxy'
+Plug 'vim-scripts/haproxy', { 'for': 'haproxy' }
 
 "----------------
 " JS
 "----------------
 " Vastly improved Javascript indentation and syntax support
 Plug 'pangloss/vim-javascript',      { 'for': 'javascript' }
+
 " Enhanced javascript syntax file
 Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' }
 
@@ -306,20 +261,12 @@ Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' }
 "----------------
 " A better JSON for Vim: distinct highlighting of keywords as values,
 " JSON-specific (non-JS) warnings, quote concealing.
-Plug 'elzr/vim-json'
-
-"----------------
-" Mapserver
-"----------------
-Plug 'calvinchengx/vim-mapserver'
+Plug 'elzr/vim-json', { 'for': 'json' }
+Plug 'GutenYe/json5.vim'
 
 "----------------
 " Markdown
 "----------------
-" Plug 'gabrielelana/vim-markdown',         { 'for': 'markdown' }
-
-Plug 'godlygeek/tabular'
-
 " Syntax highlighting, matching rules and mappings
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 
@@ -336,42 +283,25 @@ Plug 'tpope/vim-rake',    { 'for': ['ruby', 'eruby'] }
 Plug 'vim-ruby/vim-ruby', { 'for': ['ruby', 'eruby'] }
 
 " Better rspec syntax highlighting for Vim
-Plug 'sheerun/rspec.vim'
+Plug 'sheerun/rspec.vim', { 'for': 'ruby' }
 
 " Ruby syntax extensions for highlighting YARD documentation
-Plug 'sheerun/vim-yardoc',          { 'for': ['ruby', 'eruby'] }
-
-" Refactoring tool for Ruby in vim
-Plug 'ecomba/vim-ruby-refactoring', { 'for': ['ruby', 'eruby'] }
+Plug 'sheerun/vim-yardoc', { 'for': 'ruby' }
 
 " Lightweight support for Ruby's Bundler
-Plug 'tpope/vim-bundler'
-
-" Browse Ruby, RSpec, and Rails API docs quickly with Vim
-Plug 'lucapette/vim-ruby-doc', { 'for': ['ruby', 'eruby'] }
-
-"Ruby format for vim via rufo
-" Plug 'splattael/rufo-vim',     { 'for': ['ruby', 'eruby'] }
+Plug 'tpope/vim-bundler', { 'for': ['ruby', 'eruby'] }
 
 "----------------
 " Rust
 "----------------
-Plug 'rust-lang/rust.vim',   { 'for': ['rust'] }
-
-" Racer support for Vim
-Plug 'racer-rust/vim-racer', { 'for': ['rust'] }
+Plug 'rust-lang/rust.vim',   { 'for': 'rust' }
+" Plug 'mattn/webapi-vim'
 
 " Vim syntax for TOML
-Plug 'cespare/vim-toml'
+Plug 'cespare/vim-toml', {'for': 'toml'}
 
 " Rust Cargo command bindings
-Plug 'timonv/vim-cargo', { 'for': ['rust'] }
-
-"----------------
-" Slim
-"----------------
-" Syntax highlighting for VIM
-Plug 'slim-template/vim-slim', { 'for': 'slim' }
+" Plug 'timonv/vim-cargo', { 'for': ['rust'] }
 
 "----------------
 " SQL
@@ -391,6 +321,11 @@ Plug 'tmux-plugins/vim-tmux'
 Plug 'tmux-plugins/vim-tmux-focus-events'
 
 "----------------
+" TypeScript
+"----------------
+Plug 'HerringtonDarkholme/yats.vim'
+
+"----------------
 " YAML
 "----------------
 " Plug 'avakhov/vim-yaml',                  { 'for': 'yaml' }
@@ -401,15 +336,34 @@ Plug 'tarekbecker/vim-yaml-formatter', { 'for': 'yaml' }
 ""===========================================================================""
 " 25. various
 ""===========================================================================""
+" A light and configurable statusline/tabline
+" Plug 'itchyny/lightline.vim'
+"
+" Plug 'kyazdani42/nvim-web-devicons'
+Plug 'ryanoasis/vim-devicons'
+
+" I like, but it doesn't show the whole path to the current file and that's
+" not configurable.
+Plug 'glepnir/spaceline.vim'
+
+" Simple tmux statusline generator with support for powerline symbols and
+" statusline / airline / lightline integration
+" Plug 'edkolev/tmuxline.vim'
+" Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
+
+" Plug 'rbong/vim-crystalline'
+
+" Plug '/Users/steve.loveless/Development/projects/pantsline.vim'
+" Plug 'turboladen/pantsline.vim', { 'branch': 'feature/initial-stuff' }
 
 ""----------------------------------------------------------------------------
 " Tools
 ""----------------------------------------------------------------------------
-" Plug 'tbabej/taskwiki'
-Plug 'vimwiki/vimwiki'
-
 " Library of common functions
 " Plug 'vim-scripts/ingo-library'
+
+" Asynchronous Lint Engine
+Plug 'dense-analysis/ale'
 
 ""----------------------------------------------------------------------------
 " PLUGIN END

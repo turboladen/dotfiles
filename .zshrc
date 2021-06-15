@@ -20,7 +20,7 @@ ZSH=$HOME/.oh-my-zsh
 #ZSH_THEME="robbyrussell" # single. left: path | git info.
 #ZSH_THEME="smt"          # double. left0: host | path | gitinfo.  right0: return code | time.  left1: prompt #
 #ZSH_THEME="sorin"         # single. left: dir | gitinfo. right: return code
-ZSH_THEME="turboladen"         # single. left: dir | gitinfo. right: return code
+# ZSH_THEME="turboladen"         # single. left: dir | gitinfo. right: return code
 #ZSH_THEME="trapd00r"
 #ZSH_THEME="wedisagree"   # single. left: path.  right: time (return coloring), git infographics
 #ZSH_THEME="wezm"         # single. left: git info | return code. right: path
@@ -68,6 +68,18 @@ setopt no_share_history
 # much faster.
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
 
+#------------------------------------------------------------------------------
+# nvm
+#------------------------------------------------------------------------------
+# export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] \
+#   && printf %s "${HOME}/.nvm" \
+#   || printf %s "${XDG_CONFIG_HOME}/nvm")"
+
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+export NVM_AUTO_USE=true
+export NVM_LAZY_LOAD=true
+export NVM_COMPLETION=true
+
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
@@ -81,6 +93,7 @@ plugins=(
   gem
   git
   git-hubflow
+  git-prompt
   hgrep
   myrails
   rake-fast
@@ -177,31 +190,27 @@ source ~/.config/zsh/ansible.zsh
 source ~/.config/zsh/aliases.zsh
 source ~/.config/zsh/iterm.zsh
 
+
+# Ruby
+# Link Rubies to Homebrew's OpenSSL 1.1 (which is upgraded)...
+export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
+
 #--------------------------------------------------------------------
 # fzf
 #--------------------------------------------------------------------
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-#--------------------------------------------------------------------
-# emscripten
-#--------------------------------------------------------------------
-# PATH=$PATH:/Users/sloveless/.emsdk/emscripten/1.37.22
+# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# source ~/.config/zsh/fzf.zsh
+source ~/.fzf.zsh
 
 #--------------------------------------------------------------------
 # overmind
 #--------------------------------------------------------------------
-export OVERMIND_PROCFILE=/Users/sloveless/.Procfile
+export OVERMIND_PROCFILE=/Users/steve.loveless/.Procfile
 export OVERMIND_SOCKET=$TMPDIR/overmind.sock
-
-#---
-# nvm for node
-#---
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-# "$NVM_DIR/bin/nvm -use --delete-prefix v8.14.0 --silent"
-# /usr/local/bin/npm config delete prefix
-
 
 # Keep this towards the end so other things can prep
 compinit
+
+# https://starship.rs/
+eval "$(starship init zsh)"
+export PATH="/usr/local/opt/binutils/bin:$PATH"

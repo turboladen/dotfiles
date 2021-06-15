@@ -1,6 +1,7 @@
 # IRB.conf[:VERBOSE] = true
 # hairballs_path = Dir.glob("#{Gem.dir}/gems/hairballs-*/lib")
 # $LOAD_PATH.unshift(hairballs_path.first) unless hairballs_path.empty?
+require 'readline'
 require 'hairballs'
 
 if Hairballs.rails?

@@ -3,7 +3,10 @@
 :bulk_threshold: 1000
 :sources:
 - https://rubygems.org/
-- https://steve:pr0teinp0wder@gems.agrian.com/
+# - https://agrian:D%5E%5Dqq%3CFLswpp_%3EmQ@gems.agrian.com/
+- https://steve:j6FFnxq8dE6HDGe4@gems.agrian.com
 :update_sources: true
 :verbose: true
-gem: "--no-ri --no-rdoc"
+gem: "--no-document"
+
+# vim:ft=yaml
