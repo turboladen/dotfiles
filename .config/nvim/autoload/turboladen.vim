@@ -3,68 +3,6 @@
 " This file contains all of my own non-plugin-specific functions.
 "
 "###############################################################################
-
-function! turboladen#FindRspecIts(direction) abort
-  if a:direction ==# 'forward'
-    let a:direction_flag = ''
-  elseif a:direction ==# 'backward'
-    let a:direction_flag = 'b'
-  endif
-
-  let l:flags = a:direction_flag . 'ws'
-
-  let [l:lnum, l:col] = searchpos("\^(it \\|before\\|after\)", l:flags)
-
-  echom 'Found line ' . l:lnum . ' and col ' . l:col
-
-  if l:lnum == 0 && l:col == 0
-    return
-  else
-    call cursor(l:lnum, l:col)
-  endif
-endfunction
-
-function! turboladen#FindRubyMethod(direction) abort
-  if a:direction ==# 'forward'
-    let a:direction_flag = ''
-  elseif a:direction ==# 'backward'
-    let a:direction_flag = 'b'
-  endif
-
-  let l:flags = a:direction_flag . 'ws'
-
-  let [l:lnum, l:col] = searchpos('\<def\>', l:flags)
-
-  echom 'Found line ' . l:lnum . ' and col ' . l:col
-
-  if l:lnum == 0 && l:col == 0
-    return
-  else
-    call cursor(l:lnum, l:col)
-  endif
-endfunction
-
-function! turboladen#RubyMethodFold(line) abort
-  let l:stack = synstack(a:line, (match(getline(a:line), '^\s*\zs'))+1)
-
-  for l:synid in l:stack
-    if GetSynString(GetSynDict(l:synid)) ==? 'rubyMethodBlock' || GetSynString(GetSynDict(l:synid)) ==? 'rubyDefine' || GetSynString(GetSynDict(l:synid)) ==? 'rubyDocumentation'
-      return 1
-    endif
-  endfor
-
-  return 0
-endfunction
-
-" Allows running a normal-mode command, but keeps your cursor in the same spot
-" the command was run from.
-function! turboladen#KeepJumps(command) abort
-  let l:winview = winsaveview()
-
-  execute 'keepjumps normal! ' . a:command
-  call winrestview(l:winview)
-endfunction
-
 " Builds a the RSpec command for running the test on your current line, then
 " echos it and copies it to the system clipboard. Useful for when wanting to
 " run the same test in a different terminal.
@@ -114,17 +52,6 @@ function! turboladen#StripTrailingWhitespaces() abort
   " Clean up: restore previous search history, and cursor position
   let @/=l:_s
   call cursor(l:l, l:c)
-endfunction
-
-""
-" Updates ctags for the project directory, then updates Neocomplete's cache.
-function! turboladen#UpdateCTags() abort
-  :Dispatch ctags .
-  echom 'ctag generation complete.'
-endfunction
-
-function! turboladen#UpdateRipperTags() abort
-  :Dispatch ripper-tags -R .
 endfunction
 
 function! turboladen#TabularizeHashArgs() abort

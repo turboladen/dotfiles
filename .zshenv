@@ -3,5 +3,5 @@
 # sessions
 #------------------------------------------------------------------------------
 
-source "$HOME/.chruby.zsh"
+source "$HOME/.config/zsh/chruby.zsh"
 source "$HOME/.cargo/env"

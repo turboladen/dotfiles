@@ -29,7 +29,7 @@ brew 'fzf'
 brew 'yadm'
 brew 'z'
 brew 'zsh'
-brew 'zsh-syntax-highlighting'
+brew 'zinit'
 
 brew 'bat'
 brew 'cargo-watch'
