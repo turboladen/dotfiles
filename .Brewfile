@@ -1,19 +1,27 @@
 # brew bundle
 
-# Apps
+# Casks
 tap 'caskroom/cask'
-cask 'caffeine'
+cask 'alacritty'
+cask 'appcleaner'
+cask 'choosy'
+cask 'expressvpn'
 cask 'firefox'
+cask 'font-fira-mono-nerd-font'
+cask 'font-jetbrains-mono-nerd-font'
+cask 'font-powerline-symbols'
 cask 'github'
-cask 'gitter'
-cask 'google-chrome'
 cask 'iterm2'
+cask 'karabiner-elements'
 cask 'kindle'
 cask 'onyx'
-cask 'paw'
-cask 'postico'
-cask 'sourcetree'
+cask 'paw' # work
+cask 'postgres' # work
+cask 'postico' # work
+cask 'sizeup'
 cask 'transmission'
+cask 'tunnelblick' # work
+cask 'visual-studio-code'
 
 # Shell env
 brew 'curl'
@@ -23,32 +31,36 @@ brew 'z'
 brew 'zsh'
 brew 'zsh-syntax-highlighting'
 
-# Editing
-brew 'neovim'
-brew 'reattach-to-user-namespace'
-brew 'shellcheck' # Shell script linter
-brew 'tmux'
-
-# General dev
-brew 'ctags'
-brew 'gdal'
-brew 'git'
-brew 'haproxy'
-brew 'hubflow'
-brew 'imagemagick@6'
-brew 'libsodium'
-brew 'postgis'
-brew 'postgresql'
-brew 'rabbitmq'
-brew 'redis'
-
-# Ruby
+brew 'bat'
+brew 'cargo-watch'
 brew 'chruby'
-brew 'ruby-install'
+brew 'cmake' # work
+brew 'coreutils'
+brew 'dua-cli'
+brew 'elasticsearch' # work
+brew 'gdal' # work
+brew 'gh'
+brew 'git'
+brew 'git-lfs' # work
+brew 'haproxy' # work
+brew 'hubflow'
+brew 'jq'
+brew 'libsodium'
+brew 'neovim'
+brew 'node' # work
 brew 'overmind' # for Procfiles
-
-# JS
-brew 'node'
-brew 'yarn'
+brew 'pinentry'
+brew 'pinentry-mac'
+brew 'rabbitmq' # work
+brew 'reattach-to-user-namespace'
+brew 'redis' # work
+brew 'ripgrep'
+brew 'ruby-install'
+brew 'shellcheck' # Shell script linter
+brew 'starship'
+brew 'tmux'
+brew 'tmuxinator'
+brew 'tokei'
+brew 'tree-sitter'
 
 # vi:ft=ruby
