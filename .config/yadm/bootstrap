@@ -82,7 +82,6 @@ install_rust() {
 
   rustup completions zsh > ~/.zfunc/_rustup
 
-  cargo install -f ripgrep
   log "Done with Rust."
 }
 
