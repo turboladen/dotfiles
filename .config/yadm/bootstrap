@@ -48,7 +48,7 @@ install_ruby() {
   if [ -f "$(brew --prefix)/bin/ruby-install" ]; then
     rubies_count=`ls $HOME/.rubies | wc -l`
 
-    if [ rubies_count = "0" ]; then
+    if [ $rubies_count = 0 ]; then
       log "Installing Ruby..."
       ruby-install ruby -- --enable-shared || log_and_exit "Couldn't ruby-install ruby"
     fi
