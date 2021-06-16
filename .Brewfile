@@ -1,7 +1,7 @@
 # brew bundle
 
 # Casks
-tap 'caskroom/cask'
+tap 'homebrew/cask'
 cask 'alacritty'
 cask 'appcleaner'
 cask 'choosy'
@@ -26,7 +26,6 @@ cask 'visual-studio-code'
 # Shell env
 brew 'curl'
 brew 'fzf'
-brew 'yadm'
 brew 'z'
 brew 'zsh'
 brew 'zinit'
