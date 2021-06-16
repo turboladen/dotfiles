@@ -1,14 +1,14 @@
 # load zinit
-source /usr/local/opt/zinit/zinit.zsh
+source `brew --prefix`/opt/zinit/zinit.zsh
 
 setopt no_share_history
 setopt promptsubst
 
 # Make sure homebrew commands come first
-export PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:$PATH
+export PATH=`brew --prefix`/bin:/`brew --prefix`sbin:/usr/bin:$PATH
 
 # Node
-export PATH=$PATH:/usr/local/share/npm/bin
+export PATH=$PATH:`brew --prefix`/share/npm/bin
 
 # Local bin
 export PATH=$PATH:~/bin
@@ -59,7 +59,7 @@ zinit light-mode as"completion" blockf for \
   OMZP::ripgrep/_ripgrep \
   OMZP::rust/_rust \
   OMZP::rustup/_rustup \
-  /usr/local/share/zsh/site-functions/**/* \
+  `brew --prefix`/share/zsh/site-functions/**/* \
 
 export NVM_COMPLETION=true
 export NVM_LAZY_LOAD=true
@@ -100,7 +100,7 @@ zinit wait lucid for \
 export EDITOR=nvim
 export LC_CTYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
-export PATH="/usr/local/opt/binutils/bin:$PATH"
+export PATH="$(brew --prefix)/opt/binutils/bin:$PATH"
 
 #---
 # for vi-mode
@@ -111,7 +111,7 @@ export VI_MODE_SET_CURSOR=true
 # From zsh brew install
 unalias run-help
 autoload run-help
-HELPDIR=/usr/local/share/zsh/help
+HELPDIR=`brew --prefix`/share/zsh/help
 
 # Keep this towards the end so other things can prep
 autoload -Uz compinit
