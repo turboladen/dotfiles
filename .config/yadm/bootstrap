@@ -56,9 +56,13 @@ setup_tmux() {
 }
 
 install_ruby() {
-  if [ -f /usr/local/bin/ruby-install ]; then
-    log "Installing Ruby..."
-    ruby-install ruby -- --enable-shared || log_and_exit "Couldn't ruby-install ruby"
+  if [ -f `brew --prefix`/ruby-install ]; then
+    rubies_count=`ls $HOME/.rubies | wc -l`
+
+    if [ rubies_count = "0" ]; then
+      log "Installing Ruby..."
+      ruby-install ruby -- --enable-shared || log_and_exit "Couldn't ruby-install ruby"
+    fi
   else
     log "Couldn't find ruby-install. Skipping installation of Ruby."
     return 1
@@ -69,7 +73,7 @@ install_ruby() {
     return 1
   fi
 
-  source /usr/local/opt/chruby/share/chruby/chruby.sh
+  source `brew --prefix`/opt/chruby/share/chruby/chruby.sh
   chruby ruby
   gem install bundler
   bundle
