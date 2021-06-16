@@ -68,12 +68,12 @@ install_ruby() {
     return 1
   fi
 
-  if [[ ! -f /usr/local/opt/chruby/share/chruby/chruby.sh ]]; then
+  if [[ ! -f "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh" ]]; then
     log "Couldn't find chruby. Skipping installation of gems."
     return 1
   fi
 
-  source `brew --prefix`/opt/chruby/share/chruby/chruby.sh
+  source "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh"
   chruby ruby
   gem install bundler
   bundle
@@ -137,9 +137,6 @@ setup_neovim() {
       log "Installing vim-plug..."
       sh -c 'curl -fLo "${HOME}/.config/nvim/autoload/plug.vim --create-dirs \
          https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-
-      log "Bootstraping nvim"
-      nvim '+PlugUpdate' '+PlugClean!' '+PlugUpdate' '+qall'
     fi
   fi
 }
