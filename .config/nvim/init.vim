@@ -450,9 +450,6 @@ set gdefault
 " set signcolumn=number " only works with neovim >= 0.5
 set signcolumn=yes
 
-" Show (git) signs next to numbers instead of on top of numbers
-set signcolumn=yes
-
 ""===========================================================================""
 " XX. No :options section
 ""===========================================================================""
