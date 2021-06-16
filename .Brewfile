@@ -13,7 +13,7 @@ cask 'karabiner-elements'
 cask 'kindle'
 cask 'onyx'
 cask 'paw' # work
-cask 'postgres' # work
+cask 'postgres-unofficial' # work
 cask 'postico' # work
 cask 'sizeup'
 cask 'transmission'
