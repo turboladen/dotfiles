@@ -33,17 +33,6 @@ install_homebrew_packages() {
   brew bundle --global || log_and_exit "Couldn't brew bundle"
 }
 
-install_ohmyzsh() {
-  log "Installing oh-my-zsh..."
-
-  if [ -d "$HOME/.oh-my-zsh" ]; then
-    log "oh-my-zsh already installed."
-    return 0
-  fi
-
-  sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-}
-
 setup_tmux() {
   log "Setting up tmux..."
 
@@ -153,7 +142,6 @@ if [ "$system_type" = "Darwin" ]; then
   install_homebrew_packages
 fi
 
-install_ohmyzsh
 setup_tmux
 install_ruby
 install_rust
