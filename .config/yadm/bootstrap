@@ -128,8 +128,8 @@ setup_neovim() {
   if [ -d "$HOME/.config/nvim" ]; then
     if command -v nvim >/dev/null 2>&1; then
       log "Installing vim-plug..."
-      sh -c 'curl -fLo "${HOME}/.config/nvim/autoload/plug.vim --create-dirs \
-         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+      sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
     fi
   fi
 }
