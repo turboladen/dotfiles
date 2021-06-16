@@ -52,6 +52,7 @@ brew 'node' # work
 brew 'overmind' # for Procfiles
 brew 'pinentry'
 brew 'pinentry-mac'
+brew 'python'
 brew 'rabbitmq' # work
 brew 'reattach-to-user-namespace'
 brew 'redis' # work
