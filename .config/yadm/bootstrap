@@ -110,7 +110,7 @@ setup_develop_dirs() {
 setup_neovim() {
   needs_pip_install=true
 
-  if [ type "pip3" > /dev/null]; then
+  if command -v pip3 > /dev/null 2>&1; then
     log "Installing neovim python-client for pip3"
     pip3 install neovim
     $needs_pip_install=false
@@ -118,7 +118,7 @@ setup_neovim() {
     log "pip3 not found; skipping neovim install"
   fi
 
-  if [ type "pip2" > /dev/null]; then
+  if command -v pip2 > /dev/null 2>&1; then
     log "Installing neovim python-client for pip2"
     pip2 install neovim
     $needs_pip_install=false
@@ -127,7 +127,7 @@ setup_neovim() {
   fi
 
   if $needs_pip_install; then
-    if [ type "pip" > /dev/null ]; then
+    if command -v pip > /dev/null 2>&1; then
       log "Installing neovim python-client for pip"
       pip install neovim
     else
