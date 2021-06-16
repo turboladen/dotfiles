@@ -27,6 +27,7 @@ cask 'font-powerline-symbols'
 
 # Shell env
 brew 'curl'
+brew 'exa'
 brew 'fzf'
 brew 'z'
 brew 'zsh'
