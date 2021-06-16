@@ -108,19 +108,31 @@ setup_develop_dirs() {
 }
 
 setup_neovim() {
-  if [ "$(command_exists \"pip3\")" ]; then
+  needs_pip_install=true
+
+  if [ type "pip3" > /dev/null]; then
     log "Installing neovim python-client for pip3"
     pip3 install neovim
+    $needs_pip_install=false
+  else
+    log "pip3 not found; skipping neovim install"
   fi
 
-  if [ "$(command_exists \"pip2\")" ]; then
+  if [ type "pip2" > /dev/null]; then
     log "Installing neovim python-client for pip2"
     pip2 install neovim
+    $needs_pip_install=false
+  else
+    log "pip2 not found; skipping neovim install"
   fi
 
-  if [ "$(command_exists \"pip\")" ]; then
-    log "Installing neovim python-client for pip"
-    pip install neovim
+  if $needs_pip_install; then
+    if [ type "pip" > /dev/null ]; then
+      log "Installing neovim python-client for pip"
+      pip install neovim
+    else
+      log "pip not found; skipping neovim install"
+    fi
   fi
 
   # (Ruby neovim is handled in Gemfile)
