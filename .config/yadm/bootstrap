@@ -79,7 +79,9 @@ install_ruby() {
 install_rust() {
   log "Installing Rust..."
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-  rustup component add rls-preview rust-analysis rust-src
+  # Manually update the PATH
+  export PATH=$PATH:$HOME/.cargo/bin
+  rustup component add rust-analysis rust-src
 
   if [ ! -d "$HOME/.zfunc" ]; then
     mkdir "$HOME/.zfunc"
