@@ -56,7 +56,7 @@ setup_tmux() {
 }
 
 install_ruby() {
-  if [ -f `brew --prefix`/ruby-install ]; then
+  if [ -f "$(brew --prefix)/bin/ruby-install" ]; then
     rubies_count=`ls $HOME/.rubies | wc -l`
 
     if [ rubies_count = "0" ]; then
