@@ -7,9 +7,6 @@ cask 'appcleaner'
 cask 'choosy'
 cask 'expressvpn'
 cask 'firefox'
-cask 'font-fira-mono-nerd-font'
-cask 'font-jetbrains-mono-nerd-font'
-cask 'font-powerline-symbols'
 cask 'github'
 cask 'iterm2'
 cask 'karabiner-elements'
@@ -22,6 +19,11 @@ cask 'sizeup'
 cask 'transmission'
 cask 'tunnelblick' # work
 cask 'visual-studio-code'
+
+tap 'homebrew/homebrew-cask-fonts'
+cask 'font-fira-mono-nerd-font'
+cask 'font-jetbrains-mono-nerd-font'
+cask 'font-powerline-symbols'
 
 # Shell env
 brew 'curl'
