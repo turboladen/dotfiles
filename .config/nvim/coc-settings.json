@@ -1,4 +1,5 @@
 {
+  "coc.preferences.formatOnType": true,
   "codeLens.enable": false,
   "cSpell.words": [
     "Agrian's",
@@ -86,6 +87,5 @@
   "suggest.enablePreview": true,
   "suggest.maxPreviewWidth": 100,
   "suggest.minTriggerInputLength": 2,
-  "suggest.removeDuplicateItems": true,
-  "suggest.numberSelect": true
+  "suggest.removeDuplicateItems": true
 }

@@ -225,13 +225,6 @@ set foldexpr=nvim_treesitter#foldexpr()
 ""===========================================================================""
 " 17. mappings
 ""===========================================================================""
-" https://www.reddit.com/r/vim/comments/6h0dy7/which_autoclosing_plugin_do_you_use/diujtbd/
-" inoremap (; (<CR>);<C-c>O
-" inoremap (, (<CR>),<C-c>O
-" inoremap {; {<CR>};<C-c>O
-" inoremap {, {<CR>},<C-c>O
-" inoremap [; [<CR>];<C-c>O
-" inoremap [, [<CR>],<C-c>O
 
 "--------------------------------------
 " Leader commands
@@ -242,20 +235,13 @@ set foldexpr=nvim_treesitter#foldexpr()
 
 "-----
 " BufOnly.vim
-" Close buffers
 "-----
+" Close all buffers except the current one
 nnoremap <leader>q :BufOnly<CR>
 
 "-----
 " Plug 'tpope/vim-dispatch'
 "-----
-" nnoremap <leader>b :Dispatch bundle install<CR>
-
-"-----
-" skwp/greplace.vim
-"-----
-" nnoremap <leader>/ :Gsearch<SPACE>
-" nnoremap <leader>\ :Greplace<CR>
 
 "-----
 " tpope/vim-fugitive.
@@ -278,10 +264,6 @@ noremap <leader>gs :Git<CR>
 "-----
 " janko-m/vim-test
 "-----
-" augroup VimTest
-"   autocmd FileType rust nmap <silent> <leader>s :tab RustTest<CR>
-" augroup END
-
 nnoremap <silent> <leader>t :TestFile<CR>
 nnoremap <silent> <leader>l :TestLast<CR>
 
@@ -291,11 +273,6 @@ nmap <silent> <leader>[ <Plug>(ale_previous_wrap)
 "--------------------------------------
 " <Leader>A-G
 "--------------------------------------
-
-" Close a buffer but don't close the window
-nnoremap <silent><leader>bc :bprevious<CR>:bdelete #<CR>
-nnoremap <silent><leader>bn :bnext<CR>
-nnoremap <silent><leader>bp :bprevious<CR>
 
 " Since I remap <C-l> (default redraw command), add a mapping for that.
 nnoremap <leader>dr :redraw!<CR>
@@ -307,10 +284,8 @@ nnoremap <leader>ep :vsplit ~/.config/nvim/plugins.vim<CR>
 "--------------------------------------
 " <Leader>H-L
 "--------------------------------------
-" noremap <leader>h :call turboladen#SetUpTurboladenDocs()<CR>
-
 " bind r to grep word under cursor
-nnoremap <leader>r :FzfRg <C-R><C-W><CR>
+" nnoremap <leader>r :FzfRg <C-R><C-W><CR>
 
 "--------------------------------------
 " <Leader>L-R
@@ -327,7 +302,6 @@ nnoremap <leader>v :source $MYVIMRC<CR>
 "--------------------------------------
 " <Leader>W-Z
 "--------------------------------------
-nnoremap <leader>w :call turboladen#StripTrailingWhitespaces()<CR>
 
 "-------------------------------------------------------------------------------
 " Other remappings
@@ -347,18 +321,9 @@ noremap <C-k> <C-w>k
 noremap <C-l> <C-w>l
 imap <C-BS> <C-W>
 
-" Center screen on Down/Up jumping
-" noremap <C-d> <C-d>zz
-" noremap <C-u> <C-u>zz
-" noremap <C-D> :call smoothie#downwards()<CR>zz
-" noremap <C-U> :call smoothie#upwards()<CR>zz
-
 "------------------------------------------------------------------------------
 " Alpha character combos
 "------------------------------------------------------------------------------
-" Reindent whole file
-nnoremap <leader>= :call turboladen#KeepJumps("gg=G")<CR>
-
 " Disable Ex mode
 nnoremap Q <NOP>
 
@@ -428,7 +393,6 @@ set wildignore+=.idea/*
 ""===========================================================================""
 " 22. running make and jumping to errors
 ""===========================================================================""
-" set grepprg=rg\ --files\ --vimgrep
 set grepprg=rg\ --vimgrep
 
 ""===========================================================================""
@@ -443,7 +407,7 @@ set grepprg=rg\ --vimgrep
 " 25. various
 ""===========================================================================""
 " Default search/replace to work globally.
-set gdefault
+" set gdefault
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
@@ -462,79 +426,33 @@ augroup vimrc
   autocmd BufReadPost fugitive://* set bufhidden=delete
 
   " Open grep commands, specifically Ggrep, in QuickFix
-  autocmd QuickFixCmdPost *grep* cwindow
+  " autocmd QuickFixCmdPost *grep* cwindow
 augroup END
 
 augroup FTCheck
   autocmd BufNewFile,BufRead *.jbuilder set ft=ruby
+  autocmd BufNewFile,BufRead *.rs.hbs setlocal ft=rust.handlebars
 augroup END
 
 augroup FTOptions " {{{2
+  autocmd!
+
   autocmd FileType dirvish setlocal nospell
   autocmd FileType haproxy setlocal commentstring=#\ %s
   autocmd FileType help nnoremap  q :q
   autocmd FileType html setlocal softtabstop=4
-  autocmd FileType markdown setlocal textwidth=100
-  autocmd FileType markdown setlocal colorcolumn=100
-  autocmd FileType markdown setlocal formatoptions-=l
   autocmd FileType qf setlocal nospell
-
-  autocmd FileType ruby setlocal foldexpr=turboladen#RubyMethodFold(v:lnum)
-  autocmd FileType ruby setlocal foldmethod=expr
-  autocmd FileType ruby nnoremap <leader>b :Dispatch bundle install<CR>
-  autocmd FileType ruby nmap <silent> <leader>r :!bin/rubocop -a %<CR>
-  " Output the command for manually running RSpec for that line.
-  autocmd FileType ruby nnoremap <leader>m :call turboladen#RSpecCommandForManualRunning()<CR>
-  " puts the caller
-  autocmd FileType ruby nnoremap <leader>x oputs "#" * 90<c-m>puts caller<c-m>puts "#" * 90<esc>
-
-  autocmd FileType rust setlocal colorcolumn=100
-  autocmd FileType rust setlocal foldmethod=expr
-  autocmd FileType rust setlocal foldexpr=GetRustFold(v:lnum)
-  " autocmd FileType rust nmap <silent> <leader>s :TestNearest<CR>
-  " autocmd FileType rust inoremap S( Some()<esc>ha
-  autocmd FileType rust nnoremap <leader>cc :Dispatch cargo check --all-features<CR>
-  autocmd FileType rust nmap <silent> gO :CocCommand rust-analyzer.openDocs<cr>
 
   autocmd FileType vim-plug setlocal nospell
   autocmd FileType vimwiki setlocal ts=4 sts=4 sw=4 expandtab
   autocmd FileType vim setlocal ts=2 sts=2 sw=2 expandtab
   autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab cursorcolumn indentkeys-=<:>
   autocmd FileType zsh setlocal ts=2 sts=2 sw=2 expandtab
-
-  autocmd BufNewFile,BufRead *.rs.hbs setlocal ft=rust.handlebars
 augroup END "}}}2
-
-augroup coc
-" Highlight the symbol and its references when holding the cursor.
-  autocmd CursorHold * silent call CocActionAsync('highlight')
-augroup END
 
 ""===========================================================================""
 " YY. Plugin options that must be here.
 ""===========================================================================""
-"-------------------------
-" ale
-"-------------------------
-" let g:ale_cursor_detail = 1
-let g:ale_fix_on_save = 1
-let g:ale_sign_error = '✘'
-let g:ale_sign_warning = '⚠'
-let g:ale_disable_lsp = 1
-
-" Only run linters named in ale_linters settings.
-let g:ale_linters_explicit = 1
-
-let g:ale_linters = {
-  \ 'markdown': ['proselint', 'writegood'],
-  \ 'vim': ['vint'],
-  \ }
-
-let g:ale_fixers = {
-  \ '*': ['remove_trailing_lines', 'trim_whitespace'],
-  \ 'ruby': ['rubocop'],
-  \ 'rust': ['rustfmt']
-  \ }
 
 "-------------------------
 " fzf
@@ -574,129 +492,6 @@ let g:rg_command = 'rg --vimgrep --ignore-vcs'
 "-------------------------
 " coc.vim
 "-------------------------
-let g:coc_node_path = '/usr/local/bin/node'
-
-" coc-dictionary: Words from files in &dictionary.
-" coc-git: Somewhat replaces gitgutter; kinda depends on vim-fugitive.
-" coc-html: HTML language server.
-" coc-lists: Some basic list sources
-" coc-prettier: Code reformatting--initially got for markdown
-"
-let g:coc_global_extensions = [
-  \ 'coc-dictionary',
-  \ 'coc-git',
-  \ 'coc-html',
-  \ 'coc-lists',
-  \ 'coc-markdownlint',
-  \ 'coc-prettier',
-  \ 'coc-rust-analyzer',
-  \ 'coc-solargraph',
-  \ 'coc-snippets',
-  \ 'coc-toml',
-  \ 'coc-yaml'
-\ ]
-
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" https://kimpers.com/vim-intelligent-autocompletion/
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gD <Plug>(coc-declaration)
-" nmap <silent> <leader>] <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-nmap <silent> [G <Plug>(coc-diagnostic-prev-error)
-nmap <silent> ]G <Plug>(coc-diagnostic-next-error)
-nmap <silent> g= <Plug>(coc-format)
-
-" Remap for rename current word
-nmap <silent> rn <Plug>(coc-rename)
-nmap gA <Plug>(coc-codeaction-line)
-vmap gA <Plug>(coc-codeaction-selected)
-nmap gB <Plug>(coc-codeaction-cursor)
-vmap gB <Plug>(coc-codeaction)
-nmap gF <Plug>(coc-fix-current)
-nmap <silent> gR <Plug>(coc-refactor)
-
-" Show all diagnostics.
-nnoremap <silent><nowait> <leader>a  :<C-u>CocList diagnostics<cr>
-" Show commands.
-nnoremap <silent><nowait> <leader>cc  :<C-u>CocList commands<cr>
-" Find symbol of current document.
-" nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols.
-nnoremap <silent><nowait> <leader>cs  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list.
-nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-
-nnoremap <leader>/ :CocSearch<SPACE>
-
-" Use K for show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
-
-" Introduce function text object
-" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-xmap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap if <Plug>(coc-funcobj-i)
-omap af <Plug>(coc-funcobj-a)
-
-"--
-" For coc-snippets
-"--
-" https://github.com/neoclide/coc-snippets
-" Use <C-l> for trigger snippet expand.
-imap <C-l> <Plug>(coc-snippets-expand)
-
-" Use <C-j> for select text for visual placeholder of snippet.
-vmap <C-j> <Plug>(coc-snippets-select)
-
-" Use <C-j> for jump to next placeholder, it's default of coc.nvim
-let g:coc_snippet_next = '<c-j>'
-
-" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
-let g:coc_snippet_prev = '<c-k>'
-
-" Use <C-j> for both expand and jump (make expand higher priority.)
-imap <C-j> <Plug>(coc-snippets-expand-jump)
-
-"-------------------------
-" neoclide/coc-git
-"-------------------------
-set signcolumn=yes
-nmap [c <Plug>(coc-git-prevchunk)
-nmap ]c <Plug>(coc-git-nextchunk)
-
-"-------------------------
-" neoclide/coc-prettier
-"-------------------------
-command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
 "------------------------
 " junegunn/limelight.vim
@@ -760,8 +555,8 @@ let g:rg_highlight = 1
 "-------------------------
 " 'psliwka/vim-smoothie'
 "-------------------------
-let g:smoothie_enabled = 1
-let g:smoothie_no_default_mappings = 0
+" let g:smoothie_enabled = 1
+" let g:smoothie_no_default_mappings = 0
 
 "-------------------------
 " janko-m/vim-test
@@ -790,4 +585,4 @@ let g:goyo_width = 101
 "-------------------------
 " liuchengxu/vim-clap
 "-------------------------
-let g:clap_layout = { 'relative': 'editor' }
+" let g:clap_layout = { 'relative': 'editor' }

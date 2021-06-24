@@ -1,1 +1,3 @@
-autocmd Filetype gemfilelock setlocal nospell
+augroup bundler
+  autocmd FileType gemfilelock setlocal nospell
+augroup END

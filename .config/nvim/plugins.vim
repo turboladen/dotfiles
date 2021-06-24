@@ -40,14 +40,6 @@ Plug 'junegunn/fzf.vim'
 " Use RipGrep in Vim and display results in a quickfix list
 Plug 'jremmen/vim-ripgrep'
 
-" Project-wide search/replace with :Gsearch and :Greplace
-" Plug 'skwp/greplace.vim'
-
-" An ack/ag/pt/rg powered code search and view tool, takes advantage of Vim 8's
-" power to support asynchronous searching, and lets you edit file in-place with
-" Edit Mode.
-Plug 'dyng/ctrlsf.vim'
-
 " combine with netrw to create a delicious salad dressing.
 Plug 'tpope/vim-vinegar'
 
@@ -83,19 +75,19 @@ Plug 'easymotion/vim-easymotion'
 " 5. syntax, highlighting and spelling
 ""===========================================================================""
 " Color schema
-Plug 'humanoid-colors/vim-humanoid-colorscheme'
+" Plug 'humanoid-colors/vim-humanoid-colorscheme'
 
 " Color scheme
 Plug 'aonemd/kuroi.vim'
 
 " Color Scheme
-Plug 'trusktr/seti.vim'
+" Plug 'trusktr/seti.vim'
 
 " Adaptation of one-light and one-dark colorschemes for Vim
-Plug 'rakr/vim-one'
+" Plug 'rakr/vim-one'
 
 " 🔭 Vim colors for the final frontier.
-Plug 'jaredgorski/SpaceCamp'
+" Plug 'jaredgorski/SpaceCamp'
 
 " Hyperfocus-writing in Vim
 Plug 'junegunn/limelight.vim'
@@ -106,7 +98,7 @@ Plug 'junegunn/limelight.vim'
 " Toast! A colorful, medium-contrast theme with full Vim and Neovim support,
 " true color and 256-color support, and automatic light and dark variants. Easy
 " to read without frying your retinae.
-Plug 'jsit/toast.vim'
+" Plug 'jsit/toast.vim'
 
 " Define a different filetype syntax on regions of a buffer
 " Plug 'vim-scripts/SyntaxRange'
@@ -124,9 +116,6 @@ Plug 'vim-scripts/BufOnly.vim'
 ""===========================================================================""
 " 12. selecting text
 ""===========================================================================""
-" It's called vim-visual-multi in analogy with visual-block, but the plugin
-" works mostly from normal mode.
-" Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
 ""===========================================================================""
 " 13. editing text
@@ -165,8 +154,6 @@ Plug 'godlygeek/tabular'
 ""===========================================================================""
 " 15. folding
 ""===========================================================================""
-" Speed up Vim by updating folds only when called-for
-" Plug 'Konfekt/FastFold'
 
 ""===========================================================================""
 " 21. executing external commands
@@ -262,7 +249,7 @@ Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' }
 " A better JSON for Vim: distinct highlighting of keywords as values,
 " JSON-specific (non-JS) warnings, quote concealing.
 Plug 'elzr/vim-json', { 'for': 'json' }
-Plug 'GutenYe/json5.vim'
+" Plug 'GutenYe/json5.vim'
 
 "----------------
 " Markdown
