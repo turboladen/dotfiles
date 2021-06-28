@@ -134,7 +134,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 
 " Adds gS and gJ to split/join code blocks.
-Plug 'AndrewRadev/splitjoin.vim'
+Plug 'AndrewRadev/splitjoin.vim', { 'for': ['ruby'] }
 
 " Easy text exchange operator
 Plug 'tommcdo/vim-exchange'
