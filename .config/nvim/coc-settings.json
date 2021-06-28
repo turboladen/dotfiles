@@ -1,6 +1,8 @@
 {
   "coc.preferences.formatOnType": true,
-  "codeLens.enable": false,
+  "coc.preferences.enableMessageDialog": true,
+  "coc.preferences.enableMarkdown": true,
+  "codeLens.enable": true,
   "cSpell.words": [
     "Agrian's",
     "agrian",
@@ -16,8 +18,9 @@
   "diagnostic.infoSign": "ℹ︎",
   "diagnostic.hintSign": "ℹ︎",
   "diagnostic.maxWindowHeight": 10,
-  "diagnostic.maxWindowWidth": 100,
-  "diagnostic.separateRelatedInformationAsDiagnostics": true,
+  "diagnostic.maxWindowWidth": 200,
+  "diagnostic.messageTarget": "echo",
+  "diagnostic.virtualText": true,
   "git.addedSign.text": "✚",
   "git.addedSign.hlGroup": "GitGutterAdd",
   "git.changedSign.text": "✹",
@@ -28,7 +31,7 @@
   "git.removedSign.hlGroup": "GitGutterDelete",
   "git.topRemovedSign.hlGroup": "GitGutterDelete",
   "hover.floatMaxHeight": 80,
-  "hover.target": "preview",
+  "hover.target": "float",
   "markdownlint.config": {
     "MD013": {
       "line_length": 100
@@ -45,13 +48,14 @@
   "npm.binPath": "/usr/local/bin/npm",
   "prettier.printWidth": 100,
   "prettier.proseWrap": "always",
+  "rust-analyzer.assist.importPrefix": "self",
   "rust-analyzer.cargo.allFeatures": true,
+  "rust-analyzer.completion.autoimport.enable": true,
   "rust-analyzer.checkOnSave.allFeatures": true,
-  "rust-analyzer.checkOnSave.extraArgs": ["--verbose"],
-  "rust-analyzer.hoverActions.linksInHover": true,
   "rust-analyzer.inlayHints.enable": false,
-  "rust-analyzer.inlayHints.typeHints": false,
+  "rust-analyzer.inlayHints.typeHints": true,
   "rust-analyzer.lens.methodReferences": true,
+  "rust-analyzer.lruCapacity": 4096,
   "signature.hideOnTextChange": true,
   "signature.maxWindowHeight": 10,
   "signature.maxWindowWidth": 120,
@@ -87,5 +91,6 @@
   "suggest.enablePreview": true,
   "suggest.maxPreviewWidth": 100,
   "suggest.minTriggerInputLength": 2,
+  "suggest.noselect": false,
   "suggest.removeDuplicateItems": true
 }
