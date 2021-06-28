@@ -99,3 +99,15 @@ nmap ]c <Plug>(coc-git-nextchunk)
 " neoclide/coc-prettier
 "-------------------------
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
+
+"-------------------------
+" FileType specific settings
+"-------------------------
+augroup coc_rust
+  autocmd!
+
+  autocmd FileType rust nmap <silent> gO :CocCommand rust-analyzer.openDocs<cr>
+  autocmd FileType rust nmap <leader>ra :CocCommand rust-analyzer.
+  autocmd FileType rust nmap <leader>rt :CocCommand rust-analyzer.run<cr>
+  autocmd FileType rust vnoremap gJ :CocCommand rust-analyzer.joinLines<cr>
+augroup END
