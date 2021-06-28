@@ -211,12 +211,13 @@ set expandtab
 ""===========================================================================""
 " 15. folding
 ""===========================================================================""
-set foldlevelstart=10
-set foldnestmax=10      " 10 nested fold max
+" set foldmethod=indent
+" set foldlevelstart=4
+" set foldnestmax=10      " 10 nested fold max
 
 " from https://github.com/nvim-treesitter/nvim-treesitter#folding
-set foldmethod=expr
-set foldexpr=nvim_treesitter#foldexpr()
+" set foldmethod=expr
+" set foldexpr=nvim_treesitter#foldexpr()
 
 ""===========================================================================""
 " 16. diff mode
