@@ -33,7 +33,6 @@ augroup ruby_ft
 
   autocmd FileType ruby setlocal foldexpr=turboladen#RubyMethodFold(v:lnum)
   autocmd FileType ruby setlocal foldmethod=expr
-  autocmd FileType ruby nnoremap <leader>b :Dispatch bundle install<CR>
   autocmd FileType ruby nmap <silent> <leader>r :!bin/rubocop -a %<CR>
   " Output the command for manually running RSpec for that line.
   autocmd FileType ruby nnoremap <leader>m :call turboladen#RSpecCommandForManualRunning()<CR>
