@@ -506,14 +506,3 @@ let g:cargo_command = 'Dispatch cargo {cmd}'
 " idanarye/vim-casetrate
 "-------------------------
 let g:casetrate_leader = '\c'
-
-"-------------------------
-" airblade/vim-gitgutter
-"-------------------------
-" let g:gitgutter_sign_added = '✚'
-" let g:gitgutter_sign_modified = '✹'
-" let g:gitgutter_sign_removed = '✖'
-" let g:gitgutter_sign_removed_first_line = '^^'
-" let g:gitgutter_sign_modified_removed = '⟪⟫'
-" let g:gitgutter_sign_modified_removed = '⇄'
-" navigate chunks of current buffer
