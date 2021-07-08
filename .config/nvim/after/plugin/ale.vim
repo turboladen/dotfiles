@@ -21,3 +21,6 @@ let g:ale_fixers = {
   \ 'ruby': ['rubocop'],
   \ 'rust': ['rustfmt']
   \ }
+
+nmap <silent> <leader>] <Plug>(ale_next_wrap)
+nmap <silent> <leader>[ <Plug>(ale_previous_wrap)

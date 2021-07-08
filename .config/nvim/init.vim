@@ -262,9 +262,6 @@ noremap <leader>gd :Gvdiff<CR>
 " noremap <leader>gr :Gremove<CR>
 noremap <leader>gs :Git<CR>
 
-nmap <silent> <leader>] <Plug>(ale_next_wrap)
-nmap <silent> <leader>[ <Plug>(ale_previous_wrap)
-
 "--------------------------------------
 " <Leader>A-G
 "--------------------------------------
