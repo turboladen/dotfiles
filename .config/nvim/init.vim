@@ -517,8 +517,3 @@ let g:casetrate_leader = '\c'
 " let g:gitgutter_sign_modified_removed = '⟪⟫'
 " let g:gitgutter_sign_modified_removed = '⇄'
 " navigate chunks of current buffer
-
-"-------------------------
-" jremmen/vim-ripgrep
-"-------------------------
-let g:rg_highlight = 1
