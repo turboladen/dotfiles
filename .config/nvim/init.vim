@@ -524,22 +524,6 @@ let g:casetrate_leader = '\c'
 let g:vim_json_syntax_conceal = 0
 
 "-------------------------
-" iamcco/vim-language-server
-"-------------------------
-let g:markdown_fenced_languages = [
-      \ 'vim',
-      \ 'help'
-      \]
-
-"-------------------------
-" plasticpoy/vim-markdown
-"-------------------------
-let g:vim_markdown_no_default_key_mappings = 1
-let g:vim_markdown_fenced_languages = ['c++=cpp', 'viml=vim', 'bash=sh', 'ini=dosini', 'rust=rust']
-let g:vim_markdown_strikethrough = 1
-let g:vim_markdown_new_list_item_indent = 2
-
-"-------------------------
 " jremmen/vim-ripgrep
 "-------------------------
 let g:rg_highlight = 1
