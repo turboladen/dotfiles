@@ -482,27 +482,6 @@ nnoremap <leader>. :Rg<SPACE>
 let g:rg_command = 'rg --vimgrep --ignore-vcs'
 
 "-------------------------
-" coc.vim
-"-------------------------
-
-"------------------------
-" junegunn/limelight.vim
-"------------------------
-" Number of preceding/following paragraphs to include (default: 0)
-let g:limelight_paragraph_span = 1
-
-"-------------------------
-" tmuxline.vim
-"-------------------------
-let g:tmuxline_preset = 'nightly_fox'
-" let g:tmuxline_powerline_separators = 0
-
-"-------------------------
-" timonv/vim-cargo
-"-------------------------
-let g:cargo_command = 'Dispatch cargo {cmd}'
-
-"-------------------------
 " idanarye/vim-casetrate
 "-------------------------
 let g:casetrate_leader = '\c'
