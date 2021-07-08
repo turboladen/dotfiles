@@ -554,19 +554,8 @@ let g:vim_markdown_new_list_item_indent = 2
 let g:rg_highlight = 1
 
 "-------------------------
-" 'psliwka/vim-smoothie'
-"-------------------------
-" let g:smoothie_enabled = 1
-" let g:smoothie_no_default_mappings = 0
-
-"-------------------------
 " janko-m/vim-test
 "-------------------------
 let g:test#strategy = 'dispatch'
 let g:test#preserve_screen = 1
 let test#enabled_runners = ['rust#cargotest', 'ruby#rspec']
-
-"-------------------------
-" junegunn/goyo.vim
-"-------------------------
-let g:goyo_width = 101
