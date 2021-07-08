@@ -262,12 +262,6 @@ noremap <leader>gd :Gvdiff<CR>
 " noremap <leader>gr :Gremove<CR>
 noremap <leader>gs :Git<CR>
 
-"-----
-" janko-m/vim-test
-"-----
-nnoremap <silent> <leader>t :TestFile<CR>
-nnoremap <silent> <leader>l :TestLast<CR>
-
 nmap <silent> <leader>] <Plug>(ale_next_wrap)
 nmap <silent> <leader>[ <Plug>(ale_previous_wrap)
 
@@ -552,10 +546,3 @@ let g:vim_markdown_new_list_item_indent = 2
 " jremmen/vim-ripgrep
 "-------------------------
 let g:rg_highlight = 1
-
-"-------------------------
-" janko-m/vim-test
-"-------------------------
-let g:test#strategy = 'dispatch'
-let g:test#preserve_screen = 1
-let test#enabled_runners = ['rust#cargotest', 'ruby#rspec']
