@@ -519,11 +519,6 @@ let g:casetrate_leader = '\c'
 " navigate chunks of current buffer
 
 "-------------------------
-" elzr/vim-json
-"-------------------------
-let g:vim_json_syntax_conceal = 0
-
-"-------------------------
 " jremmen/vim-ripgrep
 "-------------------------
 let g:rg_highlight = 1
