@@ -11,18 +11,21 @@
 
 [commit]
   gpgsign = true
-	template = /Users/steve.loveless/.stCommitMsg
-  ; gpgsign = true
+  ; template = /Users/sloveless/.stCommitMsg
 
 [color]
   ui = true
+  status = auto
+  branch = auto
+  interactive = auto
+  diff = auto
 
 [credential]
   helper = osxkeychain
 
 [core]
   editor = nvim
-	excludesfile = /Users/steve.loveless/.gitignore_global
+  excludesfile = /Users/sloveless/.gitignore_global
   pager = delta
 
 [delta]
@@ -36,10 +39,6 @@
 
 [difftool]
   prompt = false
-
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
 
 [filter "lfs"]
   clean = git-lfs clean -- %f
@@ -56,10 +55,6 @@
 [merge]
   tool = vimdiff
 
-[mergetool "sourcetree"]
-	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
-
 [pager]
   branch = false
 
@@ -70,11 +65,12 @@
   submoduleSummary = true
 
 [user]
-	name = Steve Loveless
-	email = 
+  name = Steve Loveless
 [includeIf "gitdir:~/Development/agrian/"]
   path = .gitconfig-work
 [includeIf "gitdir:~/Development/projects/"]
+  path = .gitconfig-personal
+[includeIf "gitdir:~/.local/share/yadm/repo.git"]
   path = .gitconfig-personal
 
 [gpg]
