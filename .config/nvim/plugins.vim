@@ -32,7 +32,7 @@ Plug 'junegunn/goyo.vim'
 ""===========================================================================""
 " 2. moving around, searching and patterns
 ""===========================================================================""
-Plug 'lotabout/skim', { 'dir': '~/.skim', 'do': './install' }
+Plug 'lotabout/skim', { 'dir': '~/.local/share/skim', 'do': './install' }
 Plug 'lotabout/skim.vim'
 
 " Use RipGrep in Vim and display results in a quickfix list

@@ -2,10 +2,10 @@
 " fzf
 " https://github.com/junegunn/dotfiles/blob/da378217ad008d422bc5b577802cad237a2930e1/vimrc#L1197
 "-------------------------
-set runtimepath+=/usr/local/opt/fzf
+" set runtimepath+=/usr/local/opt/fzf
 
-let $FZF_DEFAULT_COMMAND='rg --files --vimgrep'
-let $FZF_DEFAULT_OPTS='--layout=reverse --inline-info --border=horizontal --height=5'
+" let $FZF_DEFAULT_COMMAND='rg --files --vimgrep'
+" let $FZF_DEFAULT_OPTS='--layout=reverse --inline-info --border=horizontal --height=5'
 
 let g:fzf_command_prefix = 'Fzf'
 
@@ -26,5 +26,4 @@ nnoremap <silent> <leader><leader> :FzfFiles<CR>
 nnoremap <silent> <leader><CR> :FzfBuffers<CR>
 
 " nnoremap <silent> <leader><leader> :FzfGitFiles<CR>
-" nnoremap <silent> <leader><leader> :FzfSearch<CR>
 " nnoremap <silent> <leader><C-m> :Maps<CR>
