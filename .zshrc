@@ -42,7 +42,6 @@ zinit light-mode is-snippet for \
   id-as"steve-aliases" ~/.config/zsh/aliases.zsh \
   id-as"steve-chruby" ~/.config/zsh/chruby.zsh \
   id-as"steve-fzf" ~/.config/zsh/fzf.zsh \
-  id-as"steve-homebrew" ~/.config/zsh/homebrew.zsh \
   id-as"steve-iterm" ~/.config/zsh/iterm.zsh \
   id-as"steve-overmind" ~/.config/zsh/overmind.zsh \
   id-as"steve-ruby" ~/.config/zsh/ruby.zsh \
@@ -60,6 +59,7 @@ zinit light-mode as"completion" blockf for \
   OMZP::rust/_rust \
   OMZP::rustup/_rustup \
   `brew --prefix`/share/zsh/site-functions/**/* \
+  light-mode zsh-users/zsh-completions \
 
 export NVM_COMPLETION=true
 export NVM_LAZY_LOAD=true
