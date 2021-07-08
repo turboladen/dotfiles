@@ -32,9 +32,6 @@ set pastetoggle=<F9> " For Mac
 set noignorecase  " searches are case insensitive...
 set smartcase     " ... unless they contain at least one capital letter
 
-map <leader>f <Plug>(easymotion-prefix)
-" map <leader>f :HopChar1<CR>
-
 ""===========================================================================""
 " 4. displaying text
 ""===========================================================================""
