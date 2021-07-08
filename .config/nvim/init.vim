@@ -570,20 +570,3 @@ let test#enabled_runners = ['rust#cargotest', 'ruby#rspec']
 " junegunn/goyo.vim
 "-------------------------
 let g:goyo_width = 101
-
-"-------------------------
-" nvim-treesitter
-"-------------------------
-" lua <<EOF
-" require'nvim-treesitter.configs'.setup {
-  " ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-  " highlight = {
-    " enable = { "bash", "c", "cpp", "html", "javascript", "json", "lua", "python", "rust", "ruby", "toml", "typescript" },
-  " },
-" }
-" EOF
-
-"-------------------------
-" liuchengxu/vim-clap
-"-------------------------
-" let g:clap_layout = { 'relative': 'editor' }
