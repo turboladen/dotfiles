@@ -58,7 +58,6 @@ zinit light-mode as"completion" blockf for \
   OMZP::ripgrep/_ripgrep \
   OMZP::rust/_rust \
   OMZP::rustup/_rustup \
-  `brew --prefix`/share/zsh/site-functions/**/* \
   light-mode zsh-users/zsh-completions \
 
 export NVM_COMPLETION=true
@@ -82,7 +81,6 @@ zinit wait lucid for \
   OMZP::colored-man-pages \
   OMZP::dash \
   OMZP::git-hubflow \
-  OMZP::history \
   OMZP::rake-fast \
   light-mode OMZP::tmux \
   light-mode OMZP::vi-mode \
