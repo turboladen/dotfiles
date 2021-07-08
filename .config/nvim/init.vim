@@ -238,32 +238,9 @@ set expandtab
 " Close all buffers except the current one
 nnoremap <leader>q :BufOnly<CR>
 
-"-----
-" Plug 'tpope/vim-dispatch'
-"-----
-
-"-----
-" tpope/vim-fugitive.
-" Follows mappings for the zsh git plugin.
-"-----
-" noremap <leader>ga :Gwrite<CR>
-" noremap <leader>gbl :Gblame<CR>
-" noremap <leader>gbr :Gbrowse<CR>
-" noremap <leader>gc :Gcommit<CR>
-noremap <leader>gd :Gvdiff<CR>
-" noremap <leader>ggp :Gpush<CR>
-" noremap <leader>ggr :Ggrep<SPACE>
-" noremap <leader>gi :Git<SPACE>
-" noremap <leader>glg :Glog<CR>
-" noremap <leader>gll :Gpull<CR>
-" noremap <leader>gm :Gmove<SPACE>
-" noremap <leader>gr :Gremove<CR>
-noremap <leader>gs :Git<CR>
-
 "--------------------------------------
-" <Leader>A-G
+" <Leader>
 "--------------------------------------
-
 " Since I remap <C-l> (default redraw command), add a mapping for that.
 nnoremap <leader>dr :redraw!<CR>
 
@@ -271,31 +248,8 @@ nnoremap <leader>dr :redraw!<CR>
 nnoremap <leader>ev :vsplit $MYVIMRC<CR>
 nnoremap <leader>ep :vsplit ~/.config/nvim/plugins.vim<CR>
 
-"--------------------------------------
-" <Leader>H-L
-"--------------------------------------
-
-"--------------------------------------
-" <Leader>L-R
-"--------------------------------------
-
-"--------------------------------------
-" <Leader>S-V
-"--------------------------------------
 " Reload all the things!
 nnoremap <leader>v :source $MYVIMRC<CR>
-
-"--------------------------------------
-" <Leader>W-Z
-"--------------------------------------
-
-"-------------------------------------------------------------------------------
-" Other remappings
-"-------------------------------------------------------------------------------
-
-"--------------------------------------
-" F-keys
-"--------------------------------------
 
 "------------------------------------------------------------------------------
 " Ctrl- combos
@@ -379,7 +333,7 @@ set wildignore+=.idea/*
 ""===========================================================================""
 " 22. running make and jumping to errors
 ""===========================================================================""
-set grepprg=rg\ --vimgrep
+set grepprg=rg\ --vimgrep\ --files
 
 ""===========================================================================""
 " 23. language specific
@@ -392,13 +346,9 @@ set grepprg=rg\ --vimgrep
 ""===========================================================================""
 " 25. various
 ""===========================================================================""
-" Default search/replace to work globally.
-" set gdefault
-
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
-" set signcolumn=number " only works with neovim >= 0.5
-set signcolumn=yes
+set signcolumn=number " only works with neovim >= 0.5
 
 ""===========================================================================""
 " XX. No :options section
