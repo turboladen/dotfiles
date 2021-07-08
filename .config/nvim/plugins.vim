@@ -24,18 +24,16 @@ Plug 'kshenoy/vim-signature'
 " Vim plugin that shows keybindings in popup
 " Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 
-" Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " Distraction-free writing in Vim.
 Plug 'junegunn/goyo.vim'
 
-" Plug 'joeytwiddle/sexy_scroller.vim'
-" Plug 'yuttie/comfortable-motion.vim'
-
 ""===========================================================================""
 " 2. moving around, searching and patterns
 ""===========================================================================""
-Plug 'junegunn/fzf.vim'
+Plug 'lotabout/skim', { 'dir': '~/.skim', 'do': './install' }
+Plug 'lotabout/skim.vim'
 
 " Use RipGrep in Vim and display results in a quickfix list
 Plug 'jremmen/vim-ripgrep'
@@ -64,12 +62,8 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " Change code right in the quickfix window
 Plug 'stefandtw/quickfix-reflector.vim'
 
-" Modern performant generic finder and dispatcher for Vim and NeoVim
-" Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary' }
-
 " Vim motion on speed!
-Plug 'easymotion/vim-easymotion'
-" Plug 'phaazon/hop.nvim'
+Plug 'phaazon/hop.nvim'
 
 ""===========================================================================""
 " 5. syntax, highlighting and spelling
@@ -93,7 +87,7 @@ Plug 'aonemd/kuroi.vim'
 Plug 'junegunn/limelight.vim'
 
 " Show vertical line for indentation level
-" Plug 'Yggdroot/indentLine'
+Plug 'Yggdroot/indentLine', { 'for': ['yaml'] }
 
 " Toast! A colorful, medium-contrast theme with full Vim and Neovim support,
 " true color and 256-color support, and automatic light and dark variants. Easy
@@ -166,7 +160,7 @@ Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-eunuch'
 
 " run your tests at the speed of thought
-Plug 'janko-m/vim-test'
+Plug 'janko-m/vim-test', { 'for': ['ruby'] }
 
 ""===========================================================================""
 " 22. running make and jumping to errors
@@ -209,9 +203,6 @@ Plug 'tpope/vim-fugitive'
 
 " If fugitive.vim is the Git, rhubarb.vim is the Hub.
 Plug 'tpope/vim-rhubarb'
-
-" Git commit browser
-" Plug 'junegunn/gv.vim'
 
 " A Vim plugin for more pleasant editing on commit messages
 Plug 'rhysd/committia.vim'
@@ -323,22 +314,11 @@ Plug 'tarekbecker/vim-yaml-formatter', { 'for': 'yaml' }
 ""===========================================================================""
 " 25. various
 ""===========================================================================""
-" A light and configurable statusline/tabline
-" Plug 'itchyny/lightline.vim'
-"
-" Plug 'kyazdani42/nvim-web-devicons'
-Plug 'ryanoasis/vim-devicons'
+Plug 'kyazdani42/nvim-web-devicons'
 
 " I like, but it doesn't show the whole path to the current file and that's
 " not configurable.
 Plug 'glepnir/spaceline.vim'
-
-" Simple tmux statusline generator with support for powerline symbols and
-" statusline / airline / lightline integration
-" Plug 'edkolev/tmuxline.vim'
-" Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
-
-" Plug 'rbong/vim-crystalline'
 
 " Plug '/Users/steve.loveless/Development/projects/pantsline.vim'
 " Plug 'turboladen/pantsline.vim', { 'branch': 'feature/initial-stuff' }
