@@ -224,22 +224,8 @@ set expandtab
 ""===========================================================================""
 " 17. mappings
 ""===========================================================================""
-
 "--------------------------------------
-" Leader commands
-"
-" Listed first where commands pertain to plugins, then alphabetically (where
-" they're for things I've defined.
-"--------------------------------------
-
-"-----
-" BufOnly.vim
-"-----
-" Close all buffers except the current one
-nnoremap <leader>q :BufOnly<CR>
-
-"--------------------------------------
-" <Leader>
+" <Leader> maps
 "--------------------------------------
 " Since I remap <C-l> (default redraw command), add a mapping for that.
 nnoremap <leader>dr :redraw!<CR>
