@@ -50,45 +50,17 @@ set cmdheight=2 " More room for RLS info
 
 set laststatus=2
 set showtabline=2
+
 "tabline
 if exists("+showtabline")
-     function MyTabLine()
-         let s = ''
-         let t = tabpagenr()
-         let i = 1
-         while i <= tabpagenr('$')
-             let buflist = tabpagebuflist(i)
-             let winnr = tabpagewinnr(i)
-             let s .= '%' . i . 'T'
-             let s .= (i == t ? '%1*' : '%2*')
-             let s .= ' '
-             let s .= '|'. i . ')'
-             let s .= ' %*'
-             let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
-             let file = bufname(buflist[winnr - 1])
-             " let file = fnamemodify(file, ':p:t')
-             let file = fnamemodify(file, ':f')
-             if file == ''
-                 let file = '[No Name]'
-             endif
-             let s .= file
-             let s .= ' '
-             let i = i + 1
-         endwhile
-         let s .= '%T%#TabLineFill#%='
-         let s .= (tabpagenr('$') > 1 ? '%999XX' : 'X')
-         return s
-     endfunction
-     set stal=2
-     set tabline=%!MyTabLine()
+  set tabline=%!turboladen#MyTabLine()
 endif
 
 ""===========================================================================""
 " 5. syntax, highlighting and spelling
 ""===========================================================================""
 " Detect file type and syntax
-syntax on
-syntax sync fromstart
+syntax enable
 
 " Turn off syntax over X chars in a line
 set synmaxcol=250
@@ -103,10 +75,11 @@ set colorcolumn=80,120    " Show rulers
 set hlsearch              " highlight matches
 set cursorline
 
-"Credit joshdick
-"Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.
-"If you're using tmux version 2.2 or later, you can remove the outermost $TMUX check and use tmux's 24-bit color support
-"(see < http://sunaku.github.io/tmux-24bit-color.html#usage > for more information.)
+" Credit joshdick
+" Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.
+" If you're using tmux version 2.2 or later, you can remove the outermost $TMUX
+" check and use tmux's 24-bit color support (see
+" < http://sunaku.github.io/tmux-24bit-color.html#usage > for more information.)
 if (has('nvim'))
   "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
@@ -134,9 +107,6 @@ colorscheme kuroi
 " set background=dark
 " set termguicolors
 
-" set guicursor=n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50
-"       \,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor
-"       \,sm:block-blinkwait175-blinkoff150-blinkon175
 function! StatusLine(...)
   return crystalline#mode() . crystalline#right_mode_sep('')
         \ . ' %f%h%w%m%r ' . crystalline#right_sep('', 'Fill')
@@ -156,26 +126,6 @@ set splitbelow
 
 " Open new vsplit window to the right.
 set splitright
-
-""===========================================================================""
-" 7. multiple tab pages
-""===========================================================================""
-
-""===========================================================================""
-" 8. terminal
-""===========================================================================""
-
-""===========================================================================""
-" 9. using the mouse
-""===========================================================================""
-
-""===========================================================================""
-" 10. printing
-""===========================================================================""
-
-""===========================================================================""
-" 11. messages and info
-""===========================================================================""
 
 ""===========================================================================""
 " 12. selecting text
@@ -216,10 +166,6 @@ set expandtab
 " from https://github.com/nvim-treesitter/nvim-treesitter#folding
 " set foldmethod=expr
 " set foldexpr=nvim_treesitter#foldexpr()
-
-""===========================================================================""
-" 16. diff mode
-""===========================================================================""
 
 ""===========================================================================""
 " 17. mappings
