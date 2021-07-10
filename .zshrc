@@ -11,7 +11,7 @@ export PATH=`brew --prefix`/bin:/`brew --prefix`sbin:/usr/bin:$PATH
 export PATH=$PATH:`brew --prefix`/share/npm/bin
 
 # Local bin
-export PATH=$PATH:~/bin
+export PATH=$PATH:~/.local/bin
 
 # Bower
 alias bower='noglob bower'
@@ -71,7 +71,6 @@ export NVM_AUTO_USE=true
 # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/colored-man-pages
 # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/dash
 # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git-hubflow
-# https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/history
 # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/rake-fast
 # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/tmux
 # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/vi-mode
@@ -84,7 +83,6 @@ zinit wait lucid for \
   OMZP::rake-fast \
   light-mode OMZP::tmux \
   light-mode OMZP::vi-mode \
-  light-mode zdharma/history-search-multi-word \
   atinit"zicompinit; zicdreplay" light-mode zdharma/fast-syntax-highlighting \
   atload'_zsh_autosuggest_start' light-mode zsh-users/zsh-autosuggestions \
   is-snippet `brew --prefix`/etc/profile.d/z.sh \

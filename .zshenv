@@ -5,3 +5,4 @@
 
 source "$HOME/.config/zsh/chruby.zsh"
 source "$HOME/.cargo/env"
+export PATH=$PATH:$HOME/.local/share/nvim/lspinstall/rust/

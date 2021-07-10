@@ -20,6 +20,7 @@ let g:mapleader = ' '
 " 0. Load vim-plug stuff first
 ""===========================================================================""
 source ~/.config/nvim/plugins.vim
+lua require('plugins')
 
 ""===========================================================================""
 " 1. important
@@ -140,7 +141,8 @@ set clipboard=unnamed
 ""===========================================================================""
 " More info for completion.
 " set completeopt+=longest,preview
-" set completeopt+=menuone,noinsert,noselect
+set completeopt+=menuone,noinsert,noselect
+" set completeopt+=menuone,noselect
 
 " https://tomjwatson.com/blog/vim-tips/
 set undodir=~/.config/nvim/undodir
@@ -323,3 +325,40 @@ augroup END "}}}2
 ""===========================================================================""
 " YY. Plugin options that must be here.
 ""===========================================================================""
+" highlight link CompeDocumentation NormalFloat
+
+" inoremap <silent> <C-j>      <down>
+" inoremap <silent> <C-k>      <up>
+
+" inoremap <silent><expr> <C-Space> compe#complete()
+" inoremap <silent><expr> <C-CR>      compe#confirm('<C-CR>')
+" inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+" inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+" inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+
+"------
+" nvim-lightbulb
+"------
+augroup lightbulb
+  autocmd! CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()
+augroup END
+
+
+autocmd BufEnter * lua require('completion').on_attach()
+
+let g:completion_enable_snippet = 'vim-vsnip'
+" Use <Tab> and <S-Tab> to navigate through popup menu
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+let g:completion_chain_complete_list = [
+    \{'complete_items': ['lsp', 'snippet', 'buffers', 'path']},
+    \{'mode': '<c-p>'},
+    \{'mode': '<c-n>'}
+\]
+
+"--
+" telescope
+"--
+nnoremap <silent> <leader><leader> :Telescope find_files<CR>
+nnoremap <silent> <leader><CR> :Telescope buffers<CR>

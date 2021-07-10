@@ -22,8 +22,8 @@ let g:fzf_action = {
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
 
-nnoremap <silent> <leader><leader> :FzfFiles<CR>
-nnoremap <silent> <leader><CR> :FzfBuffers<CR>
+" nnoremap <silent> <leader><leader> :FzfFiles<CR>
+" nnoremap <silent> <leader><CR> :FzfBuffers<CR>
 
 " nnoremap <silent> <leader><leader> :FzfGitFiles<CR>
 " nnoremap <silent> <leader><C-m> :Maps<CR>

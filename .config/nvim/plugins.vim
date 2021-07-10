@@ -47,7 +47,7 @@ Plug 'tpope/vim-unimpaired'
 " Directory viewer for Vim
 Plug 'justinmk/vim-dirvish' | Plug 'kristijanhusak/vim-dirvish-git'
 
-Plug 'airblade/vim-gitgutter'
+" Plug 'airblade/vim-gitgutter'
 
 " extended % matching for HTML, LaTeX and many other languages
 Plug 'tmhedberg/matchit'
@@ -56,9 +56,9 @@ Plug 'tmhedberg/matchit'
 " blocks.
 Plug 'kana/vim-textobj-user' | Plug 'nelstrom/vim-textobj-rubyblock'
 
-" Conquer of Completion
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
+"---------
+" /neovim LSP
+"---------
 " Change code right in the quickfix window
 Plug 'stefandtw/quickfix-reflector.vim'
 
@@ -137,7 +137,7 @@ Plug 'tommcdo/vim-exchange'
 Plug 'vim-utils/vim-troll-stopper'
 
 " Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
+" Plug 'honza/vim-snippets'
 
 " For case swapping
 Plug 'idanarye/vim-casetrate'
@@ -318,7 +318,7 @@ Plug 'kyazdani42/nvim-web-devicons'
 
 " I like, but it doesn't show the whole path to the current file and that's
 " not configurable.
-Plug 'glepnir/spaceline.vim'
+" Plug 'glepnir/spaceline.vim'
 
 " Plug '/Users/steve.loveless/Development/projects/pantsline.vim'
 " Plug 'turboladen/pantsline.vim', { 'branch': 'feature/initial-stuff' }
