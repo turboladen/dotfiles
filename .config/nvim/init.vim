@@ -360,5 +360,5 @@ let g:completion_chain_complete_list = [
 "--
 " telescope
 "--
-nnoremap <silent> <leader><leader> :Telescope find_files<CR>
-nnoremap <silent> <leader><CR> :Telescope buffers<CR>
+" nnoremap <silent> <leader><leader> :Telescope find_files<CR>
+" nnoremap <silent> <leader><CR> :Telescope buffers<CR>
