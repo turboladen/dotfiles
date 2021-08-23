@@ -17,9 +17,15 @@ let g:python3_host_prog = '/usr/local/bin/python3'
 let g:mapleader = ' '
 
 ""===========================================================================""
-" 0. Load vim-plug stuff first
+" 0. Load packer stuff first
 ""===========================================================================""
-source ~/.config/nvim/plugins.vim
+lua require('plugins')
+
+" Reload after saving this so I can PluginInstall.
+augroup plugins_reloader
+  autocmd!
+  autocmd BufWritePost ~/.config/nvim/lua/plugins.lua source $MYVIMRC
+augroup END
 
 ""===========================================================================""
 " 1. important
@@ -49,7 +55,7 @@ set laststatus=2
 set showtabline=2
 
 "tabline
-if exists("+showtabline")
+if exists('+showtabline')
   set tabline=%!turboladen#MyTabLine()
 endif
 
@@ -140,7 +146,7 @@ set clipboard=unnamed
 ""===========================================================================""
 " More info for completion.
 " set completeopt+=longest,preview
-" set completeopt+=menuone,noinsert,noselect
+set completeopt+=menuone,noinsert,noselect
 
 " https://tomjwatson.com/blog/vim-tips/
 set undodir=~/.config/nvim/undodir
@@ -164,6 +170,7 @@ set expandtab
 " set foldmethod=indent
 " set foldlevelstart=4
 " set foldnestmax=10      " 10 nested fold max
+set nofoldenable
 
 " from https://github.com/nvim-treesitter/nvim-treesitter#folding
 " set foldmethod=expr
@@ -297,6 +304,8 @@ augroup vimrc
 
   " Open grep commands, specifically Ggrep, in QuickFix
   " autocmd QuickFixCmdPost *grep* cwindow
+ 
+ au TextYankPost * silent! lua vim.highlight.on_yank {higroup="IncSearch", timeout=150}
 augroup END
 
 augroup FTCheck
