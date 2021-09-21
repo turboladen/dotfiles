@@ -66,12 +66,14 @@
 
 [user]
   name = Steve Loveless
-[includeIf "gitdir:~/Development/agrian/"]
-  path = .gitconfig-work
 [includeIf "gitdir:~/Development/projects/"]
   path = .gitconfig-personal
 [includeIf "gitdir:~/.local/share/yadm/repo.git"]
   path = .gitconfig-personal
+{% if yadm.class == "Work" %}
+[includeIf "gitdir:~/Development/agrian/"]
+  path = .gitconfig-work
+{% endif %}
 
 [gpg]
   program = gpg
