@@ -1,16 +1,7 @@
 scriptencoding utf-8
 
 ""===========================================================================""
-" .vimrc
-"
-"  Partially borrowed from:
-"    * http://mixandgo.com/blog/vim-config-for-rails-ninjas
-"    * http://amix.dk/vim/vimrc.html
-"
-" Search settings, stolen from carlhuda/janus.
-"
-" https://github.com/carlhuda/janus/blob/master/janus/vim/core/before/plugin/settings.vim
-"
+" init.vim
 ""===========================================================================""
 let g:python_host_prog = '/usr/local/bin/python2'
 let g:python3_host_prog = '/usr/local/bin/python3'
@@ -53,6 +44,8 @@ set cmdheight=2 " More room for RLS info
 
 set laststatus=2
 set showtabline=2
+
+set conceallevel=0
 
 "tabline
 if exists('+showtabline')
@@ -187,7 +180,7 @@ nnoremap <leader>dr :redraw!<CR>
 
 " eDIT MY vIMRC FILE
 nnoremap <leader>ev :vsplit $MYVIMRC<CR>
-nnoremap <leader>ep :vsplit ~/.config/nvim/plugins.vim<CR>
+nnoremap <leader>ep :vsplit ~/.config/nvim/lua/plugins.lua<CR>
 
 " Reload all the things!
 nnoremap <leader>v :source $MYVIMRC<CR>
@@ -304,7 +297,7 @@ augroup vimrc
 
   " Open grep commands, specifically Ggrep, in QuickFix
   " autocmd QuickFixCmdPost *grep* cwindow
- 
+
  au TextYankPost * silent! lua vim.highlight.on_yank {higroup="IncSearch", timeout=150}
 augroup END
 

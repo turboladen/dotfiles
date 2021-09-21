@@ -22,7 +22,6 @@ return require("packer").startup(
             use {
                 "nvim-treesitter/nvim-treesitter",
                 run = ":TSUpdate",
-                disable = true,
                 config = function()
                     require "nvim-treesitter.configs".setup {
                         ensure_installed = {
@@ -36,7 +35,6 @@ return require("packer").startup(
                             "javascript",
                             "json",
                             "lua",
-                            "rust",
                             "ruby",
                             "toml",
                             "typescript",
@@ -98,15 +96,73 @@ return require("packer").startup(
             -- 2. moving around, searching and patterns
             -----------------------------------------------------------------------------
             -- use { 'lotabout/skim', run = "cd ~/.local/share/skim && ./install" }
+            -- use {
+            --     "lotabout/skim.vim",
+            --     rtp = "/usr/local/opt/sk",
+            --     requires = {"lotabout/skim"},
+            --     config = function()
+            --         vim.env.SKIM_DEFAULT_COMMAND = "rg --files --color=always"
+            --         vim.env.SKIM_DEFAULT_OPTIONS = "--layout=reverse --ansi"
+            --         vim.api.nvim_set_keymap("n", "<leader>,", ":Rg <C-R><C-W><CR>", {})
+            --         vim.api.nvim_set_keymap("n", "<leader>o", ":Rg TODO<CR>", {})
+            --     end
+            -- }
             use {
-                "lotabout/skim.vim",
-                rtp = "/usr/local/opt/sk",
-                requires = {"lotabout/skim"},
+                "liuchengxu/vim-clap",
+                run = ":Clap install-binary",
+                requires = {
+                    "kyazdani42/nvim-web-devicons"
+                },
                 config = function()
+                    vim.g.clap_disable_run_rooter = true
+                    vim.g.clap_layout = {relative = "editor"}
+                    vim.g.clap_enable_icon = true
+
+                    vim.api.nvim_set_keymap("n", "<leader><leader>", ":Clap files<CR>", {noremap = true, silent = true})
+                    vim.api.nvim_set_keymap("n", "<leader><CR>", ":Clap buffers<CR>", {noremap = true, silent = true})
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>,",
+                        ":Clap grep2 <C-R><C-W><CR>",
+                        {noremap = true, silent = true}
+                    )
+                    vim.api.nvim_set_keymap("n", "<leader>o", ":Clap grep TODO<CR>", {noremap = true, silent = true})
+                end
+            }
+
+            use {
+                "ibhagwan/fzf-lua",
+                requires = {
+                    "vijaymarupudi/nvim-fzf",
+                    "kyazdani42/nvim-web-devicons"
+                },
+                disable = true,
+                config = function()
+                    require("fzf-lua").setup(
+                        {
+                            fzf_bin = "sk",
+                            files = {
+                                cmd = "rg --files --vimgrep --color=always"
+                            }
+                        }
+                    )
+
                     vim.env.SKIM_DEFAULT_COMMAND = "rg --files --color=always"
                     vim.env.SKIM_DEFAULT_OPTIONS = "--layout=reverse --ansi"
-                    vim.api.nvim_set_keymap("n", "<leader>,", ":Rg <C-R><C-W><CR>", {})
-                    vim.api.nvim_set_keymap("n", "<leader>o", ":Rg TODO<CR>", {})
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader><leader>",
+                        ":FzfLua files<CR>",
+                        {noremap = true, silent = true}
+                    )
+                    vim.api.nvim_set_keymap("n", "<leader><CR>", ":FzfLua buffers<CR>", {noremap = true, silent = true})
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>,",
+                        ":FzfLua grep <C-R><C-W><CR>",
+                        {noremap = true, silent = true}
+                    )
+                    vim.api.nvim_set_keymap("n", "<leader>o", ":FzfLua grep TODO<CR>", {noremap = true, silent = true})
                 end
             }
 
@@ -539,17 +595,17 @@ return require("packer").startup(
                 "dense-analysis/ale",
                 requires = "nvim-lua/plenary.nvim",
                 -- rocks = {"luacheck"},
-                run = function()
-                    require("turboladen/installers").pip_install("proselint")
-                    require("turboladen/installers").npm_install("write-good")
-                    require("turboladen/installers").npm_install("lua-fmt")
-                    require("turboladen/installers").pip_install("vim-vint")
-                    require("turboladen/installers").brew_install("shellcheck")
-                    require("turboladen/installers").gem_install("brakeman")
-                    require("turboladen/installers").gem_install("debride")
-                    require("turboladen/installers").gem_install("reek")
-                    require("turboladen/installers").gem_install("sorbet")
-                end,
+                -- run = function()
+                --     require("turboladen/installers").pip_install("proselint")
+                --     require("turboladen/installers").npm_install("write-good")
+                --     require("turboladen/installers").npm_install("lua-fmt")
+                --     require("turboladen/installers").pip_install("vim-vint")
+                --     require("turboladen/installers").brew_install("shellcheck")
+                --     require("turboladen/installers").gem_install("brakeman")
+                --     require("turboladen/installers").gem_install("debride")
+                --     require("turboladen/installers").gem_install("reek")
+                --     require("turboladen/installers").gem_install("sorbet")
+                -- end,
                 config = function()
                     vim.g.ale_fix_on_save = 1
                     vim.g.ale_sign_error = "✘"
