@@ -1,25 +1,22 @@
 scriptencoding utf-8
 
 ""===========================================================================""
-" .vimrc
-"
-"  Partially borrowed from:
-"    * http://mixandgo.com/blog/vim-config-for-rails-ninjas
-"    * http://amix.dk/vim/vimrc.html
-"
-" Search settings, stolen from carlhuda/janus.
-"
-" https://github.com/carlhuda/janus/blob/master/janus/vim/core/before/plugin/settings.vim
-"
+" init.vim
 ""===========================================================================""
 let g:python_host_prog = '/usr/local/bin/python2'
 let g:python3_host_prog = '/usr/local/bin/python3'
 let g:mapleader = ' '
 
 ""===========================================================================""
-" 0. Load vim-plug stuff first
+" 0. Load packer stuff first
 ""===========================================================================""
-source ~/.config/nvim/plugins.vim
+lua require('plugins')
+
+" Reload after saving this so I can PluginInstall.
+augroup plugins_reloader
+  autocmd!
+  autocmd BufWritePost ~/.config/nvim/lua/plugins.lua source $MYVIMRC
+augroup END
 
 ""===========================================================================""
 " 1. important
@@ -48,8 +45,10 @@ set cmdheight=2 " More room for RLS info
 set laststatus=2
 set showtabline=2
 
+set conceallevel=0
+
 "tabline
-if exists("+showtabline")
+if exists('+showtabline')
   set tabline=%!turboladen#MyTabLine()
 endif
 
@@ -140,7 +139,7 @@ set clipboard=unnamed
 ""===========================================================================""
 " More info for completion.
 " set completeopt+=longest,preview
-" set completeopt+=menuone,noinsert,noselect
+set completeopt+=menuone,noinsert,noselect
 
 " https://tomjwatson.com/blog/vim-tips/
 set undodir=~/.config/nvim/undodir
@@ -164,6 +163,7 @@ set expandtab
 " set foldmethod=indent
 " set foldlevelstart=4
 " set foldnestmax=10      " 10 nested fold max
+set nofoldenable
 
 " from https://github.com/nvim-treesitter/nvim-treesitter#folding
 " set foldmethod=expr
@@ -180,7 +180,7 @@ nnoremap <leader>dr :redraw!<CR>
 
 " eDIT MY vIMRC FILE
 nnoremap <leader>ev :vsplit $MYVIMRC<CR>
-nnoremap <leader>ep :vsplit ~/.config/nvim/plugins.vim<CR>
+nnoremap <leader>ep :vsplit ~/.config/nvim/lua/plugins.lua<CR>
 
 " Reload all the things!
 nnoremap <leader>v :source $MYVIMRC<CR>
@@ -297,6 +297,8 @@ augroup vimrc
 
   " Open grep commands, specifically Ggrep, in QuickFix
   " autocmd QuickFixCmdPost *grep* cwindow
+
+ au TextYankPost * silent! lua vim.highlight.on_yank {higroup="IncSearch", timeout=150}
 augroup END
 
 augroup FTCheck

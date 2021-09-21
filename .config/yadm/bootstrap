@@ -146,6 +146,18 @@ setup_neovim() {
   fi
 }
 
+install_zr() {
+  log "Installing zr..."
+
+  if command -v zr >/dev/null 2&1; then
+    log "zr already installed."
+    return 0
+  fi
+
+  sh -c "$(cargo install zr)"
+}
+
+
 #------------------------------------------------------------------------------
 # Do the things
 #------------------------------------------------------------------------------
@@ -163,3 +175,4 @@ install_ruby
 install_rust
 setup_develop_dirs
 setup_neovim
+install_zr

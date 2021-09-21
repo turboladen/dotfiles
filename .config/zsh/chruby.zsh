@@ -4,10 +4,12 @@
 #
 # `brew install chruby ruby-install`
 #------------------------------------------------------------------------------
-if [[ -f /usr/local/opt/chruby/share/chruby/chruby.sh ]]; then
-  source /usr/local/opt/chruby/share/chruby/chruby.sh
+brew_prefix=/usr/local
+
+if [[ -f $brew_prefix/opt/chruby/share/chruby/chruby.sh ]]; then
+  source $brew_prefix/opt/chruby/share/chruby/chruby.sh
   chruby "2.7.3"
-  source /usr/local/opt/chruby/share/chruby/auto.sh
+  source $brew_prefix/opt/chruby/share/chruby/auto.sh
 else
   echo "chruby not found."
 fi
