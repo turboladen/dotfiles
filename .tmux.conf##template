@@ -1,4 +1,8 @@
+{% if yadm.class == "AppleSilicon" %}
+set-option -g default-shell /opt/homebrew/bin/zsh
+{% else %}
 set-option -g default-shell /usr/local/bin/zsh
+{% endif %}
 
 #-----------------------------------------------------------------------------
 # General

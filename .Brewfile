@@ -16,6 +16,7 @@ cask 'sizeup'
 cask 'transmission'
 cask 'visual-studio-code'
 
+# Work-specific
 cask 'paw'
 cask 'postgres-unofficial'
 cask 'postico'
@@ -58,6 +59,7 @@ brew 'tmuxinator'
 brew 'tokei'
 brew 'tree-sitter'
 
+# Work-specific
 brew 'cmake'
 brew 'elasticsearch'
 brew 'gdal'
