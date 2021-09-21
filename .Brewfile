@@ -31,7 +31,6 @@ brew 'exa'
 brew 'fzf'
 brew 'z'
 brew 'zsh'
-brew 'zinit'
 
 brew 'bat'
 brew 'cargo-watch'
