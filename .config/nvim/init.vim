@@ -3,7 +3,7 @@ scriptencoding utf-8
 ""===========================================================================""
 " init.vim
 ""===========================================================================""
-let s:homebrew_root = '/usr/local'
+let s:homebrew_root = substitute(system('brew --prefix'), '\n\+$', '', '')
 let g:python_host_prog = s:homebrew_root . '/bin/python2'
 let g:python3_host_prog = s:homebrew_root . '/bin/python3'
 let g:mapleader = ' '
