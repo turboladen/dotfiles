@@ -175,4 +175,4 @@ install_ruby
 install_rust
 setup_develop_dirs
 setup_neovim
-install_zinit
+install_zr
