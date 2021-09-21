@@ -13,7 +13,9 @@ happy_cd() {
 }
 
 command_exists() {
-  command -v "$1" >/dev/null 2>&1
+  readonly the_command=${1:?"The command must be specified."}
+
+  command -v "$the_command" >/dev/null 2>&1
 }
 
 # Checks if brew is installed, then installs if if it's missing.
@@ -110,7 +112,7 @@ setup_develop_dirs() {
 setup_neovim() {
   needs_pip_install=true
 
-  if command -v pip3 > /dev/null 2>&1; then
+  if command_exists pip3; then
     log "Installing neovim python-client for pip3"
     pip3 install neovim
     $needs_pip_install=false
@@ -118,7 +120,7 @@ setup_neovim() {
     log "pip3 not found; skipping neovim install"
   fi
 
-  if command -v pip2 > /dev/null 2>&1; then
+  if command_exists pip2; then
     log "Installing neovim python-client for pip2"
     pip2 install neovim
     $needs_pip_install=false
@@ -127,7 +129,7 @@ setup_neovim() {
   fi
 
   if $needs_pip_install; then
-    if command -v pip > /dev/null 2>&1; then
+    if command_exists pip; then
       log "Installing neovim python-client for pip"
       pip install neovim
     else
@@ -138,7 +140,7 @@ setup_neovim() {
   # (Ruby neovim is handled in Gemfile)
 
   if [ -d "$HOME/.config/nvim" ]; then
-    if command -v nvim >/dev/null 2>&1; then
+    if command_exists nvim; then
       log "Installing vim-plug..."
       sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
@@ -149,14 +151,13 @@ setup_neovim() {
 install_zr() {
   log "Installing zr..."
 
-  if command -v zr >/dev/null 2&1; then
+  if command_exists zr; then
     log "zr already installed."
     return 0
   fi
 
   sh -c "$(cargo install zr)"
 }
-
 
 #------------------------------------------------------------------------------
 # Do the things
