@@ -3,8 +3,9 @@ scriptencoding utf-8
 ""===========================================================================""
 " init.vim
 ""===========================================================================""
-let g:python_host_prog = '/usr/local/bin/python2'
-let g:python3_host_prog = '/usr/local/bin/python3'
+let s:homebrew_root = '/usr/local'
+let g:python_host_prog = s:homebrew_root . '/bin/python2'
+let g:python3_host_prog = s:homebrew_root . '/bin/python3'
 let g:mapleader = ' '
 
 ""===========================================================================""
