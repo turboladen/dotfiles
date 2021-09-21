@@ -16,10 +16,12 @@ cask 'sizeup'
 cask 'transmission'
 cask 'visual-studio-code'
 
+{% if yadm.class == "Work" %}
 cask 'paw'
 cask 'postgres-unofficial'
 cask 'postico'
 cask 'tunnelblick'
+{% endif %}
 
 tap 'homebrew/homebrew-cask-fonts'
 cask 'font-fira-mono-nerd-font'
@@ -58,6 +60,7 @@ brew 'tmuxinator'
 brew 'tokei'
 brew 'tree-sitter'
 
+{% if yadm.class == "Work" %}
 brew 'cmake'
 brew 'elasticsearch'
 brew 'gdal'
@@ -66,5 +69,6 @@ brew 'haproxy'
 brew 'overmind'
 brew 'rabbitmq'
 brew 'redis'
+{% endif %}
 
 # vi:ft=ruby
