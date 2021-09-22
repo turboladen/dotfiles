@@ -4,11 +4,15 @@
 #
 # `brew install chruby ruby-install`
 #------------------------------------------------------------------------------
+{% if yadm.class == "AppleSilicon" %}
+brew_prefix=/opt/homebrew
+{% else %}
 brew_prefix=/usr/local
+{% endif %}
 
 if [[ -f $brew_prefix/opt/chruby/share/chruby/chruby.sh ]]; then
   source $brew_prefix/opt/chruby/share/chruby/chruby.sh
-  chruby "2.7.3"
+  chruby "3.0.1"
   source $brew_prefix/opt/chruby/share/chruby/auto.sh
 else
   echo "chruby not found."
