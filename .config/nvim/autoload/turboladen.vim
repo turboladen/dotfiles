@@ -33,12 +33,6 @@ function! turboladen#RSpecVimCommand() abort
   return 'Dispatch ' . l:cmd . ' {spec}'
 endfunction
 
-function! turboladen#SetUpTurboladenDocs() abort
-  !cp '/Users/steve.loveless/Development/projects/config_files/vim/doc/turboladen.txt' '/Users/steve.loveless/.vim/doc/turboladen.txt'
-  " :helptags l:vim_doc_dir
-  :helptags /Users/steve.loveless/.vim/doc
-endfunction
-
 ""
 " Clean out the whitespaces from the file.
 " function! <SID>turboladen#StripTrailingWhitespaces()

@@ -3,6 +3,25 @@
 -- Only required if you have packer configured as `opt`
 -- vim.cmd [[packadd packer.nvim]]
 
+local Job = require("plenary.job")
+
+function getHomebrewPath()
+    local homebrew_root = ""
+    local job =
+        Job:new(
+        {
+            command = "brew",
+            args = {"--prefix"},
+            on_stdout = function(_, data)
+                homebrew_root = data
+            end
+        }
+    )
+    job:sync()
+
+    return homebrew_root
+end
+
 return require("packer").startup(
     {
         function(use)
@@ -196,7 +215,7 @@ return require("packer").startup(
                 "neoclide/coc.nvim",
                 branch = "release",
                 config = function()
-                    vim.g.coc_node_path = "/usr/local/bin/node"
+                    vim.g.coc_node_path = getHomebrewPath() .. "/bin/node"
 
                     -- coc-dictionary: Words from files in &dictionary.
                     -- coc-git: Somewhat replaces gitgutter; kinda depends on vim-fugitive.
@@ -595,17 +614,17 @@ return require("packer").startup(
                 "dense-analysis/ale",
                 requires = "nvim-lua/plenary.nvim",
                 -- rocks = {"luacheck"},
-                -- run = function()
-                --     require("turboladen/installers").pip_install("proselint")
-                --     require("turboladen/installers").npm_install("write-good")
-                --     require("turboladen/installers").npm_install("lua-fmt")
-                --     require("turboladen/installers").pip_install("vim-vint")
-                --     require("turboladen/installers").brew_install("shellcheck")
-                --     require("turboladen/installers").gem_install("brakeman")
-                --     require("turboladen/installers").gem_install("debride")
-                --     require("turboladen/installers").gem_install("reek")
-                --     require("turboladen/installers").gem_install("sorbet")
-                -- end,
+                run = function()
+                    --     require("turboladen/installers").pip_install("proselint")
+                    --     require("turboladen/installers").npm_install("write-good")
+                    --     require("turboladen/installers").npm_install("lua-fmt")
+                    --     require("turboladen/installers").pip_install("vim-vint")
+                    require("turboladen/installers").brew_install("shellcheck")
+                    --     require("turboladen/installers").gem_install("brakeman")
+                    --     require("turboladen/installers").gem_install("debride")
+                    --     require("turboladen/installers").gem_install("reek")
+                    --     require("turboladen/installers").gem_install("sorbet")
+                end,
                 config = function()
                     vim.g.ale_fix_on_save = 1
                     vim.g.ale_sign_error = "✘"
