@@ -5,11 +5,13 @@ setopt promptsubst
 
 setopt vi
 
+brew_prefix=`brew --prefix`
+
 # Make sure homebrew commands come first
-export PATH=`brew --prefix`/bin:/`brew --prefix`sbin:/usr/bin:$PATH
+export PATH=$brew_prefix/bin:/$brew_prefix/sbin:/usr/bin:$PATH
 
 # Node
-export PATH=$PATH:`brew --prefix`/share/npm/bin
+export PATH=$PATH:$brew_prefix/share/npm/bin
 
 # Local bin
 export PATH=$PATH:~/bin
@@ -45,17 +47,12 @@ export VI_MODE_SET_CURSOR=true
 #------------------------------------------------------------------------------
 # local things
 #------------------------------------------------------------------------------
-source `brew --prefix`/etc/profile.d/z.sh
-source ~/.config/zsh/aliases.zsh
-source ~/.config/zsh/chruby.zsh
-source ~/.config/zsh/iterm.zsh
-source ~/.config/zsh/overmind.zsh
-source ~/.config/zsh/ruby.zsh
-source ~/.config/zsh/rust.zsh
+source $brew_prefix/etc/profile.d/z.sh
+source ~/.config/zsh/*.zsh
 source ~/.fzf.zsh
 
 #------------------------------------------------------------------------------
-# Completions; keep these towards the bottom in case other plugins add 
+# Completions; keep these towards the bottom in case other plugins add
 # completions to zsh/functions/.
 #------------------------------------------------------------------------------
 # Keep this towards the end so other things can prep
@@ -92,12 +89,12 @@ alias bower='noglob bower'
 export EDITOR=nvim
 export LC_CTYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
-export PATH="$(brew --prefix)/opt/binutils/bin:$PATH"
+export PATH="$brew_prefix/opt/binutils/bin:$PATH"
 
 # From zsh brew install
 unalias run-help
 autoload run-help
-HELPDIR=`brew --prefix`/share/zsh/help
+HELPDIR=$brew_prefix/share/zsh/help
 
 # https://starship.rs/
 eval "$(starship init zsh)"
