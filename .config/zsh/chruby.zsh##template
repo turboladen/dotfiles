@@ -12,7 +12,8 @@ brew_prefix=/usr/local
 
 if [[ -f $brew_prefix/opt/chruby/share/chruby/chruby.sh ]]; then
   source $brew_prefix/opt/chruby/share/chruby/chruby.sh
-  chruby "3.0.1"
+  # Switch to the most recent ruby
+  chruby ruby
   source $brew_prefix/opt/chruby/share/chruby/auto.sh
 else
   echo "chruby not found."
