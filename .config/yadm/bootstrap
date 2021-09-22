@@ -97,7 +97,7 @@ install_ruby() {
   chruby ruby
   # Some of these are used in vim...
   gem install bundler solargraph rubocop hairballs neovim debride reek sorbet
-  bundle
+
   log "-----------------------------------------------------------------------"
   log "Done with Ruby."
   log "-----------------------------------------------------------------------"
@@ -221,6 +221,8 @@ pull_git_repos() {
   log "-----------------------------------------------------------------------"
   log "Pulling git repos..."
   log "-----------------------------------------------------------------------"
+  echo "Do you want to pull work repos? [y/n]"
+  read answer
 
   pull_repo() {
     repo_name=$1
@@ -235,33 +237,37 @@ pull_git_repos() {
     fi
   }
 
-  pull_repo agrian_resources
-  pull_repo agrian_types
-  pull_repo agrian_units
-  pull_repo agrian_units_rb
-  pull_repo agrian-units-js
-  pull_repo agrian-what-rust
+  if [ $answer = "y" ]; then
+    pull_repo agrian_resources
+    pull_repo agrian_types
+    pull_repo agrian_units
+    pull_repo agrian_units_rb
+    pull_repo agrian-units-js
+    pull_repo agrian-what-rust
 
-  pull_repo bgeo-rust
-  pull_repo chekov
-  pull_repo commodity_locationizer
-  pull_repo culottes
-  pull_repo ffi_common
-  pull_repo image_writer
-  pull_repo libcompliance
-  pull_repo rustybur
-  pull_repo shorts-rust
-  pull_repo wise_units
-  pull_repo wise_units2
+    pull_repo bgeo-rust
+    pull_repo chekov
+    pull_repo commodity_locationizer
+    pull_repo culottes
+    pull_repo ffi_common
+    pull_repo image_writer
+    pull_repo libcompliance
+    pull_repo rustybur
+    pull_repo shorts-rust
+    pull_repo wise_units
+    pull_repo wise_units2
 
-  pull_repo core
-  pull_repo references
-  pull_repo kraken
-  pull_repo twilight
-  pull_repo ffi-gdal
-  pull_repo ffi-gdal-extensions
+    pull_repo core
+    pull_repo references
+    pull_repo kraken
+    pull_repo twilight
+    pull_repo ffi-gdal
+    pull_repo ffi-gdal-extensions
 
-  pull_repo demos
+    pull_repo demos
+  else
+    info "Skipping repo cloning."
+  fi
 
   log "-----------------------------------------------------------------------"
   log "Done."
