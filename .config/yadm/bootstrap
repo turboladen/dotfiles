@@ -140,10 +140,13 @@ setup_neovim() {
   # (Ruby neovim is handled in Gemfile)
 
   if [ -d "$HOME/.config/nvim" ]; then
-    if command_exists nvim; then
-      log "Installing vim-plug..."
-      sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    packer_destination=~/.local/share/nvim/site/pack/packer/start/packer.nvim
+
+    if [ -d ! $packer_destination ]; then
+      log "Installing packer.nvim..."
+      git clone --depth 1 https://github.com/wbthomason/packer.nvim $packer_destination
+    else
+      log "packer.nvim already installed."
     fi
   fi
 }
