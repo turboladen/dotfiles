@@ -3,9 +3,9 @@
 -- Only required if you have packer configured as `opt`
 -- vim.cmd [[packadd packer.nvim]]
 
-local Job = require("plenary.job")
-
 function getHomebrewPath()
+    local Job = require("plenary.job")
+
     local homebrew_root = ""
     local job =
         Job:new(
@@ -615,15 +615,8 @@ return require("packer").startup(
                 requires = "nvim-lua/plenary.nvim",
                 -- rocks = {"luacheck"},
                 run = function()
-                    --     require("turboladen/installers").pip_install("proselint")
-                    --     require("turboladen/installers").npm_install("write-good")
-                    --     require("turboladen/installers").npm_install("lua-fmt")
-                    --     require("turboladen/installers").pip_install("vim-vint")
-                    require("turboladen/installers").brew_install("shellcheck")
-                    --     require("turboladen/installers").gem_install("brakeman")
-                    --     require("turboladen/installers").gem_install("debride")
-                    --     require("turboladen/installers").gem_install("reek")
-                    --     require("turboladen/installers").gem_install("sorbet")
+                        require("turboladen/installers").npm_install("write-good")
+                        require("turboladen/installers").npm_install("lua-fmt")
                 end,
                 config = function()
                     vim.g.ale_fix_on_save = 1

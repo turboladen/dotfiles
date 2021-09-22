@@ -4,8 +4,16 @@ log() {
   echo -e "\\033[34m\\033[1m[yadm bootstrap]\\033[0m $1"
 }
 
+info() {
+  echo -e "\\033[33m\\033[1m[yadm bootstrap INFO]\\033[0m $1"
+}
+
+error() {
+  echo -e "\\033[31m\\033[1m[yadm bootstrap INFO]\\031[0m $1"
+}
+
 log_and_exit() {
-  log "$1" && exit
+  error "$1" && exit
 }
 
 happy_cd() {
@@ -13,40 +21,61 @@ happy_cd() {
 }
 
 command_exists() {
-  readonly the_command=${1:?"The command must be specified."}
+  the_command=${1:?"The command must be specified."}
 
   command -v "$the_command" >/dev/null 2>&1
 }
 
 # Checks if brew is installed, then installs if if it's missing.
 install_homebrew() {
+  log "-----------------------------------------------------------------------"
   log "Installing homebrew..."
+  log "-----------------------------------------------------------------------"
 
-  if command -v brew >/dev/null 2>&1; then
-    log "Homebrew already installed."
+  if command_exists brew; then
+    info "Homebrew already installed."
     return 0
   fi
 
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+  log "-----------------------------------------------------------------------"
+  log "Done."
+  log "-----------------------------------------------------------------------"
 }
 
 install_homebrew_packages() {
+  log "-----------------------------------------------------------------------"
   log "Installing Brewfile things..."
+  log "-----------------------------------------------------------------------"
+
   brew bundle --global || log_and_exit "Couldn't brew bundle"
+
+  log "-----------------------------------------------------------------------"
+  log "Done."
+  log "-----------------------------------------------------------------------"
 }
 
 setup_tmux() {
+  log "-----------------------------------------------------------------------"
   log "Setting up tmux..."
+  log "-----------------------------------------------------------------------"
 
   if [ -d "$HOME/.tmux/plugins/tpm" ]; then
-    log "Tmux tpm already installed."
+    info "tmux TPM already installed."
     return 0
   fi
 
   git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+  log "-----------------------------------------------------------------------"
+  log "Done."
+  log "-----------------------------------------------------------------------"
 }
 
 install_ruby() {
+  log "-----------------------------------------------------------------------"
+  log "Setting up Ruby..."
+  log "-----------------------------------------------------------------------"
   if [ -f "$(brew --prefix)/bin/ruby-install" ]; then
     rubies_count=`ls $HOME/.rubies | wc -l`
 
@@ -55,29 +84,37 @@ install_ruby() {
       ruby-install ruby -- --enable-shared || log_and_exit "Couldn't ruby-install ruby"
     fi
   else
-    log "Couldn't find ruby-install. Skipping installation of Ruby."
+    info "Couldn't find ruby-install. Skipping installation of Ruby."
     return 1
   fi
 
   if [[ ! -f "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh" ]]; then
-    log "Couldn't find chruby. Skipping installation of gems."
+    info "Couldn't find chruby. Skipping installation of gems."
     return 1
   fi
 
   source "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh"
   chruby ruby
-  gem install bundler
+  # Some of these are used in vim...
+  gem install bundler solargraph rubocop hairballs neovim debride reek sorbet
   bundle
+  log "-----------------------------------------------------------------------"
   log "Done with Ruby."
+  log "-----------------------------------------------------------------------"
 }
 
 install_rust() {
-  if [ -f $HOME/.cargo/bin/cargo ]; then
+  log "-----------------------------------------------------------------------"
+  log "Installing Rust..."
+  log "-----------------------------------------------------------------------"
+
+  if command_exists cargo; then
+    log "-----------------------------------------------------------------------"
     log "Rust already installed. Skipping."
+    log "-----------------------------------------------------------------------"
     return 0;
   fi
 
-  log "Installing Rust..."
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
   # Manually update the PATH
   export PATH=$PATH:$HOME/.cargo/bin
@@ -89,17 +126,21 @@ install_rust() {
 
   rustup completions zsh > ~/.zfunc/_rustup
 
+  log "-----------------------------------------------------------------------"
   log "Done with Rust."
+  log "-----------------------------------------------------------------------"
 }
 
 setup_develop_dirs() {
+  log "-----------------------------------------------------------------------"
+  log "Setting up development directories..."
+  log "-----------------------------------------------------------------------"
   make_dir() {
-    log "Making directory: $1"
-
-    if [ -d "$1" ]; then
+    if [ ! -d "$1" ]; then
+      info "Making directory: $1"
       mkdir "$1"
     else
-      log "Already exists."
+      info "'$1' already exists; skipping."
       return 0
     fi
   }
@@ -107,59 +148,179 @@ setup_develop_dirs() {
   make_dir ~/Development
   make_dir ~/Development/projects
   make_dir ~/Development/not_my_projects
+  log "-----------------------------------------------------------------------"
+  log "Done."
+  log "-----------------------------------------------------------------------"
 }
 
 setup_neovim() {
+  log "-----------------------------------------------------------------------"
+  log "Setting up neovim..."
+  log "-----------------------------------------------------------------------"
   needs_pip_install=true
 
   if command_exists pip3; then
-    log "Installing neovim python-client for pip3"
-    pip3 install neovim
-    $needs_pip_install=false
+    info "Installing neovim python-client for pip3"
+    pip3 install neovim proselint vim-vint
+    needs_pip_install=false
   else
-    log "pip3 not found; skipping neovim install"
+    info "pip3 not found; skipping neovim install"
   fi
 
   if command_exists pip2; then
-    log "Installing neovim python-client for pip2"
-    pip2 install neovim
-    $needs_pip_install=false
+    info "Installing neovim python-client for pip2"
+    pip2 install neovim proselint vim-vint
+    needs_pip_install=false
   else
-    log "pip2 not found; skipping neovim install"
+    info "pip2 not found; skipping neovim install"
   fi
 
   if $needs_pip_install; then
     if command_exists pip; then
-      log "Installing neovim python-client for pip"
-      pip install neovim
+      info "Installing neovim python-client for pip"
+      pip install neovim proselint vim-vint
     else
-      log "pip not found; skipping neovim install"
+      info "pip not found; skipping neovim install"
     fi
   fi
-
-  # (Ruby neovim is handled in Gemfile)
 
   if [ -d "$HOME/.config/nvim" ]; then
     packer_destination=~/.local/share/nvim/site/pack/packer/start/packer.nvim
 
-    if [ -d ! $packer_destination ]; then
-      log "Installing packer.nvim..."
+    if [ ! -d $packer_destination ]; then
+      info "Installing packer.nvim..."
       git clone --depth 1 https://github.com/wbthomason/packer.nvim $packer_destination
     else
-      log "packer.nvim already installed."
+      info "packer.nvim already installed."
     fi
   fi
+  log "-----------------------------------------------------------------------"
+  log "Done."
+  log "-----------------------------------------------------------------------"
 }
 
 install_zr() {
+  log "-----------------------------------------------------------------------"
   log "Installing zr..."
+  log "-----------------------------------------------------------------------"
 
   if command_exists zr; then
-    log "zr already installed."
+    log "-----------------------------------------------------------------------"
+    log "zr already installed"
+    log "-----------------------------------------------------------------------"
     return 0
   fi
 
   sh -c "$(cargo install zr)"
+  log "-----------------------------------------------------------------------"
+  log "Done"
+  log "-----------------------------------------------------------------------"
+}
+
+pull_git_repos() {
+  log "-----------------------------------------------------------------------"
+  log "Pulling git repos..."
+  log "-----------------------------------------------------------------------"
+
+  pull_repo() {
+    repo_name=$1
+    local_path="$HOME/Development/agrian/$1"
+
+    if [ ! -d $local_path ]; then
+      repo_url="ssh://git@github.com/agrian-inc/$1"
+      info "Pulling git repo: $repo_url"
+      git clone $repo_url $local_path
+    else
+      info "Repo already cloned at: $local_path"
+    fi
+  }
+
+  pull_repo agrian_resources
+  pull_repo agrian_types
+  pull_repo agrian_units
+  pull_repo agrian_units_rb
+  pull_repo agrian-units-js
+  pull_repo agrian-what-rust
+
+  pull_repo bgeo-rust
+  pull_repo chekov
+  pull_repo commodity_locationizer
+  pull_repo culottes
+  pull_repo ffi_common
+  pull_repo image_writer
+  pull_repo libcompliance
+  pull_repo rustybur
+  pull_repo shorts-rust
+  pull_repo wise_units
+  pull_repo wise_units2
+
+  pull_repo core
+  pull_repo references
+  pull_repo kraken
+  pull_repo twilight
+  pull_repo ffi-gdal
+  pull_repo ffi-gdal-extensions
+
+  pull_repo demos
+
+  log "-----------------------------------------------------------------------"
+  log "Done."
+  log "-----------------------------------------------------------------------"
+}
+
+download_iterm2_color_schemes() {
+  log "-----------------------------------------------------------------------"
+  log "Downloading iTerm2 color schemes..."
+  log "-----------------------------------------------------------------------"
+  download_color_scheme() {
+    name=$1
+    file_name="$name.itermcolors"
+    local_path="$HOME/Downloads/$file_name"
+
+    if [ ! -e $local_path ]; then
+      url="https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/schemes/$file_name"
+      info "Downloading '$url' to '$local_path'..."
+      /bin/bash -c "$(curl --fail --silent --show-error --location --tcp-fastopen --http2 --compressed -o $local_path $url)"
+    else
+      info "'$name' already downloaded to '$local_path'."
+    fi
+  }
+
+  download_color_scheme "Seti"
+  download_color_scheme "Github"
+  download_color_scheme "Github Dark"
+  download_color_scheme "Laser"
+  download_color_scheme "FirefoxDev"
+  download_color_scheme "Atom"
+  download_color_scheme "AtomOneLight"
+  download_color_scheme "Adventure"
+  download_color_scheme "NightLion v1"
+  log "-----------------------------------------------------------------------"
+  log "Done."
+  log "-----------------------------------------------------------------------"
+}
+
+print_next_steps() {
+  log "-----------------------------------------------------------------------"
+  log "-----------------------------------------------------------------------"
+  log "All done with installing things. Now go do this manual stuff:"
+  log ""
+  log "* Install Alfred."
+  log "* Install Dropbox."
+  log "* Install Slack. (work)"
+  log "* Add license to Alfred."
+  log "* Add license to Choosy."
+  log "* Add license to Postico. (work)"
+  log "* Add license to SizeUp."
+  log "* Set up Firefix Sync."
+  log "* Set up ExpressVPN."
+  log "* Set up Tunnelblick (work)."
+  log "* Map CAPS Lock using karabiner-elements."
+  log "* Pull in GPG keys"
+  log "* Import iTerm2 color schemes"
+  log ""
+  log "-----------------------------------------------------------------------"
+  log "-----------------------------------------------------------------------"
 }
 
 #------------------------------------------------------------------------------
@@ -176,7 +337,10 @@ fi
 
 setup_tmux
 install_ruby
-install_rust
 setup_develop_dirs
 setup_neovim
+install_rust
 install_zr
+pull_git_repos
+download_iterm2_color_schemes
+print_next_steps

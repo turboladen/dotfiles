@@ -50,6 +50,7 @@ export VI_MODE_SET_CURSOR=true
 source $brew_prefix/etc/profile.d/z.sh
 source ~/.config/zsh/*.zsh
 source ~/.fzf.zsh
+source $HOME/.cargo/env
 
 #------------------------------------------------------------------------------
 # Completions; keep these towards the bottom in case other plugins add

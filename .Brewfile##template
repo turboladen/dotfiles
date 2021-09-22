@@ -5,6 +5,7 @@ tap 'homebrew/cask'
 cask 'alacritty'
 cask 'appcleaner'
 cask 'choosy'
+cask 'dropbox'
 cask 'expressvpn'
 cask 'firefox'
 cask 'github'
@@ -17,19 +18,34 @@ cask 'transmission'
 cask 'visual-studio-code'
 
 {% if yadm.class == "Work" %}
-# Work-specific
+#-----
+# Work-specific casks
+#-----
 cask 'paw'
 cask 'postgres-unofficial'
 cask 'postico'
 cask 'tunnelblick'
+cask 'virtualbox'
 {% endif %}
 
+#-----
+# Font casks
+#-----
 tap 'homebrew/homebrew-cask-fonts'
 cask 'font-fira-mono-nerd-font'
 cask 'font-jetbrains-mono-nerd-font'
 cask 'font-powerline-symbols'
 
-# Shell env
+#---------------------
+# Apple Store things
+#---------------------
+mas '2Do', id: 477670270
+mas 'Amphetamine', id: 937984704
+mas 'Pocket', id: 937984704
+
+#---------------------
+# Formulae
+#---------------------
 brew 'curl'
 brew 'exa'
 brew 'fzf'
@@ -43,6 +59,7 @@ brew 'coreutils'
 brew 'dua-cli'
 brew 'gh'
 brew 'git'
+brew 'gpg2'
 brew 'hubflow'
 brew 'jq'
 brew 'libsodium'
@@ -62,7 +79,9 @@ brew 'tokei'
 brew 'tree-sitter'
 
 {% if yadm.class == "Work" %}
-# Work-specific
+#---------------------
+# Work-specific formulae
+#---------------------
 brew 'cmake'
 brew 'elasticsearch'
 brew 'gdal'
