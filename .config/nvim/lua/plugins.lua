@@ -564,7 +564,8 @@ return require("packer").startup(
                 end
             }
 
-            use "~/Development/projects/vim-rbs"
+            -- use "~/Development/projects/vim-rbs"
+            use {"turboladen/vim-rbs", ft = {"ruby", "rbs", "ruby.rbs"}}
 
             -- Lightweight support for Ruby's Bundler
             use {"tpope/vim-bundler", ft = {"ruby", "eruby"}}
