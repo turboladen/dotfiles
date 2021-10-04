@@ -41,7 +41,7 @@ cask 'font-powerline-symbols'
 #---------------------
 mas '2Do', id: 477670270
 mas 'Amphetamine', id: 937984704
-mas 'Pocket', id: 937984704
+mas 'Pocket', id: 568494494
 
 #---------------------
 # Formulae
