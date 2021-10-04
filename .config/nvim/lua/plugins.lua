@@ -1,46 +1,17 @@
 -- This file can be loaded by calling `lua require('plugins')` from your init.vim
 
-local function getHomebrewPathFor(package)
-    local Job = require("plenary.job")
-
-    local homebrew_root = ""
-    local job =
-        Job:new(
-        {
-            command = "brew",
-            args = {"--prefix", package},
-            on_stdout = function(_, data)
-                homebrew_root = data
-            end
-        }
-    )
-    job:sync()
-
-    return homebrew_root
+function ShowDocumentation()
+    local filetype = vim.bo.filetype
+    if vim.tbl_contains({"vim", "help"}, filetype) then
+        vim.cmd("h " .. vim.fn.expand("<cword>"))
+    elseif vim.tbl_contains({"man"}, filetype) then
+        vim.cmd("Man " .. vim.fn.expand("<cword>"))
+    elseif vim.fn.expand("%:t") == "Cargo.toml" then
+        require("crates").show_popup()
+    else
+        vim.lsp.buf.hover()
+    end
 end
-
--- local rust_tools_config = function()
---     vim.env.PATH = vim.env.PATH .. ":/usr/local/opt/llvm/bin"
-
---     local opts = {
---         tools = {
---             -- rust-tools options
---             inlay_hints = {
---                 show_parameter_hints = false
---             }
---         },
---         -- all the opts to send to nvim-lspconfig
---         -- these override the defaults set by rust-tools.nvim
---         -- see https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#rust_analyzer
---         server = {
---             settings = rust_analyzer_settings
---         }
---     }
---     print("rust-tools setting up")
---     require("rust-tools").setup(opts)
-
---     vim.api.nvim_set_keymap("n", "K", ":RustHoverActions<CR>", {silent = true, noremap = true})
--- end
 
 return require("packer").startup(
     {
@@ -97,9 +68,13 @@ return require("packer").startup(
             -- Distraction-free writing in Vim.
             use {"junegunn/goyo.vim", config = "vim.g.goyo_width = 101", cmd = "Goyo"}
 
+            -- https://github.com/datwaft/bubbly.nvim
             use {
                 "datwaft/bubbly.nvim",
+                requires = "nvim-lua/lsp-status.nvim",
                 config = function()
+                    require("lsp-status").register_progress()
+
                     -- Here you can add the configuration for the plugin
                     vim.g.bubbly_palette = {
                         background = "#34343c",
@@ -120,7 +95,8 @@ return require("packer").startup(
                         "truncate",
                         "path",
                         "branch",
-                        "coc",
+                        "lsp_status.messages",
+                        "lsp_status.diagnostics",
                         "divisor",
                         "filetype",
                         "progress"
@@ -143,6 +119,9 @@ return require("packer").startup(
             --         vim.api.nvim_set_keymap('n', '<leader>o', ':Rg TODO<CR>', {})
             --     end
             -- }
+
+            -- https://github.com/liuchengxu/vim-clap
+            -- Vim-clap is a modern generic interactive finder and dispatcher
             use {
                 "liuchengxu/vim-clap",
                 run = ":Clap install-binary",
@@ -153,6 +132,39 @@ return require("packer").startup(
                     vim.g.clap_disable_run_rooter = true
                     vim.g.clap_layout = {relative = "editor"}
                     vim.g.clap_enable_icon = true
+                    vim.g.clap_provider_dotfiles = {
+                        source = {
+                            "~/.Brewfile",
+                            "~/.Brewfile##template",
+                            "~/.cargo/config.toml",
+                            "~/.config/alacritty/alacritty.yml",
+                            "~/.config/nvim/init.vim",
+                            "~/.config/nvim/lua/plugins.lua",
+                            "~/.config/yadm/bootstrap",
+                            "~/.gemrc",
+                            "~/.gitconfig",
+                            "~/.gitconfig##template",
+                            "~/.gitconfig-personal",
+                            "~/.gitconfig-work",
+                            "~/.gitconfig-work##class.Work",
+                            "~/.gitignore_global",
+                            "~/.irbrc",
+                            "~/.profile",
+                            "~/.rustup/settings.toml",
+                            "~/.ssh/config",
+                            "~/.tmux.conf",
+                            "~/.tmux.conf##template",
+                            "~/.zshrc",
+                            "~/.zshenv"
+                        },
+                        sink = "e",
+                        description = "Open a dotfile"
+                    }
+
+                    vim.cmd(
+                        [[autocmd FileType clap_input lua require('cmp').setup.buffer { enabled = false }
+                    ]]
+                    )
 
                     vim.api.nvim_set_keymap("n", "<leader><leader>", ":Clap files<CR>", {noremap = true, silent = true})
                     vim.api.nvim_set_keymap("n", "<leader><CR>", ":Clap buffers<CR>", {noremap = true, silent = true})
@@ -209,6 +221,8 @@ return require("packer").startup(
                 config = function()
                     vim.g.rg_command = "rg --vimgrep --ignore-vcs"
                     vim.g.rg_highlight = 1
+
+                    vim.api.nvim_set_keymap("n", "<leader>.", ":Rg<SPACE><CR>", {noremap = true})
                 end
             }
 
@@ -231,101 +245,20 @@ return require("packer").startup(
             use {
                 "neoclide/coc.nvim",
                 branch = "release",
+                disable = true,
                 config = function()
-                    -- local node_root = getHomebrewPathFor("node")
-                    -- vim.g.coc_node_path = node_root .. "/bin/node"
-
                     -- coc-dictionary: Words from files in &dictionary.
                     -- coc-git: Somewhat replaces gitgutter; kinda depends on vim-fugitive.
                     -- coc-html: HTML language server.
                     -- coc-lists: Some basic list sources
                     -- coc-prettier: Code reformatting--initially got for markdown
                     vim.g.coc_global_extensions = {
-                        "coc-dictionary",
-                        "coc-git",
                         "coc-html",
                         "coc-lists",
                         "coc-markdownlint",
                         "coc-prettier",
-                        "coc-solargraph",
-                        "coc-snippets",
-                        "coc-toml",
-                        "coc-yaml"
+                        "coc-toml"
                     }
-                    -- Use <C-j> for jump to next placeholder, it's default of coc.nvim
-                    vim.g.coc_snippet_next = "<c-j>"
-
-                    -- Use <C-k> for jump to previous placeholder, it's default of coc.nvim
-                    vim.g.coc_snippet_prev = "<c-k>"
-
-                    -- https://kimpers.com/vim-intelligent-autocompletion/
-                    -- Remap keys for gotos
-                    -- vim.api.nvim_set_keymap("n", "gd", "<Plug>(coc-definition)", {silent = true})
-                    -- vim.api.nvim_set_keymap("n", "gD", "<Plug>(coc-declaration)", {silent = true})
-                    -- vim.api.nvim_set_keymap("n", "gy", "<Plug>(coc-type-definition)", {silent = true})
-                    -- vim.api.nvim_set_keymap("n", "gi", "<Plug>(coc-implementation)", {silent = true})
-                    -- vim.api.nvim_set_keymap("n", "gr", "<Plug>(coc-references)", {silent = true})
-                    -- vim.api.nvim_set_keymap("n", "[g", "<Plug>(coc-diagnostic-prev)", {silent = true})
-                    -- vim.api.nvim_set_keymap("n", "]g", "<Plug>(coc-diagnostic-next)", {silent = true})
-                    -- vim.api.nvim_set_keymap("n", "[G", "<Plug>(coc-diagnostic-prev-error)", {silent = true})
-                    -- vim.api.nvim_set_keymap("n", "]G", "<Plug>(coc-diagnostic-next-error)", {silent = true})
-                    -- vim.api.nvim_set_keymap("n", "g=", "<Plug>(coc-format)", {silent = true})
-
-                    -- vim.api.nvim_set_keymap("n", "rn", "<Plug>(coc-rename)", {silent = true})
-                    -- vim.api.nvim_set_keymap("n", "gA", "<Plug>(coc-codeaction-line)", {})
-                    -- vim.api.nvim_set_keymap("v", "gA", "<Plug>(coc-codeaction-selected)", {})
-                    -- vim.api.nvim_set_keymap("n", "gB", "<Plug>(coc-codeaction-cursor)", {})
-                    -- vim.api.nvim_set_keymap("v", "gB", "<Plug>(coc-codeaction)", {})
-                    -- vim.api.nvim_set_keymap("n", "gF", "<Plug>(coc-fix-current)", {})
-                    -- vim.api.nvim_set_keymap("n", "gR", "<Plug>(coc-refactor)", {})
-
-                    -- Show all diagnostics.
-                    -- vim.api.nvim_set_keymap(
-                    --     "n",
-                    --     "<leader>a",
-                    --     ":<C-u>CocList diagnostics<CR>",
-                    --     {silent = true, nowait = true, noremap = true}
-                    -- )
-                    -- Show all commands.
-                    -- vim.api.nvim_set_keymap(
-                    --     "n",
-                    --     "<leader>cc",
-                    --     ":<C-u>CocList commands<CR>",
-                    --     {silent = true, nowait = true, noremap = true}
-                    -- )
-                    -- Search workspace symbols.
-                    -- vim.api.nvim_set_keymap(
-                    --     "n",
-                    --     "<leader>cs",
-                    --     ":<C-u>CocList -I symbols<CR>",
-                    --     {silent = true, nowait = true, noremap = true}
-                    -- )
-                    -- Do default action for next item.
-                    -- vim.api.nvim_set_keymap(
-                    --     "n",
-                    --     "<leader>j",
-                    --     ":<C-u>CocNext<CR>",
-                    --     {silent = true, nowait = true, noremap = true}
-                    -- )
-                    -- Do default action for previous item.
-                    -- vim.api.nvim_set_keymap(
-                    --     "n",
-                    --     "<leader>k",
-                    --     ":<C-u>CocPrev<CR>",
-                    --     {silent = true, nowait = true, noremap = true}
-                    -- )
-                    -- Resume latest coc list.
-                    -- vim.api.nvim_set_keymap(
-                    --     "n",
-                    --     "<leader>p",
-                    --     ":<C-u>CocListResume<CR>",
-                    --     {silent = true, nowait = true, noremap = true}
-                    -- )
-
-                    -- vim.api.nvim_set_keymap("n", "<leader>/", ":CocSearch<SPACE>", {noremap = true})
-
-                    -- Use K for show documentation in preview window
-                    -- vim.api.nvim_set_keymap('n', 'K', '<SID>show_documentation()<CR>', {silent = true, noremap = true})
                 end
             }
 
@@ -401,7 +334,7 @@ return require("packer").startup(
             -- Protect against weird unicode copy/paste
             use "vim-utils/vim-troll-stopper"
 
-            use "honza/vim-snippets"
+            -- use "honza/vim-snippets"
 
             -- For case swapping
             use {
@@ -422,7 +355,7 @@ return require("packer").startup(
             use {"tpope/vim-dispatch", opt = true, cmd = {"Dispatch", "Make", "Focus", "Start"}}
 
             -- Vim sugar for the UNIX shell commands that need it the most
-            use {"tpope/vim-eunuch", opt = true, cmd = {"Delete", "Move", "Rename"}}
+            use {"tpope/vim-eunuch", opt = true, cmd = {"Delete", "Move", "Rename", "Remove"}}
 
             -- run your tests at the speed of thought
             use {
@@ -516,7 +449,12 @@ return require("packer").startup(
             use {"tpope/vim-git", ft = {"git", "gitconfig", "gitcommit", "gitsendmail"}}
 
             -- a Git wrapper so awesome, it should be illegal
-            use "tpope/vim-fugitive"
+            use {
+                "tpope/vim-fugitive",
+                config = function()
+                    vim.api.nvim_set_keymap("n", "<leader>gs", ":Git<CR>", {silent = true})
+                end
+            }
 
             -- If fugitive.vim is the Git, rhubarb.vim is the Hub.
             use "tpope/vim-rhubarb"
@@ -555,7 +493,12 @@ return require("packer").startup(
             ------------------
             -- A better JSON for Vim: distinct highlighting of keywords as values,
             -- JSON-specific (non-JS) warnings, quote concealing.
-            use "elzr/vim-json"
+            use {
+                "elzr/vim-json",
+                config = function()
+                    vim.g.vim_json_syntax_conceal = false
+                end
+            }
             -- Plug 'GutenYe/json5.vim'
 
             ------------------
@@ -703,6 +646,32 @@ return require("packer").startup(
             }
 
             use {
+                "mhartington/formatter.nvim",
+                config = function()
+                    require("formatter").setup(
+                        {
+                            filetype = {
+                                javascript = {
+                                    -- prettier
+                                    function()
+                                        return {
+                                            exe = "prettier",
+                                            args = {
+                                                "--stdin-filepath",
+                                                vim.fn.fnameescape(vim.api.nvim_buf_get_name(0)),
+                                                "--single-quote"
+                                            },
+                                            stdin = true
+                                        }
+                                    end
+                                }
+                            }
+                        }
+                    )
+                end
+            }
+
+            use {
                 "mfussenegger/nvim-dap",
                 requires = "nvim-lua/plenary.nvim",
                 config = function()
@@ -806,34 +775,16 @@ return require("packer").startup(
                 end
             }
 
-            -- use {
-            --     "neovim/nvim-lspconfig",
-            --     config = function()
-            --         -- Use a loop to conveniently call 'setup' on multiple servers and
-            --         -- map buffer local keybindings when the language server attaches
-            --         local nvim_lsp = require("lspconfig")
-
-            --         for _, lsp in pairs(lsp_server_names) do
-            --             print("lspconfig. Setting up sever... " .. lsp)
-            --             nvim_lsp[lsp].setup {
-            --                 on_attach = common_on_attach,
-            --                 flags = {
-            --                     debounce_text_changes = 150
-            --                 }
-            --             }
-            --         end
-            --     end
-            -- }
-
             use {
                 "williamboman/nvim-lsp-installer",
                 requires = {
                     "neovim/nvim-lspconfig",
-                    "simrat39/rust-tools.nvim"
+                    "simrat39/rust-tools.nvim",
+                    "nvim-lua/lsp-status.nvim"
                 },
                 config = function()
                     local function for_each_lsp_server(cb)
-                        local server_names = {"rust_analyzer", "sumneko_lua"}
+                        local server_names = {"rust_analyzer", "sumneko_lua", "jsonls", "solargraph", "vimls", "yamlls"}
 
                         for _, server_name in pairs(server_names) do
                             cb(server_name)
@@ -843,7 +794,7 @@ return require("packer").startup(
                     for_each_lsp_server(
                         function(server_name)
                             local lsp_installer_servers = require("nvim-lsp-installer.servers")
-                            local ok, server = lsp_installer_servers.get_server(name)
+                            local ok, server = lsp_installer_servers.get_server(server_name)
                             if ok then
                                 if not server:is_installed() then
                                     server:install()
@@ -853,11 +804,19 @@ return require("packer").startup(
                     )
 
                     local lsp_installer = require("nvim-lsp-installer")
+                    local lsp_status = require("lsp-status")
+                    -- lsp_status.register_progress()
 
                     lsp_installer.on_server_ready(
                         function(server)
                             local opts = {
+                                capabilities = lsp_status.capabilities,
                                 on_attach = function(client, bufnr)
+                                    -- Register client for messages and set up buffer autocommands to update
+                                    -- the statusline and the current function.
+                                    -- NOTE: on_attach is called with the client object, which is the "client" parameter below
+                                    lsp_status.on_attach(client)
+
                                     local function buf_set_keymap(...)
                                         vim.api.nvim_buf_set_keymap(bufnr, ...)
                                     end
@@ -943,6 +902,11 @@ return require("packer").startup(
                                             command = "clippy",
                                             allFeatures = true
                                         },
+                                        completion = {
+                                            autoimport = {
+                                                enable = true
+                                            }
+                                        },
                                         lens = {
                                             methodReferences = true
                                         }
@@ -987,6 +951,155 @@ return require("packer").startup(
             }
 
             use {
+                "hrsh7th/nvim-cmp",
+                requires = {
+                    "hrsh7th/cmp-buffer",
+                    "hrsh7th/cmp-nvim-lsp",
+                    "neovim/nvim-lspconfig",
+                    "hrsh7th/vim-vsnip",
+                    "hrsh7th/cmp-vsnip",
+                    "rafamadriz/friendly-snippets",
+                    "f3fora/cmp-spell",
+                    "hrsh7th/cmp-path",
+                    "hrsh7th/cmp-nvim-lua",
+                    -- https://github.com/octaltree/cmp-look
+                    "octaltree/cmp-look",
+                    -- https://github.com/onsails/lspkind-nvim
+                    "onsails/lspkind-nvim"
+                },
+                config = function()
+                    local cmp = require("cmp")
+                    local lspkind = require("lspkind")
+
+                    cmp.setup(
+                        {
+                            completion = {
+                                keyword_length = 2
+                            },
+                            formatting = {
+                                format = function(entry, vim_item)
+                                    vim_item.kind = lspkind.presets.default[vim_item.kind]
+
+                                    -- set a name for each source
+                                    vim_item.menu =
+                                        ({
+                                        nvim_lsp = "[LSP]",
+                                        vsnip = "[V-Snip]",
+                                        buffer = "[Buffer]",
+                                        path = "[Path]",
+                                        spell = "[Spell]",
+                                        look = "[Look]",
+                                        nvim_lua = "[Lua]",
+                                        crates = "[Crates]"
+                                    })[entry.source.name]
+
+                                    return vim_item
+                                end
+                            },
+                            mapping = {
+                                ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+                                ["<C-f>"] = cmp.mapping.scroll_docs(4),
+                                ["<C-Space>"] = cmp.mapping.complete(),
+                                ["<C-e>"] = cmp.mapping.close(),
+                                ["<CR>"] = cmp.mapping.confirm({select = true})
+                            },
+                            snippet = {
+                                expand = function(args)
+                                    vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` user.
+                                end
+                            },
+                            sources = {
+                                {name = "nvim_lsp"},
+                                {name = "vsnip"},
+                                {name = "buffer"},
+                                {name = "path"},
+                                {name = "spell"},
+                                {name = "look", keyword_length = 2},
+                                {name = "nvim_lua"},
+                                {name = "crates"}
+                            }
+                        }
+                    )
+
+                    -- Setup lspconfig.
+                    local servers = require("nvim-lsp-installer.servers").get_installed_servers()
+
+                    for _, server in pairs(servers) do
+                        require("lspconfig")[server.name].setup {
+                            capabilities = require("cmp_nvim_lsp").update_capabilities(
+                                vim.lsp.protocol.make_client_capabilities()
+                            )
+                        }
+                    end
+
+                    -- Expand
+                    vim.api.nvim_set_keymap(
+                        "i",
+                        "<C-j>",
+                        "vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-j>'",
+                        {expr = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "s",
+                        "<C-j>",
+                        "vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-j>'",
+                        {expr = true}
+                    )
+
+                    -- Expand or jump
+                    vim.api.nvim_set_keymap(
+                        "i",
+                        "<C-l>",
+                        "vsnip#available(1) ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'",
+                        {expr = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "s",
+                        "<C-l>",
+                        "vsnip#available(1) ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'",
+                        {expr = true}
+                    )
+
+                    -- Jump forward or backward
+                    vim.api.nvim_set_keymap(
+                        "i",
+                        "<Tab>",
+                        "vsnip#jumpable(1) ? '<Plug>(vsnip-jump-next)' : '<Tab>'",
+                        {expr = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "s",
+                        "<Tab>",
+                        "vsnip#jumpable(1) ? '<Plug>(vsnip-jump-next)' : '<Tab>'",
+                        {expr = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "i",
+                        "<S-Tab>",
+                        "vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<S-Tab>'",
+                        {expr = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "s",
+                        "<S-Tab>",
+                        "vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<S-Tab>'",
+                        {expr = true}
+                    )
+                end
+            }
+
+            use {
+                "Saecki/crates.nvim",
+                event = {"BufEnter Cargo.toml"},
+                requires = {"nvim-lua/plenary.nvim"},
+                config = function()
+                    require("crates").setup()
+
+                    vim.api.nvim_set_keymap("n", "K", ":lua ShowDocumentation()<CR>", {noremap = true, silent = true})
+                end
+            }
+
+            use {
                 "rcarriga/nvim-dap-ui",
                 requires = "mfussenegger/nvim-dap"
             }
@@ -999,13 +1112,6 @@ return require("packer").startup(
 
             -- Load on an autocommand event
             use {"andymass/vim-matchup", event = "VimEnter"}
-
-            -- Plugins can have dependencies on other plugins
-            -- use {
-            --   'haorenW1025/completion-nvim',
-            --   opt = true,
-            --   requires = {{'hrsh7th/vim-vsnip', opt = true}, {'hrsh7th/vim-vsnip-integ', opt = true}}
-            -- }
 
             -- You can specify rocks in isolation
             -- use_rocks 'penlight'
@@ -1034,7 +1140,17 @@ return require("packer").startup(
                 "lewis6991/gitsigns.nvim",
                 requires = {"nvim-lua/plenary.nvim"},
                 config = function()
-                    require("gitsigns").setup()
+                    require("gitsigns").setup(
+                        {
+                            signs = {
+                                add = {text = "✚"},
+                                change = {text = "✹"},
+                                delete = {text = "✖"},
+                                changedelete = {text = "⇄"}
+                            },
+                            yadm = {enable = true}
+                        }
+                    )
                 end
             }
 
