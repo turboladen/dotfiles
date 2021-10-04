@@ -1,9 +1,6 @@
 -- This file can be loaded by calling `lua require('plugins')` from your init.vim
 
--- Only required if you have packer configured as `opt`
--- vim.cmd [[packadd packer.nvim]]
-
-function getHomebrewPath()
+local function getHomebrewPathFor(package)
     local Job = require("plenary.job")
 
     local homebrew_root = ""
@@ -11,7 +8,7 @@ function getHomebrewPath()
         Job:new(
         {
             command = "brew",
-            args = {"--prefix"},
+            args = {"--prefix", package},
             on_stdout = function(_, data)
                 homebrew_root = data
             end
@@ -20,6 +17,55 @@ function getHomebrewPath()
     job:sync()
 
     return homebrew_root
+end
+
+-- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
+local rust_analyzer_settings = {
+    ["rust-analyzer"] = {
+        assist = {
+            importGranularity = "module",
+            importPrefix = "by_self"
+        },
+        cargo = {
+            allFeatures = true,
+            loadOutDirsFromCheck = true
+        },
+        -- enable clippy on save
+        checkOnSave = {
+            command = "clippy",
+            allFeatures = true
+        },
+        lens = {
+            methodReferences = true
+        },
+        -- lruCapacity = 4096,
+        procMacro = {
+            enable = true
+        }
+    }
+}
+
+local rust_tools_config = function()
+    vim.env.PATH = vim.env.PATH .. ":/usr/local/opt/llvm/bin"
+
+    local opts = {
+        tools = {
+            -- rust-tools options
+            inlay_hints = {
+                show_parameter_hints = false
+            }
+        },
+        -- all the opts to send to nvim-lspconfig
+        -- these override the defaults set by rust-tools.nvim
+        -- see https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#rust_analyzer
+        server = {
+            settings = rust_analyzer_settings
+        }
+    }
+    print("rust-tools setting up")
+    require("rust-tools").setup(opts)
+
+    vim.api.nvim_set_keymap("n", "K", ":RustHoverActions<CR>", {silent = true, noremap = true})
 end
 
 return require("packer").startup(
@@ -55,11 +101,15 @@ return require("packer").startup(
                             "json",
                             "lua",
                             "ruby",
+                            "rust",
                             "toml",
                             "typescript",
                             "yaml"
                         },
-                        highlight = {enable = true}
+                        highlight = {enable = true},
+                        matchup = {
+                            enable = true
+                        }
                     }
                 end
             }
@@ -72,10 +122,6 @@ return require("packer").startup(
 
             -- Distraction-free writing in Vim.
             use {"junegunn/goyo.vim", config = "vim.g.goyo_width = 101", cmd = "Goyo"}
-
-            -- I like, but it doesn't show the whole path to the current file and that's
-            -- not configurable.
-            -- use {"glepnir/spaceline.vim", requires = "kyazdani42/nvim-web-devicons"}
 
             use {
                 "datwaft/bubbly.nvim",
@@ -108,22 +154,19 @@ return require("packer").startup(
                 end
             }
 
-            -- Plug '/Users/steve.loveless/Development/projects/pantsline.vim'
-            -- Plug 'turboladen/pantsline.vim', { 'branch': 'feature/initial-stuff' }
-
             -----------------------------------------------------------------------------
             -- 2. moving around, searching and patterns
             -----------------------------------------------------------------------------
-            -- use { 'lotabout/skim', run = "cd ~/.local/share/skim && ./install" }
+            -- use { 'lotabout/skim', run = 'cd ~/.local/share/skim && ./install' }
             -- use {
-            --     "lotabout/skim.vim",
-            --     rtp = "/usr/local/opt/sk",
-            --     requires = {"lotabout/skim"},
+            --     'lotabout/skim.vim',
+            --     rtp = '/usr/local/opt/sk',
+            --     requires = {'lotabout/skim'},
             --     config = function()
-            --         vim.env.SKIM_DEFAULT_COMMAND = "rg --files --color=always"
-            --         vim.env.SKIM_DEFAULT_OPTIONS = "--layout=reverse --ansi"
-            --         vim.api.nvim_set_keymap("n", "<leader>,", ":Rg <C-R><C-W><CR>", {})
-            --         vim.api.nvim_set_keymap("n", "<leader>o", ":Rg TODO<CR>", {})
+            --         vim.env.SKIM_DEFAULT_COMMAND = 'rg --files --color=always'
+            --         vim.env.SKIM_DEFAULT_OPTIONS = '--layout=reverse --ansi'
+            --         vim.api.nvim_set_keymap('n', '<leader>,', ':Rg <C-R><C-W><CR>', {})
+            --         vim.api.nvim_set_keymap('n', '<leader>o', ':Rg TODO<CR>', {})
             --     end
             -- }
             use {
@@ -205,17 +248,18 @@ return require("packer").startup(
             use "justinmk/vim-dirvish"
             use {"kristijanhusak/vim-dirvish-git", requires = {"justinmk/vim-dirvish"}}
 
-            use "airblade/vim-gitgutter"
+            -- use "airblade/vim-gitgutter"
 
             -- extended % matching for HTML, LaTeX and many other languages
-            use "tmhedberg/matchit"
+            -- use "tmhedberg/matchit"
 
             -- Conquer of Completion
             use {
                 "neoclide/coc.nvim",
                 branch = "release",
                 config = function()
-                    vim.g.coc_node_path = getHomebrewPath() .. "/bin/node"
+                    -- local node_root = getHomebrewPathFor("node")
+                    -- vim.g.coc_node_path = node_root .. "/bin/node"
 
                     -- coc-dictionary: Words from files in &dictionary.
                     -- coc-git: Somewhat replaces gitgutter; kinda depends on vim-fugitive.
@@ -229,7 +273,6 @@ return require("packer").startup(
                         "coc-lists",
                         "coc-markdownlint",
                         "coc-prettier",
-                        "coc-rust-analyzer",
                         "coc-solargraph",
                         "coc-snippets",
                         "coc-toml",
@@ -243,72 +286,72 @@ return require("packer").startup(
 
                     -- https://kimpers.com/vim-intelligent-autocompletion/
                     -- Remap keys for gotos
-                    vim.api.nvim_set_keymap("n", "gd", "<Plug>(coc-definition)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "gD", "<Plug>(coc-declaration)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "gy", "<Plug>(coc-type-definition)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "gi", "<Plug>(coc-implementation)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "gr", "<Plug>(coc-references)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "[g", "<Plug>(coc-diagnostic-prev)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "]g", "<Plug>(coc-diagnostic-next)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "[G", "<Plug>(coc-diagnostic-prev-error)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "]G", "<Plug>(coc-diagnostic-next-error)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "g=", "<Plug>(coc-format)", {silent = true})
+                    -- vim.api.nvim_set_keymap("n", "gd", "<Plug>(coc-definition)", {silent = true})
+                    -- vim.api.nvim_set_keymap("n", "gD", "<Plug>(coc-declaration)", {silent = true})
+                    -- vim.api.nvim_set_keymap("n", "gy", "<Plug>(coc-type-definition)", {silent = true})
+                    -- vim.api.nvim_set_keymap("n", "gi", "<Plug>(coc-implementation)", {silent = true})
+                    -- vim.api.nvim_set_keymap("n", "gr", "<Plug>(coc-references)", {silent = true})
+                    -- vim.api.nvim_set_keymap("n", "[g", "<Plug>(coc-diagnostic-prev)", {silent = true})
+                    -- vim.api.nvim_set_keymap("n", "]g", "<Plug>(coc-diagnostic-next)", {silent = true})
+                    -- vim.api.nvim_set_keymap("n", "[G", "<Plug>(coc-diagnostic-prev-error)", {silent = true})
+                    -- vim.api.nvim_set_keymap("n", "]G", "<Plug>(coc-diagnostic-next-error)", {silent = true})
+                    -- vim.api.nvim_set_keymap("n", "g=", "<Plug>(coc-format)", {silent = true})
 
-                    vim.api.nvim_set_keymap("n", "rn", "<Plug>(coc-rename)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "gA", "<Plug>(coc-codeaction-line)", {})
-                    vim.api.nvim_set_keymap("v", "gA", "<Plug>(coc-codeaction-selected)", {})
-                    vim.api.nvim_set_keymap("n", "gB", "<Plug>(coc-codeaction-cursor)", {})
-                    vim.api.nvim_set_keymap("v", "gB", "<Plug>(coc-codeaction)", {})
-                    vim.api.nvim_set_keymap("n", "gF", "<Plug>(coc-fix-current)", {})
-                    vim.api.nvim_set_keymap("n", "gR", "<Plug>(coc-refactor)", {})
+                    -- vim.api.nvim_set_keymap("n", "rn", "<Plug>(coc-rename)", {silent = true})
+                    -- vim.api.nvim_set_keymap("n", "gA", "<Plug>(coc-codeaction-line)", {})
+                    -- vim.api.nvim_set_keymap("v", "gA", "<Plug>(coc-codeaction-selected)", {})
+                    -- vim.api.nvim_set_keymap("n", "gB", "<Plug>(coc-codeaction-cursor)", {})
+                    -- vim.api.nvim_set_keymap("v", "gB", "<Plug>(coc-codeaction)", {})
+                    -- vim.api.nvim_set_keymap("n", "gF", "<Plug>(coc-fix-current)", {})
+                    -- vim.api.nvim_set_keymap("n", "gR", "<Plug>(coc-refactor)", {})
 
                     -- Show all diagnostics.
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>a",
-                        ":<C-u>CocList diagnostics<CR>",
-                        {silent = true, nowait = true, noremap = true}
-                    )
+                    -- vim.api.nvim_set_keymap(
+                    --     "n",
+                    --     "<leader>a",
+                    --     ":<C-u>CocList diagnostics<CR>",
+                    --     {silent = true, nowait = true, noremap = true}
+                    -- )
                     -- Show all commands.
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>cc",
-                        ":<C-u>CocList commands<CR>",
-                        {silent = true, nowait = true, noremap = true}
-                    )
+                    -- vim.api.nvim_set_keymap(
+                    --     "n",
+                    --     "<leader>cc",
+                    --     ":<C-u>CocList commands<CR>",
+                    --     {silent = true, nowait = true, noremap = true}
+                    -- )
                     -- Search workspace symbols.
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>cs",
-                        ":<C-u>CocList -I symbols<CR>",
-                        {silent = true, nowait = true, noremap = true}
-                    )
+                    -- vim.api.nvim_set_keymap(
+                    --     "n",
+                    --     "<leader>cs",
+                    --     ":<C-u>CocList -I symbols<CR>",
+                    --     {silent = true, nowait = true, noremap = true}
+                    -- )
                     -- Do default action for next item.
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>j",
-                        ":<C-u>CocNext<CR>",
-                        {silent = true, nowait = true, noremap = true}
-                    )
+                    -- vim.api.nvim_set_keymap(
+                    --     "n",
+                    --     "<leader>j",
+                    --     ":<C-u>CocNext<CR>",
+                    --     {silent = true, nowait = true, noremap = true}
+                    -- )
                     -- Do default action for previous item.
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>k",
-                        ":<C-u>CocPrev<CR>",
-                        {silent = true, nowait = true, noremap = true}
-                    )
+                    -- vim.api.nvim_set_keymap(
+                    --     "n",
+                    --     "<leader>k",
+                    --     ":<C-u>CocPrev<CR>",
+                    --     {silent = true, nowait = true, noremap = true}
+                    -- )
                     -- Resume latest coc list.
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>p",
-                        ":<C-u>CocListResume<CR>",
-                        {silent = true, nowait = true, noremap = true}
-                    )
+                    -- vim.api.nvim_set_keymap(
+                    --     "n",
+                    --     "<leader>p",
+                    --     ":<C-u>CocListResume<CR>",
+                    --     {silent = true, nowait = true, noremap = true}
+                    -- )
 
-                    vim.api.nvim_set_keymap("n", "<leader>/", ":CocSearch<SPACE>", {noremap = true})
+                    -- vim.api.nvim_set_keymap("n", "<leader>/", ":CocSearch<SPACE>", {noremap = true})
 
                     -- Use K for show documentation in preview window
-                    -- vim.api.nvim_set_keymap("n", "K", "<SID>show_documentation()<CR>", {silent = true, noremap = true})
+                    -- vim.api.nvim_set_keymap('n', 'K', '<SID>show_documentation()<CR>', {silent = true, noremap = true})
                 end
             }
 
@@ -325,9 +368,9 @@ return require("packer").startup(
                 end
             }
 
-            --===========================================================================""
+            --===========================================================================
             -- 5. syntax, highlighting and spelling
-            --===========================================================================""
+            --===========================================================================
             ----------------------------------------
             -- Color schemes
             ----------------------------------------
@@ -348,9 +391,9 @@ return require("packer").startup(
             -- Show vertical line for indentation level
             use {"Yggdroot/indentLine", ft = "yaml"}
 
-            --===========================================================================""
+            --===========================================================================
             -- 6. multiple windows
-            --===========================================================================""
+            --===========================================================================
             -- Delete all the buffers except the current/named buffer
             use {
                 "vim-scripts/BufOnly.vim",
@@ -359,9 +402,9 @@ return require("packer").startup(
                 end
             }
 
-            --===========================================================================""
+            --===========================================================================
             -- 13. editing text
-            --===========================================================================""
+            --===========================================================================
             -- wisely add 'end' in ruby, endfucntion/endif/more in vimscript, etc.
             use "tpope/vim-endwise"
 
@@ -397,9 +440,9 @@ return require("packer").startup(
             -- Vim script for text filtering and alignment
             use {"godlygeek/tabular", opt = true, cmd = "Tabularize"}
 
-            --===========================================================================""
+            --===========================================================================
             -- 21. executing external commands
-            --===========================================================================""
+            --===========================================================================
             -- Asynchronous build and test dispatcher. Used for running specs in a separate
             -- tmux pane.
             use {"tpope/vim-dispatch", opt = true, cmd = {"Dispatch", "Make", "Focus", "Start"}}
@@ -409,7 +452,7 @@ return require("packer").startup(
 
             -- run your tests at the speed of thought
             use {
-                "janko-m/vim-test",
+                "vim-test/vim-test",
                 opt = true,
                 ft = "ruby",
                 config = function()
@@ -424,13 +467,52 @@ return require("packer").startup(
                 end
             }
 
-            --===========================================================================""
-            -- 22. running make and jumping to errors (quickfix)
-            --===========================================================================""
+            use {
+                "rcarriga/vim-ultest",
+                requires = "vim-test/vim-test",
+                run = ":UpdateRemotePlugins",
+                config = function()
+                    vim.g.ultest_use_pty = true
 
-            --===========================================================================""
+                    require("ultest").setup(
+                        {
+                            builders = {
+                                ["ruby#rspec"] = function(cmd)
+                                    for key, value in pairs(cmd) do
+                                        print(key, " -- ", value)
+                                    end
+                                    local module = cmd[1]
+                                    local args = cmd[2]
+                                    -- local args = vim.list_slice(cmd, 3)
+
+                                    return {
+                                        dap = {
+                                            type = "ruby",
+                                            request = "launch",
+                                            module = args
+                                            -- module = module,
+                                            -- args = args
+                                        }
+                                    }
+                                end
+                            }
+                        }
+                    )
+
+                    vim.cmd([[autocmd FileType ruby nnoremap <silent> <leader>t :Ultest<CR>]])
+                    vim.cmd([[autocmd FileType ruby nnoremap <silent> <leader>n :UltestNearest<CR>]])
+                    vim.cmd([[autocmd FileType ruby nnoremap <silent> <leader>l :UltestLast<CR>]])
+                    vim.cmd([[autocmd FileType ruby nnoremap <silent> <leader>s :TestSuite<CR>]])
+                end
+            }
+
+            --===========================================================================
+            -- 22. running make and jumping to errors (quickfix)
+            --===========================================================================
+
+            --===========================================================================
             -- 23. language specific
-            --===========================================================================""
+            --===========================================================================
             ------------------
             -- CSS
             ------------------
@@ -564,11 +646,8 @@ return require("packer").startup(
                 end
             }
 
-            -- use "~/Development/projects/vim-rbs"
+            -- use '~/Development/projects/vim-rbs'
             use {"turboladen/vim-rbs", ft = {"ruby", "rbs", "ruby.rbs"}}
-
-            -- Lightweight support for Ruby's Bundler
-            use {"tpope/vim-bundler", ft = {"ruby", "eruby"}}
 
             ------------------
             -- Rust
@@ -576,7 +655,7 @@ return require("packer").startup(
             use {"rust-lang/rust.vim", ft = "rust"}
 
             -- Vim syntax for TOML
-            use "cespare/vim-toml"
+            use {"cespare/vim-toml", ft = "toml"}
 
             ------------------
             -- SQL
@@ -614,19 +693,20 @@ return require("packer").startup(
             use {
                 "dense-analysis/ale",
                 requires = "nvim-lua/plenary.nvim",
-                -- rocks = {"luacheck"},
-                run = function()
-                        require("turboladen/installers").npm_install("write-good")
-                        require("turboladen/installers").npm_install("lua-fmt")
-                end,
+                -- rocks = {'luacheck'},
+                -- run = function()
+                --         require('turboladen/installers').npm_install('write-good')
+                --         require('turboladen/installers').npm_install('lua-fmt')
+                -- end,
+                cmd = "ALEEnable",
                 config = function()
-                    vim.g.ale_fix_on_save = 1
+                    vim.g.ale_fix_on_save = true
                     vim.g.ale_sign_error = "✘"
                     vim.g.ale_sign_warning = "⚠"
-                    vim.g.ale_disable_lsp = 1
+                    vim.g.ale_disable_lsp = true
 
                     --  Only run linters named in ale_linters settings.
-                    vim.g.ale_linters_explicit = 1
+                    vim.g.ale_linters_explicit = true
 
                     vim.g.ale_linters = {
                         lua = {"luacheck"},
@@ -639,14 +719,267 @@ return require("packer").startup(
                     vim.g.ale_fixers = {
                         ["lua"] = {"luafmt"},
                         ["ruby"] = {"rubocop"},
-                        ["rust"] = {"rustfmt"},
                         ["*"] = {"remove_trailing_lines", "trim_whitespace"}
                     }
-                    -- vim.g.ale_fixers["*"] = {"remove_trailing_lines", "trim_whitespace"}
 
                     vim.api.nvim_set_keymap("n", "<leader>]", "<Plug>(ale_next_wrap)", {silent = true})
                     vim.api.nvim_set_keymap("n", "<leader>[", "<Plug>(ale_previous_wrap)", {silent = true})
+                    vim.cmd [[ALEEnable]]
                 end
+            }
+
+            use {
+                "mfussenegger/nvim-dap",
+                requires = "nvim-lua/plenary.nvim",
+                config = function()
+                    local dap = require("dap")
+
+                    -- dap.adapters.ruby = {
+                    --     type = "executable",
+                    --     command = "bundle",
+                    --     args = {"exec", "readapt", "stdio"}
+                    -- }
+                    dap.adapters.ruby = {
+                        type = "executable",
+                        command = "readapt",
+                        args = {"stdio"}
+                    }
+
+                    dap.configurations.rust = {
+                        {
+                            name = "Launch",
+                            type = "lldb",
+                            request = "launch",
+                            program = function()
+                                return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+                            end,
+                            cwd = "${workspaceFolder}",
+                            stopOnEntry = false,
+                            args = {},
+                            -- if you change `runInTerminal` to true, you might need to change the yama/ptrace_scope setting:
+                            --
+                            --    echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+                            --
+                            -- Otherwise you might get the following error:
+                            --
+                            --    Error on launch: Failed to attach to the target process
+                            --
+                            -- But you should be aware of the implications:
+                            -- https://www.kernel.org/doc/html/latest/admin-guide/LSM/Yama.html
+                            runInTerminal = false
+                        }
+                    }
+
+                    dap.configurations.ruby = {
+                        {
+                            type = "ruby",
+                            request = "launch",
+                            name = "Ruby",
+                            program = "bundle",
+                            programArgs = {"exec", "rspec"},
+                            useBundler = true
+                        }
+                    }
+
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<C-S-5>",
+                        ":lua require('dap').continue()<CR>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<C-S-0>",
+                        ":lua require('dap').step_over()<CR>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<C-S-->",
+                        ":lua require('dap').step_out()<CR>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>b",
+                        ":lua require('dap').toggle_breakpoint()<CR>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>B",
+                        ":lua require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>lp",
+                        ":lua require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>dr",
+                        ":lua require('dap').repl.open()<CR>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>dl",
+                        ":lua require('dap').run_last()<CR>",
+                        {silent = true, noremap = true}
+                    )
+                end
+            }
+
+            -- use {
+            --     "neovim/nvim-lspconfig",
+            --     config = function()
+            --         -- Use a loop to conveniently call 'setup' on multiple servers and
+            --         -- map buffer local keybindings when the language server attaches
+            --         local nvim_lsp = require("lspconfig")
+
+            --         for _, lsp in pairs(lsp_server_names) do
+            --             print("lspconfig. Setting up sever... " .. lsp)
+            --             nvim_lsp[lsp].setup {
+            --                 on_attach = common_on_attach,
+            --                 flags = {
+            --                     debounce_text_changes = 150
+            --                 }
+            --             }
+            --         end
+            --     end
+            -- }
+
+            use {
+                "williamboman/nvim-lsp-installer",
+                requires = {
+                    "neovim/nvim-lspconfig",
+                    "simrat39/rust-tools.nvim"
+                },
+                config = function()
+                    print("lsp_installer.setting up...")
+
+                    local function for_each_lsp_server(cb)
+                        local server_names = {"rust_analyzer", "sumneko_lua"}
+
+                        for _, server_name in pairs(server_names) do
+                            cb(server_name)
+                        end
+                    end
+
+                    for_each_lsp_server(
+                        function(server_name)
+                            local lsp_installer_servers = require("nvim-lsp-installer.servers")
+                            local ok, server = lsp_installer_servers.get_server(name)
+                            if ok then
+                                if not server:is_installed() then
+                                    server:install()
+                                end
+                            end
+                        end
+                    )
+
+                    local lsp_installer = require("nvim-lsp-installer")
+
+                    lsp_installer.on_server_ready(
+                        function(server)
+                            print("lsp_installer.on_server_ready: " .. server.name)
+
+                            local opts = {
+                                on_attach = function(client, bufnr)
+                                    print("common_on attach!")
+                                    local function buf_set_keymap(...)
+                                        vim.api.nvim_buf_set_keymap(bufnr, ...)
+                                    end
+                                    local function buf_set_option(...)
+                                        vim.api.nvim_buf_set_option(bufnr, ...)
+                                    end
+
+                                    -- Enable completion triggered by <c-x><c-o>
+                                    buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
+
+                                    -- Mappings.
+                                    local opts = {noremap = true, silent = true}
+
+                                    -- See `:help vim.lsp.*` for documentation on any of the below functions
+                                    buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
+                                    buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+                                    buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+                                    buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+                                    buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
+                                    buf_set_keymap(
+                                        "n",
+                                        "<space>wa",
+                                        "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>",
+                                        opts
+                                    )
+                                    buf_set_keymap(
+                                        "n",
+                                        "<space>wr",
+                                        "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>",
+                                        opts
+                                    )
+                                    buf_set_keymap(
+                                        "n",
+                                        "<space>wl",
+                                        "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>",
+                                        opts
+                                    )
+                                    buf_set_keymap("n", "<space>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
+                                    buf_set_keymap("n", "<space>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
+                                    buf_set_keymap("n", "<space>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+                                    buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+                                    buf_set_keymap(
+                                        "n",
+                                        "<space>e",
+                                        "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>",
+                                        opts
+                                    )
+                                    buf_set_keymap("n", "[g", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
+                                    buf_set_keymap("n", "]g", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
+                                    buf_set_keymap(
+                                        "n",
+                                        "<space>q",
+                                        "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>",
+                                        opts
+                                    )
+                                    buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+                                end,
+                                flags = {
+                                    debounce_text_changes = 150
+                                }
+                            }
+
+                            if server.name == "rust_analyzer" then
+                                opts.settings = rust_analyzer_settings
+                                -- rust_tools_config()
+                            end
+
+                            server:setup(opts)
+
+                            -- This setup() function is exactly the same as lspconfig's setup function (:help lspconfig-quickstart)
+                            vim.cmd [[ do User LspAttachBuffers ]]
+                        end
+                    )
+                end
+            }
+
+            use {
+                "simrat39/rust-tools.nvim",
+                requires = {
+                    "neovim/nvim-lspconfig",
+                    "nvim-lua/popup.nvim",
+                    "nvim-lua/plenary.nvim",
+                    "nvim-telescope/telescope.nvim",
+                    "mfussenegger/nvim-dap"
+                }
+                -- config = rust_tools_config
+            }
+
+            use {
+                "rcarriga/nvim-dap-ui",
+                requires = "mfussenegger/nvim-dap"
             }
 
             -- Simple plugins can be specified as strings
@@ -656,19 +989,13 @@ return require("packer").startup(
             -- Load on specific commands
 
             -- Load on an autocommand event
-            -- use {'andymass/vim-matchup', event = 'VimEnter'}
+            use {"andymass/vim-matchup", event = "VimEnter"}
 
             -- Plugins can have dependencies on other plugins
             -- use {
             --   'haorenW1025/completion-nvim',
             --   opt = true,
             --   requires = {{'hrsh7th/vim-vsnip', opt = true}, {'hrsh7th/vim-vsnip-integ', opt = true}}
-            -- }
-
-            -- Plugins can also depend on rocks from luarocks.org:
-            -- use {
-            --   'my/supercoolplugin',
-            --   rocks = {'lpeg', {'lua-cjson', version = '2.1.0'}}
             -- }
 
             -- You can specify rocks in isolation
@@ -694,11 +1021,13 @@ return require("packer").startup(
             -- }
 
             -- Use dependency and run lua function after load
-            -- use {
-            --   'lewis6991/gitsigns.nvim',
-            --   requires = { 'nvim-lua/plenary.nvim' },
-            --   config = function() require('gitsigns').setup() end
-            -- }
+            use {
+                "lewis6991/gitsigns.nvim",
+                requires = {"nvim-lua/plenary.nvim"},
+                config = function()
+                    require("gitsigns").setup()
+                end
+            }
 
             -- You can specify multiple plugins in a single call
             -- use {'tjdevries/colorbuddy.vim', {'nvim-treesitter/nvim-treesitter', opt = true}}

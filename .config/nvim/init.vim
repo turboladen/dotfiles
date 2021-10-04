@@ -14,10 +14,10 @@ let g:mapleader = ' '
 lua require('plugins')
 
 " Reload after saving this so I can PluginInstall.
-augroup plugins_reloader
-  autocmd!
-  autocmd BufWritePost ~/.config/nvim/lua/plugins.lua source $MYVIMRC
-augroup END
+" augroup plugins_reloader
+"   autocmd!
+"   autocmd BufWritePost ~/.config/nvim/lua/plugins.lua source $MYVIMRC
+" augroup END
 
 ""===========================================================================""
 " 1. important

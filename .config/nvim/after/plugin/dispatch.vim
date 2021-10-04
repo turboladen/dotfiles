@@ -1,9 +1,3 @@
-augroup dispatch_ruby
-  autocmd!
-
-  autocmd FileType ruby nnoremap <leader>b :Dispatch bundle install<CR>
-augroup END
-
 augroup dispatch_rust
   autocmd!
 
