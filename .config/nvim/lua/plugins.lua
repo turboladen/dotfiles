@@ -19,54 +19,28 @@ local function getHomebrewPathFor(package)
     return homebrew_root
 end
 
--- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
-local rust_analyzer_settings = {
-    ["rust-analyzer"] = {
-        assist = {
-            importGranularity = "module",
-            importPrefix = "by_self"
-        },
-        cargo = {
-            allFeatures = true,
-            loadOutDirsFromCheck = true
-        },
-        -- enable clippy on save
-        checkOnSave = {
-            command = "clippy",
-            allFeatures = true
-        },
-        lens = {
-            methodReferences = true
-        },
-        -- lruCapacity = 4096,
-        procMacro = {
-            enable = true
-        }
-    }
-}
+-- local rust_tools_config = function()
+--     vim.env.PATH = vim.env.PATH .. ":/usr/local/opt/llvm/bin"
 
-local rust_tools_config = function()
-    vim.env.PATH = vim.env.PATH .. ":/usr/local/opt/llvm/bin"
+--     local opts = {
+--         tools = {
+--             -- rust-tools options
+--             inlay_hints = {
+--                 show_parameter_hints = false
+--             }
+--         },
+--         -- all the opts to send to nvim-lspconfig
+--         -- these override the defaults set by rust-tools.nvim
+--         -- see https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#rust_analyzer
+--         server = {
+--             settings = rust_analyzer_settings
+--         }
+--     }
+--     print("rust-tools setting up")
+--     require("rust-tools").setup(opts)
 
-    local opts = {
-        tools = {
-            -- rust-tools options
-            inlay_hints = {
-                show_parameter_hints = false
-            }
-        },
-        -- all the opts to send to nvim-lspconfig
-        -- these override the defaults set by rust-tools.nvim
-        -- see https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#rust_analyzer
-        server = {
-            settings = rust_analyzer_settings
-        }
-    }
-    print("rust-tools setting up")
-    require("rust-tools").setup(opts)
-
-    vim.api.nvim_set_keymap("n", "K", ":RustHoverActions<CR>", {silent = true, noremap = true})
-end
+--     vim.api.nvim_set_keymap("n", "K", ":RustHoverActions<CR>", {silent = true, noremap = true})
+-- end
 
 return require("packer").startup(
     {
@@ -858,8 +832,6 @@ return require("packer").startup(
                     "simrat39/rust-tools.nvim"
                 },
                 config = function()
-                    print("lsp_installer.setting up...")
-
                     local function for_each_lsp_server(cb)
                         local server_names = {"rust_analyzer", "sumneko_lua"}
 
@@ -884,11 +856,8 @@ return require("packer").startup(
 
                     lsp_installer.on_server_ready(
                         function(server)
-                            print("lsp_installer.on_server_ready: " .. server.name)
-
                             local opts = {
                                 on_attach = function(client, bufnr)
-                                    print("common_on attach!")
                                     local function buf_set_keymap(...)
                                         vim.api.nvim_buf_set_keymap(bufnr, ...)
                                     end
@@ -905,7 +874,11 @@ return require("packer").startup(
                                     -- See `:help vim.lsp.*` for documentation on any of the below functions
                                     buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
                                     buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-                                    buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+                                    if server.name == "rust_analyzer" then
+                                        buf_set_keymap("n", "K", "<cmd>RustHoverActions<CR>", opts)
+                                    else
+                                        buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+                                    end
                                     buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
                                     buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
                                     buf_set_keymap(
@@ -952,11 +925,48 @@ return require("packer").startup(
                             }
 
                             if server.name == "rust_analyzer" then
-                                opts.settings = rust_analyzer_settings
-                                -- rust_tools_config()
-                            end
+                                vim.env.PATH = vim.env.PATH .. ":/usr/local/opt/llvm/bin"
 
-                            server:setup(opts)
+                                opts.settings = {
+                                    -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
+                                    ["rust-analyzer"] = {
+                                        assist = {
+                                            importGranularity = "module",
+                                            importPrefix = "by_self"
+                                        },
+                                        cargo = {
+                                            allFeatures = true,
+                                            loadOutDirsFromCheck = true
+                                        },
+                                        checkOnSave = {
+                                            -- enable clippy on save
+                                            command = "clippy",
+                                            allFeatures = true
+                                        },
+                                        lens = {
+                                            methodReferences = true
+                                        }
+                                        -- lruCapacity = 4096,
+                                    }
+                                }
+
+                                local rust_opts = {
+                                    tools = {
+                                        -- rust-tools options
+                                        inlay_hints = {
+                                            show_parameter_hints = false
+                                        }
+                                    },
+                                    -- all the opts to send to nvim-lspconfig
+                                    -- these override the defaults set by rust-tools.nvim
+                                    -- see https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#rust_analyzer
+                                    server = opts
+                                }
+
+                                require("rust-tools").setup(rust_opts)
+                            else
+                                server:setup(opts)
+                            end
 
                             -- This setup() function is exactly the same as lspconfig's setup function (:help lspconfig-quickstart)
                             vim.cmd [[ do User LspAttachBuffers ]]
@@ -974,7 +984,6 @@ return require("packer").startup(
                     "nvim-telescope/telescope.nvim",
                     "mfussenegger/nvim-dap"
                 }
-                -- config = rust_tools_config
             }
 
             use {
