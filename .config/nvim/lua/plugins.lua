@@ -1,5 +1,10 @@
 -- This file can be loaded by calling `lua require('plugins')` from your init.vim
 
+function SteveUltest()
+    vim.cmd([[UltestSummaryOpen]])
+    vim.cmd([[Ultest]])
+end
+
 function ShowDocumentation()
     local filetype = vim.bo.filetype
     if vim.tbl_contains({"vim", "help"}, filetype) then
@@ -13,11 +18,77 @@ function ShowDocumentation()
     end
 end
 
+-- Use an on_attach function to only map the following keys
+-- after the language server attaches to the current buffer
+function _GeneralOnAttach(server_name, client, bufnr)
+    local function buf_set_keymap(...)
+        vim.api.nvim_buf_set_keymap(bufnr, ...)
+    end
+    local function buf_set_option(...)
+        vim.api.nvim_buf_set_option(bufnr, ...)
+    end
+
+    -- Enable completion triggered by <c-x><c-o>
+    buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
+
+    -- Mappings.
+    local opts = {noremap = true, silent = true}
+
+    -- See `:help vim.lsp.*` for documentation on any of the below functions
+    buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
+    buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+    if server_name == "rust_analyzer" then
+        buf_set_keymap("n", "K", "<cmd>RustHoverActions<CR>", opts)
+    else
+        buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+    end
+    buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+    buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
+    buf_set_keymap("n", "<leader>wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
+    buf_set_keymap("n", "<leader>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
+    buf_set_keymap("n", "<leader>wl", "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", opts)
+    buf_set_keymap("n", "<leader>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
+    buf_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
+    -- buf_set_keymap("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+    buf_set_keymap("n", "<leader>ca", "<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
+    -- buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+    buf_set_keymap("n", "gr", "<cmd>lua require('telescope.builtin').lsp_references()<CR>", opts)
+    buf_set_keymap("n", "<leader>e", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
+    buf_set_keymap("n", "[g", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
+    buf_set_keymap("n", "]g", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
+    buf_set_keymap("n", "<leader>q", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", opts)
+    buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+end
+
+function _MakeLspOpts(server_name, capabilities)
+    return {
+        capabilities = capabilities,
+        on_attach = function(client, bufnr)
+            _GeneralOnAttach(server_name, client, bufnr)
+        end,
+        flags = {
+            debounce_text_changes = 150
+        }
+    }
+end
+
 return require("packer").startup(
     {
         function(use)
-            -- Packer can manage itself
-            use "wbthomason/packer.nvim"
+            -- https://github.com/wbthomason/packer.nvim
+            use {
+                "wbthomason/packer.nvim",
+                config = function()
+                    vim.cmd(
+                        [[
+  augroup packer_user_config
+    autocmd!
+    autocmd BufWritePost plugins.lua source <afile> | PackerCompile
+  augroup end
+]]
+                    )
+                end
+            }
 
             -----------------------------------------------------------------------------
             -- 0.
@@ -107,113 +178,6 @@ return require("packer").startup(
             -----------------------------------------------------------------------------
             -- 2. moving around, searching and patterns
             -----------------------------------------------------------------------------
-            -- use { 'lotabout/skim', run = 'cd ~/.local/share/skim && ./install' }
-            -- use {
-            --     'lotabout/skim.vim',
-            --     rtp = '/usr/local/opt/sk',
-            --     requires = {'lotabout/skim'},
-            --     config = function()
-            --         vim.env.SKIM_DEFAULT_COMMAND = 'rg --files --color=always'
-            --         vim.env.SKIM_DEFAULT_OPTIONS = '--layout=reverse --ansi'
-            --         vim.api.nvim_set_keymap('n', '<leader>,', ':Rg <C-R><C-W><CR>', {})
-            --         vim.api.nvim_set_keymap('n', '<leader>o', ':Rg TODO<CR>', {})
-            --     end
-            -- }
-
-            -- https://github.com/liuchengxu/vim-clap
-            -- Vim-clap is a modern generic interactive finder and dispatcher
-            use {
-                "liuchengxu/vim-clap",
-                run = ":Clap install-binary",
-                requires = {
-                    "kyazdani42/nvim-web-devicons"
-                },
-                config = function()
-                    vim.g.clap_disable_run_rooter = true
-                    vim.g.clap_layout = {relative = "editor"}
-                    vim.g.clap_enable_icon = true
-                    vim.g.clap_provider_dotfiles = {
-                        source = {
-                            "~/.Brewfile",
-                            "~/.Brewfile##template",
-                            "~/.cargo/config.toml",
-                            "~/.config/alacritty/alacritty.yml",
-                            "~/.config/nvim/init.vim",
-                            "~/.config/nvim/lua/plugins.lua",
-                            "~/.config/yadm/bootstrap",
-                            "~/.gemrc",
-                            "~/.gitconfig",
-                            "~/.gitconfig##template",
-                            "~/.gitconfig-personal",
-                            "~/.gitconfig-work",
-                            "~/.gitconfig-work##class.Work",
-                            "~/.gitignore_global",
-                            "~/.irbrc",
-                            "~/.profile",
-                            "~/.rustup/settings.toml",
-                            "~/.ssh/config",
-                            "~/.tmux.conf",
-                            "~/.tmux.conf##template",
-                            "~/.zshrc",
-                            "~/.zshenv"
-                        },
-                        sink = "e",
-                        description = "Open a dotfile"
-                    }
-
-                    vim.cmd(
-                        [[autocmd FileType clap_input lua require('cmp').setup.buffer { enabled = false }
-                    ]]
-                    )
-
-                    vim.api.nvim_set_keymap("n", "<leader><leader>", ":Clap files<CR>", {noremap = true, silent = true})
-                    vim.api.nvim_set_keymap("n", "<leader><CR>", ":Clap buffers<CR>", {noremap = true, silent = true})
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>,",
-                        ":Clap grep2 <C-R><C-W><CR>",
-                        {noremap = true, silent = true}
-                    )
-                    vim.api.nvim_set_keymap("n", "<leader>o", ":Clap grep TODO<CR>", {noremap = true, silent = true})
-                end
-            }
-
-            use {
-                "ibhagwan/fzf-lua",
-                requires = {
-                    "vijaymarupudi/nvim-fzf",
-                    "kyazdani42/nvim-web-devicons"
-                },
-                disable = true,
-                config = function()
-                    require("fzf-lua").setup(
-                        {
-                            fzf_bin = "sk",
-                            files = {
-                                cmd = "rg --files --vimgrep --color=always"
-                            }
-                        }
-                    )
-
-                    vim.env.SKIM_DEFAULT_COMMAND = "rg --files --color=always"
-                    vim.env.SKIM_DEFAULT_OPTIONS = "--layout=reverse --ansi"
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader><leader>",
-                        ":FzfLua files<CR>",
-                        {noremap = true, silent = true}
-                    )
-                    vim.api.nvim_set_keymap("n", "<leader><CR>", ":FzfLua buffers<CR>", {noremap = true, silent = true})
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>,",
-                        ":FzfLua grep <C-R><C-W><CR>",
-                        {noremap = true, silent = true}
-                    )
-                    vim.api.nvim_set_keymap("n", "<leader>o", ":FzfLua grep TODO<CR>", {noremap = true, silent = true})
-                end
-            }
-
             -- Use RipGrep in Vim and display results in a quickfix list
             use {
                 "jremmen/vim-ripgrep",
@@ -236,44 +200,8 @@ return require("packer").startup(
             use "justinmk/vim-dirvish"
             use {"kristijanhusak/vim-dirvish-git", requires = {"justinmk/vim-dirvish"}}
 
-            -- use "airblade/vim-gitgutter"
-
-            -- extended % matching for HTML, LaTeX and many other languages
-            -- use "tmhedberg/matchit"
-
-            -- Conquer of Completion
-            use {
-                "neoclide/coc.nvim",
-                branch = "release",
-                disable = true,
-                config = function()
-                    -- coc-dictionary: Words from files in &dictionary.
-                    -- coc-git: Somewhat replaces gitgutter; kinda depends on vim-fugitive.
-                    -- coc-html: HTML language server.
-                    -- coc-lists: Some basic list sources
-                    -- coc-prettier: Code reformatting--initially got for markdown
-                    vim.g.coc_global_extensions = {
-                        "coc-html",
-                        "coc-lists",
-                        "coc-markdownlint",
-                        "coc-prettier",
-                        "coc-toml"
-                    }
-                end
-            }
-
             -- Change code right in the quickfix window
             use "stefandtw/quickfix-reflector.vim"
-
-            -- Vim motion on speed!
-            use {
-                "phaazon/hop.nvim",
-                opt = true,
-                config = function()
-                    require("hop").setup()
-                    vim.api.nvim_set_keymap("n", "<leader>h", ":lua require('hop').hint_char1()<CR>", {})
-                end
-            }
 
             --===========================================================================
             -- 5. syntax, highlighting and spelling
@@ -282,11 +210,19 @@ return require("packer").startup(
             -- Color schemes
             ----------------------------------------
             use "aonemd/kuroi.vim"
-            use {"humanoid-colors/vim-humanoid-colorscheme", disable = true}
-            use {"trusktr/seti.vim", disable = true}
-            use {"rakr/vim-one", disable = true}
-            use {"jaredgorski/SpaceCamp", disable = true}
-            use {"jsit/toast.vim", disable = true}
+            -- use "humanoid-colors/vim-humanoid-colorscheme"
+            -- use "trusktr/seti.vim"
+            -- use "rakr/vim-one"
+            -- use "jaredgorski/SpaceCamp"
+            -- use "jsit/toast.vim"
+            use {
+                "marko-cerovac/material.nvim",
+                config = function()
+                    vim.g.material_style = "darker"
+                    -- vim.g.material_style = "deep ocean"
+                    -- vim.g.material_style = "lighter"
+                end
+            }
 
             -- Hyperfocus-writing in Vim
             use {
@@ -296,7 +232,20 @@ return require("packer").startup(
             }
 
             -- Show vertical line for indentation level
-            use {"Yggdroot/indentLine", ft = "yaml"}
+            use {
+                "lukas-reineke/indent-blankline.nvim",
+                config = function()
+                    vim.opt.list = true
+
+                    require("indent_blankline").setup(
+                        {
+                            buftype_exclude = {"terminal"},
+                            space_char_blankline = " ",
+                            show_current_context = true
+                        }
+                    )
+                end
+            }
 
             --===========================================================================
             -- 6. multiple windows
@@ -304,17 +253,12 @@ return require("packer").startup(
             -- Delete all the buffers except the current/named buffer
             use {
                 "vim-scripts/BufOnly.vim",
-                config = function()
-                    vim.api.nvim_set_keymap("n", "<leader>q", ":BufOnly<CR>", {})
-                end
+                cmd = "BufOnly"
             }
 
             --===========================================================================
             -- 13. editing text
             --===========================================================================
-            -- wisely add 'end' in ruby, endfucntion/endif/more in vimscript, etc.
-            use "tpope/vim-endwise"
-
             -- Closes brackets. Perfect companion to vim-endwise. Basically, a more
             -- conservative version of auto-pairs that only works when you press Enter.
             use {"rstacruz/vim-closer", requires = "tpope/vim-endwise"}
@@ -334,14 +278,10 @@ return require("packer").startup(
             -- Protect against weird unicode copy/paste
             use "vim-utils/vim-troll-stopper"
 
-            -- use "honza/vim-snippets"
-
             -- For case swapping
             use {
                 "idanarye/vim-casetrate",
-                config = function()
-                    vim.g.casetrate_leader = "\\c"
-                end
+                cmd = "Casetrate"
             }
 
             -- Vim script for text filtering and alignment
@@ -360,17 +300,20 @@ return require("packer").startup(
             -- run your tests at the speed of thought
             use {
                 "vim-test/vim-test",
-                opt = true,
-                ft = "ruby",
+                requires = "tpope/vim-dispatch",
+                ft = {"ruby", "rust"},
                 config = function()
                     vim.g["test#strategy"] = "dispatch"
-                    vim.g["test#preserve_screen"] = 1
-                    vim.g["test#enabled_runners"] = {"ruby#rspec"}
+                    vim.g["test#preserve_screen"] = true
+                    vim.g["test#enabled_runners"] = {
+                        "ruby#rspec",
+                        "ruby#rails",
+                        "rust#cargotest"
+                    }
 
-                    vim.cmd([[autocmd FileType ruby nnoremap <silent> <leader>t :TestFile<CR>]])
-                    vim.cmd([[autocmd FileType ruby nnoremap <silent> <leader>n :TestNearest<CR>]])
-                    vim.cmd([[autocmd FileType ruby nnoremap <silent> <leader>l :TestLast<CR>]])
-                    vim.cmd([[autocmd FileType ruby nnoremap <silent> <leader>s :TestSuite<CR>]])
+                    vim.cmd([[autocmd FileType ruby,rust nnoremap <silent> <leader>tf <cmd>TestFile<CR>]])
+                    vim.cmd([[autocmd FileType ruby,rust nnoremap <silent> <leader>tn <cmd>TestNearest<CR>]])
+                    vim.cmd([[autocmd FileType ruby,rust nnoremap <silent> <leader>ta <cmd>TestSuite<CR>]])
                 end
             }
 
@@ -378,27 +321,43 @@ return require("packer").startup(
                 "rcarriga/vim-ultest",
                 requires = "vim-test/vim-test",
                 run = ":UpdateRemotePlugins",
+                ft = {"ruby", "rust"},
                 config = function()
-                    vim.g.ultest_use_pty = true
+                    vim.g.ultest_use_pty = 1
+                    vim.g.ultest_virtual_text = 1
 
+                    -- https://www.nerdfonts.com/cheat-sheet
+                    -- vim.g.ultest_running_sign = require("nvim-web-devicons").get_icon("test.diff", "diff")
+                    -- local spinner = ""
+                    -- local pomodoro_ticking = ""
+                    -- local beaker = ""
+                    local weather_refresh = ""
+                    vim.g.ultest_running_sign = weather_refresh
+
+                    vim.api.nvim_set_keymap("n", "]t", "<Plug>(ultest-next-fail)", {})
+                    vim.api.nvim_set_keymap("n", "[t", "<Plug>(ultest-prev-fail)", {})
+                    -- I wanna be able to turn off the sidebar thing even if I switched to a buffer that's not ruby or rust.
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>ts",
+                        "<cmd>UltestSummary<CR>",
+                        {noremap = true, silent = true}
+                    )
+                    -- For debugging
                     require("ultest").setup(
                         {
                             builders = {
                                 ["ruby#rspec"] = function(cmd)
-                                    for key, value in pairs(cmd) do
-                                        print(key, " -- ", value)
-                                    end
-                                    local module = cmd[1]
-                                    local args = cmd[2]
-                                    -- local args = vim.list_slice(cmd, 3)
+                                    -- { "bin/rspec", "spec/path/to/file_spec.rb:123"}
+                                    local rspec_exec = cmd[1]
+                                    local spec_file_path = cmd[2]
 
                                     return {
                                         dap = {
                                             type = "ruby",
                                             request = "launch",
-                                            module = args
-                                            -- module = module,
-                                            -- args = args
+                                            program = rspec_exec,
+                                            programArgs = {spec_file_path}
                                         }
                                     }
                                 end
@@ -406,10 +365,10 @@ return require("packer").startup(
                         }
                     )
 
-                    vim.cmd([[autocmd FileType ruby nnoremap <silent> <leader>t :Ultest<CR>]])
-                    vim.cmd([[autocmd FileType ruby nnoremap <silent> <leader>n :UltestNearest<CR>]])
-                    vim.cmd([[autocmd FileType ruby nnoremap <silent> <leader>l :UltestLast<CR>]])
-                    vim.cmd([[autocmd FileType ruby nnoremap <silent> <leader>s :TestSuite<CR>]])
+                    vim.cmd([[autocmd FileType ruby,rust nnoremap <silent> <leader>tu <cmd>lua SteveUltest()<CR>]])
+                    vim.cmd([[autocmd FileType ruby,rust nnoremap <silent> <leader>tx :UltestNearest<CR>]])
+                    -- vim.cmd([[autocmd FileType ruby nnoremap <silent> <leader>l :UltestLast<CR>]])
+                    -- vim.cmd([[autocmd FileType ruby nnoremap <silent> <leader>s :TestSuite<CR>]])
                 end
             }
 
@@ -525,7 +484,7 @@ return require("packer").startup(
             -- Configuration files for editing and compiling Ruby
             use {
                 "vim-ruby/vim-ruby",
-                ft = {"ruby", "eruby"},
+                ft = {"ruby", "eruby", "rspec"},
                 config = function()
                     vim.g.ruby_operators = 1
                     vim.g.ruby_spellcheck_strings = 1
@@ -538,7 +497,7 @@ return require("packer").startup(
             }
 
             -- Ruby on Rails power tools
-            use {"tpope/vim-rails", ft = {"ruby", "eruby"}}
+            use {"tpope/vim-rails", ft = {"ruby", "eruby", "rspec"}}
 
             -- Its' like rails.vim without the rails
             use {
@@ -549,7 +508,7 @@ return require("packer").startup(
             }
 
             -- Better rspec syntax highlighting for Vim
-            use {"sheerun/rspec.vim", ft = "ruby"}
+            use {"sheerun/rspec.vim", ft = {"ruby", "rspec"}}
 
             -- Ruby syntax extensions for highlighting YARD documentation
             use {
@@ -564,7 +523,7 @@ return require("packer").startup(
             }
 
             -- use '~/Development/projects/vim-rbs'
-            use {"turboladen/vim-rbs", ft = {"ruby", "rbs", "ruby.rbs"}}
+            use {"turboladen/vim-rbs", ft = {"ruby", "rbs", "ruby.rbs", "rspec"}}
 
             ------------------
             -- Rust
@@ -608,51 +567,79 @@ return require("packer").startup(
             use "nvim-lua/plenary.nvim"
 
             use {
-                "dense-analysis/ale",
-                requires = "nvim-lua/plenary.nvim",
-                -- rocks = {'luacheck'},
-                -- run = function()
-                --         require('turboladen/installers').npm_install('write-good')
-                --         require('turboladen/installers').npm_install('lua-fmt')
-                -- end,
-                cmd = "ALEEnable",
+                "mfussenegger/nvim-lint",
+                ft = {"ruby", "vimscript", "vim", "bash", "sh", "zsh"},
                 config = function()
-                    vim.g.ale_fix_on_save = true
-                    vim.g.ale_sign_error = "✘"
-                    vim.g.ale_sign_warning = "⚠"
-                    vim.g.ale_disable_lsp = true
+                    -- require("turboladen/installers").npm_install("write-good")
+                    -- require("turboladen.installers").gem_install("brakeman")
+                    -- require("turboladen.installers").gem_install("debride")
+                    -- require("turboladen.installers").gem_install("reek")
+                    -- require("turboladen.installers").gem_install("sorbet")
+                    -- require("turboladen.installers").brew_install("languagetool", "shellcheck")
+                    -- require("turboladen.installers").pip_install("vim-vint")
 
-                    --  Only run linters named in ale_linters settings.
-                    vim.g.ale_linters_explicit = true
+                    local lint = require("lint")
 
-                    vim.g.ale_linters = {
-                        lua = {"luacheck"},
-                        markdown = {"proselint", "writegood"},
-                        ruby = {"brakeman", "debride", "reek", "rubocop", "ruby", "sorbet"},
+                    -- lint.linters.brakeman = {
+                    --   cmd = "brakeman",
+                    --   args = {
+                    --     "-q", "--faster", "--no-color", "--no-highlights", "--no-pager"
+                    --   },
+                    --   stream = "stdout",
+                    --   parser = function()
+                    --     -- Need to figure this out before it'll work.
+                    --   end
+                    -- }
+                    -- lint.linters.debride = {
+                    --     cmd = "debride",
+                    --     args = {"."},
+                    --     stream = "stdout",
+                    --     parser = function()
+                    --         -- Need to figure this out before it'll work.
+                    --     end
+                    -- }
+                    -- lint.linters.reek = {
+                    --     cmd = "reek",
+                    --     args = {
+                    --         "--format",
+                    --         "json",
+                    --         "--no-color",
+                    --         "--line-numbers",
+                    --         "--no-progress"
+                    --     },
+                    --     stream = "stdout",
+                    --     parser = function()
+                    --         -- Need to figure this out before it'll work.
+                    --     end
+                    -- }
+
+                    lint.linters_by_ft = {
+                        -- html = {"tidy"},
+                        -- lua = {"luacheck", "selene"},
+                        -- markdown = {"proselint", "writegood"},
+                        -- markdown = {"languagetool"},
+                        -- ruby = {"brakeman", "debride", "reek", "ruby", "sorbet"},
+                        ruby = {"ruby"},
                         vim = {"vint"},
                         zsh = {"shellcheck"}
                     }
 
-                    vim.g.ale_fixers = {
-                        ["lua"] = {"luafmt"},
-                        ["ruby"] = {"rubocop"},
-                        ["*"] = {"remove_trailing_lines", "trim_whitespace"}
-                    }
-
-                    vim.api.nvim_set_keymap("n", "<leader>]", "<Plug>(ale_next_wrap)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "<leader>[", "<Plug>(ale_previous_wrap)", {silent = true})
-                    vim.cmd [[ALEEnable]]
+                    vim.cmd([[autocmd BufWritePost ruby,vim,zsh,vimscript,bash,sh <buffer> require('lint').try_lint()]])
                 end
             }
 
             use {
                 "mhartington/formatter.nvim",
+                ft = {"markdown", "lua", "rust", "ruby"},
                 config = function()
+                    -- require("turboladen/installers").npm_install("prettier")
+                    -- require("turboladen/installers").npm_install("lua-fmt")
+
                     require("formatter").setup(
                         {
                             filetype = {
-                                javascript = {
-                                    -- prettier
+                                markdown = {
+                                    -- prettier for markdown
                                     function()
                                         return {
                                             exe = "prettier",
@@ -664,9 +651,56 @@ return require("packer").startup(
                                             stdin = true
                                         }
                                     end
+                                },
+                                lua = {
+                                    -- luafmt
+                                    function()
+                                        return {
+                                            exe = "luafmt",
+                                            args = {"--indent-count", 4, "--stdin"},
+                                            stdin = true
+                                        }
+                                    end
+                                },
+                                ruby = {
+                                    -- rubocop
+                                    function()
+                                        return {
+                                            exe = "rubocop", -- might prepend `bundle exec `
+                                            args = {
+                                                "--auto-correct",
+                                                "--stdin",
+                                                "%:p",
+                                                "2>/dev/null",
+                                                "|",
+                                                "awk 'f; /^====================$/{f=1}'"
+                                            },
+                                            stdin = true
+                                        }
+                                    end
+                                },
+                                rust = {
+                                    -- Rustfmt
+                                    function()
+                                        return {
+                                            exe = "rustfmt",
+                                            args = {"--emit=stdout"},
+                                            stdin = true
+                                        }
+                                    end
                                 }
                             }
                         }
+                    )
+
+                    vim.api.nvim_exec(
+                        [[
+augroup FormatAutogroup
+  autocmd!
+  autocmd BufWritePost *.lua,*.rb.*.rs FormatWrite
+augroup END
+]],
+                        true
                     )
                 end
             }
@@ -677,15 +711,21 @@ return require("packer").startup(
                 config = function()
                     local dap = require("dap")
 
-                    -- dap.adapters.ruby = {
-                    --     type = "executable",
-                    --     command = "bundle",
-                    --     args = {"exec", "readapt", "stdio"}
-                    -- }
                     dap.adapters.ruby = {
                         type = "executable",
                         command = "readapt",
                         args = {"stdio"}
+                    }
+
+                    dap.configurations.ruby = {
+                        {
+                            type = "ruby",
+                            request = "launch",
+                            name = "Ruby",
+                            program = "bundle",
+                            programArgs = {"exec", "rspec"},
+                            useBundler = true
+                        }
                     }
 
                     dap.configurations.rust = {
@@ -713,231 +753,221 @@ return require("packer").startup(
                         }
                     }
 
-                    dap.configurations.ruby = {
-                        {
-                            type = "ruby",
-                            request = "launch",
-                            name = "Ruby",
-                            program = "bundle",
-                            programArgs = {"exec", "rspec"},
-                            useBundler = true
-                        }
-                    }
+                    vim.fn.sign_define("DapBreakpoint", {text = "🛑", texthl = "", linehl = "", numhl = ""})
 
                     vim.api.nvim_set_keymap(
                         "n",
-                        "<C-S-5>",
+                        "<F5>",
                         ":lua require('dap').continue()<CR>",
                         {silent = true, noremap = true}
                     )
+                    vim.api.nvim_set_keymap("n", "<S-k>", "<cmd>lua require('dap').step_out()<CR>", {noremap = true})
+                    vim.api.nvim_set_keymap("n", "<S-l>", "<cmd>lua require('dap').step_into()<CR>", {noremap = true})
+                    vim.api.nvim_set_keymap("n", "<S-j>", "<cmd>lua require('dap').step_over()<CR>", {noremap = true})
                     vim.api.nvim_set_keymap(
                         "n",
-                        "<C-S-0>",
-                        ":lua require('dap').step_over()<CR>",
-                        {silent = true, noremap = true}
+                        "<leader>db",
+                        "<cmd>lua require('dap').toggle_breakpoint()<CR>",
+                        {noremap = true}
                     )
                     vim.api.nvim_set_keymap(
                         "n",
-                        "<C-S-->",
-                        ":lua require('dap').step_out()<CR>",
-                        {silent = true, noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>b",
-                        ":lua require('dap').toggle_breakpoint()<CR>",
-                        {silent = true, noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>B",
-                        ":lua require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>",
-                        {silent = true, noremap = true}
+                        "<leader>dB",
+                        "<cmd>lua require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>",
+                        {noremap = true}
                     )
                     vim.api.nvim_set_keymap(
                         "n",
                         "<leader>lp",
-                        ":lua require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>",
-                        {silent = true, noremap = true}
+                        "<cmd>lua require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>",
+                        {noremap = true}
                     )
                     vim.api.nvim_set_keymap(
                         "n",
                         "<leader>dr",
-                        ":lua require('dap').repl.open()<CR>",
-                        {silent = true, noremap = true}
+                        "<cmd>lua require('dap').repl.open()<CR>",
+                        {noremap = true}
                     )
                     vim.api.nvim_set_keymap(
                         "n",
                         "<leader>dl",
-                        ":lua require('dap').run_last()<CR>",
+                        "<cmd>lua require('dap').run_last()<CR>",
+                        {noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>di",
+                        "<cmd>lua require('dap.ui.variables').hover()<CR>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "v",
+                        "<leader>di",
+                        "<cmd>lua require('dap.ui.variables').visual_hover()<CR>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>d?",
+                        "<cmd>lua require('dap.ui.variables').scopes()<CR>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>de",
+                        "<cmd>lua require('dap').set_exception_breakpoints({'all'})<CR>",
+                        {noremap = true}
+                    )
+
+                    -- au FileType dap-repl lua require('dap.ext.autocompl').attach()
+                    vim.cmd [[autocmd FileType dap-repl lua require('dap.ext.autocompl').attach()]]
+                end
+            }
+
+            use {
+                "rcarriga/nvim-dap-ui",
+                requires = "mfussenegger/nvim-dap",
+                config = function()
+                    require("dapui").setup({})
+
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>dt",
+                        ":lua require('dapui').toggle()<CR>",
                         {silent = true, noremap = true}
                     )
                 end
             }
 
             use {
-                "williamboman/nvim-lsp-installer",
-                requires = {
-                    "neovim/nvim-lspconfig",
-                    "simrat39/rust-tools.nvim",
-                    "nvim-lua/lsp-status.nvim"
-                },
+                "neovim/nvim-lspconfig",
                 config = function()
-                    local function for_each_lsp_server(cb)
-                        local server_names = {"rust_analyzer", "sumneko_lua", "jsonls", "solargraph", "vimls", "yamlls"}
-
-                        for _, server_name in pairs(server_names) do
-                            cb(server_name)
-                        end
-                    end
-
-                    for_each_lsp_server(
-                        function(server_name)
-                            local lsp_installer_servers = require("nvim-lsp-installer.servers")
-                            local ok, server = lsp_installer_servers.get_server(server_name)
-                            if ok then
-                                if not server:is_installed() then
-                                    server:install()
-                                end
-                            end
-                        end
-                    )
-
-                    local lsp_installer = require("nvim-lsp-installer")
+                    local lspconfig = require("lspconfig")
                     local lsp_status = require("lsp-status")
-                    -- lsp_status.register_progress()
+                    lsp_status.register_progress()
+                    local status_capabilities = lsp_status.capabilities
+                    local opts = _MakeLspOpts("solargraph", status_capabilities)
 
-                    lsp_installer.on_server_ready(
-                        function(server)
-                            local opts = {
-                                capabilities = lsp_status.capabilities,
-                                on_attach = function(client, bufnr)
-                                    -- Register client for messages and set up buffer autocommands to update
-                                    -- the statusline and the current function.
-                                    -- NOTE: on_attach is called with the client object, which is the "client" parameter below
-                                    lsp_status.on_attach(client)
-
-                                    local function buf_set_keymap(...)
-                                        vim.api.nvim_buf_set_keymap(bufnr, ...)
-                                    end
-                                    local function buf_set_option(...)
-                                        vim.api.nvim_buf_set_option(bufnr, ...)
-                                    end
-
-                                    -- Enable completion triggered by <c-x><c-o>
-                                    buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
-
-                                    -- Mappings.
-                                    local opts = {noremap = true, silent = true}
-
-                                    -- See `:help vim.lsp.*` for documentation on any of the below functions
-                                    buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-                                    buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-                                    if server.name == "rust_analyzer" then
-                                        buf_set_keymap("n", "K", "<cmd>RustHoverActions<CR>", opts)
-                                    else
-                                        buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-                                    end
-                                    buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-                                    buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-                                    buf_set_keymap(
-                                        "n",
-                                        "<space>wa",
-                                        "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>",
-                                        opts
-                                    )
-                                    buf_set_keymap(
-                                        "n",
-                                        "<space>wr",
-                                        "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>",
-                                        opts
-                                    )
-                                    buf_set_keymap(
-                                        "n",
-                                        "<space>wl",
-                                        "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>",
-                                        opts
-                                    )
-                                    buf_set_keymap("n", "<space>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
-                                    buf_set_keymap("n", "<space>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-                                    buf_set_keymap("n", "<space>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-                                    buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-                                    buf_set_keymap(
-                                        "n",
-                                        "<space>e",
-                                        "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>",
-                                        opts
-                                    )
-                                    buf_set_keymap("n", "[g", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
-                                    buf_set_keymap("n", "]g", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
-                                    buf_set_keymap(
-                                        "n",
-                                        "<space>q",
-                                        "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>",
-                                        opts
-                                    )
-                                    buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-                                end,
-                                flags = {
-                                    debounce_text_changes = 150
-                                }
-                            }
-
-                            if server.name == "rust_analyzer" then
-                                vim.env.PATH = vim.env.PATH .. ":/usr/local/opt/llvm/bin"
-
-                                opts.settings = {
-                                    -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
-                                    ["rust-analyzer"] = {
-                                        assist = {
-                                            importGranularity = "module",
-                                            importPrefix = "by_self"
-                                        },
-                                        cargo = {
-                                            allFeatures = true,
-                                            loadOutDirsFromCheck = true
-                                        },
-                                        checkOnSave = {
-                                            -- enable clippy on save
-                                            command = "clippy",
-                                            allFeatures = true
-                                        },
-                                        completion = {
-                                            autoimport = {
-                                                enable = true
-                                            }
-                                        },
-                                        lens = {
-                                            methodReferences = true
-                                        }
-                                        -- lruCapacity = 4096,
-                                    }
-                                }
-
-                                local rust_opts = {
-                                    tools = {
-                                        -- rust-tools options
-                                        inlay_hints = {
-                                            show_parameter_hints = false
-                                        }
-                                    },
-                                    -- all the opts to send to nvim-lspconfig
-                                    -- these override the defaults set by rust-tools.nvim
-                                    -- see https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#rust_analyzer
-                                    server = opts
-                                }
-
-                                require("rust-tools").setup(rust_opts)
-                            else
-                                server:setup(opts)
-                            end
-
-                            -- This setup() function is exactly the same as lspconfig's setup function (:help lspconfig-quickstart)
-                            vim.cmd [[ do User LspAttachBuffers ]]
-                        end
-                    )
+                    lspconfig.solargraph.setup(opts)
                 end
             }
+
+            -- use {
+            --     "williamboman/nvim-lsp-installer",
+            --     requires = {
+            --         "neovim/nvim-lspconfig",
+            --         "nvim-lua/lsp-status.nvim"
+            --     },
+            --     config = function()
+            --         local function for_each_lsp_server(cb)
+            --             -- local server_names = {"sumneko_lua", "jsonls", "vimls", "yamlls"}
+            --             local server_names = {"sumneko_lua"}
+
+            --             for _, server_name in pairs(server_names) do
+            --                 cb(server_name)
+            --             end
+            --         end
+
+            --         for_each_lsp_server(
+            --             function(server_name)
+            --                 local lsp_installer_servers = require("nvim-lsp-installer.servers")
+            --                 local ok, server = lsp_installer_servers.get_server(server_name)
+            --                 if ok then
+            --                     if not server:is_installed() then
+            --                         server:install()
+            --                     end
+            --                 end
+            --             end
+            --         )
+
+            --         local lsp_installer = require("nvim-lsp-installer")
+            --         local lsp_status = require("lsp-status")
+            --         lsp_status.register_progress()
+
+            --         lsp_installer.on_server_ready(
+            --             function(server)
+            --                 local opts = {
+            --                     capabilities = lsp_status.capabilities,
+            --                     on_attach = function(client, bufnr)
+            --                         -- Register client for messages and set up buffer autocommands to update
+            --                         -- the statusline and the current function.
+            --                         -- NOTE: on_attach is called with the client object, which is the "client" parameter below
+            --                         lsp_status.on_attach(client)
+
+            --                         local function buf_set_keymap(...)
+            --                             vim.api.nvim_buf_set_keymap(bufnr, ...)
+            --                         end
+            --                         local function buf_set_option(...)
+            --                             vim.api.nvim_buf_set_option(bufnr, ...)
+            --                         end
+
+            --                         -- Enable completion triggered by <c-x><c-o>
+            --                         buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
+
+            --                         -- Mappings.
+            --                         local opts = {noremap = true, silent = true}
+
+            --                         -- See `:help vim.lsp.*` for documentation on any of the below functions
+            --                         buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
+            --                         buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+            --                         buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+            --                         buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+            --                         buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
+            --                         buf_set_keymap(
+            --                             "n",
+            --                             "<leader>wa",
+            --                             "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>",
+            --                             opts
+            --                         )
+            --                         buf_set_keymap(
+            --                             "n",
+            --                             "<leader>wr",
+            --                             "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>",
+            --                             opts
+            --                         )
+            --                         buf_set_keymap(
+            --                             "n",
+            --                             "<leader>wl",
+            --                             "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>",
+            --                             opts
+            --                         )
+            --                         buf_set_keymap("n", "<leader>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
+            --                         buf_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
+            --                         buf_set_keymap("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+            --                         -- buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+            --                         buf_set_keymap(
+            --                             "n",
+            --                             "gr",
+            --                             "<cmd>lua require('telescope.builtin').lsp_references()<CR>",
+            --                             opts
+            --                         )
+            --                         buf_set_keymap(
+            --                             "n",
+            --                             "<leader>e",
+            --                             "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>",
+            --                             opts
+            --                         )
+            --                         buf_set_keymap("n", "[g", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
+            --                         buf_set_keymap("n", "]g", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
+            --                         buf_set_keymap(
+            --                             "n",
+            --                             "<leader>q",
+            --                             "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>",
+            --                             opts
+            --                         )
+            --                         buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+            --                     end,
+            --                     flags = {
+            --                         debounce_text_changes = 150
+            --                     }
+            --                 }
+
+            --                 -- This setup() function is exactly the same as lspconfig's setup function (:help lspconfig-quickstart)
+            --                 vim.cmd [[ do User LspAttachBuffers ]]
+            --             end
+            --         )
+            --     end
+            -- }
 
             use {
                 "simrat39/rust-tools.nvim",
@@ -947,29 +977,191 @@ return require("packer").startup(
                     "nvim-lua/plenary.nvim",
                     "nvim-telescope/telescope.nvim",
                     "mfussenegger/nvim-dap"
-                }
+                },
+                config = function()
+                    local lsp_status = require("lsp-status")
+                    lsp_status.register_progress()
+
+                    -- Needed to allow for finding lldb and lldb-vscode for DAP.
+                    vim.env.PATH = vim.env.PATH .. ":/usr/local/opt/llvm/bin"
+
+                    local status_capabilities = lsp_status.capabilities
+                    local server_config = _MakeLspOpts("rust_analyzer", status_capabilities)
+
+                    server_config.settings = {
+                        -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
+                        ["rust-analyzer"] = {
+                            assist = {
+                                importGranularity = "module",
+                                importPrefix = "by_self"
+                            },
+                            cargo = {
+                                allFeatures = true,
+                                loadOutDirsFromCheck = true
+                            },
+                            checkOnSave = {
+                                -- enable clippy on save
+                                command = "clippy",
+                                allFeatures = true
+                            },
+                            completion = {
+                                autoimport = {
+                                    enable = true
+                                }
+                            },
+                            lens = {
+                                methodReferences = true
+                            }
+                            -- lruCapacity = 4096,
+                        }
+                    }
+
+                    -- https://github.com/simrat39/rust-tools.nvim#configuration
+                    local rust_tools_opts = {
+                        tools = {
+                            -- rust-tools options
+                            inlay_hints = {
+                                show_parameter_hints = false
+                            }
+                        },
+                        -- all the opts to send to nvim-lspconfig
+                        -- these override the defaults set by rust-tools.nvim
+                        -- see https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#rust_analyzer
+                        server = server_config
+                    }
+
+                    require("rust-tools").setup(rust_tools_opts)
+                end
+            }
+
+            use {
+                "kosayoda/nvim-lightbulb",
+                config = function()
+                    vim.cmd [[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()]]
+                end
+            }
+
+            use {
+                "nvim-telescope/telescope.nvim",
+                requires = {
+                    "nvim-lua/plenary.nvim",
+                    "kyazdani42/nvim-web-devicons",
+                    "nvim-treesitter/nvim-treesitter"
+                },
+                config = function()
+                    require("telescope").setup(
+                        {
+                            pickers = {
+                                find_files = {
+                                    theme = "ivy"
+                                },
+                                lsp_code_actions = {
+                                    theme = "cursor"
+                                }
+                            }
+                        }
+                    )
+
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader><leader>",
+                        "<cmd>lua require('telescope.builtin').find_files()<CR>",
+                        {noremap = true}
+                    )
+
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader><CR>",
+                        "<cmd>lua require('telescope.builtin').buffers()<CR>",
+                        {noremap = true}
+                    )
+
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>fg",
+                        "<cmd>lua require('telescope.builtin').live_grep()<CR>",
+                        {noremap = true}
+                    )
+
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>fk",
+                        "<cmd>lua require('telescope.builtin').grep_string()<CR>",
+                        {noremap = true}
+                    )
+
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>fm",
+                        "<cmd>lua require('telescope.builtin').marks()<CR>",
+                        {noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>fo",
+                        "<cmd>lua require('telescope.builtin').oldfiles()<CR>",
+                        {noremap = true}
+                    )
+                end
+            }
+
+            -- Lua
+            use {
+                "folke/trouble.nvim",
+                requires = {
+                    "kyazdani42/nvim-web-devicons"
+                    -- "nvim-telescope/telescope.nvim"
+                },
+                config = function()
+                    require("trouble").setup(
+                        {
+                            auto_preview = false
+                        }
+                    )
+
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>a",
+                        "<cmd>Trouble lsp_workspace_diagnostics<cr>",
+                        {silent = true, noremap = true}
+                    )
+
+                    -- jump to the next item, skipping the groups
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>]",
+                        "<cmd>lua require('trouble').next({skip_groups = true, jump = true})<cr>",
+                        {silent = true, noremap = true}
+                    )
+
+                    -- jump to the previous item, skipping the groups
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>[",
+                        "<cmd>lua require('trouble').previous({skip_groups = true, jump = true})<cr>",
+                        {silent = true, noremap = true}
+                    )
+                end
             }
 
             use {
                 "hrsh7th/nvim-cmp",
                 requires = {
-                    "hrsh7th/cmp-buffer",
-                    "hrsh7th/cmp-nvim-lsp",
                     "neovim/nvim-lspconfig",
+                    "hrsh7th/cmp-nvim-lsp",
+                    "hrsh7th/cmp-buffer",
                     "hrsh7th/vim-vsnip",
                     "hrsh7th/cmp-vsnip",
                     "rafamadriz/friendly-snippets",
-                    "f3fora/cmp-spell",
                     "hrsh7th/cmp-path",
                     "hrsh7th/cmp-nvim-lua",
-                    -- https://github.com/octaltree/cmp-look
-                    "octaltree/cmp-look",
                     -- https://github.com/onsails/lspkind-nvim
                     "onsails/lspkind-nvim"
                 },
                 config = function()
                     local cmp = require("cmp")
                     local lspkind = require("lspkind")
+                    local lsp_status = require("lsp-status")
 
                     cmp.setup(
                         {
@@ -977,29 +1169,14 @@ return require("packer").startup(
                                 keyword_length = 2
                             },
                             formatting = {
-                                format = function(entry, vim_item)
-                                    vim_item.kind = lspkind.presets.default[vim_item.kind]
-
-                                    -- set a name for each source
-                                    vim_item.menu =
-                                        ({
-                                        nvim_lsp = "[LSP]",
-                                        vsnip = "[V-Snip]",
-                                        buffer = "[Buffer]",
-                                        path = "[Path]",
-                                        spell = "[Spell]",
-                                        look = "[Look]",
-                                        nvim_lua = "[Lua]",
-                                        crates = "[Crates]"
-                                    })[entry.source.name]
-
-                                    return vim_item
-                                end
+                                format = lspkind.cmp_format({with_text = true})
                             },
                             mapping = {
+                                ["<C-j>"] = cmp.mapping.select_next_item(),
+                                ["<C-k>"] = cmp.mapping.select_prev_item(),
                                 ["<C-d>"] = cmp.mapping.scroll_docs(-4),
                                 ["<C-f>"] = cmp.mapping.scroll_docs(4),
-                                ["<C-Space>"] = cmp.mapping.complete(),
+                                ["<C-space>"] = cmp.mapping.complete(),
                                 ["<C-e>"] = cmp.mapping.close(),
                                 ["<CR>"] = cmp.mapping.confirm({select = true})
                             },
@@ -1009,12 +1186,10 @@ return require("packer").startup(
                                 end
                             },
                             sources = {
-                                {name = "nvim_lsp"},
-                                {name = "vsnip"},
-                                {name = "buffer"},
-                                {name = "path"},
-                                {name = "spell"},
-                                {name = "look", keyword_length = 2},
+                                {name = "nvim_lsp", priority = 2},
+                                {name = "vsnip", priority = 2},
+                                {name = "buffer", max_item_count = 5},
+                                {name = "path", max_item_count = 5},
                                 {name = "nvim_lua"},
                                 {name = "crates"}
                             }
@@ -1022,12 +1197,15 @@ return require("packer").startup(
                     )
 
                     -- Setup lspconfig.
-                    local servers = require("nvim-lsp-installer.servers").get_installed_servers()
+                    local server_names = require("lspconfig").available_servers()
+                    local capabilities = lsp_status.capabilities
 
-                    for _, server in pairs(servers) do
-                        require("lspconfig")[server.name].setup {
-                            capabilities = require("cmp_nvim_lsp").update_capabilities(
-                                vim.lsp.protocol.make_client_capabilities()
+                    for _, server_name in pairs(server_names) do
+                        require("lspconfig")[server_name].setup {
+                            capabilities = vim.tbl_extend(
+                                "keep",
+                                require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities()),
+                                capabilities
                             )
                         }
                     end
@@ -1095,45 +1273,16 @@ return require("packer").startup(
                 config = function()
                     require("crates").setup()
 
-                    vim.api.nvim_set_keymap("n", "K", ":lua ShowDocumentation()<CR>", {noremap = true, silent = true})
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "K",
+                        "<cmd>lua ShowDocumentation()<CR>",
+                        {noremap = true, silent = true}
+                    )
                 end
             }
 
-            use {
-                "rcarriga/nvim-dap-ui",
-                requires = "mfussenegger/nvim-dap"
-            }
-
-            -- Simple plugins can be specified as strings
-            -- use '9mm/vim-closer'
-
-            -- Lazy loading:
-            -- Load on specific commands
-
-            -- Load on an autocommand event
             use {"andymass/vim-matchup", event = "VimEnter"}
-
-            -- You can specify rocks in isolation
-            -- use_rocks 'penlight'
-            -- use_rocks {'lua-resty-http', 'lpeg'}
-
-            -- Local plugins can be included
-            -- use '~/projects/personal/hover.nvim'
-
-            -- Plugins can have post-install/update hooks
-            -- use {'iamcco/markdown-preview.nvim', run = 'cd app && yarn install', cmd = 'MarkdownPreview'}
-
-            -- Post-install/update hook with neovim command
-            -- use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
-
-            -- Post-install/update hook with call of vimscript function with argument
-            -- use { 'glacambre/firenvim', run = function() vim.fn['firenvim#install'](0) end }
-
-            -- Use specific branch, dependency and run lua file after load
-            -- use {
-            --   'glepnir/galaxyline.nvim', branch = 'main', config = function() require'statusline' end,
-            --   requires = {'kyazdani42/nvim-web-devicons'}
-            -- }
 
             -- Use dependency and run lua function after load
             use {
@@ -1142,6 +1291,7 @@ return require("packer").startup(
                 config = function()
                     require("gitsigns").setup(
                         {
+                            current_line_blame = true,
                             signs = {
                                 add = {text = "✚"},
                                 change = {text = "✹"},
@@ -1154,31 +1304,24 @@ return require("packer").startup(
                 end
             }
 
-            -- You can specify multiple plugins in a single call
-            -- use {'tjdevries/colorbuddy.vim', {'nvim-treesitter/nvim-treesitter', opt = true}}
+            use {
+                "lewis6991/spellsitter.nvim",
+                config = function()
+                    require("spellsitter").setup({})
+                end
+            }
 
-            -- You can alias plugin names
-            -- use {'dracula/vim', as = 'dracula'}
-
-            -- use {
-            --   'lewis6991/spellsitter.nvim',
-            --   config = function()
-            --     require('spellsitter').setup()
-            --   end
-            -- }
-
-            -- use {
-            --   'beauwilliams/statusline.lua',
-            --   requires = { 'nvim-lua/lsp-status.nvim' },
-            --   config = function()
-            --     local statusline = require('statusline')
-            --   end
-            -- }
+            use {
+                "Shatur/neovim-session-manager",
+                requires = "nvim-telescope/telescope.nvim",
+                config = function()
+                    require("session_manager").setup({})
+                    require("telescope").load_extension("sessions")
+                end
+            }
         end,
         config = {
-            display = {
-                open_fn = require("packer.util").float
-            }
+            max_jobs = 20
         }
     }
 )

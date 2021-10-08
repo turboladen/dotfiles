@@ -91,29 +91,6 @@ endif
 
 " colorscheme humanoid
 colorscheme kuroi
-" colorscheme spacecamp
-" colorscheme one
-" colorscheme seti
-" colorscheme Tomorrow-Night
-" colorscheme Tomorrow
-" colorscheme Tomorrow-Night-Eighties
-" let g:onedark_terminal_italics = 1
-" colorscheme onedark
-" let g:seoul256_background = 234
-" colorscheme seoul256
-" set background=dark
-" set termguicolors
-
-function! StatusLine(...)
-  return crystalline#mode() . crystalline#right_mode_sep('')
-        \ . ' %f%h%w%m%r ' . crystalline#right_sep('', 'Fill')
-        \ . get(g:, 'coc_status', '')
-        \ . '%='
-        \ . crystalline#left_sep('', 'Fill') . ' %{&ft}[%{&fenc!=#""?&fenc:&enc}][%{&ff}] %l/%L %c%V %P '
-endfunction
-let g:crystalline_enable_sep = 1
-let g:crystalline_statusline_fn = 'StatusLine'
-let g:crystalline_theme = 'onedark'
 
 ""===========================================================================""
 " 6. multiple windows
@@ -140,7 +117,8 @@ set clipboard=unnamed
 ""===========================================================================""
 " More info for completion.
 " set completeopt+=longest,preview
-set completeopt+=menuone,noinsert,noselect
+" set completeopt+=menuone,noinsert,noselect
+set completeopt=menu,menuone,noselect
 
 " https://tomjwatson.com/blog/vim-tips/
 set undodir=~/.config/nvim/undodir
@@ -283,7 +261,8 @@ set grepprg=rg\ --vimgrep\ --files
 ""===========================================================================""
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
-set signcolumn=number " only works with neovim >= 0.5
+" set signcolumn=number " only works with neovim >= 0.5
+set signcolumn=yes " only works with neovim >= 0.5
 
 ""===========================================================================""
 " XX. No :options section
