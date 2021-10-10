@@ -20,51 +20,52 @@ end
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
-function _GeneralOnAttach(server_name, client, bufnr)
-    local function buf_set_keymap(...)
-        vim.api.nvim_buf_set_keymap(bufnr, ...)
-    end
-    local function buf_set_option(...)
-        vim.api.nvim_buf_set_option(bufnr, ...)
-    end
-
-    -- Enable completion triggered by <c-x><c-o>
-    buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
-
-    -- Mappings.
-    local opts = {noremap = true, silent = true}
-
-    -- See `:help vim.lsp.*` for documentation on any of the below functions
-    buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-    buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-    if server_name == "rust_analyzer" then
-        buf_set_keymap("n", "K", "<cmd>RustHoverActions<CR>", opts)
-    else
-        buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-    end
-    buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-    buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-    buf_set_keymap("n", "<leader>wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
-    buf_set_keymap("n", "<leader>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
-    buf_set_keymap("n", "<leader>wl", "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", opts)
-    buf_set_keymap("n", "<leader>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
-    buf_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-    -- buf_set_keymap("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-    buf_set_keymap("n", "<leader>ca", "<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
-    -- buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-    buf_set_keymap("n", "gr", "<cmd>lua require('telescope.builtin').lsp_references()<CR>", opts)
-    buf_set_keymap("n", "<leader>e", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
-    buf_set_keymap("n", "[g", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
-    buf_set_keymap("n", "]g", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
-    buf_set_keymap("n", "<leader>q", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", opts)
-    buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-end
-
 function _MakeLspOpts(server_name, capabilities)
     return {
         capabilities = capabilities,
         on_attach = function(client, bufnr)
-            _GeneralOnAttach(server_name, client, bufnr)
+            local function buf_set_keymap(...)
+                vim.api.nvim_buf_set_keymap(bufnr, ...)
+            end
+            local function buf_set_option(...)
+                vim.api.nvim_buf_set_option(bufnr, ...)
+            end
+
+            -- Enable completion triggered by <c-x><c-o>
+            buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
+
+            -- Mappings.
+            local opts = {noremap = true, silent = true}
+
+            -- See `:help vim.lsp.*` for documentation on any of the below functions
+            buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
+            buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+            if server_name == "rust_analyzer" then
+                buf_set_keymap("n", "K", "<cmd>RustHoverActions<CR>", opts)
+            else
+                buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+            end
+            buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+            buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
+            buf_set_keymap("n", "<leader>wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
+            buf_set_keymap("n", "<leader>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
+            buf_set_keymap(
+                "n",
+                "<leader>wl",
+                "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>",
+                opts
+            )
+            buf_set_keymap("n", "<leader>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
+            buf_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
+            -- buf_set_keymap("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+            buf_set_keymap("n", "<leader>ca", "<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
+            -- buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+            buf_set_keymap("n", "gr", "<cmd>lua require('telescope.builtin').lsp_references()<CR>", opts)
+            buf_set_keymap("n", "<leader>e", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
+            buf_set_keymap("n", "[g", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
+            buf_set_keymap("n", "]g", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
+            buf_set_keymap("n", "<leader>q", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", opts)
+            buf_set_keymap("n", "<leader>ff", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
         end,
         flags = {
             debounce_text_changes = 150
@@ -181,12 +182,11 @@ return require("packer").startup(
             -- Use RipGrep in Vim and display results in a quickfix list
             use {
                 "jremmen/vim-ripgrep",
-                cmd = "Rg",
                 config = function()
                     vim.g.rg_command = "rg --vimgrep --ignore-vcs"
                     vim.g.rg_highlight = 1
 
-                    vim.api.nvim_set_keymap("n", "<leader>.", ":Rg<SPACE><CR>", {noremap = true})
+                    vim.api.nvim_set_keymap("n", "<leader>.", ":Rg<SPACE>", {noremap = true})
                 end
             }
 
@@ -992,7 +992,6 @@ augroup END
                         -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
                         ["rust-analyzer"] = {
                             assist = {
-                                importGranularity = "module",
                                 importPrefix = "by_self"
                             },
                             cargo = {
@@ -1021,7 +1020,7 @@ augroup END
                         tools = {
                             -- rust-tools options
                             inlay_hints = {
-                                show_parameter_hints = false
+                                only_current_line = true
                             }
                         },
                         -- all the opts to send to nvim-lspconfig
@@ -1052,11 +1051,18 @@ augroup END
                     require("telescope").setup(
                         {
                             pickers = {
+                                buffers = {
+                                    theme = "cursor",
+                                    previewer = false
+                                },
                                 find_files = {
-                                    theme = "ivy"
+                                    theme = "dropdown"
                                 },
                                 lsp_code_actions = {
                                     theme = "cursor"
+                                },
+                                oldfiles = {
+                                    theme = "dropdown"
                                 }
                             }
                         }
@@ -1311,14 +1317,14 @@ augroup END
                 end
             }
 
-            use {
-                "Shatur/neovim-session-manager",
-                requires = "nvim-telescope/telescope.nvim",
-                config = function()
-                    require("session_manager").setup({})
-                    require("telescope").load_extension("sessions")
-                end
-            }
+            -- use {
+            --     "Shatur/neovim-session-manager",
+            --     requires = "nvim-telescope/telescope.nvim",
+            --     config = function()
+            --         require("session_manager").setup({})
+            --         require("telescope").load_extension("sessions")
+            --     end
+            -- }
         end,
         config = {
             max_jobs = 20
