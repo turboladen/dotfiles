@@ -1,5 +1,13 @@
 -- This file can be loaded by calling `lua require('plugins')` from your init.vim
 
+function HlsLensNext()
+    vim.cmd([[execute('normal! ' . v:count1 . 'n') | lua require('hlslens').start()]])
+end
+
+function HlsLensPrev()
+    vim.cmd([[execute('normal! ' . v:count1 . 'N') | lua require('hlslens').start()]])
+end
+
 function ShowDocumentation()
     local filetype = vim.bo.filetype
     if vim.tbl_contains({"vim", "help"}, filetype) then
@@ -435,6 +443,19 @@ return require("packer").startup(
             -- Change code right in the quickfix window
             -- https://github.com/stefandtw/quickfix-reflector.vim
             use "stefandtw/quickfix-reflector.vim"
+
+            -- https://github.com/kevinhwang91/nvim-hlslens
+            use {
+                "kevinhwang91/nvim-hlslens",
+                config = function()
+                    vim.api.nvim_set_keymap("n", "n", "<cmd>lua HlsLensNext()<CR>", {silent = true, noremap = true})
+                    vim.api.nvim_set_keymap("n", "N", "<cmd>lua HlsLensPrev()<CR>", {silent = true, noremap = true})
+                    vim.api.nvim_set_keymap("n", "*", "*<cmd>lua require('hlslens').start()<CR>", {noremap = true})
+                    vim.api.nvim_set_keymap("n", "#", "#<cmd>lua require('hlslens').start()<CR>", {noremap = true})
+                    vim.api.nvim_set_keymap("n", "g*", "g*<cmd>lua require('hlslens').start()<CR>", {noremap = true})
+                    vim.api.nvim_set_keymap("n", "g#", "g#<cmd>lua require('hlslens').start()<CR>", {noremap = true})
+                end
+            }
 
             --===========================================================================
             -- 5. syntax, highlighting and spelling
@@ -989,6 +1010,15 @@ augroup END
                     local opts = _MakeLspOpts("solargraph", status_capabilities)
 
                     lspconfig.solargraph.setup(opts)
+
+                    vim.cmd(
+                        [[
+  augroup lsp_format_config
+    autocmd!
+    autocmd BufWritePost * lua vim.lsp.buf.formatting_sync()
+  augroup end
+]]
+                    )
                 end
             }
 
@@ -1181,8 +1211,8 @@ augroup END
                     )
                     vim.api.nvim_set_keymap(
                         "n",
-                        "gR",
-                        "<cmd>Trouble lsp_references<cr>",
+                        "<leader>xr",
+                        "<cmd>Trouble refresh<cr>",
                         {silent = true, noremap = true}
                     )
 
