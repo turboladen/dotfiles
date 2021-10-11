@@ -5,4 +5,3 @@
 
 source "$HOME/.config/zsh/chruby.zsh"
 source "$HOME/.cargo/env"
-. "$HOME/.cargo/env"

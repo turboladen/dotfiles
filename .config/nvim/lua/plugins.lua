@@ -1,43 +1,100 @@
 -- This file can be loaded by calling `lua require('plugins')` from your init.vim
 
--- Only required if you have packer configured as `opt`
--- vim.cmd [[packadd packer.nvim]]
+function ShowDocumentation()
+    local filetype = vim.bo.filetype
+    if vim.tbl_contains({"vim", "help"}, filetype) then
+        vim.cmd("h " .. vim.fn.expand("<cword>"))
+    elseif vim.tbl_contains({"man"}, filetype) then
+        vim.cmd("Man " .. vim.fn.expand("<cword>"))
+    elseif vim.fn.expand("%:t") == "Cargo.toml" then
+        require("crates").show_popup()
+    else
+        vim.lsp.buf.hover()
+    end
+end
 
-function getHomebrewPath()
-    local Job = require("plenary.job")
+-- Use an on_attach function to only map the following keys
+-- after the language server attaches to the current buffer
+function _MakeLspOpts(server_name, capabilities)
+    return {
+        capabilities = capabilities,
+        on_attach = function(client, bufnr)
+            require("lsp_signature").on_attach()
 
-    local homebrew_root = ""
-    local job =
-        Job:new(
-        {
-            command = "brew",
-            args = {"--prefix"},
-            on_stdout = function(_, data)
-                homebrew_root = data
+            local function buf_set_keymap(...)
+                vim.api.nvim_buf_set_keymap(bufnr, ...)
             end
-        }
-    )
-    job:sync()
+            local function buf_set_option(...)
+                vim.api.nvim_buf_set_option(bufnr, ...)
+            end
 
-    return homebrew_root
+            -- Enable completion triggered by <c-x><c-o>
+            buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
+
+            -- Mappings.
+            local opts = {noremap = true, silent = true}
+
+            -- See `:help vim.lsp.*` for documentation on any of the below functions
+            buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
+            buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+
+            buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+
+            buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+            buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
+
+            buf_set_keymap("n", "<leader>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
+            buf_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
+            -- buf_set_keymap("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+            buf_set_keymap("n", "<leader>ca", "<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
+            -- buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+            buf_set_keymap("n", "gr", "<cmd>lua require('telescope.builtin').lsp_references()<CR>", opts)
+            buf_set_keymap("n", "<leader>e", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
+            buf_set_keymap("n", "[g", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
+            buf_set_keymap("n", "]g", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
+            buf_set_keymap("n", "<leader>q", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", opts)
+            buf_set_keymap("n", "<leader>ff", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+
+            if server_name == "rust_analyzer" then
+                buf_set_keymap("n", "gJ", "<cmd>RustJoinLines<CR>", opts)
+            end
+        end,
+        flags = {
+            debounce_text_changes = 150
+        }
+    }
 end
 
 return require("packer").startup(
     {
         function(use)
-            -- Packer can manage itself
-            use "wbthomason/packer.nvim"
+            -- https://github.com/wbthomason/packer.nvim
+            use {
+                "wbthomason/packer.nvim",
+                config = function()
+                    vim.cmd(
+                        [[
+  augroup packer_user_config
+    autocmd!
+    autocmd BufWritePost plugins.lua source <afile> | PackerCompile
+  augroup end
+]]
+                    )
+                end
+            }
 
             -----------------------------------------------------------------------------
             -- 0.
             -----------------------------------------------------------------------------
             -- Enable repeating supported plugin maps with '.'
+            -- https://github.com/tpope/vim-repeat
             use "tpope/vim-repeat"
 
             ------------------------------------------------------------------------------
             -- UI tweaks
             ------------------------------------------------------------------------------
             -- Treesitter configurations and abstraction layer for Neovim.
+            -- https://github.com/nvim-treesitter/nvim-treesitter
             use {
                 "nvim-treesitter/nvim-treesitter",
                 run = ":TSUpdate",
@@ -55,31 +112,257 @@ return require("packer").startup(
                             "json",
                             "lua",
                             "ruby",
+                            "rust",
                             "toml",
                             "typescript",
                             "yaml"
                         },
-                        highlight = {enable = true}
+                        highlight = {enable = true},
+                        matchup = {enable = true}
+                    }
+                end
+            }
+
+            -- https://github.com/p00f/nvim-ts-rainbow
+            -- 🌈 Rainbow parentheses for neovim using tree-sitter 🌈
+            use {
+                "p00f/nvim-ts-rainbow",
+                requires = {
+                    "nvim-lua/plenary.nvim",
+                    "nvim-telescope/telescope.nvim"
+                },
+                config = function()
+                    require("nvim-treesitter.configs").setup {
+                        rainbow = {
+                            enable = true,
+                            extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
+                            max_file_lines = nil -- Do not enable for files with more than n lines, int
+                            -- colors = {}, -- table of hex strings
+                            -- termcolors = {} -- table of colour name strings
+                        }
+                    }
+                end
+            }
+
+            -- Neovim treesitter plugin for setting the commentstring based on
+            -- the cursor location in a file.
+            -- https://github.com/JoosepAlviste/nvim-ts-context-commentstring
+            use {
+                "JoosepAlviste/nvim-ts-context-commentstring",
+                requires = {
+                    "nvim-telescope/telescope.nvim",
+                    "tpope/vim-commentary"
+                },
+                config = function()
+                    require("nvim-treesitter.configs").setup {
+                        context_commentstring = {
+                            enable = true,
+                            config = {
+                                rust = "// %s"
+                            }
+                        }
                     }
                 end
             }
 
             -- Enhanced terminal integration for Vim.
+            -- https://github.com/wincent/terminus
             use "wincent/terminus"
 
+            -- A completion plugin for neovim coded in Lua.
+            -- https://github.com/hrsh7th/nvim-cmp
+            use {
+                "hrsh7th/nvim-cmp",
+                requires = {
+                    "neovim/nvim-lspconfig",
+                    "nvim-lua/lsp-status.nvim",
+                    -- https://github.com/onsails/lspkind-nvim
+                    "onsails/lspkind-nvim",
+                    -- nvim-cmp source for neovim builtin LSP client.
+                    -- https://github.com/hrsh7th/cmp-nvim-lsp
+                    "hrsh7th/cmp-nvim-lsp",
+                    -- VSCode(LSP)'s snippet feature in vim.
+                    -- https://github.com/hrsh7th/vim-vsnip
+                    "hrsh7th/vim-vsnip",
+                    -- https://github.com/hrsh7th/cmp-buffer
+                    "hrsh7th/cmp-buffer",
+                    -- https://github.com/hrsh7th/vim-vsnip
+                    "hrsh7th/cmp-vsnip",
+                    -- https://github.com/rafamadriz/friendly-snippets
+                    "rafamadriz/friendly-snippets",
+                    -- https://github.com/hrsh7th/cmp-path
+                    "hrsh7th/cmp-path",
+                    -- nvim-cmp source for neovim Lua API.
+                    -- https://github.com/hrsh7th/cmp-nvim-lua
+                    "hrsh7th/cmp-nvim-lua"
+                },
+                config = function()
+                    local cmp = require("cmp")
+                    local lspkind = require("lspkind")
+                    local lsp_status = require("lsp-status")
+
+                    cmp.setup(
+                        {
+                            completion = {
+                                keyword_length = 2
+                            },
+                            formatting = {
+                                format = lspkind.cmp_format({with_text = true})
+                            },
+                            mapping = {
+                                ["<C-j>"] = cmp.mapping.select_next_item(),
+                                ["<C-k>"] = cmp.mapping.select_prev_item(),
+                                ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+                                ["<C-f>"] = cmp.mapping.scroll_docs(4),
+                                ["<C-space>"] = cmp.mapping.complete(),
+                                ["<C-e>"] = cmp.mapping.close(),
+                                ["<CR>"] = cmp.mapping.confirm({select = true})
+                            },
+                            snippet = {
+                                expand = function(args)
+                                    vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` user.
+                                end
+                            },
+                            sources = {
+                                {name = "nvim_lsp", priority = 2},
+                                {name = "vsnip", priority = 2},
+                                {name = "buffer", max_item_count = 5},
+                                {name = "path", max_item_count = 5},
+                                {name = "nvim_lua"},
+                                {name = "crates"}
+                            }
+                        }
+                    )
+
+                    -- Setup lspconfig.
+                    local server_names = require("lspconfig").available_servers()
+                    local capabilities = lsp_status.capabilities
+
+                    for _, server_name in pairs(server_names) do
+                        require("lspconfig")[server_name].setup {
+                            capabilities = vim.tbl_extend(
+                                "keep",
+                                require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities()),
+                                capabilities
+                            )
+                        }
+                    end
+
+                    -- Expand
+                    vim.api.nvim_set_keymap(
+                        "i",
+                        "<C-j>",
+                        "vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-j>'",
+                        {expr = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "s",
+                        "<C-j>",
+                        "vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-j>'",
+                        {expr = true}
+                    )
+
+                    -- Expand or jump
+                    vim.api.nvim_set_keymap(
+                        "i",
+                        "<C-l>",
+                        "vsnip#available(1) ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'",
+                        {expr = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "s",
+                        "<C-l>",
+                        "vsnip#available(1) ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'",
+                        {expr = true}
+                    )
+
+                    -- Jump forward or backward
+                    vim.api.nvim_set_keymap(
+                        "i",
+                        "<Tab>",
+                        "vsnip#jumpable(1) ? '<Plug>(vsnip-jump-next)' : '<Tab>'",
+                        {expr = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "s",
+                        "<Tab>",
+                        "vsnip#jumpable(1) ? '<Plug>(vsnip-jump-next)' : '<Tab>'",
+                        {expr = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "i",
+                        "<S-Tab>",
+                        "vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<S-Tab>'",
+                        {expr = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "s",
+                        "<S-Tab>",
+                        "vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<S-Tab>'",
+                        {expr = true}
+                    )
+                end
+            }
+
+            -- LSP signature hint as you type
+            -- https://github.com/ray-x/lsp_signature.nvim
+            use {
+                "ray-x/lsp_signature.nvim"
+            }
+
+            use {
+                "Saecki/crates.nvim",
+                event = {"BufEnter Cargo.toml"},
+                requires = {"nvim-lua/plenary.nvim"},
+                config = function()
+                    require("crates").setup()
+                    vim.cmd([[autocmd BufEnter Cargo.toml nnoremap <silent> K <cmd>lua ShowDocumentation()<CR>]])
+                end
+            }
+
+            -- Use dependency and run lua function after load
+            use {
+                "lewis6991/gitsigns.nvim",
+                requires = {"nvim-lua/plenary.nvim"},
+                event = "BufRead",
+                config = function()
+                    require("gitsigns").setup(
+                        {
+                            signs = {
+                                add = {text = "✚"},
+                                change = {text = "✹"},
+                                delete = {text = "✖"},
+                                changedelete = {text = "⇄"}
+                            },
+                            yadm = {enable = true}
+                        }
+                    )
+                end
+            }
+
+            use {
+                "lewis6991/spellsitter.nvim",
+                config = function()
+                    require("spellsitter").setup({})
+                end
+            }
+
             -- vim-signature is a plugin to place, toggle and display marks.
+            -- https://github.com/kshenoy/vim-signature
             use "kshenoy/vim-signature"
 
             -- Distraction-free writing in Vim.
+            -- https://github.com/junegunn/goyo.vim
             use {"junegunn/goyo.vim", config = "vim.g.goyo_width = 101", cmd = "Goyo"}
 
-            -- I like, but it doesn't show the whole path to the current file and that's
-            -- not configurable.
-            -- use {"glepnir/spaceline.vim", requires = "kyazdani42/nvim-web-devicons"}
-
+            -- A good looking and efficient status line.
+            -- https://github.com/datwaft/bubbly.nvim
             use {
                 "datwaft/bubbly.nvim",
+                requires = "nvim-lua/lsp-status.nvim",
                 config = function()
+                    require("lsp-status").register_progress()
+
                     -- Here you can add the configuration for the plugin
                     vim.g.bubbly_palette = {
                         background = "#34343c",
@@ -100,7 +383,8 @@ return require("packer").startup(
                         "truncate",
                         "path",
                         "branch",
-                        "coc",
+                        "lsp_status.messages",
+                        "lsp_status.diagnostics",
                         "divisor",
                         "filetype",
                         "progress"
@@ -108,237 +392,68 @@ return require("packer").startup(
                 end
             }
 
-            -- Plug '/Users/steve.loveless/Development/projects/pantsline.vim'
-            -- Plug 'turboladen/pantsline.vim', { 'branch': 'feature/initial-stuff' }
-
+            use {
+                "simrat39/symbols-outline.nvim",
+                cmd = {"SymbolsOutline", "SymbolsOutlineClose", "SymbolsOutlineOpen"},
+                config = function()
+                    vim.api.nvim_set_keymap("n", "<leader>s", ":SymbolsOutline", {noremap = true, silent = true})
+                end
+            }
             -----------------------------------------------------------------------------
             -- 2. moving around, searching and patterns
             -----------------------------------------------------------------------------
-            -- use { 'lotabout/skim', run = "cd ~/.local/share/skim && ./install" }
-            -- use {
-            --     "lotabout/skim.vim",
-            --     rtp = "/usr/local/opt/sk",
-            --     requires = {"lotabout/skim"},
-            --     config = function()
-            --         vim.env.SKIM_DEFAULT_COMMAND = "rg --files --color=always"
-            --         vim.env.SKIM_DEFAULT_OPTIONS = "--layout=reverse --ansi"
-            --         vim.api.nvim_set_keymap("n", "<leader>,", ":Rg <C-R><C-W><CR>", {})
-            --         vim.api.nvim_set_keymap("n", "<leader>o", ":Rg TODO<CR>", {})
-            --     end
-            -- }
-            use {
-                "liuchengxu/vim-clap",
-                run = ":Clap install-binary",
-                requires = {
-                    "kyazdani42/nvim-web-devicons"
-                },
-                config = function()
-                    vim.g.clap_disable_run_rooter = true
-                    vim.g.clap_layout = {relative = "editor"}
-                    vim.g.clap_enable_icon = true
-
-                    vim.api.nvim_set_keymap("n", "<leader><leader>", ":Clap files<CR>", {noremap = true, silent = true})
-                    vim.api.nvim_set_keymap("n", "<leader><CR>", ":Clap buffers<CR>", {noremap = true, silent = true})
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>,",
-                        ":Clap grep2 <C-R><C-W><CR>",
-                        {noremap = true, silent = true}
-                    )
-                    vim.api.nvim_set_keymap("n", "<leader>o", ":Clap grep TODO<CR>", {noremap = true, silent = true})
-                end
-            }
-
-            use {
-                "ibhagwan/fzf-lua",
-                requires = {
-                    "vijaymarupudi/nvim-fzf",
-                    "kyazdani42/nvim-web-devicons"
-                },
-                disable = true,
-                config = function()
-                    require("fzf-lua").setup(
-                        {
-                            fzf_bin = "sk",
-                            files = {
-                                cmd = "rg --files --vimgrep --color=always"
-                            }
-                        }
-                    )
-
-                    vim.env.SKIM_DEFAULT_COMMAND = "rg --files --color=always"
-                    vim.env.SKIM_DEFAULT_OPTIONS = "--layout=reverse --ansi"
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader><leader>",
-                        ":FzfLua files<CR>",
-                        {noremap = true, silent = true}
-                    )
-                    vim.api.nvim_set_keymap("n", "<leader><CR>", ":FzfLua buffers<CR>", {noremap = true, silent = true})
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>,",
-                        ":FzfLua grep <C-R><C-W><CR>",
-                        {noremap = true, silent = true}
-                    )
-                    vim.api.nvim_set_keymap("n", "<leader>o", ":FzfLua grep TODO<CR>", {noremap = true, silent = true})
-                end
-            }
-
             -- Use RipGrep in Vim and display results in a quickfix list
             use {
                 "jremmen/vim-ripgrep",
-                cmd = "Rg",
+                command = "Rg",
                 config = function()
                     vim.g.rg_command = "rg --vimgrep --ignore-vcs"
                     vim.g.rg_highlight = 1
+
+                    vim.api.nvim_set_keymap("n", "<leader>.", ":Rg<SPACE>", {noremap = true})
                 end
             }
 
-            -- combine with netrw to create a delicious salad dressing.
-            use "tpope/vim-vinegar"
-
             -- pairs of handy bracket mappings
+            -- https://github.com/tpope/vim-unimpaired
             use "tpope/vim-unimpaired"
 
+            -- match-up is a plugin that lets you highlight, navigate, and operate on sets of matching text. It extends vim's % key to language-specific words instead of just single characters.
+            -- https://github.com/andymass/vim-matchup
+            use {"andymass/vim-matchup", event = "VimEnter"}
+
             -- Directory viewer for Vim
+            -- https://github.com/justinmk/vim-dirvish
             use "justinmk/vim-dirvish"
             use {"kristijanhusak/vim-dirvish-git", requires = {"justinmk/vim-dirvish"}}
 
-            use "airblade/vim-gitgutter"
-
-            -- extended % matching for HTML, LaTeX and many other languages
-            use "tmhedberg/matchit"
-
-            -- Conquer of Completion
-            use {
-                "neoclide/coc.nvim",
-                branch = "release",
-                config = function()
-                    vim.g.coc_node_path = getHomebrewPath() .. "/bin/node"
-
-                    -- coc-dictionary: Words from files in &dictionary.
-                    -- coc-git: Somewhat replaces gitgutter; kinda depends on vim-fugitive.
-                    -- coc-html: HTML language server.
-                    -- coc-lists: Some basic list sources
-                    -- coc-prettier: Code reformatting--initially got for markdown
-                    vim.g.coc_global_extensions = {
-                        "coc-dictionary",
-                        "coc-git",
-                        "coc-html",
-                        "coc-lists",
-                        "coc-markdownlint",
-                        "coc-prettier",
-                        "coc-rust-analyzer",
-                        "coc-solargraph",
-                        "coc-snippets",
-                        "coc-toml",
-                        "coc-yaml"
-                    }
-                    -- Use <C-j> for jump to next placeholder, it's default of coc.nvim
-                    vim.g.coc_snippet_next = "<c-j>"
-
-                    -- Use <C-k> for jump to previous placeholder, it's default of coc.nvim
-                    vim.g.coc_snippet_prev = "<c-k>"
-
-                    -- https://kimpers.com/vim-intelligent-autocompletion/
-                    -- Remap keys for gotos
-                    vim.api.nvim_set_keymap("n", "gd", "<Plug>(coc-definition)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "gD", "<Plug>(coc-declaration)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "gy", "<Plug>(coc-type-definition)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "gi", "<Plug>(coc-implementation)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "gr", "<Plug>(coc-references)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "[g", "<Plug>(coc-diagnostic-prev)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "]g", "<Plug>(coc-diagnostic-next)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "[G", "<Plug>(coc-diagnostic-prev-error)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "]G", "<Plug>(coc-diagnostic-next-error)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "g=", "<Plug>(coc-format)", {silent = true})
-
-                    vim.api.nvim_set_keymap("n", "rn", "<Plug>(coc-rename)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "gA", "<Plug>(coc-codeaction-line)", {})
-                    vim.api.nvim_set_keymap("v", "gA", "<Plug>(coc-codeaction-selected)", {})
-                    vim.api.nvim_set_keymap("n", "gB", "<Plug>(coc-codeaction-cursor)", {})
-                    vim.api.nvim_set_keymap("v", "gB", "<Plug>(coc-codeaction)", {})
-                    vim.api.nvim_set_keymap("n", "gF", "<Plug>(coc-fix-current)", {})
-                    vim.api.nvim_set_keymap("n", "gR", "<Plug>(coc-refactor)", {})
-
-                    -- Show all diagnostics.
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>a",
-                        ":<C-u>CocList diagnostics<CR>",
-                        {silent = true, nowait = true, noremap = true}
-                    )
-                    -- Show all commands.
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>cc",
-                        ":<C-u>CocList commands<CR>",
-                        {silent = true, nowait = true, noremap = true}
-                    )
-                    -- Search workspace symbols.
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>cs",
-                        ":<C-u>CocList -I symbols<CR>",
-                        {silent = true, nowait = true, noremap = true}
-                    )
-                    -- Do default action for next item.
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>j",
-                        ":<C-u>CocNext<CR>",
-                        {silent = true, nowait = true, noremap = true}
-                    )
-                    -- Do default action for previous item.
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>k",
-                        ":<C-u>CocPrev<CR>",
-                        {silent = true, nowait = true, noremap = true}
-                    )
-                    -- Resume latest coc list.
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>p",
-                        ":<C-u>CocListResume<CR>",
-                        {silent = true, nowait = true, noremap = true}
-                    )
-
-                    vim.api.nvim_set_keymap("n", "<leader>/", ":CocSearch<SPACE>", {noremap = true})
-
-                    -- Use K for show documentation in preview window
-                    -- vim.api.nvim_set_keymap("n", "K", "<SID>show_documentation()<CR>", {silent = true, noremap = true})
-                end
-            }
-
             -- Change code right in the quickfix window
+            -- https://github.com/stefandtw/quickfix-reflector.vim
             use "stefandtw/quickfix-reflector.vim"
 
-            -- Vim motion on speed!
-            use {
-                "phaazon/hop.nvim",
-                opt = true,
-                config = function()
-                    require("hop").setup()
-                    vim.api.nvim_set_keymap("n", "<leader>h", ":lua require('hop').hint_char1()<CR>", {})
-                end
-            }
-
-            --===========================================================================""
+            --===========================================================================
             -- 5. syntax, highlighting and spelling
-            --===========================================================================""
+            --===========================================================================
             ----------------------------------------
             -- Color schemes
             ----------------------------------------
             use "aonemd/kuroi.vim"
-            use {"humanoid-colors/vim-humanoid-colorscheme", disable = true}
-            use {"trusktr/seti.vim", disable = true}
-            use {"rakr/vim-one", disable = true}
-            use {"jaredgorski/SpaceCamp", disable = true}
-            use {"jsit/toast.vim", disable = true}
+            -- use "humanoid-colors/vim-humanoid-colorscheme"
+            -- use "trusktr/seti.vim"
+            -- use "rakr/vim-one"
+            -- use "jaredgorski/SpaceCamp"
+            -- use "jsit/toast.vim"
+            use {
+                "marko-cerovac/material.nvim",
+                config = function()
+                    vim.g.material_style = "darker"
+                    -- vim.g.material_style = "deep ocean"
+                    -- vim.g.material_style = "lighter"
+                end
+            }
 
             -- Hyperfocus-writing in Vim
+            -- https://github.com/junegunn/limelight.vim
             use {
                 "junegunn/limelight.vim",
                 config = "vim.g.limelight_paragraph_span = 1",
@@ -346,127 +461,198 @@ return require("packer").startup(
             }
 
             -- Show vertical line for indentation level
-            use {"Yggdroot/indentLine", ft = "yaml"}
+            -- https://github.com/lukas-reineke/indent-blankline.nvim
+            use {
+                "lukas-reineke/indent-blankline.nvim",
+                config = function()
+                    vim.opt.list = true
 
-            --===========================================================================""
+                    require("indent_blankline").setup(
+                        {
+                            buftype_exclude = {"terminal"},
+                            space_char_blankline = " ",
+                            show_current_context = true
+                        }
+                    )
+                end
+            }
+
+            --===========================================================================
             -- 6. multiple windows
-            --===========================================================================""
+            --===========================================================================
             -- Delete all the buffers except the current/named buffer
             use {
                 "vim-scripts/BufOnly.vim",
-                config = function()
-                    vim.api.nvim_set_keymap("n", "<leader>q", ":BufOnly<CR>", {})
-                end
+                cmd = "BufOnly"
             }
 
-            --===========================================================================""
+            --===========================================================================
             -- 13. editing text
-            --===========================================================================""
-            -- wisely add 'end' in ruby, endfucntion/endif/more in vimscript, etc.
-            use "tpope/vim-endwise"
-
+            --===========================================================================
             -- Closes brackets. Perfect companion to vim-endwise. Basically, a more
             -- conservative version of auto-pairs that only works when you press Enter.
+            -- https://github.com/rstacruz/vim-closer
+            -- https://github.com/tpope/vim-endwise
             use {"rstacruz/vim-closer", requires = "tpope/vim-endwise"}
 
             -- comment stuff out
+            -- https://github.com/tpope/vim-commentary
             use "tpope/vim-commentary"
 
             -- quoting/parenthesizing made simple
+            -- https://github.com/tpope/vim-surround
             use "tpope/vim-surround"
 
             -- Adds gS and gJ to split/join code blocks.
+            -- https://github.com/AndrewRadev/splitjoin.vim
             use "AndrewRadev/splitjoin.vim"
 
             -- Easy text exchange operator
+            -- https://github.com/tommcdo/vim-exchange
             use "tommcdo/vim-exchange"
 
             -- Protect against weird unicode copy/paste
-            use "vim-utils/vim-troll-stopper"
-
-            use "honza/vim-snippets"
+            -- https://github.com/vim-utils/vim-troll-stopper
+            use {
+                "vim-utils/vim-troll-stopper",
+                config = function()
+                    vim.cmd([[highlight TrollStopper ctermbg = red guibg = #FF0000
+]])
+                end
+            }
 
             -- For case swapping
+            -- https://github.com/idanarye/vim-casetrate
             use {
                 "idanarye/vim-casetrate",
-                config = function()
-                    vim.g.casetrate_leader = "\\c"
-                end
+                cmd = "Casetrate"
             }
 
             -- Vim script for text filtering and alignment
-            use {"godlygeek/tabular", opt = true, cmd = "Tabularize"}
+            -- https://github.com/godlygeek/tabular
+            use {"godlygeek/tabular", cmd = "Tabularize"}
 
-            --===========================================================================""
+            --===========================================================================
             -- 21. executing external commands
-            --===========================================================================""
+            --===========================================================================
             -- Asynchronous build and test dispatcher. Used for running specs in a separate
             -- tmux pane.
-            use {"tpope/vim-dispatch", opt = true, cmd = {"Dispatch", "Make", "Focus", "Start"}}
+            -- https://github.com/tpope/vim-dispatch
+            use {"tpope/vim-dispatch", cmd = {"Dispatch", "Make", "Focus", "Start"}}
 
             -- Vim sugar for the UNIX shell commands that need it the most
-            use {"tpope/vim-eunuch", opt = true, cmd = {"Delete", "Move", "Rename"}}
-
-            -- run your tests at the speed of thought
+            -- https://github.com/tpope/vim-eunuch
             use {
-                "janko-m/vim-test",
-                opt = true,
-                ft = "ruby",
-                config = function()
-                    vim.g["test#strategy"] = "dispatch"
-                    vim.g["test#preserve_screen"] = 1
-                    vim.g["test#enabled_runners"] = {"ruby#rspec"}
+                "tpope/vim-eunuch",
+                cmd = {"Delete", "Unlink", "Move", "Rename", "Remove", "Mkdir"}
+            }
 
-                    vim.cmd([[autocmd FileType ruby nnoremap <silent> <leader>t :TestFile<CR>]])
-                    vim.cmd([[autocmd FileType ruby nnoremap <silent> <leader>n :TestNearest<CR>]])
-                    vim.cmd([[autocmd FileType ruby nnoremap <silent> <leader>l :TestLast<CR>]])
-                    vim.cmd([[autocmd FileType ruby nnoremap <silent> <leader>s :TestSuite<CR>]])
+            --===========================================================================
+            -- 22. running make and jumping to errors (quickfix)
+            --===========================================================================
+            -- run your tests at the speed of thought
+            -- https://github.com/vim-test/vim-test
+            -- https://github.com/voldikss/vim-floaterm
+            use {
+                "vim-test/vim-test",
+                requires = {"tpope/vim-dispatch", "voldikss/vim-floaterm"},
+                ft = {"rust", "ruby"},
+                config = function()
+                    vim.g["test#strategy"] = {
+                        nearest = "floaterm",
+                        last = "floaterm",
+                        file = "dispatch",
+                        suite = "dispatch"
+                    }
+                    vim.g["test#preserve_screen"] = 1
+                    vim.g["test#enabled_runners"] = {
+                        "ruby#rspec",
+                        "ruby#rails",
+                        "rust#cargotest"
+                    }
+
+                    vim.cmd([[autocmd FileType ruby,rust nnoremap <silent> <leader>tn <cmd>TestNearest<CR>]])
+                    vim.cmd([[autocmd FileType ruby,rust nnoremap <silent> <leader>tf <cmd>TestFile<CR>]])
+                    vim.cmd([[autocmd FileType ruby,rust nnoremap <silent> <leader>ta <cmd>TestSuite<CR>]])
+                    vim.cmd([[autocmd FileType ruby,rust nnoremap <silent> <leader>tl <cmd>TestLast<CR>]])
+                    vim.cmd([[autocmd FileType ruby,rust nnoremap <silent> <leader>tv <cmd>TestVisit<CR>]])
                 end
             }
 
-            --===========================================================================""
-            -- 22. running make and jumping to errors (quickfix)
-            --===========================================================================""
-
-            --===========================================================================""
+            --===========================================================================
             -- 23. language specific
-            --===========================================================================""
-            ------------------
-            -- CSS
-            ------------------
-            -- Cutting-edge vim css syntax file
-            use {"JulesWang/css.vim", opt = true, ft = "css"}
+            --===========================================================================
+            -- A solid language pack for Vim.
+            -- https://github.com/sheerun/vim-polyglot
+            use {
+                "sheerun/vim-polyglot",
+                requires = {
+                    "godlygeek/tabular"
+                },
+                config = function()
+                    -- vim-json
+                    vim.g.vim_json_syntax_conceal = false
 
-            ------------------
-            -- dockerfile
-            ------------------
-            use {"ekalinin/Dockerfile.vim", opt = true, ft = "dockerfile"}
+                    -- vim-markdown
+                    vim.g.vim_markdown_folding_disabled = 1
+                    vim.g.vim_markdown_conceal = 0
+                    vim.g.vim_markdown_follow_anchor = 1
+                    vim.g.vim_markdown_new_list_item_indent = 2
+                    vim.g.vim_markdown_no_default_key_mappings = 1
+                    vim.g.vim_markdown_strikethrough = 1
+
+                    -- vim-ruby
+                    vim.g.ruby_operators = 1
+                    vim.g.ruby_spellcheck_strings = 1
+                    vim.g.ruby_space_errors = 1
+
+                    vim.g.rubycomplete_buffer_loading = 1
+                    vim.g.rubycomplete_classes_in_global = 1
+                    vim.g.rubycomplete_load_gemfile = 1
+
+                    -- vim-yardoc
+                    -- vim.cmd("hi link yardGenericTag rubyInstanceVariable")
+                    -- vim.cmd("hi link yardTypeList rubyConstant")
+                    -- vim.cmd("hi link yardType rubyConstant")
+                end
+            }
 
             ------------------
             -- Elixir
             ------------------
-            use {"elixir-lang/vim-elixir", opt = true, ft = {"elixir", "eelixir"}}
             use {"avdgaag/vim-phoenix", opt = true, ft = {"elixir", "eelixir"}}
-
-            ------------------
-            -- Elm
-            ------------------
-            use {"elmcast/elm-vim", opt = true, ft = "elm"}
 
             ------------------
             -- Git
             ------------------
-            -- Vim Git syntax highlighting
-            use {"tpope/vim-git", ft = {"git", "gitconfig", "gitcommit", "gitsendmail"}}
-
             -- a Git wrapper so awesome, it should be illegal
-            use "tpope/vim-fugitive"
+            use {
+                "tpope/vim-fugitive",
+                config = function()
+                    vim.api.nvim_set_keymap("n", "<leader>gs", ":Git<CR>", {silent = true})
+                end
+            }
 
             -- If fugitive.vim is the Git, rhubarb.vim is the Hub.
             use "tpope/vim-rhubarb"
 
             -- A Vim plugin for more pleasant editing on commit messages
-            use "rhysd/committia.vim"
+            -- https://github.com/rhysd/committia.vim
+            use {
+                "rhysd/committia.vim",
+                config = function()
+                    vim.g.committia_hooks = {}
+
+                    vim.g.committia_hooks.edit_open = function(info)
+                        vim.opt_local.spell = true
+
+                        -- If no commit message, start with insert mode
+                        if info.vcs == "git" and vim.fn.getline(1) == "" then
+                            vim.fn.startinsert()
+                        end
+                    end
+                end
+            }
 
             ------------------
             -- HTML
@@ -475,71 +661,16 @@ return require("packer").startup(
             use {"mattn/emmet-vim", opt = true, ft = {"html", "html.*"}}
 
             ------------------
-            -- Handlebars
-            ------------------
-            -- Syntax, matchit support, navigations, text objects
-            use {"mustache/vim-mustache-handlebars", opt = true, ft = {"mustache", "html.handlebars"}}
-
-            ------------------
-            -- haproxy
-            ------------------
-            use {"vim-scripts/haproxy", opt = true, ft = "haproxy"}
-
-            ------------------
             -- JS
             ------------------
-            -- Vastly improved Javascript indentation and syntax support
-            use {"pangloss/vim-javascript", opt = true, ft = "javascript"}
-
             -- Enhanced javascript syntax file
             use {"jelera/vim-javascript-syntax", opt = true, ft = "javascript"}
 
             ------------------
-            -- JSON
-            ------------------
-            -- A better JSON for Vim: distinct highlighting of keywords as values,
-            -- JSON-specific (non-JS) warnings, quote concealing.
-            use "elzr/vim-json"
-            -- Plug 'GutenYe/json5.vim'
-
-            ------------------
-            -- Markdown
-            ------------------
-            -- Syntax highlighting, matching rules and mappings
-            use {
-                "plasticboy/vim-markdown",
-                ft = "markdown",
-                requires = "godlygeek/tabular",
-                config = function()
-                    vim.g.vim_markdown_folding_disabled = 1
-                    vim.g.vim_markdown_conceal = 0
-                    vim.g.vim_markdown_follow_anchor = 1
-                    vim.g.vim_markdown_new_list_item_indent = 2
-                    vim.g.vim_markdown_no_default_key_mappings = 1
-                    vim.g.vim_markdown_strikethrough = 1
-                end
-            }
-
-            ------------------
             -- Ruby
             ------------------
-            -- Configuration files for editing and compiling Ruby
-            use {
-                "vim-ruby/vim-ruby",
-                ft = {"ruby", "eruby"},
-                config = function()
-                    vim.g.ruby_operators = 1
-                    vim.g.ruby_spellcheck_strings = 1
-                    vim.g.ruby_space_errors = 1
-
-                    vim.g.rubycomplete_buffer_loading = 1
-                    vim.g.rubycomplete_classes_in_global = 1
-                    vim.g.rubycomplete_load_gemfile = 1
-                end
-            }
-
             -- Ruby on Rails power tools
-            use {"tpope/vim-rails", ft = {"ruby", "eruby"}}
+            use {"tpope/vim-rails", ft = {"ruby", "eruby", "rspec"}}
 
             -- Its' like rails.vim without the rails
             use {
@@ -549,41 +680,8 @@ return require("packer").startup(
                 requires = "tpope/vim-projectionist"
             }
 
-            -- Better rspec syntax highlighting for Vim
-            use {"sheerun/rspec.vim", ft = "ruby"}
-
-            -- Ruby syntax extensions for highlighting YARD documentation
-            use {
-                "sheerun/vim-yardoc",
-                ft = "ruby",
-                requires = "vim-ruby/vim-ruby",
-                config = function()
-                    vim.cmd("hi link yardGenericTag rubyInstanceVariable")
-                    vim.cmd("hi link yardTypeList rubyConstant")
-                    vim.cmd("hi link yardType rubyConstant")
-                end
-            }
-
-            -- use "~/Development/projects/vim-rbs"
-            use {"turboladen/vim-rbs", ft = {"ruby", "rbs", "ruby.rbs"}}
-
-            -- Lightweight support for Ruby's Bundler
-            use {"tpope/vim-bundler", ft = {"ruby", "eruby"}}
-
-            ------------------
-            -- Rust
-            ------------------
-            use {"rust-lang/rust.vim", ft = "rust"}
-
-            -- Vim syntax for TOML
-            use "cespare/vim-toml"
-
-            ------------------
-            -- SQL
-            ------------------
-            -- Better SQL Syntax highlighting with errors.
-            use {"vim-scripts/sql.vim", opt = true, ft = "sql"}
-            use {"exu/pgsql.vim", opt = true, ft = "sql"}
+            -- use '~/Development/projects/vim-rbs'
+            use {"turboladen/vim-rbs", ft = {"ruby", "rbs", "ruby.rbs", "rspec"}}
 
             ------------------
             -- tmux
@@ -596,135 +694,556 @@ return require("packer").startup(
             use "tmux-plugins/vim-tmux-focus-events"
 
             ------------------
-            -- TypeScript
-            ------------------
-            use {"HerringtonDarkholme/yats.vim", opt = true, ft = {"typescript", "typescriptreact"}}
-
-            ------------------
             -- YAML
             ------------------
             use {"stephpy/vim-yaml", ft = "yaml"}
-            use {"tarekbecker/vim-yaml-formatter", ft = "yaml", disable = true}
 
             --===========================================================================
             -- 25. various
             --===========================================================================
+            -- plenary: full; complete; entire; absolute; unqualified. All the lua
+            -- functions I don't want to write twice.
+            -- https://github.com/nvim-lua/plenary.nvim/
             use "nvim-lua/plenary.nvim"
 
+            --  An asynchronous linter plugin for Neovim (>= 0.5) complementary
+            --  to the built-in Language Server Protocol support.
+            -- https://github.com/mfussenegger/nvim-lint
             use {
-                "dense-analysis/ale",
-                requires = "nvim-lua/plenary.nvim",
-                -- rocks = {"luacheck"},
-                run = function()
-                        require("turboladen/installers").npm_install("write-good")
-                        require("turboladen/installers").npm_install("lua-fmt")
-                end,
+                "mfussenegger/nvim-lint",
+                ft = {"ruby", "vimscript", "vim", "bash", "sh", "zsh"},
                 config = function()
-                    vim.g.ale_fix_on_save = 1
-                    vim.g.ale_sign_error = "✘"
-                    vim.g.ale_sign_warning = "⚠"
-                    vim.g.ale_disable_lsp = 1
+                    -- require("turboladen/installers").npm_install("write-good")
+                    -- require("turboladen.installers").gem_install("brakeman")
+                    -- require("turboladen.installers").gem_install("debride")
+                    -- require("turboladen.installers").gem_install("reek")
+                    -- require("turboladen.installers").gem_install("sorbet")
+                    -- require("turboladen.installers").brew_install("languagetool", "shellcheck")
+                    -- require("turboladen.installers").pip_install("vim-vint")
 
-                    --  Only run linters named in ale_linters settings.
-                    vim.g.ale_linters_explicit = 1
+                    local lint = require("lint")
 
-                    vim.g.ale_linters = {
-                        lua = {"luacheck"},
-                        markdown = {"proselint", "writegood"},
-                        ruby = {"brakeman", "debride", "reek", "rubocop", "ruby", "sorbet"},
+                    -- lint.linters.brakeman = {
+                    --     cmd = "brakeman",
+                    --     args = {
+                    --         "-q",
+                    --         "--faster",
+                    --         "--no-color",
+                    --         "--no-highlights",
+                    --         "--no-pager"
+                    --     },
+                    --     stream = "stdout",
+                    --     parser = function()
+                    --         -- Need to figure this out before it'll work.
+                    --     end
+                    -- }
+                    -- lint.linters.debride = {
+                    --     cmd = "debride",
+                    --     args = {"."},
+                    --     stream = "stdout",
+                    --     parser = function()
+                    --         -- Need to figure this out before it'll work.
+                    --     end
+                    -- }
+                    -- lint.linters.reek = {
+                    --     cmd = "reek",
+                    --     args = {
+                    --         "--format",
+                    --         "json",
+                    --         "--no-color",
+                    --         "--line-numbers",
+                    --         "--no-progress"
+                    --     },
+                    --     stream = "stdout",
+                    --     parser = function()
+                    --         -- Need to figure this out before it'll work.
+                    --     end
+                    -- }
+
+                    lint.linters_by_ft = {
+                        -- markdown = {"proselint", "writegood"},
+                        -- markdown = {"languagetool"},
+                        -- ruby = {"brakeman", "debride", "reek", "ruby", "sorbet"},
+                        ruby = {"ruby"},
                         vim = {"vint"},
                         zsh = {"shellcheck"}
                     }
 
-                    vim.g.ale_fixers = {
-                        ["lua"] = {"luafmt"},
-                        ["ruby"] = {"rubocop"},
-                        ["rust"] = {"rustfmt"},
-                        ["*"] = {"remove_trailing_lines", "trim_whitespace"}
-                    }
-                    -- vim.g.ale_fixers["*"] = {"remove_trailing_lines", "trim_whitespace"}
-
-                    vim.api.nvim_set_keymap("n", "<leader>]", "<Plug>(ale_next_wrap)", {silent = true})
-                    vim.api.nvim_set_keymap("n", "<leader>[", "<Plug>(ale_previous_wrap)", {silent = true})
+                    vim.cmd([[autocmd BufWritePost ruby,vim,zsh,vimscript,bash,sh <buffer> require('lint').try_lint()]])
                 end
             }
 
-            -- Simple plugins can be specified as strings
-            -- use '9mm/vim-closer'
+            use {
+                "mhartington/formatter.nvim",
+                ft = {"markdown", "lua"},
+                config = function()
+                    -- require("turboladen/installers").npm_install("prettier")
+                    -- require("turboladen/installers").npm_install("lua-fmt")
 
-            -- Lazy loading:
-            -- Load on specific commands
+                    require("formatter").setup(
+                        {
+                            filetype = {
+                                markdown = {
+                                    -- prettier for markdown
+                                    function()
+                                        return {
+                                            exe = "prettier",
+                                            args = {
+                                                "--stdin-filepath",
+                                                vim.fn.fnameescape(vim.api.nvim_buf_get_name(0)),
+                                                "--single-quote"
+                                            },
+                                            stdin = true
+                                        }
+                                    end
+                                },
+                                lua = {
+                                    -- luafmt
+                                    function()
+                                        return {
+                                            exe = "luafmt",
+                                            args = {"--indent-count", 4, "--stdin"},
+                                            stdin = true
+                                        }
+                                    end
+                                }
+                            }
+                        }
+                    )
 
-            -- Load on an autocommand event
-            -- use {'andymass/vim-matchup', event = 'VimEnter'}
+                    vim.api.nvim_exec(
+                        [[
+augroup FormatAutogroup
+  autocmd!
+  autocmd BufWritePost *.lua FormatWrite
+augroup END
+]],
+                        true
+                    )
+                end
+            }
 
-            -- Plugins can have dependencies on other plugins
-            -- use {
-            --   'haorenW1025/completion-nvim',
-            --   opt = true,
-            --   requires = {{'hrsh7th/vim-vsnip', opt = true}, {'hrsh7th/vim-vsnip-integ', opt = true}}
-            -- }
+            use {
+                "mfussenegger/nvim-dap",
+                requires = "nvim-lua/plenary.nvim",
+                config = function()
+                    local dap = require("dap")
 
-            -- Plugins can also depend on rocks from luarocks.org:
-            -- use {
-            --   'my/supercoolplugin',
-            --   rocks = {'lpeg', {'lua-cjson', version = '2.1.0'}}
-            -- }
+                    dap.adapters.ruby = {
+                        type = "executable",
+                        command = "readapt",
+                        args = {"stdio"}
+                    }
 
-            -- You can specify rocks in isolation
-            -- use_rocks 'penlight'
-            -- use_rocks {'lua-resty-http', 'lpeg'}
+                    dap.configurations.ruby = {
+                        {
+                            type = "ruby",
+                            request = "launch",
+                            name = "Ruby",
+                            program = "bundle",
+                            programArgs = {"exec", "rspec"},
+                            useBundler = true
+                        }
+                    }
 
-            -- Local plugins can be included
-            -- use '~/projects/personal/hover.nvim'
+                    dap.configurations.rust = {
+                        {
+                            name = "Launch",
+                            type = "lldb",
+                            request = "launch",
+                            program = function()
+                                return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+                            end,
+                            cwd = "${workspaceFolder}",
+                            stopOnEntry = false,
+                            args = {},
+                            -- if you change `runInTerminal` to true, you might need to change the yama/ptrace_scope setting:
+                            --
+                            --    echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+                            --
+                            -- Otherwise you might get the following error:
+                            --
+                            --    Error on launch: Failed to attach to the target process
+                            --
+                            -- But you should be aware of the implications:
+                            -- https://www.kernel.org/doc/html/latest/admin-guide/LSM/Yama.html
+                            runInTerminal = false
+                        }
+                    }
 
-            -- Plugins can have post-install/update hooks
-            -- use {'iamcco/markdown-preview.nvim', run = 'cd app && yarn install', cmd = 'MarkdownPreview'}
+                    vim.fn.sign_define("DapBreakpoint", {text = "🛑", texthl = "", linehl = "", numhl = ""})
 
-            -- Post-install/update hook with neovim command
-            -- use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<F5>",
+                        ":lua require('dap').continue()<CR>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>dk",
+                        "<cmd>lua require('dap').step_out()<CR>",
+                        {noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>dl",
+                        "<cmd>lua require('dap').step_into()<CR>",
+                        {noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>dj",
+                        "<cmd>lua require('dap').step_over()<CR>",
+                        {noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>db",
+                        "<cmd>lua require('dap').toggle_breakpoint()<CR>",
+                        {noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>dB",
+                        "<cmd>lua require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>",
+                        {noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>lp",
+                        "<cmd>lua require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>",
+                        {noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>dr",
+                        "<cmd>lua require('dap').repl.open()<CR>",
+                        {noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>dL",
+                        "<cmd>lua require('dap').run_last()<CR>",
+                        {noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>di",
+                        "<cmd>lua require('dap.ui.variables').hover()<CR>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "v",
+                        "<leader>di",
+                        "<cmd>lua require('dap.ui.variables').visual_hover()<CR>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>d?",
+                        "<cmd>lua require('dap.ui.variables').scopes()<CR>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>de",
+                        "<cmd>lua require('dap').set_exception_breakpoints({'all'})<CR>",
+                        {noremap = true}
+                    )
 
-            -- Post-install/update hook with call of vimscript function with argument
-            -- use { 'glacambre/firenvim', run = function() vim.fn['firenvim#install'](0) end }
+                    -- au FileType dap-repl lua require('dap.ext.autocompl').attach()
+                    vim.cmd [[autocmd FileType dap-repl lua require('dap.ext.autocompl').attach()]]
+                end
+            }
 
-            -- Use specific branch, dependency and run lua file after load
-            -- use {
-            --   'glepnir/galaxyline.nvim', branch = 'main', config = function() require'statusline' end,
-            --   requires = {'kyazdani42/nvim-web-devicons'}
-            -- }
+            use {
+                "rcarriga/nvim-dap-ui",
+                requires = "mfussenegger/nvim-dap",
+                config = function()
+                    require("dapui").setup({})
 
-            -- Use dependency and run lua function after load
-            -- use {
-            --   'lewis6991/gitsigns.nvim',
-            --   requires = { 'nvim-lua/plenary.nvim' },
-            --   config = function() require('gitsigns').setup() end
-            -- }
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>dt",
+                        ":lua require('dapui').toggle()<CR>",
+                        {silent = true, noremap = true}
+                    )
+                end
+            }
 
-            -- You can specify multiple plugins in a single call
-            -- use {'tjdevries/colorbuddy.vim', {'nvim-treesitter/nvim-treesitter', opt = true}}
+            -- https://github.com/nvim-lua/lsp-status.nvim
+            use {
+                "neovim/nvim-lspconfig",
+                requires = "nvim-lua/lsp-status.nvim",
+                config = function()
+                    local lspconfig = require("lspconfig")
+                    local lsp_status = require("lsp-status")
+                    lsp_status.register_progress()
+                    local status_capabilities = lsp_status.capabilities
+                    local opts = _MakeLspOpts("solargraph", status_capabilities)
 
-            -- You can alias plugin names
-            -- use {'dracula/vim', as = 'dracula'}
+                    lspconfig.solargraph.setup(opts)
+                end
+            }
 
-            -- use {
-            --   'lewis6991/spellsitter.nvim',
-            --   config = function()
-            --     require('spellsitter').setup()
-            --   end
-            -- }
+            -- Tools for better development in rust using neovim's builtin lsp
+            -- https://github.com/simrat39/rust-tools.nvim
+            use {
+                "simrat39/rust-tools.nvim",
+                requires = {
+                    "neovim/nvim-lspconfig",
+                    "nvim-lua/popup.nvim",
+                    "nvim-lua/plenary.nvim",
+                    "nvim-telescope/telescope.nvim",
+                    "mfussenegger/nvim-dap",
+                    "nvim-lua/lsp-status.nvim"
+                },
+                after = "nvim-lspconfig",
+                config = function()
+                    local lsp_status = require("lsp-status")
+                    lsp_status.register_progress()
 
-            -- use {
-            --   'beauwilliams/statusline.lua',
-            --   requires = { 'nvim-lua/lsp-status.nvim' },
-            --   config = function()
-            --     local statusline = require('statusline')
-            --   end
-            -- }
+                    -- Needed to allow for finding lldb and lldb-vscode for DAP.
+                    vim.env.PATH = vim.env.PATH .. ":/usr/local/opt/llvm/bin"
+
+                    local status_capabilities = lsp_status.capabilities
+                    local server_config = _MakeLspOpts("rust_analyzer", status_capabilities)
+
+                    server_config.settings = {
+                        -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
+                        ["rust-analyzer"] = {
+                            assist = {
+                                importPrefix = "by_self"
+                            },
+                            cargo = {
+                                allFeatures = true
+                            },
+                            checkOnSave = {
+                                -- enable clippy on save
+                                command = "clippy",
+                                allFeatures = true
+                            },
+                            lens = {
+                                references = true,
+                                methodReferences = true
+                            }
+                            -- lruCapacity = 4096
+                        }
+                    }
+
+                    -- https://github.com/simrat39/rust-tools.nvim#configuration
+                    local rust_tools_opts = {
+                        crate_graph = {
+                            full = false
+                        },
+                        tools = {
+                            -- rust-tools options
+                            inlay_hints = {
+                                only_current_line = true,
+                                max_len_align = true
+                            }
+                        },
+                        -- all the opts to send to nvim-lspconfig
+                        -- these override the defaults set by rust-tools.nvim
+                        -- see https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#rust_analyzer
+                        server = server_config
+                    }
+
+                    require("rust-tools").setup(rust_tools_opts)
+                end
+            }
+
+            use {
+                "kosayoda/nvim-lightbulb",
+                config = function()
+                    vim.cmd [[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()]]
+                end
+            }
+
+            use {
+                "nvim-telescope/telescope.nvim",
+                requires = {
+                    "nvim-lua/plenary.nvim",
+                    "kyazdani42/nvim-web-devicons",
+                    "nvim-treesitter/nvim-treesitter"
+                },
+                config = function()
+                    require("telescope").setup(
+                        {
+                            pickers = {
+                                buffers = {
+                                    theme = "cursor",
+                                    previewer = false
+                                },
+                                find_files = {
+                                    theme = "dropdown"
+                                },
+                                lsp_code_actions = {
+                                    theme = "cursor"
+                                },
+                                oldfiles = {
+                                    theme = "dropdown"
+                                }
+                            }
+                        }
+                    )
+
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader><leader>",
+                        "<cmd>lua require('telescope.builtin').find_files()<CR>",
+                        {noremap = true}
+                    )
+
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader><CR>",
+                        "<cmd>lua require('telescope.builtin').buffers()<CR>",
+                        {noremap = true}
+                    )
+
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>/",
+                        "<cmd>lua require('telescope.builtin').live_grep()<CR>",
+                        {noremap = true}
+                    )
+
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>fk",
+                        "<cmd>lua require('telescope.builtin').grep_string()<CR>",
+                        {noremap = true}
+                    )
+
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>fm",
+                        "<cmd>lua require('telescope.builtin').marks()<CR>",
+                        {noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>fo",
+                        "<cmd>lua require('telescope.builtin').oldfiles()<CR>",
+                        {noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>ft",
+                        "<cmd>lua require('telescope.builtin').grep_string({ search = 'TODO' })<CR>",
+                        {noremap = true}
+                    )
+                end
+            }
+
+            -- Lua
+            use {
+                "folke/trouble.nvim",
+                requires = "kyazdani42/nvim-web-devicons",
+                config = function()
+                    require("trouble").setup(
+                        {
+                            auto_preview = false
+                        }
+                    )
+                    -- Lua
+                    vim.api.nvim_set_keymap("n", "<leader>xx", "<cmd>Trouble<cr>", {silent = true, noremap = true})
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>xw",
+                        "<cmd>Trouble lsp_workspace_diagnostics<cr>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>xd",
+                        "<cmd>Trouble lsp_document_diagnostics<cr>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>xl",
+                        "<cmd>Trouble loclist<cr>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>xq",
+                        "<cmd>Trouble quickfix<cr>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "gR",
+                        "<cmd>Trouble lsp_references<cr>",
+                        {silent = true, noremap = true}
+                    )
+
+                    -- jump to the next item, skipping the groups
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>]",
+                        "<cmd>lua require('trouble').next({skip_groups = true, jump = true})<cr>",
+                        {silent = true, noremap = true}
+                    )
+
+                    -- jump to the previous item, skipping the groups
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>[",
+                        "<cmd>lua require('trouble').previous({skip_groups = true, jump = true})<cr>",
+                        {silent = true, noremap = true}
+                    )
+                end
+            }
+
+            use {
+                "xiyaowong/telescope-emoji.nvim",
+                requires = "nvim-telescope/telescope.nvim",
+                config = function()
+                    require("telescope").load_extension("emoji")
+                end
+            }
+
+            -- https://github.com/nvim-telescope/telescope-github.nvim
+            -- Requires `gh` and don't forget to auth the first use!
+            use {
+                "nvim-telescope/telescope-github.nvim",
+                requires = {
+                    "nvim-lua/plenary.nvim",
+                    "nvim-telescope/telescope.nvim"
+                },
+                config = function()
+                    require("telescope").load_extension("gh")
+
+                    vim.api.nvim_set_keymap("n", "<leader>gh", "<cmd>Telescope gh ", {noremap = true})
+                end
+            }
+
+            use {
+                "sudormrfbin/cheatsheet.nvim"
+            }
+
+            -- A small automated session manager for Neovim
+            -- https://github.com/rmagatti/auto-session
+            use {
+                "rmagatti/auto-session",
+                config = function()
+                    vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,resize,winpos,terminal"
+
+                    require("auto-session").setup(
+                        {
+                            pre_save_cmds = {"tabdo SymbolsOutlineClose"},
+                            auto_save_enabled = true
+                        }
+                    )
+                end
+            }
         end,
         config = {
-            display = {
-                open_fn = require("packer.util").float
-            }
+            max_jobs = 20
         }
     }
 )
