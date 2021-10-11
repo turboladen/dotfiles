@@ -19,6 +19,8 @@ function _MakeLspOpts(server_name, capabilities)
     return {
         capabilities = capabilities,
         on_attach = function(client, bufnr)
+            require("lsp_signature").on_attach()
+
             local function buf_set_keymap(...)
                 vim.api.nvim_buf_set_keymap(bufnr, ...)
             end
@@ -302,6 +304,12 @@ return require("packer").startup(
                 end
             }
 
+            -- LSP signature hint as you type
+            -- https://github.com/ray-x/lsp_signature.nvim
+            use {
+                "ray-x/lsp_signature.nvim"
+            }
+
             use {
                 "Saecki/crates.nvim",
                 event = {"BufEnter Cargo.toml"},
@@ -385,7 +393,11 @@ return require("packer").startup(
             }
 
             use {
-                "simrat39/symbols-outline.nvim"
+                "simrat39/symbols-outline.nvim",
+                cmd = {"SymbolsOutline", "SymbolsOutlineClose", "SymbolsOutlineOpen"},
+                config = function()
+                    vim.api.nvim_set_keymap("n", "<leader>s", ":SymbolsOutline", {noremap = true, silent = true})
+                end
             }
             -----------------------------------------------------------------------------
             -- 2. moving around, searching and patterns
@@ -1028,7 +1040,8 @@ augroup END
                         tools = {
                             -- rust-tools options
                             inlay_hints = {
-                                only_current_line = true
+                                only_current_line = true,
+                                max_len_align = true
                             }
                         },
                         -- all the opts to send to nvim-lspconfig
@@ -1213,14 +1226,21 @@ augroup END
                 "sudormrfbin/cheatsheet.nvim"
             }
 
-            -- use {
-            --     "Shatur/neovim-session-manager",
-            --     requires = "nvim-telescope/telescope.nvim",
-            --     config = function()
-            --         require("session_manager").setup({})
-            --         require("telescope").load_extension("sessions")
-            --     end
-            -- }
+            -- A small automated session manager for Neovim
+            -- https://github.com/rmagatti/auto-session
+            use {
+                "rmagatti/auto-session",
+                config = function()
+                    vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,resize,winpos,terminal"
+
+                    require("auto-session").setup(
+                        {
+                            pre_save_cmds = {"tabdo SymbolsOutlineClose"},
+                            auto_save_enabled = true
+                        }
+                    )
+                end
+            }
         end,
         config = {
             max_jobs = 20
