@@ -396,7 +396,12 @@ return require("packer").startup(
                 "simrat39/symbols-outline.nvim",
                 cmd = {"SymbolsOutline", "SymbolsOutlineClose", "SymbolsOutlineOpen"},
                 config = function()
-                    vim.api.nvim_set_keymap("n", "<leader>s", ":SymbolsOutline", {noremap = true, silent = true})
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>s",
+                        "<cmd>SymbolsOutline<CR>",
+                        {noremap = true, silent = true}
+                    )
                 end
             }
             -----------------------------------------------------------------------------
@@ -629,7 +634,7 @@ return require("packer").startup(
             use {
                 "tpope/vim-fugitive",
                 config = function()
-                    vim.api.nvim_set_keymap("n", "<leader>gs", ":Git<CR>", {silent = true})
+                    vim.api.nvim_set_keymap("n", "<leader>gs", "<cmd>Git<CR>", {silent = true})
                 end
             }
 
@@ -876,7 +881,7 @@ augroup END
                     vim.api.nvim_set_keymap(
                         "n",
                         "<F5>",
-                        ":lua require('dap').continue()<CR>",
+                        "<cmd>lua require('dap').continue()<CR>",
                         {silent = true, noremap = true}
                     )
                     vim.api.nvim_set_keymap(
@@ -966,7 +971,7 @@ augroup END
                     vim.api.nvim_set_keymap(
                         "n",
                         "<leader>dt",
-                        ":lua require('dapui').toggle()<CR>",
+                        "<cmd>lua require('dapui').toggle()<CR>",
                         {silent = true, noremap = true}
                     )
                 end
@@ -1218,7 +1223,10 @@ augroup END
                 config = function()
                     require("telescope").load_extension("gh")
 
-                    vim.api.nvim_set_keymap("n", "<leader>gh", "<cmd>Telescope gh ", {noremap = true})
+                    vim.api.nvim_set_keymap("n", "<leader>ghi", "<cmd>Telescope gh issues<CR>", {noremap = true})
+                    vim.api.nvim_set_keymap("n", "<leader>ghp", "<cmd>Telescope gh pull_request<CR>", {noremap = true})
+                    vim.api.nvim_set_keymap("n", "<leader>ghg", "<cmd>Telescope gh gist<CR>", {noremap = true})
+                    vim.api.nvim_set_keymap("n", "<leader>ghr", "<cmd>Telescope gh run<CR>", {noremap = true})
                 end
             }
 
