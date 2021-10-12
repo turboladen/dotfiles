@@ -90,7 +90,9 @@ if (has('termguicolors'))
 endif
 
 " colorscheme humanoid
-colorscheme kuroi
+" colorscheme kuroi
+" colorscheme material
+colorscheme codeschool
 
 ""===========================================================================""
 " 6. multiple windows

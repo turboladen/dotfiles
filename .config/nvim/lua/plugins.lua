@@ -21,58 +21,6 @@ function ShowDocumentation()
     end
 end
 
--- Use an on_attach function to only map the following keys
--- after the language server attaches to the current buffer
-function _MakeLspOpts(server_name, capabilities)
-    return {
-        capabilities = capabilities,
-        on_attach = function(client, bufnr)
-            require("lsp_signature").on_attach()
-
-            local function buf_set_keymap(...)
-                vim.api.nvim_buf_set_keymap(bufnr, ...)
-            end
-            local function buf_set_option(...)
-                vim.api.nvim_buf_set_option(bufnr, ...)
-            end
-
-            -- Enable completion triggered by <c-x><c-o>
-            buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
-
-            -- Mappings.
-            local opts = {noremap = true, silent = true}
-
-            -- See `:help vim.lsp.*` for documentation on any of the below functions
-            buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-            buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-
-            buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-
-            buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-            buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-
-            buf_set_keymap("n", "<leader>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
-            buf_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-            -- buf_set_keymap("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-            buf_set_keymap("n", "<leader>ca", "<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
-            -- buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-            buf_set_keymap("n", "gr", "<cmd>lua require('telescope.builtin').lsp_references()<CR>", opts)
-            buf_set_keymap("n", "<leader>e", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
-            buf_set_keymap("n", "[g", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
-            buf_set_keymap("n", "]g", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
-            buf_set_keymap("n", "<leader>q", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", opts)
-            buf_set_keymap("n", "<leader>ff", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-
-            if server_name == "rust_analyzer" then
-                buf_set_keymap("n", "gJ", "<cmd>RustJoinLines<CR>", opts)
-            end
-        end,
-        flags = {
-            debounce_text_changes = 150
-        }
-    }
-end
-
 return require("packer").startup(
     {
         function(use)
@@ -107,27 +55,35 @@ return require("packer").startup(
                 "nvim-treesitter/nvim-treesitter",
                 run = ":TSUpdate",
                 config = function()
-                    require "nvim-treesitter.configs".setup {
-                        ensure_installed = {
-                            "bash",
-                            "c",
-                            "cmake",
-                            "comment",
-                            "cpp",
-                            "dockerfile",
-                            "html",
-                            "javascript",
-                            "json",
-                            "lua",
-                            "ruby",
-                            "rust",
-                            "toml",
-                            "typescript",
-                            "yaml"
-                        },
-                        highlight = {enable = true},
-                        matchup = {enable = true}
-                    }
+                    require("nvim-treesitter.configs").setup(
+                        {
+                            ensure_installed = {
+                                "bash",
+                                "c",
+                                "cmake",
+                                "comment",
+                                "cpp",
+                                "dockerfile",
+                                "elixir",
+                                "elm",
+                                "html",
+                                "javascript",
+                                "json",
+                                "json5",
+                                "jsonc",
+                                "llvm",
+                                "lua",
+                                "ruby",
+                                "rust",
+                                "toml",
+                                "typescript",
+                                "vim",
+                                "yaml"
+                            },
+                            highlight = {enable = true},
+                            matchup = {enable = true}
+                        }
+                    )
                 end
             }
 
@@ -209,6 +165,11 @@ return require("packer").startup(
                     local lspkind = require("lspkind")
                     local lsp_status = require("lsp-status")
 
+                    vim.g.vsnip_filetypes = {
+                        rails = {"ruby", "rails"},
+                        rspec = {"ruby", "rails", "rspec"}
+                    }
+
                     cmp.setup(
                         {
                             completion = {
@@ -241,20 +202,6 @@ return require("packer").startup(
                             }
                         }
                     )
-
-                    -- Setup lspconfig.
-                    local server_names = require("lspconfig").available_servers()
-                    local capabilities = lsp_status.capabilities
-
-                    for _, server_name in pairs(server_names) do
-                        require("lspconfig")[server_name].setup {
-                            capabilities = vim.tbl_extend(
-                                "keep",
-                                require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities()),
-                                capabilities
-                            )
-                        }
-                    end
 
                     -- Expand
                     vim.api.nvim_set_keymap(
@@ -402,14 +349,8 @@ return require("packer").startup(
 
             use {
                 "simrat39/symbols-outline.nvim",
-                cmd = {"SymbolsOutline", "SymbolsOutlineClose", "SymbolsOutlineOpen"},
                 config = function()
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>s",
-                        "<cmd>SymbolsOutline<CR>",
-                        {noremap = true, silent = true}
-                    )
+                    vim.api.nvim_set_keymap("n", "<leader>s", ":SymbolsOutline<CR>", {noremap = true, silent = true})
                 end
             }
             -----------------------------------------------------------------------------
@@ -468,7 +409,72 @@ return require("packer").startup(
             -- use "trusktr/seti.vim"
             -- use "rakr/vim-one"
             -- use "jaredgorski/SpaceCamp"
-            -- use "jsit/toast.vim"
+
+            -- https://github.com/adisen99/codeschool.nvim
+            use {
+                "adisen99/codeschool.nvim",
+                requires = "rktjmp/lush.nvim",
+                config = function()
+                    vim.g.codeschool_contrast_dark = "hard"
+                    vim.g.codeschool_italic = 1
+                    -- vim.g.codeschool_sign_column = "none"
+                    -- vim.g.codeschool_color_column = "none"
+                    vim.g.codeschool_invert_signs = 1
+                    vim.g.codeschool_invert_indent_guides = 1
+                    vim.g.codeschool_improved_strings = 1
+                    vim.g.codeschool_improved_warnings = 1
+                    vim.g.codeschool_transparent_bg = 1
+                    vim.g.codeschool_underline = 0
+                    vim.g.codeschool_undercurl = 0
+
+                    require("lush")(
+                        require("codeschool").setup(
+                            {
+                                plugins = {
+                                    "buftabline",
+                                    "fzf",
+                                    "gitsigns",
+                                    "lsp",
+                                    "telescope",
+                                    "treesitter"
+                                },
+                                langs = {
+                                    "c",
+                                    "css",
+                                    "elixir",
+                                    "html",
+                                    "js",
+                                    "json",
+                                    "lua",
+                                    "markdown",
+                                    "python",
+                                    "rust",
+                                    "typescript",
+                                    "viml",
+                                    "xml"
+                                }
+                            }
+                        )
+                    )
+                end
+            }
+
+            use "nxvu699134/vn-night.nvim"
+            -- use {
+            --     "sainnhe/everforest",
+            --     config = function()
+            --         vim.g.everforest_background = "medium"
+            --         vim.g.everforest_enable_italic = 1
+            --         vim.g.everforest_transparent_background = 1
+            --         vim.g.everforest_ui_contrast = "high"
+            --         vim.g.everforest_diagnostic_text_highlight = 1
+            --         vim.g.everforest_diagnostic_line_highlight = 1
+            --         vim.g.everforest_diagnostic_virtual_text = "colored"
+            --     end
+            -- }
+
+            -- https://github.com/Pocco81/Catppuccino.nvim
+            -- use "Pocco81/Catppuccino.nvim"
             use {
                 "marko-cerovac/material.nvim",
                 config = function()
@@ -490,6 +496,7 @@ return require("packer").startup(
             -- https://github.com/lukas-reineke/indent-blankline.nvim
             use {
                 "lukas-reineke/indent-blankline.nvim",
+                ft = {"yaml", "json"},
                 config = function()
                     vim.opt.list = true
 
@@ -1003,13 +1010,7 @@ augroup END
                 "neovim/nvim-lspconfig",
                 requires = "nvim-lua/lsp-status.nvim",
                 config = function()
-                    local lspconfig = require("lspconfig")
-                    local lsp_status = require("lsp-status")
-                    lsp_status.register_progress()
-                    local status_capabilities = lsp_status.capabilities
-                    local opts = _MakeLspOpts("solargraph", status_capabilities)
-
-                    lspconfig.solargraph.setup(opts)
+                    require("turboladen.lsp").setup_lsp()
 
                     vim.cmd(
                         [[
@@ -1042,47 +1043,45 @@ augroup END
                     -- Needed to allow for finding lldb and lldb-vscode for DAP.
                     vim.env.PATH = vim.env.PATH .. ":/usr/local/opt/llvm/bin"
 
-                    local status_capabilities = lsp_status.capabilities
-                    local server_config = _MakeLspOpts("rust_analyzer", status_capabilities)
-
-                    server_config.settings = {
-                        -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
-                        ["rust-analyzer"] = {
-                            assist = {
-                                importPrefix = "by_self"
-                            },
-                            cargo = {
-                                allFeatures = true
-                            },
-                            checkOnSave = {
-                                -- enable clippy on save
-                                command = "clippy",
-                                allFeatures = true
-                            },
-                            lens = {
-                                references = true,
-                                methodReferences = true
-                            }
-                            -- lruCapacity = 4096
-                        }
-                    }
-
                     -- https://github.com/simrat39/rust-tools.nvim#configuration
                     local rust_tools_opts = {
-                        crate_graph = {
-                            full = false
-                        },
                         tools = {
-                            -- rust-tools options
+                            crate_graph = {
+                                full = false
+                            },
                             inlay_hints = {
-                                only_current_line = true,
-                                max_len_align = true
+                                only_current_line = true
                             }
                         },
                         -- all the opts to send to nvim-lspconfig
                         -- these override the defaults set by rust-tools.nvim
                         -- see https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#rust_analyzer
-                        server = server_config
+                        server = {
+                            on_attach = require("turboladen.lsp").make_on_attach("rust_analyzer"),
+                            capabilities = require("turboladen.lsp").make_capabilities(),
+                            flags = require("turboladen.lsp").make_flags(),
+                            settings = {
+                                -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
+                                ["rust-analyzer"] = {
+                                    assist = {
+                                        importPrefix = "by_self"
+                                    },
+                                    cargo = {
+                                        allFeatures = true
+                                    },
+                                    checkOnSave = {
+                                        command = "clippy"
+                                    },
+                                    hoverActions = {
+                                        references = true
+                                    }
+                                    -- lens = {
+                                    --     references = true,
+                                    --     methodReferences = true
+                                    -- }
+                                }
+                            }
+                        }
                     }
 
                     require("rust-tools").setup(rust_tools_opts)
@@ -1171,6 +1170,11 @@ augroup END
                         {noremap = true}
                     )
                 end
+            }
+
+            use {
+                "nvim-telescope/telescope-symbols.nvim",
+                requires = "nvim-telescope/telescope.nvim"
             }
 
             -- Lua
@@ -1268,12 +1272,16 @@ augroup END
             -- https://github.com/rmagatti/auto-session
             use {
                 "rmagatti/auto-session",
+                requires = "Asheq/close-buffers.vim",
                 config = function()
                     vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,resize,winpos,terminal"
 
                     require("auto-session").setup(
                         {
-                            pre_save_cmds = {"tabdo SymbolsOutlineClose"},
+                            pre_save_cmds = {
+                                "tabdo SymbolsOutlineClose",
+                                ":Bdelete hidden"
+                            },
                             auto_save_enabled = true
                         }
                     )
