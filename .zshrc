@@ -47,7 +47,7 @@ export VI_MODE_SET_CURSOR=true
 #------------------------------------------------------------------------------
 # local things
 #------------------------------------------------------------------------------
-source $brew_prefix/etc/profile.d/z.sh
+eval "$(zoxide init --hook pwd zsh)"
 source ~/.config/zsh/*.zsh
 source ~/.fzf.zsh
 source $HOME/.cargo/env

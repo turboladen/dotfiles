@@ -49,7 +49,7 @@ mas 'Pocket', id: 568494494
 brew 'curl'
 brew 'exa'
 brew 'fzf'
-brew 'z'
+brew 'zoxide'
 brew 'zsh'
 
 brew 'bat'
