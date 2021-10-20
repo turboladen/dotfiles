@@ -21,6 +21,13 @@ function ShowDocumentation()
     end
 end
 
+-- https://github.com/mfussenegger/nvim-dap/wiki/Cookbook#2-clear-the-lua-package-cache-and-reload-the-configuration-module
+-- function ReloadPluginsAfterSave()
+-- package.loaded["dap_config"] = nil
+-- require("dap_config")
+-- require("dap").continue()
+-- end
+
 return require("packer").startup(
     {
         function(use)
@@ -32,7 +39,7 @@ return require("packer").startup(
                         [[
   augroup packer_user_config
     autocmd!
-    autocmd BufWritePost plugins.lua source <afile> | PackerCompile
+    autocmd BufWritePost plugins.lua source <afile> | PackerCompile 
   augroup end
 ]]
                     )
@@ -81,6 +88,8 @@ return require("packer").startup(
                                 "yaml"
                             },
                             highlight = {enable = true},
+                            incremental_selection = {enable = true},
+                            indent = {enable = true},
                             matchup = {enable = true}
                         }
                     )
@@ -158,12 +167,12 @@ return require("packer").startup(
                     "hrsh7th/cmp-path",
                     -- nvim-cmp source for neovim Lua API.
                     -- https://github.com/hrsh7th/cmp-nvim-lua
-                    "hrsh7th/cmp-nvim-lua"
+                    "hrsh7th/cmp-nvim-lua",
+                    "saecki/crates.nvim"
                 },
                 config = function()
                     local cmp = require("cmp")
                     local lspkind = require("lspkind")
-                    local lsp_status = require("lsp-status")
 
                     vim.g.vsnip_filetypes = {
                         rails = {"ruby", "rails"},
@@ -267,7 +276,7 @@ return require("packer").startup(
 
             use {
                 "Saecki/crates.nvim",
-                event = {"BufEnter Cargo.toml"},
+                -- event = {"BufEnter Cargo.toml"},
                 requires = {"nvim-lua/plenary.nvim"},
                 config = function()
                     require("crates").setup()
@@ -291,6 +300,32 @@ return require("packer").startup(
                             },
                             yadm = {enable = true}
                         }
+                    )
+                end
+            }
+
+            -- https://github.com/TimUntersberger/neogit
+            use {
+                "TimUntersberger/neogit",
+                requires = "nvim-lua/plenary.nvim",
+                config = function()
+                    local nf_fa_folder = ""
+                    local nf_fa_folder_open = ""
+
+                    require("neogit").setup(
+                        {
+                            signs = {
+                                section = {nf_fa_folder, nf_fa_folder_open},
+                                item = {nf_fa_folder, nf_fa_folder_open}
+                            }
+                        }
+                    )
+
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>gs",
+                        [[<cmd>lua require("neogit").open({kind = "split"})<CR>]],
+                        {silent = true}
                     )
                 end
             }
@@ -347,12 +382,6 @@ return require("packer").startup(
                 end
             }
 
-            use {
-                "simrat39/symbols-outline.nvim",
-                config = function()
-                    vim.api.nvim_set_keymap("n", "<leader>s", ":SymbolsOutline<CR>", {noremap = true, silent = true})
-                end
-            }
             -----------------------------------------------------------------------------
             -- 2. moving around, searching and patterns
             -----------------------------------------------------------------------------
@@ -415,7 +444,7 @@ return require("packer").startup(
                 "adisen99/codeschool.nvim",
                 requires = "rktjmp/lush.nvim",
                 config = function()
-                    vim.g.codeschool_contrast_dark = "hard"
+                    -- vim.g.codeschool_contrast_dark = "hard"
                     vim.g.codeschool_italic = 1
                     -- vim.g.codeschool_sign_column = "none"
                     -- vim.g.codeschool_color_column = "none"
@@ -432,9 +461,12 @@ return require("packer").startup(
                             {
                                 plugins = {
                                     "buftabline",
+                                    "cmp",
                                     "fzf",
                                     "gitsigns",
                                     "lsp",
+                                    "netrw",
+                                    "neogit",
                                     "telescope",
                                     "treesitter"
                                 },
@@ -447,8 +479,11 @@ return require("packer").startup(
                                     "json",
                                     "lua",
                                     "markdown",
+                                    "objc",
                                     "python",
+                                    "ruby",
                                     "rust",
+                                    "scala",
                                     "typescript",
                                     "viml",
                                     "xml"
@@ -589,8 +624,12 @@ return require("packer").startup(
             use {
                 "vim-test/vim-test",
                 requires = {"tpope/vim-dispatch", "voldikss/vim-floaterm"},
-                ft = {"rust", "ruby"},
                 config = function()
+                    vim.g.floaterm_wintype = "split"
+                    vim.g.floaterm_autoclose = 1
+                    vim.g.floaterm_autoinsert = false
+                    vim.g.floaterm_height = 0.3
+
                     vim.g["test#strategy"] = {
                         nearest = "floaterm",
                         last = "floaterm",
@@ -604,11 +643,18 @@ return require("packer").startup(
                         "rust#cargotest"
                     }
 
-                    vim.cmd([[autocmd FileType ruby,rust nnoremap <silent> <leader>tn <cmd>TestNearest<CR>]])
-                    vim.cmd([[autocmd FileType ruby,rust nnoremap <silent> <leader>tf <cmd>TestFile<CR>]])
-                    vim.cmd([[autocmd FileType ruby,rust nnoremap <silent> <leader>ta <cmd>TestSuite<CR>]])
-                    vim.cmd([[autocmd FileType ruby,rust nnoremap <silent> <leader>tl <cmd>TestLast<CR>]])
-                    vim.cmd([[autocmd FileType ruby,rust nnoremap <silent> <leader>tv <cmd>TestVisit<CR>]])
+                    vim.cmd(
+                        [[
+                        augroup VimTestSetup
+                            autocmd!
+                            autocmd FileType ruby,rust nnoremap <silent> <leader>tn <cmd>TestNearest<CR>
+                            autocmd FileType ruby,rust nnoremap <silent> <leader>tf <cmd>TestFile<CR>
+                            autocmd FileType ruby,rust nnoremap <silent> <leader>ta <cmd>TestSuite<CR>
+                            autocmd FileType ruby,rust nnoremap <silent> <leader>tl <cmd>TestLast<CR>
+                            autocmd FileType ruby,rust nnoremap <silent> <leader>tv <cmd>TestVisit<CR>
+                        augroup END
+                    ]]
+                    )
                 end
             }
 
@@ -662,7 +708,7 @@ return require("packer").startup(
             use {
                 "tpope/vim-fugitive",
                 config = function()
-                    vim.api.nvim_set_keymap("n", "<leader>gs", "<cmd>Git<CR>", {silent = true})
+                    -- vim.api.nvim_set_keymap("n", "<leader>gs", "<cmd>Git<CR>", {silent = true})
                 end
             }
 
@@ -844,14 +890,13 @@ return require("packer").startup(
                         }
                     )
 
-                    vim.api.nvim_exec(
+                    vim.cmd(
                         [[
-augroup FormatAutogroup
-  autocmd!
-  autocmd BufWritePost *.lua FormatWrite
-augroup END
-]],
-                        true
+                            augroup FormatAutogroup
+                              autocmd!
+                              autocmd BufWritePost *.lua FormatWrite
+                            augroup END
+                            ]]
                     )
                 end
             }
@@ -876,31 +921,6 @@ augroup END
                             program = "bundle",
                             programArgs = {"exec", "rspec"},
                             useBundler = true
-                        }
-                    }
-
-                    dap.configurations.rust = {
-                        {
-                            name = "Launch",
-                            type = "lldb",
-                            request = "launch",
-                            program = function()
-                                return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-                            end,
-                            cwd = "${workspaceFolder}",
-                            stopOnEntry = false,
-                            args = {},
-                            -- if you change `runInTerminal` to true, you might need to change the yama/ptrace_scope setting:
-                            --
-                            --    echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
-                            --
-                            -- Otherwise you might get the following error:
-                            --
-                            --    Error on launch: Failed to attach to the target process
-                            --
-                            -- But you should be aware of the implications:
-                            -- https://www.kernel.org/doc/html/latest/admin-guide/LSM/Yama.html
-                            runInTerminal = false
                         }
                     }
 
@@ -1005,10 +1025,22 @@ augroup END
                 end
             }
 
+            use {
+                "theHamsta/nvim-dap-virtual-text",
+                requires = {
+                    "nvim-treesitter/nvim-treesitter",
+                    "mfussenegger/nvim-dap"
+                },
+                config = function()
+                    vim.g.dap_virtual_text = true
+                    vim.g.dap_virtual_text_commented = true
+                end
+            }
+
             -- https://github.com/nvim-lua/lsp-status.nvim
             use {
                 "neovim/nvim-lspconfig",
-                requires = "nvim-lua/lsp-status.nvim",
+                requires = {"nvim-lua/lsp-status.nvim", "stevearc/aerial.nvim"},
                 config = function()
                     require("turboladen.lsp").setup_lsp()
 
@@ -1020,6 +1052,17 @@ augroup END
   augroup end
 ]]
                     )
+                end
+            }
+
+            use {
+                "stevearc/aerial.nvim",
+                config = function()
+                    vim.g.aerial = {
+                        default_direction = "prefer_left",
+                        placement_editor_edge = true,
+                        filter_kind = false
+                    }
                 end
             }
 
@@ -1042,6 +1085,10 @@ augroup END
 
                     -- Needed to allow for finding lldb and lldb-vscode for DAP.
                     vim.env.PATH = vim.env.PATH .. ":/usr/local/opt/llvm/bin"
+
+                    local extension_path = vim.env.HOME .. "/.vscode/extensions/vadimcn.vscode-lldb-1.6.8/"
+                    local codelldb_path = extension_path .. "adapter/codelldb"
+                    local liblldb_path = extension_path .. "lldb/lib/liblldb.dylib"
 
                     -- https://github.com/simrat39/rust-tools.nvim#configuration
                     local rust_tools_opts = {
@@ -1072,15 +1119,15 @@ augroup END
                                     checkOnSave = {
                                         command = "clippy"
                                     },
-                                    hoverActions = {
-                                        references = true
+                                    lens = {
+                                        references = true,
+                                        methodReferences = true
                                     }
-                                    -- lens = {
-                                    --     references = true,
-                                    --     methodReferences = true
-                                    -- }
                                 }
                             }
+                        },
+                        dap = {
+                            adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path)
                         }
                     }
 
@@ -1279,12 +1326,15 @@ augroup END
                     require("auto-session").setup(
                         {
                             pre_save_cmds = {
-                                "tabdo SymbolsOutlineClose",
-                                ":Bdelete hidden"
+                                ":Bdelete hidden",
+                                ":TroubleClose"
                             },
-                            auto_save_enabled = true
+                            auto_save_enabled = true,
+                            auto_restore_enabled = false
                         }
                     )
+
+                    vim.api.nvim_set_keymap("n", "<leader>sr", ":RestoreSession<CR>", {noremap = true, silent = true})
                 end
             }
         end,

@@ -9,8 +9,25 @@ end
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local function make_on_attach(server_name)
-    return function(_client, bufnr)
+    return function(client, bufnr)
         require("lsp_signature").on_attach()
+        local aerial = require("aerial")
+        aerial.on_attach(client)
+
+        -- Aerial does not set any mappings by default, so you'll want to set some up
+        -- Toggle the aerial window with <leader>a
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>aa", "<cmd>AerialToggle!<CR>", {})
+
+        -- Jump forwards/backwards with '{' and '}'
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "{", "<cmd>AerialPrev<CR>", {})
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "}", "<cmd>AerialNext<CR>", {})
+
+        -- Jump up the tree with '[[' or ']]'
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "[[", "<cmd>AerialPrevUp<CR>", {})
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "]]", "<cmd>AerialNextUp<CR>", {})
+
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>at", "<cmd>ArealTreeToggle<CR>", {})
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>ao", "<cmd>ArealTreeOpenAll<CR>", {})
 
         local function buf_set_keymap(...)
             vim.api.nvim_buf_set_keymap(bufnr, ...)
@@ -30,15 +47,20 @@ local function make_on_attach(server_name)
         buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
         buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
 
-        buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+        if server_name == "rust_analyzer" then
+            buf_set_keymap("n", "K", "<cmd>RustHoverActions<CR>", opts)
+        else
+            buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+        end
 
         buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-        buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
+        buf_set_keymap("n", "<C-s>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
 
         buf_set_keymap("n", "<leader>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
         buf_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
         -- buf_set_keymap("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
         buf_set_keymap("n", "<leader>ca", "<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
+        buf_set_keymap("v", "<leader>ca", "<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
         -- buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
         buf_set_keymap("n", "gr", "<cmd>lua require('telescope.builtin').lsp_references()<CR>", opts)
         buf_set_keymap("n", "<leader>e", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
