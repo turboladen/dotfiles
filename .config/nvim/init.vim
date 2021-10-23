@@ -49,9 +49,9 @@ set showtabline=2
 set conceallevel=0
 
 "tabline
-if exists('+showtabline')
-  set tabline=%!turboladen#MyTabLine()
-endif
+" if exists('+showtabline')
+"   set tabline=%!turboladen#MyTabLine()
+" endif
 
 ""===========================================================================""
 " 5. syntax, highlighting and spelling
@@ -92,7 +92,7 @@ endif
 " colorscheme humanoid
 " colorscheme kuroi
 " colorscheme material
-colorscheme codeschool
+" colorscheme codeschool
 
 ""===========================================================================""
 " 6. multiple windows

@@ -443,6 +443,7 @@ return require("packer").startup(
             use {
                 "adisen99/codeschool.nvim",
                 requires = "rktjmp/lush.nvim",
+                disable = true,
                 config = function()
                     -- vim.g.codeschool_contrast_dark = "hard"
                     vim.g.codeschool_italic = 1
@@ -510,12 +511,31 @@ return require("packer").startup(
 
             -- https://github.com/Pocco81/Catppuccino.nvim
             -- use "Pocco81/Catppuccino.nvim"
+
+            -- https://github.com/marko-cerovac/material.nvim
             use {
                 "marko-cerovac/material.nvim",
                 config = function()
-                    vim.g.material_style = "darker"
+                    -- vim.g.material_style = "darker"
                     -- vim.g.material_style = "deep ocean"
+                    vim.g.material_style = "oceanic"
+                    -- vim.g.material_style = "palenight"
                     -- vim.g.material_style = "lighter"
+                    require("material").setup(
+                        {
+                            italics = {
+                                comments = true,
+                                keywords = true,
+                                functions = true,
+                                strings = true,
+                                variables = true
+                            },
+                            text_contrast = {
+                                lighter = true
+                            }
+                        }
+                    )
+                    vim.cmd([[colorscheme material]])
                 end
             }
 
@@ -658,6 +678,40 @@ return require("packer").startup(
                 end
             }
 
+            use {
+                "rcarriga/vim-ultest",
+                requires = "vim-test/vim-test",
+                run = ":UpdateRemotePlugins",
+                config = function()
+                    -- vim.api.nvim_exec(
+                    --     [[function! g:OpenUltest(file_path)
+                    --     :UltestSummaryOpen
+                    --     endfunction
+                    -- ]],
+                    --     false
+                    -- )
+                    vim.g.ultest_use_pty = 1
+                    vim.g.ultest_virtual_text = 1
+                    -- vim.g.ultest_pre_run = "g:OpenUltest"
+                    -- local nf_mdi_run_fast = "省"
+                    -- local nf_fa_angle_double_right = ""
+                    local nf_fa_hourglass_1 = ""
+                    vim.g.ultest_running_sign = nf_fa_hourglass_1
+
+                    vim.cmd(
+                        [[
+                        augroup UltestSetup
+                            autocmd!
+                            autocmd FileType ruby,rust nmap ]t <Plug>(ultest-next-fail)
+                            autocmd FileType ruby,rust nmap [t <Plug>(ultest-prev-fail)
+                            autocmd FileType ruby,rust nnoremap <silent> <leader>tu <cmd>Ultest<CR>
+                            autocmd FileType ruby,rust nnoremap <silent> <leader>tt <cmd>UltestSummary<CR>
+                        augroup END
+                    ]]
+                    )
+                end
+            }
+
             --===========================================================================
             -- 23. language specific
             --===========================================================================
@@ -720,16 +774,14 @@ return require("packer").startup(
             use {
                 "rhysd/committia.vim",
                 config = function()
-                    vim.g.committia_hooks = {}
-
-                    vim.g.committia_hooks.edit_open = function(info)
-                        vim.opt_local.spell = true
-
-                        -- If no commit message, start with insert mode
-                        if info.vcs == "git" and vim.fn.getline(1) == "" then
-                            vim.fn.startinsert()
-                        end
-                    end
+                    -- vim.g.committia_hooks = {}
+                    -- vim.g.committia_hooks.edit_open = function(info)
+                    --     vim.opt_local.spell = true
+                    --     -- If no commit message, start with insert mode
+                    --     if info.vcs == "git" and vim.fn.getline(1) == "" then
+                    --         vim.fn.startinsert()
+                    --     end
+                    -- end
                 end
             }
 
@@ -1327,6 +1379,7 @@ return require("packer").startup(
                         {
                             pre_save_cmds = {
                                 ":Bdelete hidden",
+                                ":UltestSummaryClose",
                                 ":TroubleClose"
                             },
                             auto_save_enabled = true,
