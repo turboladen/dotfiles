@@ -47,6 +47,7 @@ mas 'Pocket', id: 568494494
 # Formulae
 #---------------------
 brew 'curl'
+brew 'diffr'
 brew 'exa'
 brew 'fzf'
 brew 'zoxide'
