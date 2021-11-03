@@ -56,6 +56,19 @@ return require("packer").startup(
             ------------------------------------------------------------------------------
             -- UI tweaks
             ------------------------------------------------------------------------------
+            use {
+                "edluffy/specs.nvim",
+                config = function()
+                    require("specs").setup(
+                        {
+                            popup = {
+                                fader = require("specs").pulse_fader
+                            }
+                        }
+                    )
+                end
+            }
+
             -- Treesitter configurations and abstraction layer for Neovim.
             -- https://github.com/nvim-treesitter/nvim-treesitter
             use {
@@ -80,6 +93,7 @@ return require("packer").startup(
                                 "jsonc",
                                 "llvm",
                                 "lua",
+                                "org",
                                 "ruby",
                                 "rust",
                                 "toml",
@@ -87,13 +101,56 @@ return require("packer").startup(
                                 "vim",
                                 "yaml"
                             },
-                            highlight = {enable = true},
+                            highlight = {
+                                enable = true
+                            },
                             incremental_selection = {enable = true},
                             indent = {enable = true},
-                            matchup = {enable = true}
+                            matchup = {enable = true},
+                            textobjects = {
+                                select = {
+                                    enable = true,
+                                    lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
+                                    keymaps = {
+                                        -- You can use the capture groups defined in textobjects.scm
+                                        ["af"] = "@function.outer",
+                                        ["if"] = "@function.inner",
+                                        ["ac"] = "@class.outer",
+                                        ["ic"] = "@class.inner"
+                                    }
+                                },
+                                move = {
+                                    enable = true,
+                                    set_jumps = true, -- whether to set jumps in the jumplist
+                                    goto_next_start = {
+                                        ["]m"] = "@function.outer",
+                                        ["]]"] = "@class.outer"
+                                    },
+                                    goto_next_end = {
+                                        ["]M"] = "@function.outer",
+                                        ["]["] = "@class.outer"
+                                    },
+                                    goto_previous_start = {
+                                        ["[m"] = "@function.outer",
+                                        ["[["] = "@class.outer"
+                                    },
+                                    goto_previous_end = {
+                                        ["[M"] = "@function.outer",
+                                        ["[]"] = "@class.outer"
+                                    }
+                                }
+                            }
                         }
                     )
                 end
+            }
+
+            use {
+                "nvim-treesitter/nvim-treesitter-textobjects",
+                branch = "0.5-compat",
+                requires = {
+                    {"nvim-telescope/telescope.nvim", branch = "0.5-compat"}
+                }
             }
 
             -- https://github.com/p00f/nvim-ts-rainbow
@@ -135,6 +192,13 @@ return require("packer").startup(
                             }
                         }
                     }
+                end
+            }
+
+            use {
+                "romgrk/nvim-treesitter-context",
+                config = function()
+                    require("treesitter-context").setup({})
                 end
             }
 
@@ -184,17 +248,36 @@ return require("packer").startup(
                             completion = {
                                 keyword_length = 2
                             },
+                            experimental = {
+                                native_menu = true,
+                                ghost_text = true
+                            },
                             formatting = {
                                 format = lspkind.cmp_format({with_text = true})
                             },
                             mapping = {
-                                ["<C-j>"] = cmp.mapping.select_next_item(),
-                                ["<C-k>"] = cmp.mapping.select_prev_item(),
-                                ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-                                ["<C-f>"] = cmp.mapping.scroll_docs(4),
-                                ["<C-space>"] = cmp.mapping.complete(),
-                                ["<C-e>"] = cmp.mapping.close(),
-                                ["<CR>"] = cmp.mapping.confirm({select = true})
+                                -- ["<C-j>"] = cmp.mapping.select_next_item(),
+                                -- ["<C-k>"] = cmp.mapping.select_prev_item(),
+                                ["<C-j>"] = cmp.mapping.select_next_item({behavior = cmp.SelectBehavior.Select}),
+                                ["<C-k>"] = cmp.mapping.select_prev_item({behavior = cmp.SelectBehavior.Select}),
+                                ["<Down>"] = cmp.mapping.select_next_item({behavior = cmp.SelectBehavior.Select}),
+                                ["<Up>"] = cmp.mapping.select_prev_item({behavior = cmp.SelectBehavior.Select}),
+                                ["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), {"i", "c"}),
+                                ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), {"i", "c"}),
+                                ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), {"i", "c"}),
+                                ["<C-y>"] = cmp.config.disable, -- If you want to remove the default `<C-y>` mapping, You can specify `cmp.config.disable` value.
+                                ["<C-e>"] = cmp.mapping(
+                                    {
+                                        i = cmp.mapping.abort(),
+                                        c = cmp.mapping.close()
+                                    }
+                                ),
+                                ["<CR>"] = cmp.mapping(
+                                    {
+                                        i = cmp.mapping.confirm({select = true}),
+                                        c = cmp.mapping.confirm({select = true})
+                                    }
+                                )
                             },
                             snippet = {
                                 expand = function(args)
@@ -207,7 +290,8 @@ return require("packer").startup(
                                 {name = "buffer", max_item_count = 5},
                                 {name = "path", max_item_count = 5},
                                 {name = "nvim_lua"},
-                                {name = "crates"}
+                                {name = "crates"},
+                                {name = "orgmode"}
                             }
                         }
                     )
@@ -268,18 +352,52 @@ return require("packer").startup(
                 end
             }
 
-            -- LSP signature hint as you type
-            -- https://github.com/ray-x/lsp_signature.nvim
-            use {
-                "ray-x/lsp_signature.nvim"
-            }
-
             use {
                 "Saecki/crates.nvim",
                 -- event = {"BufEnter Cargo.toml"},
                 requires = {"nvim-lua/plenary.nvim"},
                 config = function()
-                    require("crates").setup()
+                    require("crates").setup(
+                        {
+                            version_date = true
+                        }
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>vu",
+                        "<cmd>lua require('crates').update_crate()<CR>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "v",
+                        "<leader>vu",
+                        "<cmd>lua require('crates').update_crates()<CR>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>vU",
+                        "<cmd>lua require('crates').upgrade_crate()<CR>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "v",
+                        "<leader>vU",
+                        "<cmd>lua require('crates').upgrade_crates()<CR>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>va",
+                        "<cmd>lua require('crates').update_all_crates()<CR>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "<leader>vA",
+                        "<cmd>lua require('crates').upgrade_all_crates()<CR>",
+                        {silent = true, noremap = true}
+                    )
                     vim.cmd([[autocmd BufEnter Cargo.toml nnoremap <silent> K <cmd>lua ShowDocumentation()<CR>]])
                 end
             }
@@ -330,12 +448,12 @@ return require("packer").startup(
                 end
             }
 
-            use {
-                "lewis6991/spellsitter.nvim",
-                config = function()
-                    require("spellsitter").setup({})
-                end
-            }
+            -- use {
+            --     "lewis6991/spellsitter.nvim",
+            --     config = function()
+            --         require("spellsitter").setup({})
+            --     end
+            -- }
 
             -- vim-signature is a plugin to place, toggle and display marks.
             -- https://github.com/kshenoy/vim-signature
@@ -431,86 +549,146 @@ return require("packer").startup(
             -- 5. syntax, highlighting and spelling
             --===========================================================================
             ----------------------------------------
-            -- Color schemes
+            -- colorschemes
             ----------------------------------------
+            -- https://github.com/Mangeshrex/uwu.vim
+            use "mangeshrex/uwu.vim"
             use "aonemd/kuroi.vim"
-            -- use "humanoid-colors/vim-humanoid-colorscheme"
-            -- use "trusktr/seti.vim"
-            -- use "rakr/vim-one"
-            -- use "jaredgorski/SpaceCamp"
-
-            -- https://github.com/adisen99/codeschool.nvim
             use {
-                "adisen99/codeschool.nvim",
-                requires = "rktjmp/lush.nvim",
-                disable = true,
+                "sainnhe/edge",
                 config = function()
-                    -- vim.g.codeschool_contrast_dark = "hard"
-                    vim.g.codeschool_italic = 1
-                    -- vim.g.codeschool_sign_column = "none"
-                    -- vim.g.codeschool_color_column = "none"
-                    vim.g.codeschool_invert_signs = 1
-                    vim.g.codeschool_invert_indent_guides = 1
-                    vim.g.codeschool_improved_strings = 1
-                    vim.g.codeschool_improved_warnings = 1
-                    vim.g.codeschool_transparent_bg = 1
-                    vim.g.codeschool_underline = 0
-                    vim.g.codeschool_undercurl = 0
-
-                    require("lush")(
-                        require("codeschool").setup(
-                            {
-                                plugins = {
-                                    "buftabline",
-                                    "cmp",
-                                    "fzf",
-                                    "gitsigns",
-                                    "lsp",
-                                    "netrw",
-                                    "neogit",
-                                    "telescope",
-                                    "treesitter"
-                                },
-                                langs = {
-                                    "c",
-                                    "css",
-                                    "elixir",
-                                    "html",
-                                    "js",
-                                    "json",
-                                    "lua",
-                                    "markdown",
-                                    "objc",
-                                    "python",
-                                    "ruby",
-                                    "rust",
-                                    "scala",
-                                    "typescript",
-                                    "viml",
-                                    "xml"
-                                }
-                            }
-                        )
-                    )
+                    vim.g.edge_style = "aura"
+                    vim.g.edge_enable_italic = 1
                 end
             }
 
-            use "nxvu699134/vn-night.nvim"
+            -- https://github.com/savq/melange
+            use "savq/melange"
+
+            use {
+                "EdenEast/nightfox.nvim",
+                config = function()
+                    local nightfox = require("nightfox")
+                    nightfox.setup(
+                        {
+                            alt_nc = true,
+                            inverse = {
+                                match_paren = true,
+                                visual = true,
+                                search = true
+                            }
+                        }
+                    )
+                    nightfox.load()
+                end
+            }
             -- use {
-            --     "sainnhe/everforest",
+            --     "projekt0n/github-nvim-theme",
             --     config = function()
-            --         vim.g.everforest_background = "medium"
-            --         vim.g.everforest_enable_italic = 1
-            --         vim.g.everforest_transparent_background = 1
-            --         vim.g.everforest_ui_contrast = "high"
-            --         vim.g.everforest_diagnostic_text_highlight = 1
-            --         vim.g.everforest_diagnostic_line_highlight = 1
-            --         vim.g.everforest_diagnostic_virtual_text = "colored"
+            --         require("github-theme").setup(
+            --             {
+            --                 theme_style = "dimmed",
+            --                 function_style = "italic",
+            --                 -- sidebars = {"qf", "vista_kind", "terminal", "packer"},
+            --                 dark_float = true
+            --             }
+            --         )
             --     end
             -- }
 
-            -- https://github.com/Pocco81/Catppuccino.nvim
-            -- use "Pocco81/Catppuccino.nvim"
+            -- https://github.com/novakne/kosmikoa.nvim
+            use "novakne/kosmikoa.nvim"
+            -- https://github.com/rakr/vim-one
+            -- use {
+            --     "rakr/vim-one",
+            --     config = function()
+            --         vim.g.one_allow_italics = 1
+            --     end
+            -- }
+
+            -- https://github.com/adisen99/codeschool.nvim
+            -- use {
+            --     "adisen99/codeschool.nvim",
+            --     requires = {"rktjmp/lush.nvim"},
+            --     disable = true,
+            --     config = function()
+            --         -- vim.g.codeschool_contrast_dark = "hard"
+            --         vim.g.codeschool_italic = 1
+            --         -- vim.g.codeschool_sign_column = "none"
+            --         -- vim.g.codeschool_color_column = "none"
+            --         vim.g.codeschool_invert_signs = 1
+            --         vim.g.codeschool_invert_indent_guides = 1
+            --         vim.g.codeschool_improved_strings = 1
+            --         vim.g.codeschool_improved_warnings = 1
+            --         vim.g.codeschool_transparent_bg = 1
+            --         vim.g.codeschool_underline = 0
+            --         vim.g.codeschool_undercurl = 0
+
+            --         require("lush")(
+            --             require("codeschool").setup(
+            --                 {
+            --                     plugins = {
+            --                         "buftabline",
+            --                         "cmp",
+            --                         "fzf",
+            --                         "gitsigns",
+            --                         "lsp",
+            --                         "netrw",
+            --                         "neogit",
+            --                         "telescope",
+            --                         "treesitter"
+            --                     },
+            --                     langs = {
+            --                         "c",
+            --                         "css",
+            --                         "elixir",
+            --                         "html",
+            --                         "js",
+            --                         "json",
+            --                         "lua",
+            --                         "markdown",
+            --                         "objc",
+            --                         "python",
+            --                         "ruby",
+            --                         "rust",
+            --                         "scala",
+            --                         "typescript",
+            --                         "viml",
+            --                         "xml"
+            --                     }
+            --                 }
+            --             )
+            --         )
+            --     end
+            -- }
+
+            -- https://github.com/fenetikm/falcon
+            -- use {
+            --     "fenetikm/falcon",
+            --     config = function()
+            --         vim.g.falcon_background = 1
+            --         vim.g.falcon_inactive = 1
+            --         vim.g.falcon_italic = 1
+            --         vim.g.falcon_bold = 1
+
+            --         vim.cmd([[colorscheme falcon]])
+            --     end
+            -- }
+
+            use {
+                "sainnhe/everforest",
+                config = function()
+                    vim.g.everforest_background = "hard"
+                    vim.g.everforest_cursor = "blue"
+                    vim.g.everforest_enable_italic = 1
+                    vim.g.everforest_transparent_background = 1
+                    vim.g.everforest_ui_contrast = "low"
+                    vim.g.everforest_diagnostic_text_highlight = 1
+                    vim.g.everforest_diagnostic_line_highlight = 1
+                    vim.g.everforest_diagnostic_virtual_text = "colored"
+                    -- vim.cmd([[colorscheme everforest]])
+                end
+            }
 
             -- https://github.com/marko-cerovac/material.nvim
             use {
@@ -523,19 +701,13 @@ return require("packer").startup(
                     -- vim.g.material_style = "lighter"
                     require("material").setup(
                         {
+                            borders = true,
                             italics = {
-                                comments = true,
-                                keywords = true,
-                                functions = true,
-                                strings = true,
-                                variables = true
-                            },
-                            text_contrast = {
-                                lighter = true
+                                comments = false
                             }
                         }
                     )
-                    vim.cmd([[colorscheme material]])
+                    -- vim.cmd [[colorscheme material]]
                 end
             }
 
@@ -581,11 +753,33 @@ return require("packer").startup(
             -- conservative version of auto-pairs that only works when you press Enter.
             -- https://github.com/rstacruz/vim-closer
             -- https://github.com/tpope/vim-endwise
-            use {"rstacruz/vim-closer", requires = "tpope/vim-endwise"}
+            -- use {"rstacruz/vim-closer", requires = "tpope/vim-endwise"}
+
+            -- use {
+            --     "steelsojka/pears.nvim",
+            --     requires = "nvim-treesitter/nvim-treesitter",
+            --     config = function()
+            --         require("pears").setup()
+            --     end
+            -- }
+            use {
+                "windwp/nvim-autopairs",
+                config = function()
+                    require("nvim-autopairs").setup({})
+                end
+            }
 
             -- comment stuff out
             -- https://github.com/tpope/vim-commentary
-            use "tpope/vim-commentary"
+            -- use "tpope/vim-commentary"
+
+            -- https://github.com/numToStr/Comment.nvim
+            use {
+                "numToStr/Comment.nvim",
+                config = function()
+                    require("Comment").setup()
+                end
+            }
 
             -- quoting/parenthesizing made simple
             -- https://github.com/tpope/vim-surround
@@ -1084,8 +1278,11 @@ return require("packer").startup(
                     "mfussenegger/nvim-dap"
                 },
                 config = function()
-                    vim.g.dap_virtual_text = true
-                    vim.g.dap_virtual_text_commented = true
+                    require("nvim-dap-virtual-text").setup(
+                        {
+                            commented = true
+                        }
+                    )
                 end
             }
 
@@ -1168,9 +1365,9 @@ return require("packer").startup(
                                     cargo = {
                                         allFeatures = true
                                     },
-                                    checkOnSave = {
-                                        command = "clippy"
-                                    },
+                                    -- checkOnSave = {
+                                    --     command = "clippy"
+                                    -- },
                                     lens = {
                                         references = true,
                                         methodReferences = true
@@ -1224,49 +1421,49 @@ return require("packer").startup(
 
                     vim.api.nvim_set_keymap(
                         "n",
-                        "<leader><leader>",
+                        "<leader><space>",
                         "<cmd>lua require('telescope.builtin').find_files()<CR>",
-                        {noremap = true}
+                        {noremap = true, silent = true}
                     )
 
                     vim.api.nvim_set_keymap(
                         "n",
                         "<leader><CR>",
                         "<cmd>lua require('telescope.builtin').buffers()<CR>",
-                        {noremap = true}
+                        {noremap = true, silent = true}
                     )
 
                     vim.api.nvim_set_keymap(
                         "n",
                         "<leader>/",
                         "<cmd>lua require('telescope.builtin').live_grep()<CR>",
-                        {noremap = true}
+                        {noremap = true, silent = true}
                     )
 
                     vim.api.nvim_set_keymap(
                         "n",
                         "<leader>fk",
                         "<cmd>lua require('telescope.builtin').grep_string()<CR>",
-                        {noremap = true}
+                        {noremap = true, silent = true}
                     )
 
                     vim.api.nvim_set_keymap(
                         "n",
                         "<leader>fm",
                         "<cmd>lua require('telescope.builtin').marks()<CR>",
-                        {noremap = true}
+                        {noremap = true, silent = true}
                     )
                     vim.api.nvim_set_keymap(
                         "n",
                         "<leader>fo",
                         "<cmd>lua require('telescope.builtin').oldfiles()<CR>",
-                        {noremap = true}
+                        {noremap = true, silent = true}
                     )
                     vim.api.nvim_set_keymap(
                         "n",
                         "<leader>ft",
                         "<cmd>lua require('telescope.builtin').grep_string({ search = 'TODO' })<CR>",
-                        {noremap = true}
+                        {noremap = true, silent = true}
                     )
                 end
             }
@@ -1366,6 +1563,8 @@ return require("packer").startup(
             use {
                 "sudormrfbin/cheatsheet.nvim"
             }
+
+            use({"mrjones2014/dash.nvim", requires = {"nvim-telescope/telescope.nvim"}, run = "make install"})
 
             -- A small automated session manager for Neovim
             -- https://github.com/rmagatti/auto-session
