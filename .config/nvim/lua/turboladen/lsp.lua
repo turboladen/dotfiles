@@ -10,7 +10,6 @@ end
 -- after the language server attaches to the current buffer
 local function make_on_attach(server_name)
     return function(client, bufnr)
-        require("lsp_signature").on_attach()
         local aerial = require("aerial")
         aerial.on_attach(client)
 
@@ -152,6 +151,14 @@ local function setup_lsp()
         {
             capabilities = capabilities,
             on_attach = make_on_attach("solargraph"),
+            flags = flags
+        }
+    )
+
+    lspconfig.clangd.setup(
+        {
+            capabilities = capabilities,
+            on_attach = make_on_attach("clangd"),
             flags = flags
         }
     )
