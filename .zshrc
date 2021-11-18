@@ -71,7 +71,6 @@ install_completions() {
     ohmyzsh/ohmyzsh.git/plugins/nvm/nvm.plugin.zsh \
     ohmyzsh/ohmyzsh.git/plugins/rake-fast/rake-fast.plugin.zsh \
     ohmyzsh/ohmyzsh.git/plugins/tmux/tmux.plugin.zsh \
-    zdharma/fast-syntax-highlighting.git/fast-syntax-highlighting.plugin.zsh \
     zsh-users/zsh-autosuggestions.git/zsh-autosuggestions.plugin.zsh \
     zsh-users/zsh-completions.git/zsh-completions.plugin.zsh \
   )
