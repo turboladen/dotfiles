@@ -13,21 +13,6 @@ local function make_on_attach(server_name)
         local aerial = require("aerial")
         aerial.on_attach(client)
 
-        -- Aerial does not set any mappings by default, so you'll want to set some up
-        -- Toggle the aerial window with <leader>a
-        vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>aa", "<cmd>AerialToggle!<CR>", {})
-
-        -- Jump forwards/backwards with '{' and '}'
-        vim.api.nvim_buf_set_keymap(bufnr, "n", "{", "<cmd>AerialPrev<CR>", {})
-        vim.api.nvim_buf_set_keymap(bufnr, "n", "}", "<cmd>AerialNext<CR>", {})
-
-        -- Jump up the tree with '[[' or ']]'
-        vim.api.nvim_buf_set_keymap(bufnr, "n", "[[", "<cmd>AerialPrevUp<CR>", {})
-        vim.api.nvim_buf_set_keymap(bufnr, "n", "]]", "<cmd>AerialNextUp<CR>", {})
-
-        vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>at", "<cmd>ArealTreeToggle<CR>", {})
-        vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>ao", "<cmd>ArealTreeOpenAll<CR>", {})
-
         local function buf_set_keymap(...)
             vim.api.nvim_buf_set_keymap(bufnr, ...)
         end
@@ -41,6 +26,21 @@ local function make_on_attach(server_name)
 
         -- Mappings.
         local opts = {noremap = true, silent = true}
+
+        -- Aerial does not set any mappings by default, so you'll want to set some up
+        -- Toggle the aerial window with <leader>a
+        buf_set_keymap("n", "<leader>aa", "<cmd>AerialToggle!<CR>", opts)
+
+        -- Jump forwards/backwards with '{' and '}'
+        buf_set_keymap("n", "{", "<cmd>AerialPrev<CR>", opts)
+        buf_set_keymap("n", "}", "<cmd>AerialNext<CR>", opts)
+
+        -- Jump up the tree with '[[' or ']]'
+        buf_set_keymap("n", "[[", "<cmd>AerialPrevUp<CR>", opts)
+        buf_set_keymap("n", "]]", "<cmd>AerialNextUp<CR>", opts)
+
+        buf_set_keymap("n", "<leader>at", "<cmd>ArealTreeToggle<CR>", opts)
+        buf_set_keymap("n", "<leader>ao", "<cmd>ArealTreeOpenAll<CR>", opts)
 
         -- See `:help vim.lsp.*` for documentation on any of the below functions
         buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
@@ -57,22 +57,29 @@ local function make_on_attach(server_name)
 
         buf_set_keymap("n", "<leader>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
         buf_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
+
         -- buf_set_keymap("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-        if server_name == "rust_analyzer" then
-            buf_set_keymap("n", "<leader>ca", "<cmd>RustCodeAction<CR>", opts)
-            buf_set_keymap("v", "<leader>ca", "<cmd>RustCodeAction<CR>", opts)
-        else
-            buf_set_keymap("n", "<leader>ca", "<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
-            buf_set_keymap("v", "<leader>ca", "<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
-        end
-        -- buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-        buf_set_keymap("n", "gr", "<cmd>lua require('telescope.builtin').lsp_references()<CR>", opts)
+        -- if server_name == "rust_analyzer" then
+        --     buf_set_keymap("n", "<leader>ca", "<cmd>RustCodeAction<CR>", opts)
+        --     buf_set_keymap("v", "<leader>ca", "<cmd>RustCodeAction<CR>", opts)
+        -- else
+        buf_set_keymap("n", "<leader>ca", "<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
+        buf_set_keymap("v", "<leader>ca", "<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
+        -- end
+        buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+        -- buf_set_keymap("n", "gr", "<cmd>lua require('telescope.builtin').lsp_references()<CR>", opts)
         buf_set_keymap("n", "<leader>e", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
         buf_set_keymap("n", "[g", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
         buf_set_keymap("n", "]g", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
         buf_set_keymap("n", "<leader>q", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", opts)
         buf_set_keymap("n", "<leader>ff", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
         buf_set_keymap("n", "<leader>so", [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]], opts)
+        buf_set_keymap(
+            "n",
+            "<leader>sw",
+            [[<cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>]],
+            opts
+        )
 
         if server_name == "rust_analyzer" then
             buf_set_keymap("n", "gJ", "<cmd>RustJoinLines<CR>", opts)
@@ -170,6 +177,40 @@ local function setup_lsp()
             on_attach = make_on_attach("sumneko_lua"),
             -- flags = flags
             settings = make_lua_settings()
+        }
+    )
+
+    lspconfig.zeta_note.setup(
+        {
+            cmd = {"/Users/steve.loveless/.cargo/bin/zeta-note"},
+            capabilities = capabilities,
+            on_attach = make_on_attach("zeta_note"),
+            flags = flags
+        }
+    )
+
+    require("lspconfig").jsonls.setup(
+        {
+            capabilities = capabilities,
+            on_attach = make_on_attach("jsonls"),
+            flags = flags,
+            settings = {
+                json = {
+                    schemas = require("schemastore").json.schemas {
+                        select = {
+                            "package.json",
+                            "CMake",
+                            "geojson.json",
+                            "github-action.json",
+                            "github-issue-forms.json",
+                            "github-workflow.json",
+                            "github-workflow-template-properties.json",
+                            "JSON-API",
+                            "prettierrc.json"
+                        }
+                    }
+                }
+            }
         }
     )
 end

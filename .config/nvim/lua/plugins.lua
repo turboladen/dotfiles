@@ -53,22 +53,16 @@ return require("packer").startup(
             -- https://github.com/tpope/vim-repeat
             use "tpope/vim-repeat"
 
-            ------------------------------------------------------------------------------
-            -- UI tweaks
-            ------------------------------------------------------------------------------
             use {
-                "edluffy/specs.nvim",
+                "nathom/filetype.nvim",
                 config = function()
-                    require("specs").setup(
-                        {
-                            popup = {
-                                fader = require("specs").pulse_fader
-                            }
-                        }
-                    )
+                    vim.g.did_load_filtypes = 1
                 end
             }
 
+            ------------------------------------------------------------------------------
+            -- UI tweaks
+            ------------------------------------------------------------------------------
             -- Treesitter configurations and abstraction layer for Neovim.
             -- https://github.com/nvim-treesitter/nvim-treesitter
             use {
@@ -83,27 +77,30 @@ return require("packer").startup(
                                 "cmake",
                                 "comment",
                                 "cpp",
+                                "css",
                                 "dockerfile",
                                 "elixir",
                                 "elm",
+                                "glimmer",
+                                "graphql",
                                 "html",
                                 "javascript",
+                                "jsdoc",
                                 "json",
                                 "json5",
                                 "jsonc",
                                 "llvm",
                                 "lua",
-                                "org",
+                                "regex",
                                 "ruby",
                                 "rust",
+                                "scss",
                                 "toml",
                                 "typescript",
                                 "vim",
                                 "yaml"
                             },
-                            highlight = {
-                                enable = true
-                            },
+                            highlight = {enable = true},
                             incremental_selection = {enable = true},
                             indent = {enable = true},
                             matchup = {enable = true},
@@ -142,6 +139,9 @@ return require("packer").startup(
                             }
                         }
                     )
+
+                    -- vim.api.nvim_set_option("foldmethod", "expr")
+                    -- vim.api.nvim_set_option("foldexpr", "nvim_treesitter#foldexpr()")
                 end
             }
 
@@ -220,141 +220,96 @@ return require("packer").startup(
                     "hrsh7th/cmp-nvim-lsp",
                     -- VSCode(LSP)'s snippet feature in vim.
                     -- https://github.com/hrsh7th/vim-vsnip
-                    "hrsh7th/vim-vsnip",
+                    -- "hrsh7th/vim-vsnip",
                     -- https://github.com/hrsh7th/cmp-buffer
                     "hrsh7th/cmp-buffer",
                     -- https://github.com/hrsh7th/vim-vsnip
-                    "hrsh7th/cmp-vsnip",
+                    -- "hrsh7th/cmp-vsnip",
                     -- https://github.com/rafamadriz/friendly-snippets
-                    "rafamadriz/friendly-snippets",
+                    -- "rafamadriz/friendly-snippets",
                     -- https://github.com/hrsh7th/cmp-path
                     "hrsh7th/cmp-path",
                     -- nvim-cmp source for neovim Lua API.
                     -- https://github.com/hrsh7th/cmp-nvim-lua
                     "hrsh7th/cmp-nvim-lua",
-                    "saecki/crates.nvim"
+                    "saecki/crates.nvim",
+                    "lukas-reineke/cmp-rg",
+                    "dcampos/nvim-snippy",
+                    "dcampos/cmp-snippy",
+                    "honza/vim-snippets"
                 },
                 config = function()
                     local cmp = require("cmp")
-                    local lspkind = require("lspkind")
-
-                    vim.g.vsnip_filetypes = {
-                        rails = {"ruby", "rails"},
-                        rspec = {"ruby", "rails", "rspec"}
-                    }
 
                     cmp.setup(
                         {
                             completion = {
                                 keyword_length = 2
                             },
-                            experimental = {
-                                native_menu = true,
-                                ghost_text = true
-                            },
+                            experimental = {},
                             formatting = {
-                                format = lspkind.cmp_format({with_text = true})
+                                format = require("lspkind").cmp_format()
                             },
                             mapping = {
                                 -- ["<C-j>"] = cmp.mapping.select_next_item(),
                                 -- ["<C-k>"] = cmp.mapping.select_prev_item(),
                                 ["<C-j>"] = cmp.mapping.select_next_item({behavior = cmp.SelectBehavior.Select}),
                                 ["<C-k>"] = cmp.mapping.select_prev_item({behavior = cmp.SelectBehavior.Select}),
-                                ["<Down>"] = cmp.mapping.select_next_item({behavior = cmp.SelectBehavior.Select}),
-                                ["<Up>"] = cmp.mapping.select_prev_item({behavior = cmp.SelectBehavior.Select}),
+                                ["<Down>"] = cmp.mapping.select_next_item({behavior = cmp.SelectBehavior.Insert}),
+                                ["<Up>"] = cmp.mapping.select_prev_item({behavior = cmp.SelectBehavior.Insert}),
                                 ["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), {"i", "c"}),
                                 ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), {"i", "c"}),
                                 ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), {"i", "c"}),
-                                ["<C-y>"] = cmp.config.disable, -- If you want to remove the default `<C-y>` mapping, You can specify `cmp.config.disable` value.
-                                ["<C-e>"] = cmp.mapping(
-                                    {
-                                        i = cmp.mapping.abort(),
-                                        c = cmp.mapping.close()
-                                    }
-                                ),
                                 ["<CR>"] = cmp.mapping(
                                     {
                                         i = cmp.mapping.confirm({select = true}),
                                         c = cmp.mapping.confirm({select = true})
                                     }
                                 )
+                                -- ["<C-CR>"] = cmp.mapping(
+                                --     {
+                                --         i = cmp.mapping.confirm({select = true, benavior = cmp.SelectBehavior.Replace}),
+                                --         c = cmp.mapping.confirm({select = true, benavior = cmp.SelectBehavior.Replace})
+                                --     }
+                                -- )
                             },
                             snippet = {
                                 expand = function(args)
-                                    vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` user.
+                                    require("snippy").expand_snippet(args.body) -- For `snippy` users.
                                 end
                             },
                             sources = {
-                                {name = "nvim_lsp", priority = 2},
-                                {name = "vsnip", priority = 2},
-                                {name = "buffer", max_item_count = 5},
+                                {name = "nvim_lsp", priority = 6},
+                                {name = "snippy", priority = 2},
+                                -- {name = "buffer", max_item_count = 5},
                                 {name = "path", max_item_count = 5},
                                 {name = "nvim_lua"},
                                 {name = "crates"},
-                                {name = "orgmode"}
+                                {name = "rg", priority = 4, max_item_count = 5}
                             }
                         }
                     )
 
-                    -- Expand
-                    vim.api.nvim_set_keymap(
-                        "i",
-                        "<C-j>",
-                        "vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-j>'",
-                        {expr = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "s",
-                        "<C-j>",
-                        "vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-j>'",
-                        {expr = true}
-                    )
-
-                    -- Expand or jump
-                    vim.api.nvim_set_keymap(
-                        "i",
-                        "<C-l>",
-                        "vsnip#available(1) ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'",
-                        {expr = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "s",
-                        "<C-l>",
-                        "vsnip#available(1) ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'",
-                        {expr = true}
-                    )
-
-                    -- Jump forward or backward
-                    vim.api.nvim_set_keymap(
-                        "i",
-                        "<Tab>",
-                        "vsnip#jumpable(1) ? '<Plug>(vsnip-jump-next)' : '<Tab>'",
-                        {expr = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "s",
-                        "<Tab>",
-                        "vsnip#jumpable(1) ? '<Plug>(vsnip-jump-next)' : '<Tab>'",
-                        {expr = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "i",
-                        "<S-Tab>",
-                        "vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<S-Tab>'",
-                        {expr = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "s",
-                        "<S-Tab>",
-                        "vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<S-Tab>'",
-                        {expr = true}
+                    local snippy = require("snippy")
+                    snippy.setup(
+                        {
+                            mappings = {
+                                is = {
+                                    ["<Tab>"] = "expand_or_advance",
+                                    ["<S-Tab>"] = "previous"
+                                },
+                                nx = {
+                                    ["<leader>x"] = "cut_text"
+                                }
+                            }
+                        }
                     )
                 end
             }
 
             use {
                 "Saecki/crates.nvim",
-                -- event = {"BufEnter Cargo.toml"},
+                event = {"BufEnter Cargo.toml"},
                 requires = {"nvim-lua/plenary.nvim"},
                 config = function()
                     require("crates").setup(
@@ -448,16 +403,12 @@ return require("packer").startup(
                 end
             }
 
-            -- use {
-            --     "lewis6991/spellsitter.nvim",
-            --     config = function()
-            --         require("spellsitter").setup({})
-            --     end
-            -- }
-
-            -- vim-signature is a plugin to place, toggle and display marks.
-            -- https://github.com/kshenoy/vim-signature
-            use "kshenoy/vim-signature"
+            use {
+                "lewis6991/spellsitter.nvim",
+                config = function()
+                    require("spellsitter").setup({})
+                end
+            }
 
             -- Distraction-free writing in Vim.
             -- https://github.com/junegunn/goyo.vim
@@ -491,6 +442,7 @@ return require("packer").startup(
                         "truncate",
                         "path",
                         "branch",
+                        "gitsigns",
                         "lsp_status.messages",
                         "lsp_status.diagnostics",
                         "divisor",
@@ -723,13 +675,15 @@ return require("packer").startup(
             -- https://github.com/lukas-reineke/indent-blankline.nvim
             use {
                 "lukas-reineke/indent-blankline.nvim",
-                ft = {"yaml", "json"},
                 config = function()
                     vim.opt.list = true
 
                     require("indent_blankline").setup(
                         {
-                            buftype_exclude = {"terminal"},
+                            char = "┊",
+                            char_highlight = "LineNr",
+                            buftype_exclude = {"terminal", "nofile"},
+                            filetype_exclude = {"rust", "lua", "ruby"},
                             space_char_blankline = " ",
                             show_current_context = true
                         }
@@ -752,26 +706,10 @@ return require("packer").startup(
             -- Closes brackets. Perfect companion to vim-endwise. Basically, a more
             -- conservative version of auto-pairs that only works when you press Enter.
             -- https://github.com/rstacruz/vim-closer
+            use {"rstacruz/vim-closer", requires = "tpope/vim-endwise"}
+
             -- https://github.com/tpope/vim-endwise
-            -- use {"rstacruz/vim-closer", requires = "tpope/vim-endwise"}
-
-            -- use {
-            --     "steelsojka/pears.nvim",
-            --     requires = "nvim-treesitter/nvim-treesitter",
-            --     config = function()
-            --         require("pears").setup()
-            --     end
-            -- }
-            use {
-                "windwp/nvim-autopairs",
-                config = function()
-                    require("nvim-autopairs").setup({})
-                end
-            }
-
-            -- comment stuff out
-            -- https://github.com/tpope/vim-commentary
-            -- use "tpope/vim-commentary"
+            use {"tpope/vim-endwise"}
 
             -- https://github.com/numToStr/Comment.nvim
             use {
@@ -838,6 +776,7 @@ return require("packer").startup(
             use {
                 "vim-test/vim-test",
                 requires = {"tpope/vim-dispatch", "voldikss/vim-floaterm"},
+                cmd = {"TestNearest", "TestFile", "TestSuite", "TestLast", "TestVisit", "Ultest"},
                 config = function()
                     vim.g.floaterm_wintype = "split"
                     vim.g.floaterm_autoclose = 1
@@ -911,38 +850,38 @@ return require("packer").startup(
             --===========================================================================
             -- A solid language pack for Vim.
             -- https://github.com/sheerun/vim-polyglot
-            use {
-                "sheerun/vim-polyglot",
-                requires = {
-                    "godlygeek/tabular"
-                },
-                config = function()
-                    -- vim-json
-                    vim.g.vim_json_syntax_conceal = false
+            -- use {
+            --     "sheerun/vim-polyglot",
+            --     requires = {
+            --         "godlygeek/tabular"
+            --     },
+            --     config = function()
+            --         -- vim-json
+            --         vim.g.vim_json_syntax_conceal = false
 
-                    -- vim-markdown
-                    vim.g.vim_markdown_folding_disabled = 1
-                    vim.g.vim_markdown_conceal = 0
-                    vim.g.vim_markdown_follow_anchor = 1
-                    vim.g.vim_markdown_new_list_item_indent = 2
-                    vim.g.vim_markdown_no_default_key_mappings = 1
-                    vim.g.vim_markdown_strikethrough = 1
+            --         -- vim-markdown
+            --         vim.g.vim_markdown_folding_disabled = 1
+            --         vim.g.vim_markdown_conceal = 0
+            --         vim.g.vim_markdown_follow_anchor = 1
+            --         vim.g.vim_markdown_new_list_item_indent = 2
+            --         vim.g.vim_markdown_no_default_key_mappings = 1
+            --         vim.g.vim_markdown_strikethrough = 1
 
-                    -- vim-ruby
-                    vim.g.ruby_operators = 1
-                    vim.g.ruby_spellcheck_strings = 1
-                    vim.g.ruby_space_errors = 1
+            --         -- vim-ruby
+            --         vim.g.ruby_operators = 1
+            --         vim.g.ruby_spellcheck_strings = 1
+            --         vim.g.ruby_space_errors = 1
 
-                    vim.g.rubycomplete_buffer_loading = 1
-                    vim.g.rubycomplete_classes_in_global = 1
-                    vim.g.rubycomplete_load_gemfile = 1
+            --         vim.g.rubycomplete_buffer_loading = 1
+            --         vim.g.rubycomplete_classes_in_global = 1
+            --         vim.g.rubycomplete_load_gemfile = 1
 
-                    -- vim-yardoc
-                    -- vim.cmd("hi link yardGenericTag rubyInstanceVariable")
-                    -- vim.cmd("hi link yardTypeList rubyConstant")
-                    -- vim.cmd("hi link yardType rubyConstant")
-                end
-            }
+            --         -- vim-yardoc
+            --         -- vim.cmd("hi link yardGenericTag rubyInstanceVariable")
+            --         -- vim.cmd("hi link yardTypeList rubyConstant")
+            --         -- vim.cmd("hi link yardType rubyConstant")
+            --     end
+            -- }
 
             ------------------
             -- Elixir
@@ -986,12 +925,6 @@ return require("packer").startup(
             use {"mattn/emmet-vim", opt = true, ft = {"html", "html.*"}}
 
             ------------------
-            -- JS
-            ------------------
-            -- Enhanced javascript syntax file
-            use {"jelera/vim-javascript-syntax", opt = true, ft = "javascript"}
-
-            ------------------
             -- Ruby
             ------------------
             -- Ruby on Rails power tools
@@ -1008,6 +941,9 @@ return require("packer").startup(
             -- use '~/Development/projects/vim-rbs'
             use {"turboladen/vim-rbs", ft = {"ruby", "rbs", "ruby.rbs", "rspec"}}
 
+            -- https://github.com/rust-lang/rust.vim
+            use {"rust-lang/rust.vim", ft = "rust"}
+
             ------------------
             -- tmux
             ------------------
@@ -1021,7 +957,7 @@ return require("packer").startup(
             ------------------
             -- YAML
             ------------------
-            use {"stephpy/vim-yaml", ft = "yaml"}
+            -- use {"stephpy/vim-yaml", ft = "yaml"}
 
             --===========================================================================
             -- 25. various
@@ -1101,6 +1037,7 @@ return require("packer").startup(
             use {
                 "mhartington/formatter.nvim",
                 ft = {"markdown", "lua"},
+                cmd = "Format",
                 config = function()
                     -- require("turboladen/installers").npm_install("prettier")
                     -- require("turboladen/installers").npm_install("lua-fmt")
@@ -1289,17 +1226,20 @@ return require("packer").startup(
             -- https://github.com/nvim-lua/lsp-status.nvim
             use {
                 "neovim/nvim-lspconfig",
-                requires = {"nvim-lua/lsp-status.nvim", "stevearc/aerial.nvim"},
+                requires = {
+                    "nvim-lua/lsp-status.nvim",
+                    "stevearc/aerial.nvim",
+                    "b0o/schemastore.nvim",
+                    "filipdutescu/renamer.nvim"
+                },
                 config = function()
                     require("turboladen.lsp").setup_lsp()
 
                     vim.cmd(
-                        [[
-  augroup lsp_format_config
-    autocmd!
-    autocmd BufWritePost * lua vim.lsp.buf.formatting_sync()
-  augroup end
-]]
+                        [[ augroup lsp_format_config
+            autocmd!
+            autocmd BufWritePost * lua vim.lsp.buf.formatting_sync()
+            augroup end ]]
                     )
                 end
             }
@@ -1314,6 +1254,8 @@ return require("packer").startup(
                     }
                 end
             }
+
+            use "folke/lsp-colors.nvim"
 
             -- Tools for better development in rust using neovim's builtin lsp
             -- https://github.com/simrat39/rust-tools.nvim
@@ -1365,9 +1307,9 @@ return require("packer").startup(
                                     cargo = {
                                         allFeatures = true
                                     },
-                                    -- checkOnSave = {
-                                    --     command = "clippy"
-                                    -- },
+                                    checkOnSave = {
+                                        command = "clippy"
+                                    },
                                     lens = {
                                         references = true,
                                         methodReferences = true
@@ -1385,13 +1327,6 @@ return require("packer").startup(
             }
 
             use {
-                "kosayoda/nvim-lightbulb",
-                config = function()
-                    vim.cmd [[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()]]
-                end
-            }
-
-            use {
                 "nvim-telescope/telescope.nvim",
                 requires = {
                     "nvim-lua/plenary.nvim",
@@ -1401,16 +1336,25 @@ return require("packer").startup(
                 config = function()
                     require("telescope").setup(
                         {
+                            defaults = {
+                                mappings = {
+                                    i = {
+                                        ["<esc>"] = require("telescope.actions").close
+                                    }
+                                }
+                            },
                             pickers = {
                                 buffers = {
                                     theme = "cursor",
                                     previewer = false
                                 },
                                 find_files = {
-                                    theme = "dropdown"
+                                    theme = "dropdown",
+                                    previewer = false
                                 },
                                 lsp_code_actions = {
-                                    theme = "cursor"
+                                    theme = "cursor",
+                                    layout_config = {height = 15}
                                 },
                                 oldfiles = {
                                     theme = "dropdown"
@@ -1473,7 +1417,7 @@ return require("packer").startup(
                 requires = "nvim-telescope/telescope.nvim"
             }
 
-            -- Lua
+            -- https://github.com/folke/trouble.nvim
             use {
                 "folke/trouble.nvim",
                 requires = "kyazdani42/nvim-web-devicons",
@@ -1483,45 +1427,23 @@ return require("packer").startup(
                             auto_preview = false
                         }
                     )
-                    -- Lua
-                    vim.api.nvim_set_keymap("n", "<leader>xx", "<cmd>Trouble<cr>", {silent = true, noremap = true})
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>xw",
-                        "<cmd>Trouble lsp_workspace_diagnostics<cr>",
-                        {silent = true, noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>xd",
-                        "<cmd>Trouble lsp_document_diagnostics<cr>",
-                        {silent = true, noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>xl",
-                        "<cmd>Trouble loclist<cr>",
-                        {silent = true, noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>xq",
-                        "<cmd>Trouble quickfix<cr>",
-                        {silent = true, noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>xr",
-                        "<cmd>Trouble refresh<cr>",
-                        {silent = true, noremap = true}
-                    )
+
+                    local opts = {silent = true, noremap = true}
+                    vim.api.nvim_set_keymap("n", "<leader>xx", "<cmd>Trouble<cr>", opts)
+
+                    vim.api.nvim_set_keymap("n", "<leader>xw", "<cmd>TroubleToggle lsp_workspace_diagnostics<cr>", opts)
+                    vim.api.nvim_set_keymap("n", "<leader>xd", "<cmd>TroubleToggle lsp_document_diagnostics<cr>", opts)
+                    vim.api.nvim_set_keymap("n", "<leader>xl", "<cmd>TroubleToggle loclist<cr>", opts)
+                    vim.api.nvim_set_keymap("n", "<leader>xq", "<cmd>TroubleToggle quickfix<cr>", opts)
+                    vim.api.nvim_set_keymap("n", "<leader>xr", "<cmd>TroubleRefresh<cr>", opts)
+                    vim.api.nvim_set_keymap("n", "<leader>xR", "<cmd>TroubleToggle lsp_references<cr>", opts)
 
                     -- jump to the next item, skipping the groups
                     vim.api.nvim_set_keymap(
                         "n",
                         "<leader>]",
                         "<cmd>lua require('trouble').next({skip_groups = true, jump = true})<cr>",
-                        {silent = true, noremap = true}
+                        opts
                     )
 
                     -- jump to the previous item, skipping the groups
@@ -1529,16 +1451,8 @@ return require("packer").startup(
                         "n",
                         "<leader>[",
                         "<cmd>lua require('trouble').previous({skip_groups = true, jump = true})<cr>",
-                        {silent = true, noremap = true}
+                        opts
                     )
-                end
-            }
-
-            use {
-                "xiyaowong/telescope-emoji.nvim",
-                requires = "nvim-telescope/telescope.nvim",
-                config = function()
-                    require("telescope").load_extension("emoji")
                 end
             }
 
@@ -1550,6 +1464,7 @@ return require("packer").startup(
                     "nvim-lua/plenary.nvim",
                     "nvim-telescope/telescope.nvim"
                 },
+                cmd = "Telescope",
                 config = function()
                     require("telescope").load_extension("gh")
 
@@ -1561,10 +1476,9 @@ return require("packer").startup(
             }
 
             use {
-                "sudormrfbin/cheatsheet.nvim"
+                "sudormrfbin/cheatsheet.nvim",
+                cmd = {"Cheatsheet", "CheatsheetEdit"}
             }
-
-            use({"mrjones2014/dash.nvim", requires = {"nvim-telescope/telescope.nvim"}, run = "make install"})
 
             -- A small automated session manager for Neovim
             -- https://github.com/rmagatti/auto-session
