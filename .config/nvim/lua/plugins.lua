@@ -891,17 +891,6 @@ return require("packer").startup(
             ------------------
             -- Git
             ------------------
-            -- a Git wrapper so awesome, it should be illegal
-            use {
-                "tpope/vim-fugitive",
-                config = function()
-                    -- vim.api.nvim_set_keymap("n", "<leader>gs", "<cmd>Git<CR>", {silent = true})
-                end
-            }
-
-            -- If fugitive.vim is the Git, rhubarb.vim is the Hub.
-            use "tpope/vim-rhubarb"
-
             -- A Vim plugin for more pleasant editing on commit messages
             -- https://github.com/rhysd/committia.vim
             use {
@@ -1233,6 +1222,7 @@ return require("packer").startup(
                     "filipdutescu/renamer.nvim"
                 },
                 config = function()
+                    require("renamer").setup()
                     require("turboladen.lsp").setup_lsp()
 
                     vim.cmd(
@@ -1242,6 +1232,12 @@ return require("packer").startup(
             augroup end ]]
                     )
                 end
+            }
+
+            use {
+                "filipdutescu/renamer.nvim",
+                branch = "master",
+                requires = {"nvim-lua/plenary.nvim"}
             }
 
             use {
