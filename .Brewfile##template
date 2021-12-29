@@ -47,7 +47,7 @@ mas 'Pocket', id: 568494494
 # Formulae
 #---------------------
 brew 'curl'
-brew 'diffr'
+brew 'git-delta' # For git, diff, grep
 brew 'exa'
 brew 'fzf'
 brew 'zoxide'

@@ -50,7 +50,8 @@
   defaultBranch = main
 
 [interactive]
-  diffFilter = delta --color-only
+  ; diffFilter = delta --color-only
+  diffFilter = diffr
 
 [merge]
   tool = vimdiff
