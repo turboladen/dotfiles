@@ -102,7 +102,7 @@ return require("packer").startup(
                             },
                             highlight = {enable = true},
                             incremental_selection = {enable = true},
-                            indent = {enable = true},
+                            -- indent = {enable = true},
                             matchup = {enable = true},
                             textobjects = {
                                 select = {
@@ -147,9 +147,8 @@ return require("packer").startup(
 
             use {
                 "nvim-treesitter/nvim-treesitter-textobjects",
-                branch = "0.5-compat",
                 requires = {
-                    {"nvim-telescope/telescope.nvim", branch = "0.5-compat"}
+                    {"nvim-telescope/telescope.nvim"}
                 }
             }
 
@@ -1218,7 +1217,6 @@ return require("packer").startup(
                 requires = {
                     "nvim-lua/lsp-status.nvim",
                     "stevearc/aerial.nvim",
-                    "b0o/schemastore.nvim",
                     "filipdutescu/renamer.nvim"
                 },
                 config = function()
@@ -1243,11 +1241,13 @@ return require("packer").startup(
             use {
                 "stevearc/aerial.nvim",
                 config = function()
-                    vim.g.aerial = {
-                        default_direction = "prefer_left",
-                        placement_editor_edge = true,
-                        filter_kind = false
-                    }
+                    require("aerial").setup(
+                        {
+                            default_direction = "prefer_left",
+                            placement_editor_edge = true,
+                            filter_kind = false
+                        }
+                    )
                 end
             }
 

@@ -11,7 +11,7 @@ end
 local function make_on_attach(server_name)
     return function(client, bufnr)
         local aerial = require("aerial")
-        aerial.on_attach(client)
+        aerial.on_attach(client, bufnr)
 
         local function buf_set_keymap(...)
             vim.api.nvim_buf_set_keymap(bufnr, ...)
