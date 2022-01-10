@@ -199,15 +199,27 @@ local function setup_lsp()
                 json = {
                     schemas = require("schemastore").json.schemas {
                         select = {
-                            "package.json",
-                            "CMake",
-                            "geojson.json",
-                            "github-action.json",
-                            "github-issue-forms.json",
-                            "github-workflow.json",
-                            "github-workflow-template-properties.json",
+                            "CMake Presets",
+                            "GitHub Action",
+                            "GitHub Issue Template configuration",
+                            "GitHub Workflow",
+                            "GitHub Workflow Template Properties",
+                            "GitHub issue forms",
+                            "GitVersion",
+                            "JSON Schema Draft 2020-12",
+                            "JSON Schema Draft 4",
+                            "JSON Schema Draft 7",
+                            "JSON Schema Draft 8",
                             "JSON-API",
-                            "prettierrc.json"
+                            "prettierrc.json",
+                            "Swagger API 2.0",
+                            "VSCode Code Snippets",
+                            "compile_commands.json",
+                            "docker-compose.yml",
+                            "geojson.json",
+                            "markdownlint.json",
+                            "package.json",
+                            "yamllint"
                         }
                     }
                 }
