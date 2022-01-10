@@ -14,8 +14,6 @@ function ShowDocumentation()
         vim.cmd("h " .. vim.fn.expand("<cword>"))
     elseif vim.tbl_contains({"man"}, filetype) then
         vim.cmd("Man " .. vim.fn.expand("<cword>"))
-    elseif vim.fn.expand("%:t") == "Cargo.toml" then
-        require("crates").show_popup()
     else
         vim.lsp.buf.hover()
     end
@@ -231,7 +229,6 @@ return require("packer").startup(
                     -- nvim-cmp source for neovim Lua API.
                     -- https://github.com/hrsh7th/cmp-nvim-lua
                     "hrsh7th/cmp-nvim-lua",
-                    "saecki/crates.nvim",
                     "lukas-reineke/cmp-rg",
                     "dcampos/nvim-snippy",
                     "dcampos/cmp-snippy",
@@ -283,7 +280,6 @@ return require("packer").startup(
                                 -- {name = "buffer", max_item_count = 5},
                                 {name = "path", max_item_count = 5},
                                 {name = "nvim_lua"},
-                                {name = "crates"},
                                 {name = "rg", priority = 4, max_item_count = 5}
                             }
                         }
@@ -303,56 +299,6 @@ return require("packer").startup(
                             }
                         }
                     )
-                end
-            }
-
-            use {
-                "Saecki/crates.nvim",
-                event = {"BufEnter Cargo.toml"},
-                requires = {"nvim-lua/plenary.nvim"},
-                config = function()
-                    require("crates").setup(
-                        {
-                            version_date = true
-                        }
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>vu",
-                        "<cmd>lua require('crates').update_crate()<CR>",
-                        {silent = true, noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "v",
-                        "<leader>vu",
-                        "<cmd>lua require('crates').update_crates()<CR>",
-                        {silent = true, noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>vU",
-                        "<cmd>lua require('crates').upgrade_crate()<CR>",
-                        {silent = true, noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "v",
-                        "<leader>vU",
-                        "<cmd>lua require('crates').upgrade_crates()<CR>",
-                        {silent = true, noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>va",
-                        "<cmd>lua require('crates').update_all_crates()<CR>",
-                        {silent = true, noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>vA",
-                        "<cmd>lua require('crates').upgrade_all_crates()<CR>",
-                        {silent = true, noremap = true}
-                    )
-                    vim.cmd([[autocmd BufEnter Cargo.toml nnoremap <silent> K <cmd>lua ShowDocumentation()<CR>]])
                 end
             }
 
@@ -913,6 +859,25 @@ return require("packer").startup(
             use {"mattn/emmet-vim", opt = true, ft = {"html", "html.*"}}
 
             ------------------
+            -- just
+            ------------------
+            use {"NoahTheDuke/vim-just"}
+
+            ------------------
+            -- markdown
+            ------------------
+            use {
+                "plasticboy/vim-markdown",
+                config = function()
+                    vim.g.vim_markdown_folding_disabled = 1
+                    vim.g.vim_markdown_conceal = 0
+                    vim.g.vim_markdown_follow_anchor = 1
+                    vim.g.vim_markdown_new_list_item_indent = 2
+                    vim.g.vim_markdown_no_default_key_mappings = 1
+                    vim.g.vim_markdown_strikethrough = 1
+                end
+            }
+            ------------------
             -- Ruby
             ------------------
             -- Ruby on Rails power tools
@@ -1217,10 +1182,9 @@ return require("packer").startup(
                 requires = {
                     "nvim-lua/lsp-status.nvim",
                     "stevearc/aerial.nvim",
-                    "filipdutescu/renamer.nvim"
+                    "b0o/schemastore.nvim"
                 },
                 config = function()
-                    require("renamer").setup()
                     require("turboladen.lsp").setup_lsp()
 
                     vim.cmd(
@@ -1230,12 +1194,6 @@ return require("packer").startup(
             augroup end ]]
                     )
                 end
-            }
-
-            use {
-                "filipdutescu/renamer.nvim",
-                branch = "master",
-                requires = {"nvim-lua/plenary.nvim"}
             }
 
             use {
@@ -1259,10 +1217,9 @@ return require("packer").startup(
                 "simrat39/rust-tools.nvim",
                 requires = {
                     "neovim/nvim-lspconfig",
-                    "nvim-lua/popup.nvim",
                     "nvim-lua/plenary.nvim",
-                    "nvim-telescope/telescope.nvim",
                     "mfussenegger/nvim-dap",
+                    "nvim-lua/popup.nvim",
                     "nvim-lua/lsp-status.nvim"
                 },
                 after = "nvim-lspconfig",
