@@ -29,10 +29,23 @@
   pager = delta
 
 [delta]
-  decorations = true
-  line-numbers = true
-  side-by-side = true
-  syntax-theme = DarkNeon
+  features = decorations
+  ; line-numbers = true
+  ; side-by-side = true
+  ; syntax-theme = DarkNeon
+
+
+[delta "interactive"]
+  keep-plus-minus-markers = false
+
+[delta "decorations"]
+  commit-decoration-style = blue ol
+  commit-style = raw
+  file-style = omit
+  hunk-header-decoration-style = blue box
+  hunk-header-file-style = red
+  hunk-header-line-number-style = "#067a00"
+  hunk-header-style = file line-number syntax
 
 [diff]
   tool = vimdiff
@@ -50,8 +63,7 @@
   defaultBranch = main
 
 [interactive]
-  ; diffFilter = delta --color-only
-  diffFilter = diffr
+  diffFilter = delta --color-only --features=interactive
 
 [merge]
   tool = vimdiff
