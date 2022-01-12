@@ -30,10 +30,10 @@
 
 [delta]
   features = decorations
-  ; line-numbers = true
-  ; side-by-side = true
-  ; syntax-theme = DarkNeon
-
+  hyperlink = true
+  line-numbers = true
+  side-by-side = true
+  syntax-theme = DarkNeon
 
 [delta "interactive"]
   keep-plus-minus-markers = false
@@ -48,7 +48,7 @@
   hunk-header-style = file line-number syntax
 
 [diff]
-  tool = vimdiff
+  colorMoved = default
 
 [difftool]
   prompt = false
@@ -66,7 +66,8 @@
   diffFilter = delta --color-only --features=interactive
 
 [merge]
-  tool = vimdiff
+  conflictstyle = diff3
+  tool = diff3
 
 [pager]
   branch = false
