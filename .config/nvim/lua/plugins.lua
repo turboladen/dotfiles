@@ -1,13 +1,3 @@
--- This file can be loaded by calling `lua require('plugins')` from your init.vim
-
-function HlsLensNext()
-    vim.cmd([[execute('normal! ' . v:count1 . 'n') | lua require('hlslens').start()]])
-end
-
-function HlsLensPrev()
-    vim.cmd([[execute('normal! ' . v:count1 . 'N') | lua require('hlslens').start()]])
-end
-
 function ShowDocumentation()
     local filetype = vim.bo.filetype
     if vim.tbl_contains({"vim", "help"}, filetype) then
@@ -433,12 +423,30 @@ return require("packer").startup(
             use {
                 "kevinhwang91/nvim-hlslens",
                 config = function()
-                    vim.api.nvim_set_keymap("n", "n", "<cmd>lua HlsLensNext()<CR>", {silent = true, noremap = true})
-                    vim.api.nvim_set_keymap("n", "N", "<cmd>lua HlsLensPrev()<CR>", {silent = true, noremap = true})
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "n",
+                        "<cmd>execute('normal! ' . v:count1 . 'n')<CR><cmd>lua require('hlslens').start()<CR>",
+                        {silent = true, noremap = true}
+                    )
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "N",
+                        "<cmd>execute('normal! ' . v:count1 . 'N')<CR><cmd>lua require('hlslens').start()<CR>",
+                        {silent = true, noremap = true}
+                    )
                     vim.api.nvim_set_keymap("n", "*", "*<cmd>lua require('hlslens').start()<CR>", {noremap = true})
                     vim.api.nvim_set_keymap("n", "#", "#<cmd>lua require('hlslens').start()<CR>", {noremap = true})
                     vim.api.nvim_set_keymap("n", "g*", "g*<cmd>lua require('hlslens').start()<CR>", {noremap = true})
                     vim.api.nvim_set_keymap("n", "g#", "g#<cmd>lua require('hlslens').start()<CR>", {noremap = true})
+                end
+            }
+
+            -- Extensible Neovim Scrollbar
+            use {
+                "petertriho/nvim-scrollbar",
+                config = function()
+                    require("scrollbar").setup({})
                 end
             }
 
