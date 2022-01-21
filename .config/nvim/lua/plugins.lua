@@ -219,7 +219,6 @@ return require("packer").startup(
                     -- nvim-cmp source for neovim Lua API.
                     -- https://github.com/hrsh7th/cmp-nvim-lua
                     "hrsh7th/cmp-nvim-lua",
-                    "lukas-reineke/cmp-rg",
                     "dcampos/nvim-snippy",
                     "dcampos/cmp-snippy",
                     "honza/vim-snippets"
@@ -269,8 +268,7 @@ return require("packer").startup(
                                 {name = "snippy", priority = 2},
                                 -- {name = "buffer", max_item_count = 5},
                                 {name = "path", max_item_count = 5},
-                                {name = "nvim_lua"},
-                                {name = "rg", priority = 4, max_item_count = 5}
+                                {name = "nvim_lua"}
                             }
                         }
                     )
