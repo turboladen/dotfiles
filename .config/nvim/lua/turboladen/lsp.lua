@@ -180,15 +180,6 @@ local function setup_lsp()
         }
     )
 
-    lspconfig.zeta_note.setup(
-        {
-            cmd = {"/Users/steve.loveless/.cargo/bin/zeta-note"},
-            capabilities = capabilities,
-            on_attach = make_on_attach("zeta_note"),
-            flags = flags
-        }
-    )
-
     require("lspconfig").jsonls.setup(
         {
             capabilities = capabilities,
@@ -225,6 +216,12 @@ local function setup_lsp()
             }
         }
     )
+
+    local signs = {Error = " ", Warn = " ", Hint = " ", Info = " "}
+    for type, icon in pairs(signs) do
+        local hl = "DiagnosticSign" .. type
+        vim.fn.sign_define(hl, {text = icon, texthl = hl, numhl = hl})
+    end
 end
 
 return {
