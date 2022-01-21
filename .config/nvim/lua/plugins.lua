@@ -9,30 +9,17 @@ function ShowDocumentation()
     end
 end
 
--- https://github.com/mfussenegger/nvim-dap/wiki/Cookbook#2-clear-the-lua-package-cache-and-reload-the-configuration-module
--- function ReloadPluginsAfterSave()
--- package.loaded["dap_config"] = nil
--- require("dap_config")
--- require("dap").continue()
--- end
+function GetSetup(name)
+    return string.format('require("setup/%s")', name)
+end
+
+local disable_treesitter = false
 
 return require("packer").startup(
     {
         function(use)
             -- https://github.com/wbthomason/packer.nvim
-            use {
-                "wbthomason/packer.nvim",
-                config = function()
-                    vim.cmd(
-                        [[
-  augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost plugins.lua source <afile> | PackerCompile 
-  augroup end
-]]
-                    )
-                end
-            }
+            use {"wbthomason/packer.nvim", config = GetSetup("packer")}
 
             -----------------------------------------------------------------------------
             -- 0.
@@ -41,12 +28,9 @@ return require("packer").startup(
             -- https://github.com/tpope/vim-repeat
             use "tpope/vim-repeat"
 
-            use {
-                "nathom/filetype.nvim",
-                config = function()
-                    vim.g.did_load_filtypes = 1
-                end
-            }
+            -- This plugin is a replacement for the included filetype.vim that is sourced on startup.
+            -- https://github.com/nathom/filetype.nvim
+            use {"nathom/filetype.nvim"}
 
             ------------------------------------------------------------------------------
             -- UI tweaks
@@ -55,110 +39,18 @@ return require("packer").startup(
             -- https://github.com/nvim-treesitter/nvim-treesitter
             use {
                 "nvim-treesitter/nvim-treesitter",
+                disable = disable_treesitter,
                 run = ":TSUpdate",
-                config = function()
-                    require("nvim-treesitter.configs").setup(
-                        {
-                            ensure_installed = {
-                                "bash",
-                                "c",
-                                "cmake",
-                                "comment",
-                                "cpp",
-                                "css",
-                                "dockerfile",
-                                "elixir",
-                                "elm",
-                                "glimmer",
-                                "graphql",
-                                "html",
-                                "javascript",
-                                "jsdoc",
-                                "json",
-                                "json5",
-                                "jsonc",
-                                "llvm",
-                                "lua",
-                                "regex",
-                                "ruby",
-                                "rust",
-                                "scss",
-                                "toml",
-                                "typescript",
-                                "vim",
-                                "yaml"
-                            },
-                            highlight = {enable = true},
-                            incremental_selection = {enable = true},
-                            -- indent = {enable = true},
-                            matchup = {enable = true},
-                            textobjects = {
-                                select = {
-                                    enable = true,
-                                    lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-                                    keymaps = {
-                                        -- You can use the capture groups defined in textobjects.scm
-                                        ["af"] = "@function.outer",
-                                        ["if"] = "@function.inner",
-                                        ["ac"] = "@class.outer",
-                                        ["ic"] = "@class.inner"
-                                    }
-                                },
-                                move = {
-                                    enable = true,
-                                    set_jumps = true, -- whether to set jumps in the jumplist
-                                    goto_next_start = {
-                                        ["]m"] = "@function.outer",
-                                        ["]]"] = "@class.outer"
-                                    },
-                                    goto_next_end = {
-                                        ["]M"] = "@function.outer",
-                                        ["]["] = "@class.outer"
-                                    },
-                                    goto_previous_start = {
-                                        ["[m"] = "@function.outer",
-                                        ["[["] = "@class.outer"
-                                    },
-                                    goto_previous_end = {
-                                        ["[M"] = "@function.outer",
-                                        ["[]"] = "@class.outer"
-                                    }
-                                }
-                            }
-                        }
-                    )
-
-                    -- vim.api.nvim_set_option("foldmethod", "expr")
-                    -- vim.api.nvim_set_option("foldexpr", "nvim_treesitter#foldexpr()")
-                end
-            }
-
-            use {
-                "nvim-treesitter/nvim-treesitter-textobjects",
-                requires = {
-                    {"nvim-telescope/telescope.nvim"}
-                }
+                config = GetSetup("nvim-treesitter")
             }
 
             -- https://github.com/p00f/nvim-ts-rainbow
             -- 🌈 Rainbow parentheses for neovim using tree-sitter 🌈
             use {
                 "p00f/nvim-ts-rainbow",
-                requires = {
-                    "nvim-lua/plenary.nvim",
-                    "nvim-telescope/telescope.nvim"
-                },
-                config = function()
-                    require("nvim-treesitter.configs").setup {
-                        rainbow = {
-                            enable = true,
-                            extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
-                            max_file_lines = nil -- Do not enable for files with more than n lines, int
-                            -- colors = {}, -- table of hex strings
-                            -- termcolors = {} -- table of colour name strings
-                        }
-                    }
-                end
+                disable = disable_treesitter,
+                requires = {"nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim"},
+                config = GetSetup("nvim-ts-rainbow")
             }
 
             -- Neovim treesitter plugin for setting the commentstring based on
@@ -166,27 +58,16 @@ return require("packer").startup(
             -- https://github.com/JoosepAlviste/nvim-ts-context-commentstring
             use {
                 "JoosepAlviste/nvim-ts-context-commentstring",
-                requires = {
-                    "nvim-telescope/telescope.nvim",
-                    "tpope/vim-commentary"
-                },
-                config = function()
-                    require("nvim-treesitter.configs").setup {
-                        context_commentstring = {
-                            enable = true,
-                            config = {
-                                rust = "// %s"
-                            }
-                        }
-                    }
-                end
+                disable = disable_treesitter,
+                requires = {"nvim-telescope/telescope.nvim", "tpope/vim-commentary"},
+                config = GetSetup("nvim-ts-context-commentstring")
             }
 
+            -- Lightweight alternative to context.vim implemented with nvim-treesitter.
             use {
                 "romgrk/nvim-treesitter-context",
-                config = function()
-                    require("treesitter-context").setup({})
-                end
+                disable = disable_treesitter,
+                config = GetSetup("nvim-treesitter-context")
             }
 
             -- Enhanced terminal integration for Vim.
@@ -223,71 +104,7 @@ return require("packer").startup(
                     "dcampos/cmp-snippy",
                     "honza/vim-snippets"
                 },
-                config = function()
-                    local cmp = require("cmp")
-
-                    cmp.setup(
-                        {
-                            completion = {
-                                keyword_length = 2
-                            },
-                            experimental = {},
-                            formatting = {
-                                format = require("lspkind").cmp_format()
-                            },
-                            mapping = {
-                                -- ["<C-j>"] = cmp.mapping.select_next_item(),
-                                -- ["<C-k>"] = cmp.mapping.select_prev_item(),
-                                ["<C-j>"] = cmp.mapping.select_next_item({behavior = cmp.SelectBehavior.Select}),
-                                ["<C-k>"] = cmp.mapping.select_prev_item({behavior = cmp.SelectBehavior.Select}),
-                                ["<Down>"] = cmp.mapping.select_next_item({behavior = cmp.SelectBehavior.Insert}),
-                                ["<Up>"] = cmp.mapping.select_prev_item({behavior = cmp.SelectBehavior.Insert}),
-                                ["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), {"i", "c"}),
-                                ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), {"i", "c"}),
-                                ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), {"i", "c"}),
-                                ["<CR>"] = cmp.mapping(
-                                    {
-                                        i = cmp.mapping.confirm({select = true}),
-                                        c = cmp.mapping.confirm({select = true})
-                                    }
-                                )
-                                -- ["<C-CR>"] = cmp.mapping(
-                                --     {
-                                --         i = cmp.mapping.confirm({select = true, benavior = cmp.SelectBehavior.Replace}),
-                                --         c = cmp.mapping.confirm({select = true, benavior = cmp.SelectBehavior.Replace})
-                                --     }
-                                -- )
-                            },
-                            snippet = {
-                                expand = function(args)
-                                    require("snippy").expand_snippet(args.body) -- For `snippy` users.
-                                end
-                            },
-                            sources = {
-                                {name = "nvim_lsp", priority = 6},
-                                {name = "snippy", priority = 2},
-                                -- {name = "buffer", max_item_count = 5},
-                                {name = "path", max_item_count = 5},
-                                {name = "nvim_lua"}
-                            }
-                        }
-                    )
-
-                    local snippy = require("snippy")
-                    snippy.setup(
-                        {
-                            mappings = {
-                                is = {
-                                    ["<Tab>"] = "expand_or_advance",
-                                    ["<S-Tab>"] = "previous"
-                                },
-                                nx = {
-                                    ["<leader>x"] = "cut_text"
-                                }
-                            }
-                        }
-                    )
-                end
+                config = GetSetup("nvim-cmp")
             }
 
             -- Use dependency and run lua function after load
@@ -295,110 +112,37 @@ return require("packer").startup(
                 "lewis6991/gitsigns.nvim",
                 requires = {"nvim-lua/plenary.nvim"},
                 event = "BufRead",
-                config = function()
-                    require("gitsigns").setup(
-                        {
-                            signs = {
-                                add = {text = "✚"},
-                                change = {text = "✹"},
-                                delete = {text = "✖"},
-                                changedelete = {text = "⇄"}
-                            },
-                            yadm = {enable = true}
-                        }
-                    )
-                end
+                config = GetSetup("gitsigns-nvim")
             }
 
             -- https://github.com/TimUntersberger/neogit
             use {
                 "TimUntersberger/neogit",
                 requires = "nvim-lua/plenary.nvim",
-                config = function()
-                    local nf_fa_folder = ""
-                    local nf_fa_folder_open = ""
-
-                    require("neogit").setup(
-                        {
-                            signs = {
-                                section = {nf_fa_folder, nf_fa_folder_open},
-                                item = {nf_fa_folder, nf_fa_folder_open}
-                            }
-                        }
-                    )
-
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>gs",
-                        [[<cmd>lua require("neogit").open({kind = "split"})<CR>]],
-                        {silent = true}
-                    )
-                end
+                config = GetSetup("neogit")
             }
 
-            use {
-                "lewis6991/spellsitter.nvim",
-                config = function()
-                    require("spellsitter").setup({})
-                end
-            }
+            -- https://github.com/lewis6991/spellsitter.nvim
+            -- Enable Neovim's builtin spellchecker for buffers with tree-sitter highlighting.
+            use {"lewis6991/spellsitter.nvim", config = GetSetup("spellsitter-nvim")}
 
             -- Distraction-free writing in Vim.
             -- https://github.com/junegunn/goyo.vim
-            use {"junegunn/goyo.vim", config = "vim.g.goyo_width = 101", cmd = "Goyo"}
+            use {"junegunn/goyo.vim", config = GetSetup("goyo-vim"), cmd = "Goyo"}
 
             -- A good looking and efficient status line.
             -- https://github.com/datwaft/bubbly.nvim
             use {
                 "datwaft/bubbly.nvim",
                 requires = "nvim-lua/lsp-status.nvim",
-                config = function()
-                    require("lsp-status").register_progress()
-
-                    -- Here you can add the configuration for the plugin
-                    vim.g.bubbly_palette = {
-                        background = "#34343c",
-                        foreground = "#c5cdd9",
-                        black = "#3e4249",
-                        red = "#ec7279",
-                        green = "#a0c980",
-                        yellow = "#deb974",
-                        blue = "#6cb6eb",
-                        purple = "#d38aea",
-                        cyan = "#5dbbc1",
-                        white = "#c5cdd9",
-                        lightgrey = "#57595e",
-                        darkgrey = "#404247"
-                    }
-                    vim.g.bubbly_statusline = {
-                        "mode",
-                        "truncate",
-                        "path",
-                        "branch",
-                        "gitsigns",
-                        "lsp_status.messages",
-                        "lsp_status.diagnostics",
-                        "divisor",
-                        "filetype",
-                        "progress"
-                    }
-                end
+                config = GetSetup("bubbly-nvim")
             }
 
             -----------------------------------------------------------------------------
             -- 2. moving around, searching and patterns
             -----------------------------------------------------------------------------
             -- Use RipGrep in Vim and display results in a quickfix list
-            use {
-                "jremmen/vim-ripgrep",
-                command = "Rg",
-                config = function()
-                    vim.g.rg_command = "rg --vimgrep --ignore-vcs"
-                    vim.g.rg_highlight = 1
-
-                    vim.api.nvim_set_keymap("n", "<leader>.", ":Rg<SPACE>", {noremap = true})
-                end
-            }
+            use {"jremmen/vim-ripgrep", command = "Rg", config = GetSetup("vim-ripgrep")}
 
             -- pairs of handy bracket mappings
             -- https://github.com/tpope/vim-unimpaired
@@ -420,32 +164,13 @@ return require("packer").startup(
             -- https://github.com/kevinhwang91/nvim-hlslens
             use {
                 "kevinhwang91/nvim-hlslens",
-                config = function()
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "n",
-                        "<cmd>execute('normal! ' . v:count1 . 'n')<CR><cmd>lua require('hlslens').start()<CR>",
-                        {silent = true, noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "N",
-                        "<cmd>execute('normal! ' . v:count1 . 'N')<CR><cmd>lua require('hlslens').start()<CR>",
-                        {silent = true, noremap = true}
-                    )
-                    vim.api.nvim_set_keymap("n", "*", "*<cmd>lua require('hlslens').start()<CR>", {noremap = true})
-                    vim.api.nvim_set_keymap("n", "#", "#<cmd>lua require('hlslens').start()<CR>", {noremap = true})
-                    vim.api.nvim_set_keymap("n", "g*", "g*<cmd>lua require('hlslens').start()<CR>", {noremap = true})
-                    vim.api.nvim_set_keymap("n", "g#", "g#<cmd>lua require('hlslens').start()<CR>", {noremap = true})
-                end
+                config = GetSetup("nvim-hlslens")
             }
 
             -- Extensible Neovim Scrollbar
             use {
                 "petertriho/nvim-scrollbar",
-                config = function()
-                    require("scrollbar").setup({})
-                end
+                config = GetSetup("nvim-scrollbar")
             }
 
             --===========================================================================
@@ -456,200 +181,64 @@ return require("packer").startup(
             ----------------------------------------
             -- https://github.com/Mangeshrex/uwu.vim
             use "mangeshrex/uwu.vim"
+
             use "aonemd/kuroi.vim"
-            use {
-                "sainnhe/edge",
-                config = function()
-                    vim.g.edge_style = "aura"
-                    vim.g.edge_enable_italic = 1
-                end
-            }
+            use {"sainnhe/edge", config = GetSetup("edge")}
 
             -- https://github.com/savq/melange
             use "savq/melange"
 
-            use {
-                "EdenEast/nightfox.nvim",
-                config = function()
-                    local nightfox = require("nightfox")
-                    nightfox.setup(
-                        {
-                            alt_nc = true,
-                            inverse = {
-                                match_paren = true,
-                                visual = true,
-                                search = true
-                            }
-                        }
-                    )
-                    nightfox.load()
-                end
-            }
-            -- use {
-            --     "projekt0n/github-nvim-theme",
-            --     config = function()
-            --         require("github-theme").setup(
-            --             {
-            --                 theme_style = "dimmed",
-            --                 function_style = "italic",
-            --                 -- sidebars = {"qf", "vista_kind", "terminal", "packer"},
-            --                 dark_float = true
-            --             }
-            --         )
-            --     end
-            -- }
+            -- https://github.com/EdenEast/nightfox.nvim
+            use {"EdenEast/nightfox.nvim", config = GetSetup("nightfox-nvim")}
 
             -- https://github.com/novakne/kosmikoa.nvim
             use "novakne/kosmikoa.nvim"
+
             -- https://github.com/rakr/vim-one
-            -- use {
-            --     "rakr/vim-one",
-            --     config = function()
-            --         vim.g.one_allow_italics = 1
-            --     end
-            -- }
+            use {
+                "rakr/vim-one",
+                config = GetSetup("vim-one")
+            }
 
             -- https://github.com/adisen99/codeschool.nvim
-            -- use {
-            --     "adisen99/codeschool.nvim",
-            --     requires = {"rktjmp/lush.nvim"},
-            --     disable = true,
-            --     config = function()
-            --         -- vim.g.codeschool_contrast_dark = "hard"
-            --         vim.g.codeschool_italic = 1
-            --         -- vim.g.codeschool_sign_column = "none"
-            --         -- vim.g.codeschool_color_column = "none"
-            --         vim.g.codeschool_invert_signs = 1
-            --         vim.g.codeschool_invert_indent_guides = 1
-            --         vim.g.codeschool_improved_strings = 1
-            --         vim.g.codeschool_improved_warnings = 1
-            --         vim.g.codeschool_transparent_bg = 1
-            --         vim.g.codeschool_underline = 0
-            --         vim.g.codeschool_undercurl = 0
-
-            --         require("lush")(
-            --             require("codeschool").setup(
-            --                 {
-            --                     plugins = {
-            --                         "buftabline",
-            --                         "cmp",
-            --                         "fzf",
-            --                         "gitsigns",
-            --                         "lsp",
-            --                         "netrw",
-            --                         "neogit",
-            --                         "telescope",
-            --                         "treesitter"
-            --                     },
-            --                     langs = {
-            --                         "c",
-            --                         "css",
-            --                         "elixir",
-            --                         "html",
-            --                         "js",
-            --                         "json",
-            --                         "lua",
-            --                         "markdown",
-            --                         "objc",
-            --                         "python",
-            --                         "ruby",
-            --                         "rust",
-            --                         "scala",
-            --                         "typescript",
-            --                         "viml",
-            --                         "xml"
-            --                     }
-            --                 }
-            --             )
-            --         )
-            --     end
-            -- }
-
-            -- https://github.com/fenetikm/falcon
-            -- use {
-            --     "fenetikm/falcon",
-            --     config = function()
-            --         vim.g.falcon_background = 1
-            --         vim.g.falcon_inactive = 1
-            --         vim.g.falcon_italic = 1
-            --         vim.g.falcon_bold = 1
-
-            --         vim.cmd([[colorscheme falcon]])
-            --     end
-            -- }
+            use {
+                "adisen99/codeschool.nvim",
+                requires = {"rktjmp/lush.nvim"},
+                disable = true,
+                config = GetSetup("codeschool-nvim")
+            }
 
             use {
                 "sainnhe/everforest",
-                config = function()
-                    vim.g.everforest_background = "hard"
-                    vim.g.everforest_cursor = "blue"
-                    vim.g.everforest_enable_italic = 1
-                    vim.g.everforest_transparent_background = 1
-                    vim.g.everforest_ui_contrast = "low"
-                    vim.g.everforest_diagnostic_text_highlight = 1
-                    vim.g.everforest_diagnostic_line_highlight = 1
-                    vim.g.everforest_diagnostic_virtual_text = "colored"
-                    -- vim.cmd([[colorscheme everforest]])
-                end
+                config = GetSetup("everforest")
             }
 
             -- https://github.com/marko-cerovac/material.nvim
             use {
                 "marko-cerovac/material.nvim",
-                config = function()
-                    -- vim.g.material_style = "darker"
-                    -- vim.g.material_style = "deep ocean"
-                    vim.g.material_style = "oceanic"
-                    -- vim.g.material_style = "palenight"
-                    -- vim.g.material_style = "lighter"
-                    require("material").setup(
-                        {
-                            borders = true,
-                            italics = {
-                                comments = false
-                            }
-                        }
-                    )
-                    -- vim.cmd [[colorscheme material]]
-                end
+                config = GetSetup("material-nvim")
             }
 
             -- Hyperfocus-writing in Vim
             -- https://github.com/junegunn/limelight.vim
             use {
                 "junegunn/limelight.vim",
-                config = "vim.g.limelight_paragraph_span = 1",
-                cmd = "Limelight"
+                cmd = "Limelight",
+                config = GetSetup("limelight-vim")
             }
 
             -- Show vertical line for indentation level
             -- https://github.com/lukas-reineke/indent-blankline.nvim
             use {
                 "lukas-reineke/indent-blankline.nvim",
-                config = function()
-                    vim.opt.list = true
-
-                    require("indent_blankline").setup(
-                        {
-                            char = "┊",
-                            char_highlight = "LineNr",
-                            buftype_exclude = {"terminal", "nofile"},
-                            filetype_exclude = {"rust", "lua", "ruby"},
-                            space_char_blankline = " ",
-                            show_current_context = true
-                        }
-                    )
-                end
+                config = GetSetup("indent-blankline-nvim")
             }
 
             --===========================================================================
             -- 6. multiple windows
             --===========================================================================
             -- Delete all the buffers except the current/named buffer
-            use {
-                "vim-scripts/BufOnly.vim",
-                cmd = "BufOnly"
-            }
+            use {"vim-scripts/BufOnly.vim", cmd = "BufOnly"}
 
             --===========================================================================
             -- 13. editing text
@@ -665,9 +254,7 @@ return require("packer").startup(
             -- https://github.com/numToStr/Comment.nvim
             use {
                 "numToStr/Comment.nvim",
-                config = function()
-                    require("Comment").setup()
-                end
+                config = GetSetup("Comment-nvim")
             }
 
             -- quoting/parenthesizing made simple
@@ -686,10 +273,7 @@ return require("packer").startup(
             -- https://github.com/vim-utils/vim-troll-stopper
             use {
                 "vim-utils/vim-troll-stopper",
-                config = function()
-                    vim.cmd([[highlight TrollStopper ctermbg = red guibg = #FF0000
-]])
-                end
+                config = GetSetup("vim-troll-stopper")
             }
 
             -- For case swapping
@@ -728,72 +312,15 @@ return require("packer").startup(
                 "vim-test/vim-test",
                 requires = {"tpope/vim-dispatch", "voldikss/vim-floaterm"},
                 cmd = {"TestNearest", "TestFile", "TestSuite", "TestLast", "TestVisit", "Ultest"},
-                config = function()
-                    vim.g.floaterm_wintype = "split"
-                    vim.g.floaterm_autoclose = 1
-                    vim.g.floaterm_autoinsert = false
-                    vim.g.floaterm_height = 0.3
-
-                    vim.g["test#strategy"] = {
-                        nearest = "floaterm",
-                        last = "floaterm",
-                        file = "dispatch",
-                        suite = "dispatch"
-                    }
-                    vim.g["test#preserve_screen"] = 1
-                    vim.g["test#enabled_runners"] = {
-                        "ruby#rspec",
-                        "ruby#rails",
-                        "rust#cargotest"
-                    }
-
-                    vim.cmd(
-                        [[
-                        augroup VimTestSetup
-                            autocmd!
-                            autocmd FileType ruby,rust nnoremap <silent> <leader>tn <cmd>TestNearest<CR>
-                            autocmd FileType ruby,rust nnoremap <silent> <leader>tf <cmd>TestFile<CR>
-                            autocmd FileType ruby,rust nnoremap <silent> <leader>ta <cmd>TestSuite<CR>
-                            autocmd FileType ruby,rust nnoremap <silent> <leader>tl <cmd>TestLast<CR>
-                            autocmd FileType ruby,rust nnoremap <silent> <leader>tv <cmd>TestVisit<CR>
-                        augroup END
-                    ]]
-                    )
-                end
+                config = GetSetup("vim-test")
             }
 
             use {
                 "rcarriga/vim-ultest",
+                disable = true,
                 requires = "vim-test/vim-test",
                 run = ":UpdateRemotePlugins",
-                config = function()
-                    -- vim.api.nvim_exec(
-                    --     [[function! g:OpenUltest(file_path)
-                    --     :UltestSummaryOpen
-                    --     endfunction
-                    -- ]],
-                    --     false
-                    -- )
-                    vim.g.ultest_use_pty = 1
-                    vim.g.ultest_virtual_text = 1
-                    -- vim.g.ultest_pre_run = "g:OpenUltest"
-                    -- local nf_mdi_run_fast = "省"
-                    -- local nf_fa_angle_double_right = ""
-                    local nf_fa_hourglass_1 = ""
-                    vim.g.ultest_running_sign = nf_fa_hourglass_1
-
-                    vim.cmd(
-                        [[
-                        augroup UltestSetup
-                            autocmd!
-                            autocmd FileType ruby,rust nmap ]t <Plug>(ultest-next-fail)
-                            autocmd FileType ruby,rust nmap [t <Plug>(ultest-prev-fail)
-                            autocmd FileType ruby,rust nnoremap <silent> <leader>tu <cmd>Ultest<CR>
-                            autocmd FileType ruby,rust nnoremap <silent> <leader>tt <cmd>UltestSummary<CR>
-                        augroup END
-                    ]]
-                    )
-                end
+                config = GetSetup("vim-ultest")
             }
 
             --===========================================================================
@@ -846,16 +373,7 @@ return require("packer").startup(
             -- https://github.com/rhysd/committia.vim
             use {
                 "rhysd/committia.vim",
-                config = function()
-                    -- vim.g.committia_hooks = {}
-                    -- vim.g.committia_hooks.edit_open = function(info)
-                    --     vim.opt_local.spell = true
-                    --     -- If no commit message, start with insert mode
-                    --     if info.vcs == "git" and vim.fn.getline(1) == "" then
-                    --         vim.fn.startinsert()
-                    --     end
-                    -- end
-                end
+                config = GetSetup("committia-vim")
             }
 
             ------------------
@@ -872,17 +390,8 @@ return require("packer").startup(
             ------------------
             -- markdown
             ------------------
-            use {
-                "plasticboy/vim-markdown",
-                config = function()
-                    vim.g.vim_markdown_folding_disabled = 1
-                    vim.g.vim_markdown_conceal = 0
-                    vim.g.vim_markdown_follow_anchor = 1
-                    vim.g.vim_markdown_new_list_item_indent = 2
-                    vim.g.vim_markdown_no_default_key_mappings = 1
-                    vim.g.vim_markdown_strikethrough = 1
-                end
-            }
+            use {"plasticboy/vim-markdown", config = GetSetup("vim-markdown")}
+
             ------------------
             -- Ruby
             ------------------
@@ -893,7 +402,7 @@ return require("packer").startup(
             use {
                 "tpope/vim-rake",
                 opt = true,
-                ft = {"ruby", "eruby"},
+                ft = {"ruby", "eruby", "rspec"},
                 requires = "tpope/vim-projectionist"
             }
 
@@ -931,240 +440,36 @@ return require("packer").startup(
             -- https://github.com/mfussenegger/nvim-lint
             use {
                 "mfussenegger/nvim-lint",
-                ft = {"ruby", "vimscript", "vim", "bash", "sh", "zsh"},
-                config = function()
-                    -- require("turboladen/installers").npm_install("write-good")
-                    -- require("turboladen.installers").gem_install("brakeman")
-                    -- require("turboladen.installers").gem_install("debride")
-                    -- require("turboladen.installers").gem_install("reek")
-                    -- require("turboladen.installers").gem_install("sorbet")
-                    -- require("turboladen.installers").brew_install("languagetool", "shellcheck")
-                    -- require("turboladen.installers").pip_install("vim-vint")
-
-                    local lint = require("lint")
-
-                    -- lint.linters.brakeman = {
-                    --     cmd = "brakeman",
-                    --     args = {
-                    --         "-q",
-                    --         "--faster",
-                    --         "--no-color",
-                    --         "--no-highlights",
-                    --         "--no-pager"
-                    --     },
-                    --     stream = "stdout",
-                    --     parser = function()
-                    --         -- Need to figure this out before it'll work.
-                    --     end
-                    -- }
-                    -- lint.linters.debride = {
-                    --     cmd = "debride",
-                    --     args = {"."},
-                    --     stream = "stdout",
-                    --     parser = function()
-                    --         -- Need to figure this out before it'll work.
-                    --     end
-                    -- }
-                    -- lint.linters.reek = {
-                    --     cmd = "reek",
-                    --     args = {
-                    --         "--format",
-                    --         "json",
-                    --         "--no-color",
-                    --         "--line-numbers",
-                    --         "--no-progress"
-                    --     },
-                    --     stream = "stdout",
-                    --     parser = function()
-                    --         -- Need to figure this out before it'll work.
-                    --     end
-                    -- }
-
-                    lint.linters_by_ft = {
-                        -- markdown = {"proselint", "writegood"},
-                        -- markdown = {"languagetool"},
-                        -- ruby = {"brakeman", "debride", "reek", "ruby", "sorbet"},
-                        ruby = {"ruby"},
-                        vim = {"vint"},
-                        zsh = {"shellcheck"}
-                    }
-
-                    vim.cmd([[autocmd BufWritePost ruby,vim,zsh,vimscript,bash,sh <buffer> require('lint').try_lint()]])
-                end
+                ft = {
+                    "bash",
+                    "markdown",
+                    "ruby",
+                    "sh",
+                    "vim",
+                    "vimscript",
+                    "yaml",
+                    "zsh"
+                },
+                config = GetSetup("nvim-lint")
             }
 
             use {
                 "mhartington/formatter.nvim",
                 ft = {"markdown", "lua"},
                 cmd = "Format",
-                config = function()
-                    -- require("turboladen/installers").npm_install("prettier")
-                    -- require("turboladen/installers").npm_install("lua-fmt")
-
-                    require("formatter").setup(
-                        {
-                            filetype = {
-                                markdown = {
-                                    -- prettier for markdown
-                                    function()
-                                        return {
-                                            exe = "prettier",
-                                            args = {
-                                                "--stdin-filepath",
-                                                vim.fn.fnameescape(vim.api.nvim_buf_get_name(0)),
-                                                "--single-quote"
-                                            },
-                                            stdin = true
-                                        }
-                                    end
-                                },
-                                lua = {
-                                    -- luafmt
-                                    function()
-                                        return {
-                                            exe = "luafmt",
-                                            args = {"--indent-count", 4, "--stdin"},
-                                            stdin = true
-                                        }
-                                    end
-                                }
-                            }
-                        }
-                    )
-
-                    vim.cmd(
-                        [[
-                            augroup FormatAutogroup
-                              autocmd!
-                              autocmd BufWritePost *.lua FormatWrite
-                            augroup END
-                            ]]
-                    )
-                end
+                config = GetSetup("formatter-nvim")
             }
 
             use {
                 "mfussenegger/nvim-dap",
                 requires = "nvim-lua/plenary.nvim",
-                config = function()
-                    local dap = require("dap")
-
-                    dap.adapters.ruby = {
-                        type = "executable",
-                        command = "readapt",
-                        args = {"stdio"}
-                    }
-
-                    dap.configurations.ruby = {
-                        {
-                            type = "ruby",
-                            request = "launch",
-                            name = "Ruby",
-                            program = "bundle",
-                            programArgs = {"exec", "rspec"},
-                            useBundler = true
-                        }
-                    }
-
-                    vim.fn.sign_define("DapBreakpoint", {text = "🛑", texthl = "", linehl = "", numhl = ""})
-
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<F5>",
-                        "<cmd>lua require('dap').continue()<CR>",
-                        {silent = true, noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>dk",
-                        "<cmd>lua require('dap').step_out()<CR>",
-                        {noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>dl",
-                        "<cmd>lua require('dap').step_into()<CR>",
-                        {noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>dj",
-                        "<cmd>lua require('dap').step_over()<CR>",
-                        {noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>db",
-                        "<cmd>lua require('dap').toggle_breakpoint()<CR>",
-                        {noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>dB",
-                        "<cmd>lua require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>",
-                        {noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>lp",
-                        "<cmd>lua require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>",
-                        {noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>dr",
-                        "<cmd>lua require('dap').repl.open()<CR>",
-                        {noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>dL",
-                        "<cmd>lua require('dap').run_last()<CR>",
-                        {noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>di",
-                        "<cmd>lua require('dap.ui.variables').hover()<CR>",
-                        {silent = true, noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "v",
-                        "<leader>di",
-                        "<cmd>lua require('dap.ui.variables').visual_hover()<CR>",
-                        {silent = true, noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>d?",
-                        "<cmd>lua require('dap.ui.variables').scopes()<CR>",
-                        {silent = true, noremap = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>de",
-                        "<cmd>lua require('dap').set_exception_breakpoints({'all'})<CR>",
-                        {noremap = true}
-                    )
-
-                    -- au FileType dap-repl lua require('dap.ext.autocompl').attach()
-                    vim.cmd [[autocmd FileType dap-repl lua require('dap.ext.autocompl').attach()]]
-                end
+                config = GetSetup("nvim-dap")
             }
 
             use {
                 "rcarriga/nvim-dap-ui",
                 requires = "mfussenegger/nvim-dap",
-                config = function()
-                    require("dapui").setup({})
-
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>dt",
-                        "<cmd>lua require('dapui').toggle()<CR>",
-                        {silent = true, noremap = true}
-                    )
-                end
+                config = GetSetup("nvim-dap-ui")
             }
 
             use {
@@ -1173,13 +478,8 @@ return require("packer").startup(
                     "nvim-treesitter/nvim-treesitter",
                     "mfussenegger/nvim-dap"
                 },
-                config = function()
-                    require("nvim-dap-virtual-text").setup(
-                        {
-                            commented = true
-                        }
-                    )
-                end
+                disable = false,
+                config = GetSetup("nvim-dap-virtual-text")
             }
 
             -- https://github.com/nvim-lua/lsp-status.nvim
@@ -1190,29 +490,12 @@ return require("packer").startup(
                     "stevearc/aerial.nvim",
                     "b0o/schemastore.nvim"
                 },
-                config = function()
-                    require("turboladen.lsp").setup_lsp()
-
-                    vim.cmd(
-                        [[ augroup lsp_format_config
-            autocmd!
-            autocmd BufWritePost * lua vim.lsp.buf.formatting_sync()
-            augroup end ]]
-                    )
-                end
+                config = GetSetup("nvim-lspconfig")
             }
 
             use {
                 "stevearc/aerial.nvim",
-                config = function()
-                    require("aerial").setup(
-                        {
-                            default_direction = "prefer_left",
-                            placement_editor_edge = true,
-                            filter_kind = false
-                        }
-                    )
-                end
+                config = GetSetup("aerial-nvim")
             }
 
             use "folke/lsp-colors.nvim"
@@ -1229,60 +512,7 @@ return require("packer").startup(
                     "nvim-lua/lsp-status.nvim"
                 },
                 after = "nvim-lspconfig",
-                config = function()
-                    local lsp_status = require("lsp-status")
-                    lsp_status.register_progress()
-
-                    -- Needed to allow for finding lldb and lldb-vscode for DAP.
-                    vim.env.PATH = vim.env.PATH .. ":/usr/local/opt/llvm/bin"
-
-                    local extension_path = vim.env.HOME .. "/.vscode/extensions/vadimcn.vscode-lldb-1.6.8/"
-                    local codelldb_path = extension_path .. "adapter/codelldb"
-                    local liblldb_path = extension_path .. "lldb/lib/liblldb.dylib"
-
-                    -- https://github.com/simrat39/rust-tools.nvim#configuration
-                    local rust_tools_opts = {
-                        tools = {
-                            crate_graph = {
-                                full = false
-                            },
-                            inlay_hints = {
-                                only_current_line = true
-                            }
-                        },
-                        -- all the opts to send to nvim-lspconfig
-                        -- these override the defaults set by rust-tools.nvim
-                        -- see https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#rust_analyzer
-                        server = {
-                            on_attach = require("turboladen.lsp").make_on_attach("rust_analyzer"),
-                            capabilities = require("turboladen.lsp").make_capabilities(),
-                            flags = require("turboladen.lsp").make_flags(),
-                            settings = {
-                                -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
-                                ["rust-analyzer"] = {
-                                    assist = {
-                                        importPrefix = "by_self"
-                                    },
-                                    cargo = {
-                                        allFeatures = true
-                                    },
-                                    checkOnSave = {
-                                        command = "clippy"
-                                    },
-                                    lens = {
-                                        references = true,
-                                        methodReferences = true
-                                    }
-                                }
-                            }
-                        },
-                        dap = {
-                            adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path)
-                        }
-                    }
-
-                    require("rust-tools").setup(rust_tools_opts)
-                end
+                config = GetSetup("rust-tools-nvim")
             }
 
             use {
@@ -1292,83 +522,7 @@ return require("packer").startup(
                     "kyazdani42/nvim-web-devicons",
                     "nvim-treesitter/nvim-treesitter"
                 },
-                config = function()
-                    require("telescope").setup(
-                        {
-                            defaults = {
-                                mappings = {
-                                    i = {
-                                        ["<esc>"] = require("telescope.actions").close
-                                    }
-                                }
-                            },
-                            pickers = {
-                                buffers = {
-                                    theme = "cursor",
-                                    previewer = false
-                                },
-                                find_files = {
-                                    theme = "dropdown",
-                                    previewer = false
-                                },
-                                lsp_code_actions = {
-                                    theme = "cursor",
-                                    layout_config = {height = 15}
-                                },
-                                oldfiles = {
-                                    theme = "dropdown"
-                                }
-                            }
-                        }
-                    )
-
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader><space>",
-                        "<cmd>lua require('telescope.builtin').find_files()<CR>",
-                        {noremap = true, silent = true}
-                    )
-
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader><CR>",
-                        "<cmd>lua require('telescope.builtin').buffers()<CR>",
-                        {noremap = true, silent = true}
-                    )
-
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>/",
-                        "<cmd>lua require('telescope.builtin').live_grep()<CR>",
-                        {noremap = true, silent = true}
-                    )
-
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>fk",
-                        "<cmd>lua require('telescope.builtin').grep_string()<CR>",
-                        {noremap = true, silent = true}
-                    )
-
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>fm",
-                        "<cmd>lua require('telescope.builtin').marks()<CR>",
-                        {noremap = true, silent = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>fo",
-                        "<cmd>lua require('telescope.builtin').oldfiles()<CR>",
-                        {noremap = true, silent = true}
-                    )
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>ft",
-                        "<cmd>lua require('telescope.builtin').grep_string({ search = 'TODO' })<CR>",
-                        {noremap = true, silent = true}
-                    )
-                end
+                config = GetSetup("telescope-nvim")
             }
 
             use {
@@ -1380,39 +534,7 @@ return require("packer").startup(
             use {
                 "folke/trouble.nvim",
                 requires = "kyazdani42/nvim-web-devicons",
-                config = function()
-                    require("trouble").setup(
-                        {
-                            auto_preview = false
-                        }
-                    )
-
-                    local opts = {silent = true, noremap = true}
-                    vim.api.nvim_set_keymap("n", "<leader>xx", "<cmd>Trouble<cr>", opts)
-
-                    vim.api.nvim_set_keymap("n", "<leader>xw", "<cmd>TroubleToggle lsp_workspace_diagnostics<cr>", opts)
-                    vim.api.nvim_set_keymap("n", "<leader>xd", "<cmd>TroubleToggle lsp_document_diagnostics<cr>", opts)
-                    vim.api.nvim_set_keymap("n", "<leader>xl", "<cmd>TroubleToggle loclist<cr>", opts)
-                    vim.api.nvim_set_keymap("n", "<leader>xq", "<cmd>TroubleToggle quickfix<cr>", opts)
-                    vim.api.nvim_set_keymap("n", "<leader>xr", "<cmd>TroubleRefresh<cr>", opts)
-                    vim.api.nvim_set_keymap("n", "<leader>xR", "<cmd>TroubleToggle lsp_references<cr>", opts)
-
-                    -- jump to the next item, skipping the groups
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>]",
-                        "<cmd>lua require('trouble').next({skip_groups = true, jump = true})<cr>",
-                        opts
-                    )
-
-                    -- jump to the previous item, skipping the groups
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "<leader>[",
-                        "<cmd>lua require('trouble').previous({skip_groups = true, jump = true})<cr>",
-                        opts
-                    )
-                end
+                config = GetSetup("trouble-nvim")
             }
 
             -- https://github.com/nvim-telescope/telescope-github.nvim
@@ -1424,18 +546,12 @@ return require("packer").startup(
                     "nvim-telescope/telescope.nvim"
                 },
                 cmd = "Telescope",
-                config = function()
-                    require("telescope").load_extension("gh")
-
-                    vim.api.nvim_set_keymap("n", "<leader>ghi", "<cmd>Telescope gh issues<CR>", {noremap = true})
-                    vim.api.nvim_set_keymap("n", "<leader>ghp", "<cmd>Telescope gh pull_request<CR>", {noremap = true})
-                    vim.api.nvim_set_keymap("n", "<leader>ghg", "<cmd>Telescope gh gist<CR>", {noremap = true})
-                    vim.api.nvim_set_keymap("n", "<leader>ghr", "<cmd>Telescope gh run<CR>", {noremap = true})
-                end
+                config = GetSetup("telescope-github-nvim")
             }
 
             use {
                 "sudormrfbin/cheatsheet.nvim",
+                disable = true,
                 cmd = {"Cheatsheet", "CheatsheetEdit"}
             }
 
@@ -1444,23 +560,7 @@ return require("packer").startup(
             use {
                 "rmagatti/auto-session",
                 requires = "Asheq/close-buffers.vim",
-                config = function()
-                    vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,resize,winpos,terminal"
-
-                    require("auto-session").setup(
-                        {
-                            pre_save_cmds = {
-                                ":Bdelete hidden",
-                                ":UltestSummaryClose",
-                                ":TroubleClose"
-                            },
-                            auto_save_enabled = true,
-                            auto_restore_enabled = false
-                        }
-                    )
-
-                    vim.api.nvim_set_keymap("n", "<leader>sr", ":RestoreSession<CR>", {noremap = true, silent = true})
-                end
+                config = GetSetup("auto-session")
             }
         end,
         config = {
