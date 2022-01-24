@@ -515,19 +515,19 @@ return require("packer").startup(
                 config = GetSetup("rust-tools-nvim")
             }
 
+            -- https://github.com/nvim-telescope/telescope-github.nvim
+            -- requires `gh` and don't forget to auth the first use!
             use {
                 "nvim-telescope/telescope.nvim",
                 requires = {
                     "nvim-lua/plenary.nvim",
                     "kyazdani42/nvim-web-devicons",
-                    "nvim-treesitter/nvim-treesitter"
+                    "nvim-treesitter/nvim-treesitter",
+                    "nvim-telescope/telescope-github.nvim",
+                    "nvim-telescope/telescope-symbols.nvim"
                 },
+                -- cmd = "Telescope",
                 config = GetSetup("telescope-nvim")
-            }
-
-            use {
-                "nvim-telescope/telescope-symbols.nvim",
-                requires = "nvim-telescope/telescope.nvim"
             }
 
             -- https://github.com/folke/trouble.nvim
@@ -535,18 +535,6 @@ return require("packer").startup(
                 "folke/trouble.nvim",
                 requires = "kyazdani42/nvim-web-devicons",
                 config = GetSetup("trouble-nvim")
-            }
-
-            -- https://github.com/nvim-telescope/telescope-github.nvim
-            -- Requires `gh` and don't forget to auth the first use!
-            use {
-                "nvim-telescope/telescope-github.nvim",
-                requires = {
-                    "nvim-lua/plenary.nvim",
-                    "nvim-telescope/telescope.nvim"
-                },
-                cmd = "Telescope",
-                config = GetSetup("telescope-github-nvim")
             }
 
             use {

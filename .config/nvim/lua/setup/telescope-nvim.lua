@@ -73,3 +73,12 @@ vim.api.nvim_set_keymap(
     "<cmd>lua require('telescope.builtin').grep_string({ search = 'TODO' })<CR>",
     {noremap = true, silent = true}
 )
+
+-- telescope-github.nvim
+require("telescope").load_extension("gh")
+
+vim.api.nvim_set_keymap("n", "<leader>ghi", "<cmd>Telescope gh issues<CR>", {noremap = true})
+vim.api.nvim_set_keymap("n", "<leader>ghp", "<cmd>Telescope gh pull_request<CR>", {noremap = true})
+vim.api.nvim_set_keymap("n", "<leader>ghg", "<cmd>Telescope gh gist<CR>", {noremap = true})
+vim.api.nvim_set_keymap("n", "<leader>ghr", "<cmd>Telescope gh run<CR>", {noremap = true})
+-- vim.api.nvim_set_keymap("n", "<leader>gh", "<cmd>Telescope gh ", {noremap = true})
