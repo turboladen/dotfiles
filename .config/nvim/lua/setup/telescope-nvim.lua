@@ -1,4 +1,6 @@
-require("telescope").setup(
+local telescope = require("telescope")
+
+telescope.setup(
     {
         defaults = {
             mappings = {
@@ -28,4 +30,4 @@ require("telescope").setup(
 )
 
 -- telescope-github.nvim
-require("telescope").load_extension("gh")
+telescope.load_extension("gh")

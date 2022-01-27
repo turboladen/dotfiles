@@ -511,6 +511,7 @@ return require("packer").startup(
                 config = GetSetup("rust-tools-nvim")
             }
 
+            -- https://github.com/nvim-telescope/telescope.nvim
             -- https://github.com/nvim-telescope/telescope-github.nvim
             -- requires `gh` and don't forget to auth the first use!
             use {
@@ -522,7 +523,7 @@ return require("packer").startup(
                     "nvim-telescope/telescope-github.nvim",
                     "nvim-telescope/telescope-symbols.nvim"
                 },
-                cmd = "Telescope",
+                -- cmd = "Telescope",
                 config = GetSetup("telescope-nvim")
             }
 
