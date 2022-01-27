@@ -9,5 +9,3 @@ require("neogit").setup(
         }
     }
 )
-
-vim.api.nvim_set_keymap("n", "<leader>gs", [[<cmd>lua require("neogit").open({kind = "split"})<CR>]], {silent = true})

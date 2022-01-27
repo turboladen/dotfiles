@@ -13,15 +13,3 @@ vim.g.ultest_virtual_text = 1
 -- local nf_fa_angle_double_right = ""
 local nf_fa_hourglass_1 = ""
 vim.g.ultest_running_sign = nf_fa_hourglass_1
-
-vim.cmd(
-    [[
-                        augroup UltestSetup
-                            autocmd!
-                            autocmd FileType ruby,rust nmap ]t <Plug>(ultest-next-fail)
-                            autocmd FileType ruby,rust nmap [t <Plug>(ultest-prev-fail)
-                            autocmd FileType ruby,rust nnoremap <silent> <leader>tu <cmd>Ultest<CR>
-                            autocmd FileType ruby,rust nnoremap <silent> <leader>tt <cmd>UltestSummary<CR>
-                        augroup END
-                    ]]
-)

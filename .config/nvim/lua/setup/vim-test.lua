@@ -15,16 +15,3 @@ vim.g["test#enabled_runners"] = {
     "ruby#rails",
     "rust#cargotest"
 }
-
-vim.cmd(
-    [[
-                        augroup VimTestSetup
-                            autocmd!
-                            autocmd FileType ruby,rust nnoremap <silent> <leader>tn <cmd>TestNearest<CR>
-                            autocmd FileType ruby,rust nnoremap <silent> <leader>tf <cmd>TestFile<CR>
-                            autocmd FileType ruby,rust nnoremap <silent> <leader>ta <cmd>TestSuite<CR>
-                            autocmd FileType ruby,rust nnoremap <silent> <leader>tl <cmd>TestLast<CR>
-                            autocmd FileType ruby,rust nnoremap <silent> <leader>tv <cmd>TestVisit<CR>
-                        augroup END
-                    ]]
-)

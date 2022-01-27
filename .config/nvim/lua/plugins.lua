@@ -154,10 +154,7 @@ return require("packer").startup(
             use "stefandtw/quickfix-reflector.vim"
 
             -- https://github.com/kevinhwang91/nvim-hlslens
-            use {
-                "kevinhwang91/nvim-hlslens",
-                config = GetSetup("nvim-hlslens")
-            }
+            use {"kevinhwang91/nvim-hlslens"}
 
             -- Extensible Neovim Scrollbar
             use {
@@ -312,6 +309,7 @@ return require("packer").startup(
                 disable = true,
                 requires = "vim-test/vim-test",
                 run = ":UpdateRemotePlugins",
+                cmd = {"Ultest", "UltestSummary"},
                 config = GetSetup("vim-ultest")
             }
 
@@ -378,6 +376,8 @@ return require("packer").startup(
             -- just
             ------------------
             use {"NoahTheDuke/vim-just"}
+
+            use "LnL7/vim-nix"
 
             ------------------
             -- markdown
@@ -483,6 +483,10 @@ return require("packer").startup(
                     "b0o/schemastore.nvim"
                 },
                 config = GetSetup("nvim-lspconfig")
+            }
+            use {
+                "j-hui/fidget.nvim",
+                config = GetSetup("fidget-nvim")
             }
 
             use {

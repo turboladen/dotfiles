@@ -54,11 +54,6 @@ lint.linters_by_ft = {
     zsh = {"shellcheck"}
 }
 
-vim.api.nvim_set_keymap(
-    "n",
-    "<leader>l",
-    "<cmd>lua require('lint').try_lint()<CR>",
-    -- {silent = true, noremap = true}
-    {noremap = true}
-)
-vim.cmd([[autocmd BufWritePost ruby,vim,zsh,vimscript,bash,sh,markdown,yaml <buffer> require('lint').try_lint()]])
+vim.cmd([[
+  autocmd BufWritePost ruby,vim,zsh,vimscript,bash,sh,markdown,yaml <buffer> require('lint').try_lint()
+]])

@@ -21,7 +21,7 @@ vim.g.bubbly_statusline = {
     "path",
     "branch",
     "gitsigns",
-    "lsp_status.messages",
+    -- "lsp_status.messages",
     "lsp_status.diagnostics",
     "divisor",
     "filetype",

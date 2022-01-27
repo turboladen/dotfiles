@@ -72,7 +72,13 @@ local function make_on_attach(server_name)
         buf_set_keymap("n", "[g", "<cmd>lua vim.diagnostic.goto_prev()<CR>", opts)
         buf_set_keymap("n", "]g", "<cmd>lua vim.diagnostic.goto_next()<CR>", opts)
         buf_set_keymap("n", "<leader>q", "<cmd>lua vim.diagnostic.setloclist()<CR>", opts)
-        buf_set_keymap("n", "<leader>ff", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+        -- buf_set_keymap("n", "<leader>ff", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+        if server_name == "rust_analyzer" then
+            buf_set_keymap("n", "<leader>ff", "<cmd>RustFmt<CR>", opts)
+        else
+            buf_set_keymap("n", "<leader>ff", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+        end
+
         buf_set_keymap("n", "<leader>so", [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]], opts)
         buf_set_keymap(
             "n",
@@ -218,6 +224,7 @@ local function setup_lsp()
     )
 
     local signs = {Error = " ", Warn = " ", Hint = " ", Info = " "}
+
     for type, icon in pairs(signs) do
         local hl = "DiagnosticSign" .. type
         vim.fn.sign_define(hl, {text = icon, texthl = hl, numhl = hl})
