@@ -37,36 +37,28 @@ return require("packer").startup(
             ------------------------------------------------------------------------------
             -- Treesitter configurations and abstraction layer for Neovim.
             -- https://github.com/nvim-treesitter/nvim-treesitter
-            use {
-                "nvim-treesitter/nvim-treesitter",
-                disable = disable_treesitter,
-                run = ":TSUpdate",
-                config = GetSetup("nvim-treesitter")
-            }
-
             -- https://github.com/p00f/nvim-ts-rainbow
             -- 🌈 Rainbow parentheses for neovim using tree-sitter 🌈
-            use {
-                "p00f/nvim-ts-rainbow",
-                disable = disable_treesitter,
-                requires = {"nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim"},
-                config = GetSetup("nvim-ts-rainbow")
-            }
-
             -- Neovim treesitter plugin for setting the commentstring based on
             -- the cursor location in a file.
             -- https://github.com/JoosepAlviste/nvim-ts-context-commentstring
             use {
-                "JoosepAlviste/nvim-ts-context-commentstring",
+                "nvim-treesitter/nvim-treesitter",
                 disable = disable_treesitter,
-                requires = {"nvim-telescope/telescope.nvim", "tpope/vim-commentary"},
-                config = GetSetup("nvim-ts-context-commentstring")
+                run = ":TSUpdate",
+                requires = {
+                    "p00f/nvim-ts-rainbow",
+                    "JoosepAlviste/nvim-ts-context-commentstring",
+                    "tpope/vim-commentary" -- <- for ^^
+                },
+                config = GetSetup("nvim-treesitter")
             }
 
             -- Lightweight alternative to context.vim implemented with nvim-treesitter.
             use {
                 "romgrk/nvim-treesitter-context",
                 disable = disable_treesitter,
+                requires = {"nvim-treesitter/nvim-treesitter"},
                 config = GetSetup("nvim-treesitter-context")
             }
 
@@ -478,7 +470,7 @@ return require("packer").startup(
                     "nvim-treesitter/nvim-treesitter",
                     "mfussenegger/nvim-dap"
                 },
-                disable = false,
+                disable = disable_treesitter,
                 config = GetSetup("nvim-dap-virtual-text")
             }
 
@@ -526,7 +518,7 @@ return require("packer").startup(
                     "nvim-telescope/telescope-github.nvim",
                     "nvim-telescope/telescope-symbols.nvim"
                 },
-                -- cmd = "Telescope",
+                cmd = "Telescope",
                 config = GetSetup("telescope-nvim")
             }
 
