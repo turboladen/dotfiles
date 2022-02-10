@@ -3,6 +3,14 @@ scriptencoding utf-8
 ""===========================================================================""
 " init.vim
 ""===========================================================================""
+" Set the global var for this
+lua require('turboladen/homebrew').prefix()
+
+let g:python_host_prog = g:turboladen_homebrew_prefix . '/bin/python2'
+let g:python3_host_prog = g:turboladen_homebrew_prefix . '/bin/python3'
+let g:mapleader = ' '
+let g:maplocalleader = ' '
+
 lua << RUST
 local ffi = require("ffi")
 
@@ -15,14 +23,6 @@ local lib = ffi.load(project_path .. "/target/release/libinit_rs" .. suffix)
 -- local lib = ffi.load(project_path .. "/target/debug/libnvim_rust_init" .. suffix)
 lib.init()
 RUST
-
-" Set the global var for this
-lua require('turboladen/homebrew').prefix()
-
-let g:python_host_prog = g:turboladen_homebrew_prefix . '/bin/python2'
-let g:python3_host_prog = g:turboladen_homebrew_prefix . '/bin/python3'
-let g:mapleader = ' '
-let g:maplocalleader = ' '
 
 ""===========================================================================""
 " 0. Load packer stuff first
