@@ -1,11 +1,13 @@
+#---------------
 # cd without `cd`
+#---------------
 setopt auto_cd
 setopt no_share_history
 setopt promptsubst
 
 setopt vi
 
-brew_prefix=`brew --prefix`
+brew_prefix=$(brew --prefix)
 
 # Make sure homebrew commands come first
 export PATH=$brew_prefix/bin:/$brew_prefix/sbin:/usr/bin:$PATH
@@ -94,7 +96,7 @@ export PATH="$brew_prefix/opt/binutils/bin:$PATH"
 # From zsh brew install
 unalias run-help
 autoload run-help
-HELPDIR=$brew_prefix/share/zsh/help
+export HELPDIR=$brew_prefix/share/zsh/help
 
 # https://starship.rs/
 eval "$(starship init zsh)"
