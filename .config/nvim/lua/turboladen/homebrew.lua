@@ -15,7 +15,6 @@ local function prefix()
             args = { "--prefix" },
             env = { ["PATH"] = vim.env.PATH },
             on_exit = function(j, return_val)
-                print(return_val)
                 if return_val == 0 then
                     vim.g.turboladen_homebrew_prefix = j:result()[1]
                 else
