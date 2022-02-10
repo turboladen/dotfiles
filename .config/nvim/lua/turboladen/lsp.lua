@@ -6,6 +6,18 @@ local function make_capabilities()
     return capabilities
 end
 
+local function hover()
+    local filetype = vim.bo.filetype
+
+    if vim.tbl_contains({ "vim", "help" }, filetype) then
+        vim.cmd("h " .. vim.fn.expand("<cword>"))
+    elseif vim.tbl_contains({ "man" }, filetype) then
+        vim.cmd("Man " .. vim.fn.expand("<cword>"))
+    else
+        vim.lsp.buf.hover()
+    end
+end
+
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local function make_on_attach(server_name)
@@ -25,7 +37,7 @@ local function make_on_attach(server_name)
         buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
 
         -- Mappings.
-        local opts = {noremap = true, silent = true}
+        local opts = { noremap = true, silent = true }
 
         -- Aerial does not set any mappings by default, so you'll want to set some up
         -- Toggle the aerial window with <leader>a
@@ -49,7 +61,7 @@ local function make_on_attach(server_name)
         if server_name == "rust_analyzer" then
             buf_set_keymap("n", "K", "<cmd>RustHoverActions<CR>", opts)
         else
-            buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+            buf_set_keymap("n", "K", "<cmd>lua require('turobladen/lsp').hover()<CR>", opts)
         end
 
         buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
@@ -90,31 +102,21 @@ local function make_on_attach(server_name)
         if server_name == "rust_analyzer" then
             buf_set_keymap("n", "gJ", "<cmd>RustJoinLines<CR>", opts)
         end
+        require("fidget").setup({})
     end
 end
 
 local function make_flags()
     return {
-        debounce_text_changes = 350
+        debounce_text_changes = 350,
     }
 end
 
 local function make_lua_cmd()
-    local system_name
-    if vim.fn.has("mac") == 1 then
-        system_name = "macOS"
-    elseif vim.fn.has("unix") == 1 then
-        system_name = "Linux"
-    elseif vim.fn.has("win32") == 1 then
-        system_name = "Windows"
-    else
-        print("Unsupported system for sumneko")
-    end
+    -- brew install lua-language-server
+    local sumneko_binary = require("turboladen/homebrew").prefix() .. "/bin/lua-language-server"
 
-    local sumneko_root_path = "/usr/local/lib/sumneko_lua/extension/server"
-    local sumneko_binary = sumneko_root_path .. "/bin/" .. system_name .. "/lua-language-server"
-
-    return {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"}
+    return { sumneko_binary }
 end
 
 local function make_lua_settings()
@@ -123,14 +125,10 @@ local function make_lua_settings()
     table.insert(runtime_path, "lua/?/init.lua")
 
     local runtime_files = vim.api.nvim_get_runtime_file("", true)
-    vim.tbl_extend(
-        "keep",
-        runtime_files,
-        {
-            [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-            [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true
-        }
-    )
+    vim.tbl_extend("keep", runtime_files, {
+        [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+        [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+    })
 
     return {
         Lua = {
@@ -138,17 +136,17 @@ local function make_lua_settings()
                 -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
                 version = "LuaJIT",
                 -- Setup your lua path
-                path = runtime_path
+                path = runtime_path,
             },
             diagnostics = {
                 -- Get the language server to recognize the `vim` global
-                globals = {"vim"}
+                globals = { "vim" },
             },
             workspace = {
                 -- Make the server aware of Neovim runtime files
-                library = runtime_files
-            }
-        }
+                library = runtime_files,
+            },
+        },
     }
 end
 
@@ -160,80 +158,73 @@ local function setup_lsp()
     local capabilities = make_capabilities()
     local flags = make_flags()
 
-    lspconfig.solargraph.setup(
-        {
-            capabilities = capabilities,
-            on_attach = make_on_attach("solargraph"),
-            flags = flags
-        }
-    )
+    lspconfig.solargraph.setup({
+        capabilities = capabilities,
+        on_attach = make_on_attach("solargraph"),
+        flags = flags,
+    })
 
-    lspconfig.clangd.setup(
-        {
-            capabilities = capabilities,
-            on_attach = make_on_attach("clangd"),
-            flags = flags
-        }
-    )
+    lspconfig.clangd.setup({
+        capabilities = capabilities,
+        on_attach = make_on_attach("clangd"),
+        flags = flags,
+    })
 
-    lspconfig.sumneko_lua.setup(
-        {
-            cmd = make_lua_cmd(),
-            capabilities = capabilities,
-            on_attach = make_on_attach("sumneko_lua"),
-            -- flags = flags
-            settings = make_lua_settings()
-        }
-    )
+    lspconfig.sumneko_lua.setup({
+        cmd = make_lua_cmd(),
+        capabilities = capabilities,
+        on_attach = make_on_attach("sumneko_lua"),
+        -- flags = flags
+        settings = make_lua_settings(),
+    })
 
-    require("lspconfig").jsonls.setup(
-        {
-            capabilities = capabilities,
-            on_attach = make_on_attach("jsonls"),
-            flags = flags,
-            settings = {
-                json = {
-                    schemas = require("schemastore").json.schemas {
-                        select = {
-                            "CMake Presets",
-                            "GitHub Action",
-                            "GitHub Issue Template configuration",
-                            "GitHub Workflow",
-                            "GitHub Workflow Template Properties",
-                            "GitHub issue forms",
-                            "GitVersion",
-                            "JSON Schema Draft 2020-12",
-                            "JSON Schema Draft 4",
-                            "JSON Schema Draft 7",
-                            "JSON Schema Draft 8",
-                            "JSON-API",
-                            "prettierrc.json",
-                            "Swagger API 2.0",
-                            "VSCode Code Snippets",
-                            "compile_commands.json",
-                            "docker-compose.yml",
-                            "geojson.json",
-                            "markdownlint.json",
-                            "package.json",
-                            "yamllint"
-                        }
-                    }
-                }
-            }
-        }
-    )
+    lspconfig.jsonls.setup({
+        capabilities = capabilities,
+        on_attach = make_on_attach("jsonls"),
+        flags = flags,
+        settings = {
+            json = {
+                schemas = require("schemastore").json.schemas({
+                    select = {
+                        "CMake Presets",
+                        "GitHub Action",
+                        "GitHub Issue Template configuration",
+                        "GitHub Workflow",
+                        "GitHub Workflow Template Properties",
+                        "GitHub issue forms",
+                        "GitVersion",
+                        "JSON Schema Draft 2020-12",
+                        "JSON Schema Draft 4",
+                        "JSON Schema Draft 7",
+                        "JSON Schema Draft 8",
+                        "JSON-API",
+                        "prettierrc.json",
+                        "Swagger API 2.0",
+                        "VSCode Code Snippets",
+                        "compile_commands.json",
+                        "docker-compose.yml",
+                        "geojson.json",
+                        "markdownlint.json",
+                        "package.json",
+                        "yamllint",
+                    },
+                }),
+            },
+        },
+    })
 
-    local signs = {Error = " ", Warn = " ", Hint = " ", Info = " "}
+    local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 
     for type, icon in pairs(signs) do
         local hl = "DiagnosticSign" .. type
-        vim.fn.sign_define(hl, {text = icon, texthl = hl, numhl = hl})
+        vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
     end
 end
 
 return {
+    hover = hover,
     make_capabilities = make_capabilities,
     make_on_attach = make_on_attach,
     make_flags = make_flags,
-    setup_lsp = setup_lsp
+    setup_lsp = setup_lsp,
 }
