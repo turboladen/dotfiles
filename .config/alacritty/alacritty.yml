@@ -38,6 +38,9 @@ window:
 
   dynamic_title: true
 
+  # Background opacity
+  opacity: 1.0
+
 scrolling:
   # How many lines of scrollback to keep,
   # '0' will disable scrolling.
@@ -201,9 +204,6 @@ colors:
 bell:
   animation: EaseOutExpo
   duration: 0
-
-# Background opacity
-background_opacity: 1.0
 
 # Mouse bindings
 #
