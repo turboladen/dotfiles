@@ -13,6 +13,8 @@ local rust_tools_opts = {
     tools = {
         crate_graph = {
             full = false,
+            backend = "png",
+            output = "./crate-graph.png",
         },
         inlay_hints = {
             only_current_line = true,

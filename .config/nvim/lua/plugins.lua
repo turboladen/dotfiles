@@ -83,6 +83,8 @@ return require("packer").startup({
                 "dcampos/nvim-snippy",
                 "dcampos/cmp-snippy",
                 "honza/vim-snippets",
+                "saecki/crates.nvim",
+                "lukas-reineke/cmp-rg",
             },
             config = GetSetup("nvim-cmp"),
         })
@@ -91,7 +93,6 @@ return require("packer").startup({
         use({
             "lewis6991/gitsigns.nvim",
             requires = { "nvim-lua/plenary.nvim" },
-            event = "BufRead",
             config = GetSetup("gitsigns-nvim"),
         })
 
@@ -118,6 +119,14 @@ return require("packer").startup({
             config = GetSetup("bubbly-nvim"),
         })
 
+        use({
+            "saecki/crates.nvim",
+            tag = "v0.1.0",
+            requires = { "nvim-lua/plenary.nvim" },
+            event = { "BufRead Cargo.toml" },
+            config = GetSetup("crates-nvim"),
+        })
+
         -----------------------------------------------------------------------------
         -- 2. moving around, searching and patterns
         -----------------------------------------------------------------------------
@@ -128,13 +137,15 @@ return require("packer").startup({
         -- https://github.com/tpope/vim-unimpaired
         use("tpope/vim-unimpaired")
 
+        use("Raimondi/delimitMate")
+
         -- match-up is a plugin that lets you highlight, navigate, and operate on sets of matching text. It extends vim's % key to language-specific words instead of just single characters.
         -- https://github.com/andymass/vim-matchup
-    use({
-      "andymass/vim-matchup",
-      event = "VimEnter",
-      config = GetSetup("vim-matchup")
-    })
+        use({
+            "andymass/vim-matchup",
+            event = "VimEnter",
+            config = GetSetup("vim-matchup"),
+        })
 
         -- Directory viewer for Vim
         -- https://github.com/justinmk/vim-dirvish
@@ -227,7 +238,7 @@ return require("packer").startup({
         -- Closes brackets. Perfect companion to vim-endwise. Basically, a more
         -- conservative version of auto-pairs that only works when you press Enter.
         -- https://github.com/rstacruz/vim-closer
-        use({ "rstacruz/vim-closer", requires = "tpope/vim-endwise" })
+        -- use({ "rstacruz/vim-closer", requires = "tpope/vim-endwise" })
 
         -- https://github.com/tpope/vim-endwise
         use({ "tpope/vim-endwise" })
@@ -463,6 +474,7 @@ return require("packer").startup({
                 "stevearc/aerial.nvim",
                 "b0o/schemastore.nvim",
                 "j-hui/fidget.nvim",
+                "p00f/clangd_extensions.nvim",
             },
             config = GetSetup("nvim-lspconfig"),
         })
@@ -482,12 +494,21 @@ return require("packer").startup({
                 "neovim/nvim-lspconfig",
                 "nvim-lua/plenary.nvim",
                 "mfussenegger/nvim-dap",
-                "nvim-lua/popup.nvim",
                 "nvim-lua/lsp-status.nvim",
+                -- "hood/popui.nvim",
+                "nvim-telescope/telescope-ui-select.nvim"
             },
             after = "nvim-lspconfig",
             config = GetSetup("rust-tools-nvim"),
         })
+
+        -- use({
+        --     "hood/popui.nvim",
+        --     requires = {
+        --         "RishabhRD/popfix",
+        --     },
+        --     config = GetSetup("popui-nvim"),
+        -- })
 
         -- https://github.com/nvim-telescope/telescope.nvim
         -- https://github.com/nvim-telescope/telescope-github.nvim
@@ -500,6 +521,7 @@ return require("packer").startup({
                 "nvim-treesitter/nvim-treesitter",
                 "nvim-telescope/telescope-github.nvim",
                 "nvim-telescope/telescope-symbols.nvim",
+                "nvim-telescope/telescope-ui-select.nvim"
             },
             -- cmd = "Telescope",
             config = GetSetup("telescope-nvim"),
