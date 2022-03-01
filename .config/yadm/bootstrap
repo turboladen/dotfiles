@@ -26,52 +26,6 @@ command_exists() {
   command -v "$the_command" >/dev/null 2>&1
 }
 
-# Checks if brew is installed, then installs if if it's missing.
-install_homebrew() {
-  log "-----------------------------------------------------------------------"
-  log "Installing homebrew..."
-  log "-----------------------------------------------------------------------"
-
-  if command_exists brew; then
-    info "Homebrew already installed."
-    return 0
-  fi
-
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-  log "-----------------------------------------------------------------------"
-  log "Done."
-  log "-----------------------------------------------------------------------"
-}
-
-install_homebrew_packages() {
-  log "-----------------------------------------------------------------------"
-  log "Installing Brewfile things..."
-  log "-----------------------------------------------------------------------"
-
-  brew bundle --global || log_and_exit "Couldn't brew bundle"
-
-  log "-----------------------------------------------------------------------"
-  log "Done."
-  log "-----------------------------------------------------------------------"
-}
-
-setup_tmux() {
-  log "-----------------------------------------------------------------------"
-  log "Setting up tmux..."
-  log "-----------------------------------------------------------------------"
-
-  if [ -d "$HOME/.tmux/plugins/tpm" ]; then
-    info "tmux TPM already installed."
-    return 0
-  fi
-
-  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-  log "-----------------------------------------------------------------------"
-  log "Done."
-  log "-----------------------------------------------------------------------"
-}
-
 install_ruby() {
   log "-----------------------------------------------------------------------"
   log "Setting up Ruby..."
@@ -222,7 +176,7 @@ pull_git_repos() {
   log "Pulling git repos..."
   log "-----------------------------------------------------------------------"
   echo "Do you want to pull work repos? [y/n]"
-  read answer
+  read -r answer
 
   pull_repo() {
     repo_name=$1
