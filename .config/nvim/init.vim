@@ -16,7 +16,7 @@ local ffi = require("ffi")
 
 ffi.cdef [[ void init(void); ]]
 
-local project_path = "/Users/steve.loveless/Development/projects/init.rs"
+local project_path = vim.env.HOME .. "/Development/projects/init.rs"
 local suffix = ffi.os == "OSX" and ".dylib" or ".so"
 
 local lib = ffi.load(project_path .. "/target/release/libinit_rs" .. suffix)
