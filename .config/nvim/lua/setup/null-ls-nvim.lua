@@ -5,7 +5,7 @@ null_ls.setup({
     sources = {
         null_ls.builtins.formatting.cmake_format, -- pip3 install cmakelang
         null_ls.builtins.formatting.nixfmt,
-        null_ls.builtins.formatting.prettier, -- npm install --save-dev --save-exact prettier
+        null_ls.builtins.formatting.prettier, -- npm install -g prettier
         null_ls.builtins.formatting.rubocop,
         null_ls.builtins.formatting.shellharden,
         null_ls.builtins.formatting.shfmt,
