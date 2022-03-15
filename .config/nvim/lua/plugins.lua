@@ -68,21 +68,17 @@ return require("packer").startup({
                 "hrsh7th/cmp-nvim-lsp",
                 -- VSCode(LSP)'s snippet feature in vim.
                 -- https://github.com/hrsh7th/vim-vsnip
-                -- "hrsh7th/vim-vsnip",
+                "hrsh7th/vim-vsnip",
+                -- https://github.com/hrsh7th/vim-vsnip
+                "hrsh7th/cmp-vsnip",
+                "rafamadriz/friendly-snippets",
                 -- https://github.com/hrsh7th/cmp-buffer
                 "hrsh7th/cmp-buffer",
-                -- https://github.com/hrsh7th/vim-vsnip
-                -- "hrsh7th/cmp-vsnip",
-                -- https://github.com/rafamadriz/friendly-snippets
-                -- "rafamadriz/friendly-snippets",
                 -- https://github.com/hrsh7th/cmp-path
                 "hrsh7th/cmp-path",
                 -- nvim-cmp source for neovim Lua API.
                 -- https://github.com/hrsh7th/cmp-nvim-lua
                 "hrsh7th/cmp-nvim-lua",
-                "dcampos/nvim-snippy",
-                "dcampos/cmp-snippy",
-                "honza/vim-snippets",
                 "saecki/crates.nvim",
                 "lukas-reineke/cmp-rg",
             },
@@ -125,6 +121,18 @@ return require("packer").startup({
             requires = { "nvim-lua/plenary.nvim" },
             event = { "BufRead Cargo.toml" },
             config = GetSetup("crates-nvim"),
+        })
+
+        use({
+            "folke/todo-comments.nvim",
+            requires = "nvim-lua/plenary.nvim",
+            config = function()
+                require("todo-comments").setup({
+                    -- your configuration comes here
+                    -- or leave it empty to use the default settings
+                    -- refer to the configuration section below
+                })
+            end,
         })
 
         -----------------------------------------------------------------------------
@@ -496,7 +504,7 @@ return require("packer").startup({
                 "mfussenegger/nvim-dap",
                 "nvim-lua/lsp-status.nvim",
                 -- "hood/popui.nvim",
-                "nvim-telescope/telescope-ui-select.nvim"
+                "nvim-telescope/telescope-ui-select.nvim",
             },
             after = "nvim-lspconfig",
             config = GetSetup("rust-tools-nvim"),
@@ -521,7 +529,7 @@ return require("packer").startup({
                 "nvim-treesitter/nvim-treesitter",
                 "nvim-telescope/telescope-github.nvim",
                 "nvim-telescope/telescope-symbols.nvim",
-                "nvim-telescope/telescope-ui-select.nvim"
+                "nvim-telescope/telescope-ui-select.nvim",
             },
             -- cmd = "Telescope",
             config = GetSetup("telescope-nvim"),
