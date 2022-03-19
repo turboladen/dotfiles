@@ -1,13 +1,12 @@
 local nightfox = require("nightfox")
 
-nightfox.setup(
-    {
-        alt_nc = true,
+nightfox.setup({
+    options = {
+        dim_inactive = true,
         inverse = {
             match_paren = true,
             visual = true,
-            search = true
-        }
-    }
-)
-nightfox.load()
+            search = true,
+        },
+    },
+})
