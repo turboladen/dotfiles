@@ -28,7 +28,6 @@ RUST
 " 0. Load packer stuff first
 ""===========================================================================""
 lua require('plugins')
-lua require('mappings')
 
 " Reload after saving this so I can PluginInstall.
 " augroup plugins_reloader
@@ -43,7 +42,7 @@ lua require('mappings')
 " set conceallevel=0
 
 " colorscheme codeschool
-" colorscheme edge
+colorscheme edge
 " colorscheme everforest
 " colorscheme falcon
 " colorscheme github_dark_default
@@ -53,6 +52,7 @@ lua require('mappings')
 " colorscheme nightfox
 " colorscheme nordbuddy
 " colorscheme uwu
+" colorscheme nightfox
 
 "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
@@ -169,7 +169,7 @@ smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-T
 
 " Select or cut text to use as $TM_SELECTED_TEXT in the next snippet.
 " See https://github.com/hrsh7th/vim-vsnip/pull/50
-nmap        s   <Plug>(vsnip-select-text)
-xmap        s   <Plug>(vsnip-select-text)
-nmap        S   <Plug>(vsnip-cut-text)
-xmap        S   <Plug>(vsnip-cut-text)
+" nmap        s   <Plug>(vsnip-select-text)
+" xmap        s   <Plug>(vsnip-select-text)
+" nmap        S   <Plug>(vsnip-cut-text)
+" xmap        S   <Plug>(vsnip-cut-text)
