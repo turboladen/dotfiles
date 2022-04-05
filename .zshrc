@@ -4,19 +4,9 @@
 setopt auto_cd
 setopt no_share_history
 setopt promptsubst
-
 setopt vi
 
-brew_prefix=$(brew --prefix)
-
-# Make sure homebrew commands come first
-export PATH=$brew_prefix/bin:/$brew_prefix/sbin:/usr/bin:$PATH
-
-# Node
-export PATH=$PATH:$brew_prefix/share/npm/bin
-
-# Local bin
-export PATH=$PATH:~/bin
+export GPG_TTY=$(tty)
 
 #------------------------------------------------------------------------------
 # nvm
@@ -50,17 +40,29 @@ export VI_MODE_SET_CURSOR=true
 # local things
 #------------------------------------------------------------------------------
 eval "$(zoxide init --hook pwd zsh)"
-source ~/.config/zsh/*.zsh
-source ~/.fzf.zsh
+source $HOME/.config/zsh/*.zsh
+source $HOME/.config/zsh/chruby.zsh
+source $HOME/.config/zsh/iterm.zsh
+source $HOME/.config/zsh/myrails.plugin.zsh
+source $HOME/.config/zsh/overmind.zsh
+source $HOME/.config/zsh/ruby.zsh
+source $HOME/.config/zsh/rust.zsh
+source $HOME/.config/zsh/server.plugin.zsh
+source $HOME/.fzf.zsh
 source $HOME/.cargo/env
 
 #------------------------------------------------------------------------------
 # Completions; keep these towards the bottom in case other plugins add
 # completions to zsh/functions/.
 #------------------------------------------------------------------------------
-# Keep this towards the end so other things can prep
-autoload -Uz compinit
-compinit
+# https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
+if type brew &>/dev/null
+then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+  autoload -Uz compinit
+  compinit
+fi
 
 install_completions() {
   . <(zr \
@@ -73,6 +75,7 @@ install_completions() {
     ohmyzsh/ohmyzsh.git/plugins/nvm/nvm.plugin.zsh \
     ohmyzsh/ohmyzsh.git/plugins/rake-fast/rake-fast.plugin.zsh \
     ohmyzsh/ohmyzsh.git/plugins/tmux/tmux.plugin.zsh \
+    ohmyzsh/ohmyzsh.git/plugins/docker-compose/docker-compose.plugin.zsh \
     zsh-users/zsh-autosuggestions.git/zsh-autosuggestions.plugin.zsh \
     zsh-users/zsh-completions.git/zsh-completions.plugin.zsh \
   )
