@@ -4,13 +4,8 @@
 #
 # `brew install chruby ruby-install`
 #------------------------------------------------------------------------------
-brew_prefix=/opt/homebrew
+source "${HOMEBREW_PREFIX}/opt/chruby/share/chruby/chruby.sh"
 
-if [[ -f $brew_prefix/opt/chruby/share/chruby/chruby.sh ]]; then
-  source $brew_prefix/opt/chruby/share/chruby/chruby.sh
-  # Switch to the most recent ruby
-  chruby ruby
-  # source $brew_prefix/opt/chruby/share/chruby/auto.sh
-else
-  echo "chruby not found."
-fi
+# Switch to the most recent ruby
+chruby ruby
+source "${HOMEBREW_PREFIX}/opt/chruby/share/chruby/auto.sh"
