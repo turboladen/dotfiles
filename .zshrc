@@ -40,16 +40,16 @@ export VI_MODE_SET_CURSOR=true
 # local things
 #------------------------------------------------------------------------------
 eval "$(zoxide init --hook pwd zsh)"
-source $HOME/.config/zsh/*.zsh
-source $HOME/.config/zsh/chruby.zsh
-source $HOME/.config/zsh/iterm.zsh
-source $HOME/.config/zsh/myrails.plugin.zsh
-source $HOME/.config/zsh/overmind.zsh
-source $HOME/.config/zsh/ruby.zsh
-source $HOME/.config/zsh/rust.zsh
-source $HOME/.config/zsh/server.plugin.zsh
-source $HOME/.fzf.zsh
-source $HOME/.cargo/env
+source "$HOME"/.config/zsh/*.zsh
+source "$HOME/.config/zsh/chruby.zsh"
+source "$HOME/.config/zsh/iterm.zsh"
+source "$HOME/.config/zsh/myrails.plugin.zsh"
+source "$HOME/.config/zsh/overmind.zsh"
+source "$HOME/.config/zsh/ruby.zsh"
+source "$HOME/.config/zsh/rust.zsh"
+source "$HOME/.config/zsh/server.plugin.zsh"
+source "$HOME/.fzf.zsh"
+source "$HOME/.cargo/env"
 
 #------------------------------------------------------------------------------
 # Completions; keep these towards the bottom in case other plugins add
@@ -58,7 +58,7 @@ source $HOME/.cargo/env
 # https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
 if type brew &>/dev/null
 then
-  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+  FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH"
 
   autoload -Uz compinit
   compinit
@@ -94,14 +94,17 @@ alias bower='noglob bower'
 export EDITOR=nvim
 export LC_CTYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
-export PATH="$brew_prefix/opt/binutils/bin:$PATH"
+export PATH="$HOMEBREW_PREFIX/opt/binutils/bin:$PATH"
 
 # From zsh brew install
 unalias run-help
 autoload run-help
-export HELPDIR=$brew_prefix/share/zsh/help
+export HELPDIR=$HOMEBREW_PREFIX/share/zsh/help
 
 # https://starship.rs/
 eval "$(starship init zsh)"
+
+export COMPOSE_DOCKER_CLI_BUILD=1
+export DOCKER_BUILDKIT=1
 
 . <(zr zsh-users/zsh-syntax-highlighting.git/zsh-syntax-highlighting.plugin.zsh)
