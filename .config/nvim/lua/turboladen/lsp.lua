@@ -182,6 +182,12 @@ local function setup_lsp()
     flags = flags
   })
 
+  lspconfig.steep.setup({
+    capabilities = capabilities,
+    on_attach = make_on_attach("steep"),
+    flags = flags
+  })
+
   lspconfig.clangd.setup({
     capabilities = capabilities,
     on_attach = make_on_attach("clangd"),
