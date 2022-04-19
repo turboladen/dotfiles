@@ -29,8 +29,6 @@ telescope.setup({
 
 -- telescope-github.nvim
 telescope.load_extension("gh")
--- nvim-telescope/telescope-ui-select.nvim
-telescope.load_extension("ui-select")
 
 local nvim_config_files = function()
     require("telescope.builtin").find_files({ cwd = "~/.config/nvim" })

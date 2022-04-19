@@ -41,8 +41,9 @@ lua require('plugins')
 " set breakat=90
 " set conceallevel=0
 
+colorscheme kanagawa
 " colorscheme codeschool
-colorscheme edge
+" colorscheme edge
 " colorscheme everforest
 " colorscheme falcon
 " colorscheme github_dark_default

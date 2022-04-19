@@ -4,7 +4,6 @@ cmp.setup({
     completion = {
         keyword_length = 2,
     },
-    experimental = {},
     formatting = {
         format = require("lspkind").cmp_format(),
     },
@@ -43,7 +42,7 @@ cmp.setup({
     sources = cmp.config.sources({
         { name = "nvim_lsp", priority = 6 },
         { name = "vsnip", priority = 2 },
-        { name = "buffer", max_item_count = 5 },
+        -- { name = "buffer", max_item_count = 5 },
         { name = "path", max_item_count = 5 },
         { name = "nvim_lua" },
         { name = "crates" },
