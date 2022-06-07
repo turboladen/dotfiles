@@ -26,37 +26,6 @@ command_exists() {
   command -v "$the_command" >/dev/null 2>&1
 }
 
-install_ruby() {
-  log "-----------------------------------------------------------------------"
-  log "Setting up Ruby..."
-  log "-----------------------------------------------------------------------"
-  if [ -f "$(brew --prefix)/bin/ruby-install" ]; then
-    rubies_count=`ls $HOME/.rubies | wc -l`
-
-    if [ $rubies_count = 0 ]; then
-      log "Installing Ruby..."
-      ruby-install ruby -- --enable-shared || log_and_exit "Couldn't ruby-install ruby"
-    fi
-  else
-    info "Couldn't find ruby-install. Skipping installation of Ruby."
-    return 1
-  fi
-
-  if [[ ! -f "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh" ]]; then
-    info "Couldn't find chruby. Skipping installation of gems."
-    return 1
-  fi
-
-  source "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh"
-  chruby ruby
-  # Some of these are used in vim...
-  gem install bundler solargraph rubocop hairballs neovim debride reek sorbet
-
-  log "-----------------------------------------------------------------------"
-  log "Done with Ruby."
-  log "-----------------------------------------------------------------------"
-}
-
 install_rust() {
   log "-----------------------------------------------------------------------"
   log "Installing Rust..."
@@ -85,28 +54,6 @@ install_rust() {
   log "-----------------------------------------------------------------------"
 }
 
-setup_develop_dirs() {
-  log "-----------------------------------------------------------------------"
-  log "Setting up development directories..."
-  log "-----------------------------------------------------------------------"
-  make_dir() {
-    if [ ! -d "$1" ]; then
-      info "Making directory: $1"
-      mkdir "$1"
-    else
-      info "'$1' already exists; skipping."
-      return 0
-    fi
-  }
-
-  make_dir ~/Development
-  make_dir ~/Development/projects
-  make_dir ~/Development/not_my_projects
-  log "-----------------------------------------------------------------------"
-  log "Done."
-  log "-----------------------------------------------------------------------"
-}
-
 setup_neovim() {
   log "-----------------------------------------------------------------------"
   log "Setting up neovim..."
@@ -129,7 +76,7 @@ setup_neovim() {
     info "pip2 not found; skipping neovim install"
   fi
 
-  if $needs_pip_install; then
+  if "$needs_pip_install"; then
     if command_exists pip; then
       info "Installing neovim python-client for pip"
       pip install neovim proselint vim-vint
@@ -141,9 +88,9 @@ setup_neovim() {
   if [ -d "$HOME/.config/nvim" ]; then
     packer_destination=~/.local/share/nvim/site/pack/packer/start/packer.nvim
 
-    if [ ! -d $packer_destination ]; then
+    if [ ! -d "$packer_destination" ]; then
       info "Installing packer.nvim..."
-      git clone --depth 1 https://github.com/wbthomason/packer.nvim $packer_destination
+      git clone --depth 1 https://github.com/wbthomason/packer.nvim "$packer_destination"
     else
       info "packer.nvim already installed."
     fi
@@ -182,16 +129,16 @@ pull_git_repos() {
     repo_name=$1
     local_path="$HOME/Development/agrian/$1"
 
-    if [ ! -d $local_path ]; then
+    if [ ! -d "$local_path" ]; then
       repo_url="ssh://git@github.com/agrian-inc/$1"
       info "Pulling git repo: $repo_url"
-      git clone $repo_url $local_path
+      git clone "$repo_url" "$local_path"
     else
       info "Repo already cloned at: $local_path"
     fi
   }
 
-  if [ $answer = "y" ]; then
+  if [ "$answer" = "y" ]; then
     pull_repo agrian_resources
     pull_repo agrian_types
     pull_repo agrian_units
@@ -237,10 +184,10 @@ download_iterm2_color_schemes() {
     file_name="$name.itermcolors"
     local_path="$HOME/Downloads/$file_name"
 
-    if [ ! -e $local_path ]; then
+    if [ ! -e "$local_path" ]; then
       url="https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/schemes/$file_name"
       info "Downloading '$url' to '$local_path'..."
-      /bin/bash -c "$(curl --fail --silent --show-error --location --tcp-fastopen --http2 --compressed -o $local_path $url)"
+      /bin/bash -c "$(curl --fail --silent --show-error --location --tcp-fastopen --http2 --compressed -o "$local_path" "$url")"
     else
       info "'$name' already downloaded to '$local_path'."
     fi
@@ -286,18 +233,8 @@ print_next_steps() {
 #------------------------------------------------------------------------------
 # Do the things
 #------------------------------------------------------------------------------
-system_type=$(uname -s)
-
 happy_cd "$HOME"
 
-if [ "$system_type" = "Darwin" ]; then
-  install_homebrew
-  install_homebrew_packages
-fi
-
-setup_tmux
-install_ruby
-setup_develop_dirs
 setup_neovim
 install_rust
 install_zr

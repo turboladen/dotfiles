@@ -1,31 +1,46 @@
-pub(crate) mod app;
-pub(crate) mod os_package_manager;
-
 #[cfg(target_os = "macos")]
-mod homebrew;
-mod tmux;
+mod macos;
 
-use std::{
-    fmt::Display,
-    process::{Command, Stdio},
-};
+#[cfg(target_os = "linux")]
+mod ubuntu;
 
-use self::{app::App, os_package_manager::OsPackageManager};
+mod setup_development_directories;
+
 use log::LevelFilter;
 use simplelog::{ColorChoice, Config, TermLogger, TerminalMode};
+use stromboli::{
+    actions::Action,
+    apps::app::Tmux,
+    install::{IdempotentInstallWithLogging, IsInstalled},
+    languages::version_manager::{RubyInstall, VersionManager},
+    os_package_managers::OsPackageManager,
+    NewPluginManager,
+};
 
+use self::setup_development_directories::SetupDevelopmentDirectories;
+
+// NOTES:
+// * macOS
+//      * We install chruby, ruby-install using homebrew, so don't install those.
 fn main() -> anyhow::Result<()> {
     init_logging();
 
-    if cfg!(target_os = "macos") {
-        homebrew::Homebrew::check_and_install()?;
-    }
+    let bootstrapper = bootstrapper();
+    let os_package_manager = bootstrapper.os_package_manager();
+    bootstrapper.install_os_packages(&os_package_manager)?;
 
-    tmux::Tmux::check_and_install()?;
+    bootstrapper.setup_tmux()?;
+    let ruby_install = bootstrapper.setup_ruby_version_managers()?;
+    bootstrapper.setup_ruby(&ruby_install)?;
 
-    log_header("Done done.");
+    bootstrapper.setup_development_directories()?;
 
     Ok(())
+}
+
+#[cfg(target_os = "macos")]
+fn bootstrapper() -> impl Bootstrapper {
+    macos::MacOS
 }
 
 fn init_logging() {
@@ -38,61 +53,49 @@ fn init_logging() {
     .unwrap();
 }
 
-pub(crate) trait LogHeader {
-    fn log_header<T: Display>(msg: T);
-}
+pub(crate) trait Bootstrapper {
+    type PackageManager: OsPackageManager;
 
-pub(crate) fn log_group<T, F, O>(group_name: T, f: F) -> anyhow::Result<O>
-where
-    T: Display,
-    F: Fn() -> Result<O, anyhow::Error>,
-{
-    log_header(format!("[{}]", group_name));
-    let output = f()?;
-    log_header(format!("[{}] Done.", group_name));
+    fn os_package_manager(&self) -> Self::PackageManager {
+        Self::PackageManager::default()
+    }
 
-    Ok(output)
-}
+    fn install_os_packages(&self, package_manager: &Self::PackageManager) -> anyhow::Result<()> {
+        package_manager.install_all_packages_with_logging()?;
+        Ok(())
+    }
 
-pub(crate) fn log_install<T, F, O>(group_name: T, f: F) -> anyhow::Result<O>
-where
-    T: Display,
-    F: Fn() -> Result<O, anyhow::Error>,
-{
-    log_header(format!("[{}]...", group_name));
-    let output = f()?;
-    log_header(format!("[{}] Done installing.", group_name));
+    fn setup_tmux(&self) -> anyhow::Result<()> {
+        let tmux = Tmux::default();
 
-    Ok(output)
-}
-
-pub(crate) fn log_header<T: Display>(inner: T) {
-    log_dashed_line();
-    log::info!("{inner}");
-    log_dashed_line();
-}
-
-pub(crate) fn log_dashed_line() {
-    log::info!("-----------------------------------------------------------------------");
-}
-
-pub(crate) fn command_exists(the_command: &str) -> bool {
-    log::info!("Checking for `{the_command}`...");
-
-    let c = Command::new("command")
-        .arg("-v")
-        .arg(the_command)
-        .stdout(Stdio::null())
-        .spawn();
-
-    match c {
-        Ok(_) => {
-            log::info!("`{the_command}` exists.");
-            true
+        if !tmux.is_installed() {
+            return Err(stromboli::Error::NotInstalled("tmux".to_string()).into());
         }
-        Err(_) => {
-            log::error!("`{the_command}` not found.");
-            false
-        }
+
+        let tpm = tmux.new_plugin_manager();
+        tpm.idempotent_install_with_logging()?;
+        Ok(())
+    }
+
+    fn setup_ruby_version_managers(&self) -> anyhow::Result<RubyInstall>;
+
+    fn setup_ruby(&self, version_manager: &RubyInstall) -> anyhow::Result<()> {
+        version_manager.install_language_version([
+            "--no-reinstall",
+            "ruby",
+            "--",
+            "--enable-shared",
+        ])?;
+
+        Ok(())
+    }
+
+    fn setup_development_directories(&self) -> anyhow::Result<()> {
+        SetupDevelopmentDirectories::default().act()?;
+        Ok(())
+    }
+
+    fn setup_extras(&self) -> anyhow::Result<()> {
+        Ok(())
     }
 }
