@@ -40,6 +40,7 @@ return require("packer").startup({
         "p00f/nvim-ts-rainbow",
         "JoosepAlviste/nvim-ts-context-commentstring",
         "tpope/vim-commentary", -- <- for ^^
+        "andymass/vim-matchup"
       },
       config = GetSetup("nvim-treesitter"),
     })
@@ -47,7 +48,8 @@ return require("packer").startup({
     -- Lightweight alternative to context.vim implemented with nvim-treesitter.
     use({
       "romgrk/nvim-treesitter-context",
-      disable = disable_treesitter,
+      -- disable = disable_treesitter,
+      disable = true,
       requires = { "nvim-treesitter/nvim-treesitter" },
       config = GetSetup("nvim-treesitter-context"),
     })
@@ -62,12 +64,12 @@ return require("packer").startup({
       "hrsh7th/nvim-cmp",
       requires = {
         "neovim/nvim-lspconfig",
-        "nvim-lua/lsp-status.nvim",
-        -- https://github.com/onsails/lspkind-nvim
-        "onsails/lspkind-nvim",
         -- nvim-cmp source for neovim builtin LSP client.
         -- https://github.com/hrsh7th/cmp-nvim-lsp
         "hrsh7th/cmp-nvim-lsp",
+        "nvim-lua/lsp-status.nvim",
+        -- https://github.com/onsails/lspkind-nvim
+        "onsails/lspkind-nvim",
         -- VSCode(LSP)'s snippet feature in vim.
         -- https://github.com/hrsh7th/vim-vsnip
         "hrsh7th/vim-vsnip",
@@ -75,12 +77,12 @@ return require("packer").startup({
         "hrsh7th/cmp-vsnip",
         "rafamadriz/friendly-snippets",
         -- https://github.com/hrsh7th/cmp-buffer
-        "hrsh7th/cmp-buffer",
+        -- "hrsh7th/cmp-buffer",
         -- https://github.com/hrsh7th/cmp-path
         "hrsh7th/cmp-path",
         -- nvim-cmp source for neovim Lua API.
         -- https://github.com/hrsh7th/cmp-nvim-lua
-        "hrsh7th/cmp-nvim-lua",
+        -- "hrsh7th/cmp-nvim-lua",
         "saecki/crates.nvim",
         "lukas-reineke/cmp-rg",
       },
@@ -99,6 +101,11 @@ return require("packer").startup({
       "TimUntersberger/neogit",
       requires = "nvim-lua/plenary.nvim",
       config = GetSetup("neogit"),
+    })
+
+    use({
+      "kdheepak/lazygit.nvim",
+      -- config = GetSetup("neogit"),
     })
 
     -- https://github.com/lewis6991/spellsitter.nvim
@@ -145,6 +152,35 @@ return require("packer").startup({
       end,
     })
 
+    use({ "code-biscuits/nvim-biscuits", requires = "nvim-treesitter/nvim-treesitter", config = function()
+      -- local icon = ""
+      local icon = ""
+
+      require("nvim-biscuits").setup({
+        toggle_keybind = "<leader>cb",
+        show_on_start = true,
+        cursor_line_only = true,
+        default_config = {
+          max_distance = 25,
+          prefix_string = " " .. icon .. " ",
+        },
+        -- language_config = {
+        --   ruby = {
+        --     prefix_string = " ✨ ",
+        --     max_length = 80
+        --   }
+        -- }
+      })
+    end })
+
+    use({
+      "yamatsum/nvim-nonicons",
+      requires = { "kyazdani42/nvim-web-devicons" }
+    })
+
+    -- Neovim plugin to improve the default vim.ui interfaces
+    use('stevearc/dressing.nvim')
+
     -----------------------------------------------------------------------------
     -- 2. moving around, searching and patterns
     -----------------------------------------------------------------------------
@@ -155,6 +191,7 @@ return require("packer").startup({
     -- https://github.com/tpope/vim-unimpaired
     use("tpope/vim-unimpaired")
 
+    -- Vim plugin, provides insert mode auto-completion for quotes, parens, brackets, etc.
     use("Raimondi/delimitMate")
 
     -- match-up is a plugin that lets you highlight, navigate, and operate on sets
@@ -170,7 +207,9 @@ return require("packer").startup({
     -- Directory viewer for Vim
     -- https://github.com/justinmk/vim-dirvish
     use("justinmk/vim-dirvish")
-    use({ "kristijanhusak/vim-dirvish-git", requires = { "justinmk/vim-dirvish" } })
+
+    -- Show git status of each file
+    use({ "kristijanhusak/vim-dirvish-git", requires = "justinmk/vim-dirvish" })
 
     -- Change code right in the quickfix window
     -- https://github.com/stefandtw/quickfix-reflector.vim
@@ -198,7 +237,7 @@ return require("packer").startup({
     use({ "sainnhe/edge", disable = true, config = GetSetup("edge") })
 
     -- https://github.com/savq/melange
-    use("savq/melange")
+    use({ "savq/melange", disable = true })
 
     -- https://github.com/EdenEast/nightfox.nvim
     use({ "EdenEast/nightfox.nvim", disable = true, config = GetSetup("nightfox-nvim") })
@@ -268,6 +307,16 @@ return require("packer").startup({
       config = GetSetup("Comment-nvim"),
     })
 
+    -- A better annotation generator.
+    -- https://github.com/danymat/neogen
+    use({
+      "danymat/neogen",
+      config = function()
+        require("neogen").setup({})
+      end,
+      requires = "nvim-treesitter/nvim-treesitter"
+    })
+
     -- quoting/parenthesizing made simple
     -- https://github.com/tpope/vim-surround
     use("tpope/vim-surround")
@@ -319,20 +368,18 @@ return require("packer").startup({
     -- run your tests at the speed of thought
     -- https://github.com/vim-test/vim-test
     -- https://github.com/voldikss/vim-floaterm
-    use({
-      "vim-test/vim-test",
-      requires = { "tpope/vim-dispatch", "voldikss/vim-floaterm" },
-      cmd = { "TestNearest", "TestFile", "TestSuite", "TestLast", "TestVisit", "Ultest" },
-      config = GetSetup("vim-test"),
-    })
+    -- use({
+    --   "vim-test/vim-test",
+    --   requires = { "tpope/vim-dispatch", "voldikss/vim-floaterm" },
+    --   cmd = { "TestNearest", "TestFile", "TestSuite", "TestLast", "TestVisit", "Ultest" },
+    --   config = GetSetup("vim-test"),
+    -- })
 
     use({
-      "rcarriga/vim-ultest",
-      disable = true,
-      requires = "vim-test/vim-test",
-      run = ":UpdateRemotePlugins",
-      cmd = { "Ultest", "UltestSummary" },
-      config = GetSetup("vim-ultest"),
+      "klen/nvim-test",
+      config = function()
+        require('nvim-test').setup({})
+      end
     })
 
     --===========================================================================
@@ -383,6 +430,10 @@ return require("packer").startup({
     use({
       "rhysd/committia.vim",
       config = GetSetup("committia-vim"),
+    })
+
+    use({
+      "Joorem/vim-haproxy", opt = true, ft = { "haproxy" }
     })
 
     ------------------
@@ -499,20 +550,10 @@ return require("packer").startup({
         "nvim-lua/plenary.nvim",
         "mfussenegger/nvim-dap",
         "nvim-lua/lsp-status.nvim",
-        -- "hood/popui.nvim",
-        -- "nvim-telescope/telescope-ui-select.nvim",
       },
       after = "nvim-lspconfig",
       config = GetSetup("rust-tools-nvim"),
     })
-
-    -- use({
-    --     "hood/popui.nvim",
-    --     requires = {
-    --         "RishabhRD/popfix",
-    --     },
-    --     config = GetSetup("popui-nvim"),
-    -- })
 
     -- https://github.com/nvim-telescope/telescope.nvim
     -- https://github.com/nvim-telescope/telescope-github.nvim
@@ -525,7 +566,6 @@ return require("packer").startup({
         "nvim-treesitter/nvim-treesitter",
         "nvim-telescope/telescope-github.nvim",
         "nvim-telescope/telescope-symbols.nvim",
-        -- "nvim-telescope/telescope-ui-select.nvim",
       },
       -- cmd = "Telescope",
       config = GetSetup("telescope-nvim"),
@@ -538,13 +578,18 @@ return require("packer").startup({
       config = GetSetup("trouble-nvim"),
     })
 
+    use({
+      "olimorris/persisted.nvim",
+      config = GetSetup("persisted-nvim")
+    })
+
     -- A small automated session manager for Neovim
     -- https://github.com/rmagatti/auto-session
-    use({
-      "rmagatti/auto-session",
-      requires = "Asheq/close-buffers.vim",
-      config = GetSetup("auto-session"),
-    })
+    -- use({
+    --   "rmagatti/auto-session",
+    --   requires = "Asheq/close-buffers.vim",
+    --   config = GetSetup("auto-session"),
+    -- })
   end,
   config = {
     max_jobs = 20,
