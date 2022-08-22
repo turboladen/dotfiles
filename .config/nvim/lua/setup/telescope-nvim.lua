@@ -70,17 +70,17 @@ local yadm_files = function()
   }):find()
 end
 
-vim.api.nvim_set_keymap(
+vim.keymap.set(
   "n",
   "<leader>fn",
-  "<cmd>lua require('setup/telescope-nvim').nvim_config_files()<CR>",
+  nvim_config_files,
   { noremap = true, silent = true }
 )
 
-vim.api.nvim_set_keymap(
+vim.keymap.set(
   "n",
   "<leader>fy",
-  "<cmd>lua require('setup/telescope-nvim').yadm_files()<CR>",
+  yadm_files,
   { noremap = true, silent = true }
 )
 

@@ -8,6 +8,15 @@ return require("packer").startup({
   function(use)
     -- https://github.com/wbthomason/packer.nvim
     use({ "wbthomason/packer.nvim", config = GetSetup("packer") })
+    use('lewis6991/impatient.nvim')
+
+    use({
+      "williamboman/mason.nvim",
+      config = function()
+        require("mason").setup()
+      end
+    })
+    use("williamboman/mason-lspconfig.nvim")
 
     -----------------------------------------------------------------------------
     -- 0.
@@ -65,21 +74,19 @@ return require("packer").startup({
       requires = {
         "neovim/nvim-lspconfig",
         -- nvim-cmp source for neovim builtin LSP client.
-        -- https://github.com/hrsh7th/cmp-nvim-lsp
         "hrsh7th/cmp-nvim-lsp",
+        "hrsh7th/cmp-nvim-lsp-signature-help",
+        "hrsh7th/cmp-vsnip",
+        "hrsh7th/cmp-path",
         "nvim-lua/lsp-status.nvim",
         -- https://github.com/onsails/lspkind-nvim
         "onsails/lspkind-nvim",
         -- VSCode(LSP)'s snippet feature in vim.
         -- https://github.com/hrsh7th/vim-vsnip
         "hrsh7th/vim-vsnip",
-        -- https://github.com/hrsh7th/vim-vsnip
-        "hrsh7th/cmp-vsnip",
         "rafamadriz/friendly-snippets",
         -- https://github.com/hrsh7th/cmp-buffer
         -- "hrsh7th/cmp-buffer",
-        -- https://github.com/hrsh7th/cmp-path
-        "hrsh7th/cmp-path",
         -- nvim-cmp source for neovim Lua API.
         -- https://github.com/hrsh7th/cmp-nvim-lua
         -- "hrsh7th/cmp-nvim-lua",
@@ -96,16 +103,9 @@ return require("packer").startup({
       config = GetSetup("gitsigns-nvim"),
     })
 
-    -- https://github.com/TimUntersberger/neogit
-    use({
-      "TimUntersberger/neogit",
-      requires = "nvim-lua/plenary.nvim",
-      config = GetSetup("neogit"),
-    })
-
     use({
       "kdheepak/lazygit.nvim",
-      -- config = GetSetup("neogit"),
+      config = GetSetup("lazygit-nvim"),
     })
 
     -- https://github.com/lewis6991/spellsitter.nvim
@@ -362,19 +362,20 @@ return require("packer").startup({
       cmd = { "Delete", "Unlink", "Move", "Rename", "Remove", "Mkdir" },
     })
 
+    use({
+      "voldikss/vim-floaterm",
+      config = function()
+        -- vim.keymap.set("n", "<leader>ff",
+        --   "<cmd>FloatermNew --name=myfloat --height=0.8 --width=0.7 --autoclose=2 zsh <CR>")
+
+        vim.keymap.set("n", "t", "<cmd>FloatermToggle myfloat<CR>")
+        vim.keymap.set('t', "<Esc>", "<C-\\><C-n>:q<CR>")
+      end
+    })
+
     --===========================================================================
     -- 22. running make and jumping to errors (quickfix)
     --===========================================================================
-    -- run your tests at the speed of thought
-    -- https://github.com/vim-test/vim-test
-    -- https://github.com/voldikss/vim-floaterm
-    -- use({
-    --   "vim-test/vim-test",
-    --   requires = { "tpope/vim-dispatch", "voldikss/vim-floaterm" },
-    --   cmd = { "TestNearest", "TestFile", "TestSuite", "TestLast", "TestVisit", "Ultest" },
-    --   config = GetSetup("vim-test"),
-    -- })
-
     use({
       "klen/nvim-test",
       config = function()
@@ -385,41 +386,6 @@ return require("packer").startup({
     --===========================================================================
     -- 23. language specific
     --===========================================================================
-    -- A solid language pack for Vim.
-    -- https://github.com/sheerun/vim-polyglot
-    -- use {
-    --     "sheerun/vim-polyglot",
-    --     requires = {
-    --         "godlygeek/tabular"
-    --     },
-    --     config = function()
-    --         -- vim-json
-    --         vim.g.vim_json_syntax_conceal = false
-
-    --         -- vim-markdown
-    --         vim.g.vim_markdown_folding_disabled = 1
-    --         vim.g.vim_markdown_conceal = 0
-    --         vim.g.vim_markdown_follow_anchor = 1
-    --         vim.g.vim_markdown_new_list_item_indent = 2
-    --         vim.g.vim_markdown_no_default_key_mappings = 1
-    --         vim.g.vim_markdown_strikethrough = 1
-
-    --         -- vim-ruby
-    --         vim.g.ruby_operators = 1
-    --         vim.g.ruby_spellcheck_strings = 1
-    --         vim.g.ruby_space_errors = 1
-
-    --         vim.g.rubycomplete_buffer_loading = 1
-    --         vim.g.rubycomplete_classes_in_global = 1
-    --         vim.g.rubycomplete_load_gemfile = 1
-
-    --         -- vim-yardoc
-    --         -- vim.cmd("hi link yardGenericTag rubyInstanceVariable")
-    --         -- vim.cmd("hi link yardTypeList rubyConstant")
-    --         -- vim.cmd("hi link yardType rubyConstant")
-    --     end
-    -- }
-
     use({ "ekalinin/Dockerfile.vim" })
 
     ------------------
@@ -582,14 +548,6 @@ return require("packer").startup({
       "olimorris/persisted.nvim",
       config = GetSetup("persisted-nvim")
     })
-
-    -- A small automated session manager for Neovim
-    -- https://github.com/rmagatti/auto-session
-    -- use({
-    --   "rmagatti/auto-session",
-    --   requires = "Asheq/close-buffers.vim",
-    --   config = GetSetup("auto-session"),
-    -- })
   end,
   config = {
     max_jobs = 20,

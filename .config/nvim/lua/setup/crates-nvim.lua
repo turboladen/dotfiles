@@ -10,17 +10,20 @@
 -- nnoremap <silent> <leader>cU :lua require('crates').upgrade_crate()<cr>
 -- vnoremap <silent> <leader>cU :lua require('crates').upgrade_crates()<cr>
 -- nnoremap <silent> <leader>cA :lua require('crates').upgrade_all_crates()<cr>
-require("crates").setup()
+local crates = require("crates")
+
+crates.setup()
 
 local opts = { noremap = true, silent = true }
 
-vim.api.nvim_set_keymap("n", "<leader>ct", '<cmd>lua require("crates").toggle()<CR>', opts)
-vim.api.nvim_set_keymap("n", "<leader>cr", '<cmd>lua require("crates").reload()<CR>', opts)
-vim.api.nvim_set_keymap("n", "<leader>cv", '<cmd>lua require("crates").show_versions_popup()<CR>', opts)
-vim.api.nvim_set_keymap("n", "<leader>cf", '<cmd>lua require("crates").show_features_popup()<CR>', opts)
+vim.keymap.set("n", "<leader>ct", crates.toggle, opts)
+vim.keymap.set("n", "<leader>cr", crates.reload, opts)
+vim.keymap.set("n", "<leader>cv", crates.show_versions_popup, opts)
+vim.keymap.set("n", "<leader>cf", crates.show_features_popup, opts)
 
 vim.api.nvim_exec([[
-augroup crates
-autocmd FileType toml nnoremap <silent> K :lua require('crates').show_popup()<CR>
-augroup END
-]], false)
+  augroup crates
+  autocmd FileType toml nnoremap <silent> K :lua require('crates').show_popup()<CR>
+  augroup END
+]],
+  false)

@@ -4,11 +4,11 @@ vim.g.material_style = "oceanic"
 -- vim.g.material_style = "palenight"
 -- vim.g.material_style = "lighter"
 require("material").setup(
-    {
-        borders = true,
-        italics = {
-            comments = false
-        }
+  {
+    borders = true,
+    italics = {
+      comments = false
     }
+  }
 )
 -- vim.cmd [[colorscheme material]]

@@ -2,7 +2,7 @@ local cmp = require("cmp")
 
 cmp.setup({
   completion = {
-      keyword_length = 1,
+    keyword_length = 1,
   },
   formatting = {
     format = require("lspkind").cmp_format(),
@@ -16,11 +16,15 @@ cmp.setup({
     ["<Up>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
     ["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
     ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
-    ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
-    ["<CR>"] = cmp.mapping({
-      i = cmp.mapping.confirm({ select = true }),
-      c = cmp.mapping.confirm({ select = true }),
-    }),
+    ["<C-Space>"] = cmp.mapping(cmp.mapping.complete({}), { "i", "c" }),
+    -- ["<CR>"] = cmp.mapping({
+    --   i = cmp.mapping.confirm({ select = true }),
+    --   c = cmp.mapping.confirm({ select = true }),
+    -- }),
+    ["<CR>"] = cmp.mapping.confirm({
+      behavior = cmp.ConfirmBehavior.Insert,
+      select = true
+    })
     -- ["<C-CR>"] = cmp.mapping(
     --     {
     --         i = cmp.mapping.confirm({select = true, benavior = cmp.SelectBehavior.Replace}),
@@ -42,16 +46,19 @@ cmp.setup({
   sources = cmp.config.sources({
     -- { name = "nvim_lsp", priority = 6 },
     { name = "nvim_lsp" },
+    { name = "nvim_lsp_signature_help" },
     -- { name = "vsnip", priority = 2 },
-    { name = "vsnip" },
+    { name = "vsnip", keyword_length = 2 },
     -- { name = "buffer", max_item_count = 5 },
     -- { name = "path", max_item_count = 5 },
     { name = "path" },
-    -- { name = "nvim_lua" },
+    { name = "nvim_lua", keyword_length = 2 },
     { name = "crates" },
+    { name = "calc" },
     -- { name = "rg" },
   }),
   window = {
+    completion = cmp.config.window.bordered(),
     documentation = cmp.config.window.bordered()
   }
 })

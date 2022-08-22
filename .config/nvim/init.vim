@@ -11,6 +11,8 @@ let g:python3_host_prog = g:turboladen_homebrew_prefix . '/bin/python3'
 let g:mapleader = ' '
 let g:maplocalleader = ' '
 
+let g:loaded_perl_provider = 0
+
 lua << RUST
 local ffi = require("ffi")
 
@@ -28,6 +30,7 @@ RUST
 " 0. Load packer stuff first
 ""===========================================================================""
 lua require('plugins')
+lua require('impatient')
 
 " Reload after saving this so I can PluginInstall.
 " augroup plugins_reloader
@@ -41,6 +44,7 @@ lua require('plugins')
 " set breakat=90
 " set conceallevel=0
 
+set guifont=JetBrainsMono\ Nerd\ Font:h14
 colorscheme kanagawa
 " colorscheme codeschool
 " colorscheme edge
