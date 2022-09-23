@@ -8,6 +8,7 @@ local liblldb_path = extension_path .. "lldb/lib/liblldb.dylib"
 -- https://github.com/simrat39/rust-tools.nvim#configuration
 local rust_tools_opts = {
   tools = {
+    executor = require("rust-tools/executors").termopen,
     crate_graph = {
       full = false,
       backend = "png",
@@ -21,7 +22,7 @@ local rust_tools_opts = {
   -- these override the defaults set by rust-tools.nvim
   -- see https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#rust_analyzer
   server = {
-    on_attach = require("turboladen.lsp").make_on_attach("rust_analyzer"),
+    on_attach = require("turboladen.lsp.make_on_attach").for_rust,
     capabilities = require("turboladen.lsp").make_capabilities(),
     settings = {
       -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc

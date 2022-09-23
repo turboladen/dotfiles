@@ -18,121 +18,18 @@ local function hover()
   end
 end
 
--- Use an on_attach function to only map the following keys
--- after the language server attaches to the current buffer
-local function make_on_attach(server_name)
-  return function(client, bufnr)
-    local aerial = require("aerial")
-    aerial.on_attach(client, bufnr)
-
-    local function buf_set_keymap(...)
-      vim.api.nvim_buf_set_keymap(bufnr, ...)
-    end
-
-    local function buf_set_option(...)
-      vim.api.nvim_buf_set_option(bufnr, ...)
-    end
-
-    -- Enable completion triggered by <c-x><c-o>
-    buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
-
-    -- Mappings.
-    local opts = { noremap = true, silent = true }
-
-    -- Aerial does not set any mappings by default, so you'll want to set some up
-    -- Toggle the aerial window with <leader>a
-    buf_set_keymap("n", "<leader>aa", "<cmd>AerialToggle!<CR>", opts)
-
-    -- Jump forwards/backwards with '{' and '}'
-    buf_set_keymap("n", "{", "<cmd>AerialPrev<CR>", opts)
-    buf_set_keymap("n", "}", "<cmd>AerialNext<CR>", opts)
-
-    -- Jump up the tree with '[[' or ']]'
-    buf_set_keymap("n", "[[", "<cmd>AerialPrevUp<CR>", opts)
-    buf_set_keymap("n", "]]", "<cmd>AerialNextUp<CR>", opts)
-
-    buf_set_keymap("n", "<leader>at", "<cmd>ArealTreeToggle<CR>", opts)
-    buf_set_keymap("n", "<leader>ao", "<cmd>ArealTreeOpenAll<CR>", opts)
-
-    -- See `:help vim.lsp.*` for documentation on any of the below functions
-    buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-    buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-
-    if server_name == "rust_analyzer" then
-      vim.keymap.set("n", "K", require("rust-tools").hover_actions.hover_actions, { buffer = bufnr })
-    else
-      buf_set_keymap("n", "K", "<cmd>lua require('turboladen/lsp').hover()<CR>", opts)
-    end
-
-    buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-    buf_set_keymap("n", "<C-s>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-
-    buf_set_keymap("n", "<leader>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
-    buf_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-
-    -- buf_set_keymap("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-    -- if server_name == "rust_analyzer" then
-    --     buf_set_keymap("n", "<leader>ca", "<cmd>RustCodeAction<CR>", opts)
-    --     buf_set_keymap("v", "<leader>ca", "<cmd>RustCodeAction<CR>", opts)
-    -- else
-    -- buf_set_keymap("n", "<leader>ca", "<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
-    -- buf_set_keymap("v", "<leader>ca", "<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
-    buf_set_keymap("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-    buf_set_keymap("v", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-    vim.keymap.set("n", "<Leader>a", require("rust-tools").code_action_group.code_action_group, { buffer = bufnr })
-    -- end
-    buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-    -- buf_set_keymap("n", "gr", "<cmd>lua require('telescope.builtin').lsp_references()<CR>", opts)
-    buf_set_keymap("n", "<leader>e", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
-    buf_set_keymap("n", "[g", "<cmd>lua vim.diagnostic.goto_prev()<CR>", opts)
-    buf_set_keymap("n", "]g", "<cmd>lua vim.diagnostic.goto_next()<CR>", opts)
-    buf_set_keymap("n", "<leader>q", "<cmd>lua vim.diagnostic.setloclist()<CR>", opts)
-    -- buf_set_keymap("n", "<leader>ff", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-    if server_name == "rust_analyzer" then
-      buf_set_keymap("n", "<leader>ff", "<cmd>RustFmt<CR>", opts)
-    else
-      buf_set_keymap("n", "<leader>ff", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-    end
-
-    buf_set_keymap("n", "<leader>so", [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]], opts)
-    buf_set_keymap(
-      "n",
-      "<leader>sw",
-      [[<cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>]],
-      opts
-    )
-
-    if server_name == "rust_analyzer" then
-      buf_set_keymap("n", "gJ", "<cmd>RustJoinLines<CR>", opts)
-    end
-
-    -- if server_name == "solargraph" then
-    -- client.resolved_capabilities.document_formatting = false
-    -- client.resolved_capabilities.document_range_formatting = false
-    -- end
-
-    vim.api.nvim_exec([[
-    augroup lsp_formatting
-    autocmd BufWritePre * lua vim.lsp.buf.formatting_sync(nil, 1000)
-    augroup END
-    ]], false)
-
-    require("fidget").setup({})
-  end
-end
-
 local function make_flags()
   return {
     debounce_text_changes = 350,
   }
 end
 
-local function make_lua_cmd()
-  -- brew install lua-language-server
-  local sumneko_binary = require("turboladen/homebrew").prefix() .. "/bin/lua-language-server"
+-- local function make_lua_cmd()
+--   -- brew install lua-language-server
+--   local sumneko_binary = require("turboladen/homebrew").prefix() .. "/bin/lua-language-server"
 
-  return { sumneko_binary }
-end
+--   return { sumneko_binary }
+-- end
 
 local function make_lua_settings()
   local runtime_path = vim.split(package.path, ";")
@@ -176,14 +73,14 @@ local function setup_lsp()
   local capabilities = make_capabilities()
   local flags = make_flags()
 
-  -- lspconfig.solargraph.setup({
-  --   init_options = {
-  --     documentFormatting = true
-  --   },
-  --   capabilities = capabilities,
-  --   on_attach = make_on_attach("solargraph"),
-  --   flags = flags
-  -- })
+  lspconfig.solargraph.setup({
+    init_options = {
+      documentFormatting = true
+    },
+    capabilities = capabilities,
+    on_attach = require("turboladen.lsp.make_on_attach").for_any,
+    flags = flags
+  })
 
   -- lspconfig.steep.setup({
   --   capabilities = capabilities,
@@ -198,7 +95,7 @@ local function setup_lsp()
   require("clangd_extensions").setup({
     server = {
       capabilities = capabilities,
-      on_attach = make_on_attach("clangd"),
+      on_attach = require("turboladen.lsp.make_on_attach").for_any,
       flags = flags,
       default_config = {
         cmd = { "clangd", "--enable-config", "--clang-tidy", "--background-index" }
@@ -212,9 +109,9 @@ local function setup_lsp()
   })
 
   lspconfig.sumneko_lua.setup({
-    cmd = make_lua_cmd(),
+    -- cmd = make_lua_cmd(),
     capabilities = capabilities,
-    on_attach = make_on_attach("sumneko_lua"),
+    on_attach = require("turboladen.lsp.make_on_attach").for_any,
     flags = flags,
     settings = make_lua_settings(),
   })
@@ -223,14 +120,31 @@ local function setup_lsp()
   -- https://github.com/regen100/cmake-language-server
   lspconfig.cmake.setup({
     capabilities = capabilities,
-    on_attach = make_on_attach("cmake"),
+    on_attach = require("turboladen.lsp.make_on_attach").for_any,
   })
 
   -- npm install -g dockerfile-language-server-nodejs
   -- https://github.com/rcjsuen/dockerfile-language-server-nodejs
   lspconfig.dockerls.setup({
     capabilities = capabilities,
-    on_attach = make_on_attach("dockerls"),
+    on_attach = require("turboladen.lsp.make_on_attach").for_any,
+  })
+
+  -- lspconfig.ember.setup({
+  --   capabilities = capabilities,
+  --   on_attach = make_on_attach("ember"),
+  --   flags = flags
+  -- })
+
+  -- lspconfig.tsserver.setup({
+  --   capabilities = capabilities,
+  --   on_attach = make_on_attach("tsserver"),
+  --   flags = flags
+  -- })
+  lspconfig.denols.setup({
+    capabilities = capabilities,
+    on_attach = require("turboladen.lsp.make_on_attach").for_any,
+    flags = flags
   })
 
   -- npm i -g vscode-langservers-extracted
@@ -240,20 +154,20 @@ local function setup_lsp()
 
   lspconfig.html.setup({
     capabilities = html_capabilities,
-    on_attach = make_on_attach("html"),
+    on_attach = require("turboladen.lsp.make_on_attach").for_any,
   })
   local json_capabilities = capabilities
   json_capabilities.textDocument.completion.completionItem.snippetSupport = true
 
   lspconfig.jsonls.setup({
     capabilities = json_capabilities,
-    on_attach = make_on_attach("jsonls"),
+    on_attach = require("turboladen.lsp.make_on_attach").for_any,
   })
 
   -- cargo install taplo-cli
   lspconfig.taplo.setup({
     capabilities = capabilities,
-    on_attach = make_on_attach("taplo"),
+    on_attach = require("turboladen.lsp.make_on_attach").for_any,
   })
 
   -- gem install typeprof
@@ -267,14 +181,14 @@ local function setup_lsp()
   -- https://github.com/iamcco/vim-language-server
   lspconfig.vimls.setup({
     capabilities = capabilities,
-    on_attach = make_on_attach("vimls"),
+    on_attach = require("turboladen.lsp.make_on_attach").for_any,
   })
 
   -- yarn global add yaml-language-server
   -- https://github.com/redhat-developer/yaml-language-server
   lspconfig.yamlls.setup({
     capabilities = capabilities,
-    on_attach = make_on_attach("yamlls"),
+    on_attach = require("turboladen.lsp.make_on_attach").for_any,
     settings = {
       yaml = {
         schemaStore = {
@@ -291,7 +205,7 @@ local function setup_lsp()
       documentFormatting = true
     },
     capabilities = capabilities,
-    on_attach = make_on_attach("efm"),
+    on_attach = require("turboladen.lsp.make_on_attach").for_any,
     filetypes = {
       "bash",
       "markdown",

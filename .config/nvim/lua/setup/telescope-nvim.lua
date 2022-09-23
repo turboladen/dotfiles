@@ -27,12 +27,11 @@ telescope.setup({
   },
 })
 
--- telescope-github.nvim
-telescope.load_extension("gh")
-telescope.load_extension("persisted")
-
 local nvim_config_files = function()
-  require("telescope.builtin").find_files({ cwd = "~/.config/nvim" })
+  require("telescope.builtin").find_files({
+    cwd = "~/.config/nvim",
+    prompt_title = "Find neovim config files"
+  })
 end
 
 -- Function for defining a telescope picker over all the files that I manage using yadm.io.

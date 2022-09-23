@@ -12,11 +12,37 @@ return require("packer").startup({
 
     use({
       "williamboman/mason.nvim",
+      requires = {
+        "williamboman/mason-lspconfig.nvim"
+      },
       config = function()
         require("mason").setup()
+        require("mason-lspconfig").setup({
+          automatic_installation = true,
+          ensure_installed = {
+            "bashls", -- bash
+            "clangd", -- C/C++
+            "cmake",
+            "deno",
+            "dockerls",
+            "efm", -- general purpose LS
+            -- "ember",
+            "emmet", -- HTML fanciness
+            "html",
+            "jsonls",
+            "rust_analyzer",
+            "sorbet", -- ruby types
+            "sumneko_lua",
+            "taplo", -- TOML
+            "terraformls",
+            -- "tsserver",
+            "vimls",
+            "yamlls",
+            "zk", -- zk notes, markdown
+          }
+        })
       end
     })
-    use("williamboman/mason-lspconfig.nvim")
 
     -----------------------------------------------------------------------------
     -- 0.
@@ -103,10 +129,7 @@ return require("packer").startup({
       config = GetSetup("gitsigns-nvim"),
     })
 
-    use({
-      "kdheepak/lazygit.nvim",
-      config = GetSetup("lazygit-nvim"),
-    })
+    use({ "kdheepak/lazygit.nvim" })
 
     -- https://github.com/lewis6991/spellsitter.nvim
     -- Enable Neovim's builtin spellchecker for buffers with tree-sitter highlighting.
@@ -126,7 +149,7 @@ return require("packer").startup({
 
     use({
       "saecki/crates.nvim",
-      tag = "v0.1.0",
+      tag = "v0.2.1",
       requires = { "nvim-lua/plenary.nvim" },
       event = { "BufRead Cargo.toml" },
       config = GetSetup("crates-nvim"),
@@ -376,16 +399,45 @@ return require("packer").startup({
     --===========================================================================
     -- 22. running make and jumping to errors (quickfix)
     --===========================================================================
+    -- use({
+    --   "klen/nvim-test",
+    --   config = function()
+    --     require('nvim-test').setup({})
+    --   end
+    -- })
     use({
-      "klen/nvim-test",
+      "nvim-neotest/neotest",
+      requires = {
+        "nvim-lua/plenary.nvim",
+        "nvim-treesitter/nvim-treesitter",
+        "antoinemadec/FixCursorHold.nvim",
+        "olimorris/neotest-rspec",
+        "rouge8/neotest-rust"
+      },
       config = function()
-        require('nvim-test').setup({})
+        local neotest = require("neotest")
+
+        neotest.setup({
+          adapters = {
+            require('neotest-rspec'),
+            require("neotest-rust")
+          }
+        })
+
+        vim.keymap.set("n", "<leader>tn", "neotest.run.run()")
+        vim.keymap.set("n", "<leader>tf", "neotest.run.run(vim.fn.expand('%'))")
+        vim.keymap.set("n", "<leader>td", "neotest.run.run({strategy = 'dap'})")
       end
     })
 
     --===========================================================================
     -- 23. language specific
     --===========================================================================
+    use({
+      "sheerun/vim-polyglot",
+      config = GetSetup("vim-markdown")
+    })
+
     use({ "ekalinin/Dockerfile.vim" })
 
     ------------------
@@ -398,30 +450,39 @@ return require("packer").startup({
       config = GetSetup("committia-vim"),
     })
 
-    use({
-      "Joorem/vim-haproxy", opt = true, ft = { "haproxy" }
-    })
+    -- use({
+    --   "Joorem/vim-haproxy", opt = true, ft = { "haproxy" }
+    -- })
 
     ------------------
     -- HTML
     ------------------
     -- emmet for vim
-    use({ "mattn/emmet-vim", opt = true, ft = { "html", "html.*" } })
+    use({ "mattn/emmet-vim", opt = true, ft = { "html" } })
+
+    ------------------
+    -- handlebars
+    ------------------
+    -- use({
+    --   "mustache/vim-mustache-handlebars",
+    --   opt = true,
+    --   ft = { "html.handlebars", "handlebars", "mustache" }
+    -- })
 
     ------------------
     -- just
     ------------------
-    use({ "NoahTheDuke/vim-just" })
+    -- use({ "NoahTheDuke/vim-just" })
 
     ------------------
     -- markdown
     ------------------
-    use({ "plasticboy/vim-markdown", config = GetSetup("vim-markdown") })
+    -- use({ "plasticboy/vim-markdown", config = GetSetup("vim-markdown") })
 
     ------------------
     -- Ruby
     ------------------
-    use({ "vim-ruby/vim-ruby", ft = { "ruby", "eruby", "rspec" } })
+    -- use({ "vim-ruby/vim-ruby", ft = { "ruby", "eruby", "rspec" } })
 
     -- Ruby on Rails power tools
     use({ "tpope/vim-rails", ft = { "ruby", "eruby", "rspec" } })
@@ -441,13 +502,13 @@ return require("packer").startup({
     -- Rust
     ------------------
     -- https://github.com/rust-lang/rust.vim
-    use({ "rust-lang/rust.vim", ft = "rust" })
+    -- use({ "rust-lang/rust.vim", ft = "rust" })
 
     ------------------
     -- tmux
     ------------------
     -- Syntax, navigation, building
-    use("tmux-plugins/vim-tmux")
+    -- use("tmux-plugins/vim-tmux")
 
     -- Restores `FocusGained` and `FocusLost` autocommand events work when using
     -- vim inside Tmux.
@@ -530,7 +591,6 @@ return require("packer").startup({
         "nvim-lua/plenary.nvim",
         "kyazdani42/nvim-web-devicons",
         "nvim-treesitter/nvim-treesitter",
-        "nvim-telescope/telescope-github.nvim",
         "nvim-telescope/telescope-symbols.nvim",
       },
       -- cmd = "Telescope",
@@ -542,11 +602,6 @@ return require("packer").startup({
       "folke/trouble.nvim",
       requires = "kyazdani42/nvim-web-devicons",
       config = GetSetup("trouble-nvim"),
-    })
-
-    use({
-      "olimorris/persisted.nvim",
-      config = GetSetup("persisted-nvim")
     })
   end,
   config = {
