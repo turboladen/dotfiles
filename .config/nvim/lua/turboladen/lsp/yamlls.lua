@@ -1,6 +1,9 @@
+--
+-- https://github.com/redhat-developer/yaml-language-server
+-- yarn global add yaml-language-server
+-- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#yamlls
+--
 local function setup(lspconfig, base_capabilities)
-  -- yarn global add yaml-language-server
-  -- https://github.com/redhat-developer/yaml-language-server
   -- Stole schemastore config from https://github.com/b0o/SchemaStore.nvim/issues/9#issuecomment-1140321123
   local json_schemas = require('schemastore').json.schemas {}
   local yaml_schemas = {}

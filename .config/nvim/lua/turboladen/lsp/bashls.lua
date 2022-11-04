@@ -1,13 +1,9 @@
---
--- https://github.com/soutaro/steep
--- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#steep
---
+-- https://github.com/bash-lsp/bash-language-server
 local function setup(lspconfig, base_capabilities)
-  lspconfig.steep.setup({
+  lspconfig.bashls.setup({
     capabilities = base_capabilities,
     on_attach = require("turboladen.lsp.make_on_attach").for_any,
   })
-
 end
 
 return {

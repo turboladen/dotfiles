@@ -1,3 +1,7 @@
+--
+-- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#tsserver
+-- https://github.com/theia-ide/typescript-language-server
+--
 local function setup(lspconfig, base_capabilities)
   lspconfig.tsserver.setup({
     capabilities = base_capabilities,

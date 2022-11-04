@@ -39,6 +39,10 @@ local function make_lua_settings()
   }
 end
 
+--
+-- https://github.com/sumneko/lua-language-server
+-- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#sumneko_lua
+--
 local function setup(lspconfig, base_capabilities)
   lspconfig.sumneko_lua.setup({
     -- cmd = make_lua_cmd(),

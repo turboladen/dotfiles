@@ -1,3 +1,7 @@
+--
+-- https://github.com/ruby/typeprof
+-- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#typeprof
+--
 local function setup(lspconfig, base_capabilities)
   -- gem install typeprof
   lspconfig.typeprof.setup({

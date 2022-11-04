@@ -1,3 +1,7 @@
+--
+-- https://github.com/hrsh7th/vscode-langservers-extracted
+-- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#jsonls
+--
 local function setup(lspconfig, base_capabilities)
   local json_capabilities = base_capabilities
   json_capabilities.textDocument.completion.completionItem.snippetSupport = true
