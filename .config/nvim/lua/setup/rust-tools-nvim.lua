@@ -8,7 +8,6 @@ local liblldb_path = extension_path .. "lldb/lib/liblldb.dylib"
 -- https://github.com/simrat39/rust-tools.nvim#configuration
 local rust_tools_opts = {
   tools = {
-    executor = require("rust-tools/executors").termopen,
     crate_graph = {
       full = false,
       backend = "png",
