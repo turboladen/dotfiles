@@ -6,6 +6,10 @@ scriptencoding utf-8
 " Set the global var for this
 lua require('turboladen/homebrew').prefix()
 
+" let node_host_path = '/Users/steve.loveless/.nvm/versions/node/v16.16.0/bin'
+" let $PATH = node_host_path . ':' . $PATH
+" let g:node_host_prog = node_host_path . '/node'
+let g:node_host_prog = 'Users/steve.loveless/.nvm/versions/node/v16.16.0/lib/node_modules'
 let g:python_host_prog = g:turboladen_homebrew_prefix . '/bin/python2'
 let g:python3_host_prog = g:turboladen_homebrew_prefix . '/bin/python3'
 let g:mapleader = ' '
