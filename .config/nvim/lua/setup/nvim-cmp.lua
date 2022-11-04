@@ -47,8 +47,8 @@ cmp.setup({
     -- { name = "nvim_lsp", priority = 6 },
     { name = "nvim_lsp" },
     { name = "nvim_lsp_signature_help" },
-    -- { name = "vsnip", priority = 2 },
     { name = "vsnip", keyword_length = 2 },
+    -- { name = "ultisnips", keyword_length = 2 },
     -- { name = "buffer", max_item_count = 5 },
     -- { name = "path", max_item_count = 5 },
     { name = "path" },
@@ -62,3 +62,8 @@ cmp.setup({
     documentation = cmp.config.window.bordered()
   }
 })
+
+-- https://github.com/rafamadriz/friendly-snippets#add-snippets-from-a-framework-to-a-filetype
+vim.g.vsnip_filetypes = {
+  ruby = { "rails" }
+}
