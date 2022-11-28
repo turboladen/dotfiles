@@ -3,7 +3,7 @@
 
 # Disable specific steps - same options as the command line flag
 #disable = ["system", "emacs"]
-disable = ["gem"]
+disable = ["gem", "node"]
 
 # Ignore failures for these steps
 #ignore_failures = ["powershell"]
@@ -39,9 +39,9 @@ disable = ["gem"]
 #max_concurrency = 5
 # Additional git repositories to pull
 repos = [
-#    "~/src/*/",
-#    "~/.config/something"
-	"~/Development/projects/init.rs/"
+	#    "~/src/*/",
+	#    "~/.config/something"
+	"~/Development/projects/init.rs/",
 ]
 
 # Don't pull the predefined git repos
