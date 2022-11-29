@@ -23,6 +23,9 @@ local rust_tools_opts = {
   server = {
     on_attach = require("turboladen.lsp.make_on_attach").for_rust,
     capabilities = require("turboladen.lsp").make_capabilities(),
+    flags = {
+      debounce_text_changes = 350
+    },
     settings = {
       -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
       ["rust-analyzer"] = {

@@ -1,7 +1,6 @@
 require("aerial").setup(
   {
     filter_kind = false,
-    attach_mode = "global",
     on_attach = function(bufnr)
       local opts = { noremap = true, silent = true, buffer = bufnr }
 

@@ -7,17 +7,26 @@ require("gitsigns").setup({
   },
   yadm = { enable = true },
   on_attach = function(bufnr)
-    -- local gs = package.loaded.gitsigns
+    local gs = package.loaded.gitsigns
 
     local function map(mode, l, r, opts)
       opts = opts or {}
-      vim.api.nvim_buf_set_keymap(bufnr, mode, l, r, opts)
-      -- vim.keymap.set(mode, l, r, opts)
+      opts.buffer = bufnr
+      vim.keymap.set(mode, l, r, opts)
     end
 
     -- Navigation
-    map("n", "]c", "&diff ? ']c' : '<cmd>Gitsigns next_hunk<CR>'", { expr = true })
-    map("n", "[c", "&diff ? '[c' : '<cmd>Gitsigns prev_hunk<CR>'", { expr = true })
+    map('n', ']c', function()
+      if vim.wo.diff then return ']c' end
+      vim.schedule(function() gs.next_hunk() end)
+      return '<Ignore>'
+    end, { expr = true })
+
+    map('n', '[c', function()
+      if vim.wo.diff then return '[c' end
+      vim.schedule(function() gs.prev_hunk() end)
+      return '<Ignore>'
+    end, { expr = true })
 
     -- Actions
     -- map({ "n", "v" }, "<leader>hs", ":Gitsigns stage_hunk<CR>")

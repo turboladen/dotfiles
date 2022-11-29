@@ -18,6 +18,7 @@ local function setup(lspconfig, base_capabilities)
       "sh",
       "text",
       "yaml",
+      "yaml.docker-compose",
       "zsh",
     }
   })

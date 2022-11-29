@@ -5,7 +5,7 @@ local function setup(lspconfig, base_capabilities)
     default_config = {
       name = "ruby_analyzer";
       -- cmd = { '/Users/steve.loveless/Development/projects/meowtown/target/release/meowtown' };
-      cmd = { '/Users/steve.loveless/Development/projects/ruby_analyzer/target/debug/meowtown' };
+      cmd = { '/Users/steve.loveless/Development/projects/ruby_analzyer/target/debug/ruby_analyzer' };
       filetypes = { "ruby" };
       root_dir = function(fname)
         return lspconfig.util.find_git_ancestor(fname)
@@ -15,7 +15,7 @@ local function setup(lspconfig, base_capabilities)
 
   lspconfig.ruby_analyzer.setup({
     capabilities = base_capabilities,
-    on_attach = require("turboladen.lsp.make_on_attach").with_formatting,
+    on_attach = require("turboladen.lsp.make_on_attach").for_any,
   })
 end
 

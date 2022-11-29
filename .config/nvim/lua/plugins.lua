@@ -1,4 +1,4 @@
-function GetSetup(name)
+local function GetSetup(name)
   return string.format('require("setup/%s")', name)
 end
 
@@ -6,118 +6,95 @@ local disable_treesitter = false
 
 return require("packer").startup({
   function(use)
-    -- https://github.com/wbthomason/packer.nvim
-    use({ "wbthomason/packer.nvim", config = GetSetup("packer") })
+    use({
+      "wbthomason/packer.nvim",
+      config = GetSetup("packer"),
+    })
+    -- Improve startup time for Neovim
     use('lewis6991/impatient.nvim')
 
+    -- ⏲️ A Vim plugin for profiling Vim's startup time.
+    use('dstein64/vim-startuptime')
+
+    -- Portable package manager for Neovim that runs everywhere Neovim runs.
     use({
       "williamboman/mason.nvim",
       requires = {
-        "williamboman/mason-lspconfig.nvim"
+        "williamboman/mason-lspconfig.nvim",
+        "neovim/nvim-lspconfig",
       },
-      config = function()
-        require("mason").setup()
-        require("mason-lspconfig").setup({
-          automatic_installation = true,
-          ensure_installed = {
-            "bashls", -- bash
-            "clangd", -- C/C++
-            "cmake",
-            "deno",
-            "dockerls",
-            "efm", -- general purpose LS
-            -- "ember",
-            "emmet", -- HTML fanciness
-            "html",
-            "jsonls",
-            "rust_analyzer",
-            "sorbet", -- ruby types
-            "sumneko_lua",
-            "taplo", -- TOML
-            "terraformls",
-            -- "tsserver",
-            "vimls",
-            "yamlls",
-            "zk", -- zk notes, markdown
-          }
-        })
-      end
+      config = GetSetup("mason-nvim")
     })
 
     -----------------------------------------------------------------------------
     -- 0.
     -----------------------------------------------------------------------------
     -- Enable repeating supported plugin maps with '.'
-    -- https://github.com/tpope/vim-repeat
     use("tpope/vim-repeat")
 
     -- This plugin is a replacement for the included filetype.vim that is sourced on startup.
     -- https://github.com/nathom/filetype.nvim
     use({ "nathom/filetype.nvim" })
 
-    -- use({ "jamestthompson3/nvim-remote-containers" })
+    -- Open the current word with custom openers, GitHub shorthands for example.
+    use({
+      'ofirgall/open.nvim',
+      requires = 'nvim-lua/plenary.nvim',
+      config = GetSetup("open-nvim")
+    })
 
     ------------------------------------------------------------------------------
     -- UI tweaks
     ------------------------------------------------------------------------------
     -- Treesitter configurations and abstraction layer for Neovim.
-    -- https://github.com/nvim-treesitter/nvim-treesitter
-    -- https://github.com/p00f/nvim-ts-rainbow
-    -- 🌈 Rainbow parentheses for neovim using tree-sitter 🌈
-    -- Neovim treesitter plugin for setting the commentstring based on
-    -- the cursor location in a file.
-    -- https://github.com/JoosepAlviste/nvim-ts-context-commentstring
+    --
+    -- nvim-ts-rainbow: 🌈 Rainbow parentheses for neovim using tree-sitter 🌈
+    -- nvim-ts-context-commentstring: Neovim treesitter plugin for setting the commentstring based on the cursor location in a file.
+    -- nvim-treesitter-context: Show code context
+    -- commentary.vim: comment stuff out
+    --
     use({
       "nvim-treesitter/nvim-treesitter",
       disable = disable_treesitter,
       run = ":TSUpdate",
       requires = {
-        "p00f/nvim-ts-rainbow",
         "JoosepAlviste/nvim-ts-context-commentstring",
         "tpope/vim-commentary", -- <- for ^^
-        "andymass/vim-matchup"
+        "andymass/vim-matchup",
+        "nvim-treesitter/nvim-treesitter-context",
+        "p00f/nvim-ts-rainbow",
       },
       config = GetSetup("nvim-treesitter"),
     })
 
     -- Lightweight alternative to context.vim implemented with nvim-treesitter.
     use({
-      "romgrk/nvim-treesitter-context",
-      -- disable = disable_treesitter,
-      disable = true,
+      "nvim-treesitter/nvim-treesitter-context",
+      disable = disable_treesitter,
       requires = { "nvim-treesitter/nvim-treesitter" },
       config = GetSetup("nvim-treesitter-context"),
     })
 
     -- Enhanced terminal integration for Vim.
-    -- https://github.com/wincent/terminus
     use("wincent/terminus")
 
     -- A completion plugin for neovim coded in Lua.
-    -- https://github.com/hrsh7th/nvim-cmp
     use({
       "hrsh7th/nvim-cmp",
       requires = {
-        "neovim/nvim-lspconfig",
-        -- nvim-cmp source for neovim builtin LSP client.
+        "SirVer/ultisnips",
+        "honza/vim-snippets",
         "hrsh7th/cmp-nvim-lsp",
         "hrsh7th/cmp-nvim-lsp-signature-help",
-        "hrsh7th/cmp-vsnip",
+        "hrsh7th/cmp-nvim-lua",
         "hrsh7th/cmp-path",
-        "nvim-lua/lsp-status.nvim",
-        -- https://github.com/onsails/lspkind-nvim
-        "onsails/lspkind-nvim",
-        -- VSCode(LSP)'s snippet feature in vim.
-        -- https://github.com/hrsh7th/vim-vsnip
-        "hrsh7th/vim-vsnip",
-        "rafamadriz/friendly-snippets",
-        -- https://github.com/hrsh7th/cmp-buffer
-        -- "hrsh7th/cmp-buffer",
-        -- nvim-cmp source for neovim Lua API.
-        -- https://github.com/hrsh7th/cmp-nvim-lua
-        -- "hrsh7th/cmp-nvim-lua",
-        "saecki/crates.nvim",
         "lukas-reineke/cmp-rg",
+        "neovim/nvim-lspconfig",
+        "nvim-lua/lsp-status.nvim",
+        "nvim-treesitter/nvim-treesitter",
+        "onsails/lspkind-nvim",
+        "quangnguyen30192/cmp-nvim-ultisnips",
+        "saecki/crates.nvim",
       },
       config = GetSetup("nvim-cmp"),
     })
@@ -129,76 +106,63 @@ return require("packer").startup({
       config = GetSetup("gitsigns-nvim"),
     })
 
+    -- Plugin for calling lazygit from within neovim.
     use({ "kdheepak/lazygit.nvim" })
 
-    -- https://github.com/lewis6991/spellsitter.nvim
-    -- Enable Neovim's builtin spellchecker for buffers with tree-sitter highlighting.
-    use({ "lewis6991/spellsitter.nvim", config = GetSetup("spellsitter-nvim") })
-
     -- Distraction-free writing in Vim.
-    -- https://github.com/junegunn/goyo.vim
-    use({ "junegunn/goyo.vim", config = GetSetup("goyo-vim"), cmd = "Goyo" })
+    use({
+      "junegunn/goyo.vim",
+      config = GetSetup("goyo-vim"),
+      cmd = "Goyo",
+    })
 
     -- A good looking and efficient status line.
-    -- https://github.com/datwaft/bubbly.nvim
     use({
       "datwaft/bubbly.nvim",
       requires = "nvim-lua/lsp-status.nvim",
       config = GetSetup("bubbly-nvim"),
     })
 
+    -- A neovim plugin that helps managing crates.io dependencies
     use({
       "saecki/crates.nvim",
-      tag = "v0.2.1",
+      tag = "v0.3.0",
       requires = { "nvim-lua/plenary.nvim" },
       event = { "BufRead Cargo.toml" },
       config = GetSetup("crates-nvim"),
     })
 
+    -- ✍️ All the npm/yarn commands I don't want to type
+    use({
+      "vuki656/package-info.nvim",
+      requires = "MunifTanjim/nui.nvim",
+      config = GetSetup("package-info-nvim")
+    })
+
     -- Highlight and search for todo comments like TODO, HACK, BUG in your code base.
-    -- https://github.com/folke/todo-comments.nvim
     use({
       "folke/todo-comments.nvim",
       requires = "nvim-lua/plenary.nvim",
-      config = function()
-        require("todo-comments").setup({})
-      end,
+      config = GetSetup("todo-comments-nvim")
     })
 
     -- Prismatic line decorations for the adventurous vim user
-    -- https://github.com/mvllow/modes.nvim
     use({
       "mvllow/modes.nvim",
-      config = function()
-        vim.opt.cursorline = true
-        require("modes").setup()
-      end,
+      config = GetSetup("modes-nvim")
     })
 
-    use({ "code-biscuits/nvim-biscuits", requires = "nvim-treesitter/nvim-treesitter", config = function()
-      -- local icon = ""
-      local icon = ""
-
-      require("nvim-biscuits").setup({
-        toggle_keybind = "<leader>cb",
-        show_on_start = true,
-        cursor_line_only = true,
-        default_config = {
-          max_distance = 25,
-          prefix_string = " " .. icon .. " ",
-        },
-        -- language_config = {
-        --   ruby = {
-        --     prefix_string = " ✨ ",
-        --     max_length = 80
-        --   }
-        -- }
-      })
-    end })
+    -- A neovim port of Assorted Biscuits.
+    use({
+      "code-biscuits/nvim-biscuits",
+      requires = "nvim-treesitter/nvim-treesitter",
+      config = GetSetup("nvim-biscuits")
+    })
 
     use({
       "yamatsum/nvim-nonicons",
-      requires = { "kyazdani42/nvim-web-devicons" }
+      requires = { "kyazdani42/nvim-web-devicons" },
+      config = GetSetup("nvim-nonicons")
     })
 
     -- Neovim plugin to improve the default vim.ui interfaces
@@ -208,10 +172,13 @@ return require("packer").startup({
     -- 2. moving around, searching and patterns
     -----------------------------------------------------------------------------
     -- Use RipGrep in Vim and display results in a quickfix list
-    use({ "jremmen/vim-ripgrep", command = "Rg", config = GetSetup("vim-ripgrep") })
+    use({
+      "jremmen/vim-ripgrep",
+      command = "Rg",
+      config = GetSetup("vim-ripgrep")
+    })
 
     -- pairs of handy bracket mappings
-    -- https://github.com/tpope/vim-unimpaired
     use("tpope/vim-unimpaired")
 
     -- Vim plugin, provides insert mode auto-completion for quotes, parens, brackets, etc.
@@ -220,26 +187,25 @@ return require("packer").startup({
     -- match-up is a plugin that lets you highlight, navigate, and operate on sets
     -- of matching text. It extends vim's % key to language-specific words instead
     -- of just single characters.
-    -- https://github.com/andymass/vim-matchup
     use({
       "andymass/vim-matchup",
-      event = "VimEnter",
       config = GetSetup("vim-matchup"),
     })
 
     -- Directory viewer for Vim
-    -- https://github.com/justinmk/vim-dirvish
     use("justinmk/vim-dirvish")
 
     -- Show git status of each file
     use({ "kristijanhusak/vim-dirvish-git", requires = "justinmk/vim-dirvish" })
 
     -- Change code right in the quickfix window
-    -- https://github.com/stefandtw/quickfix-reflector.vim
     use("stefandtw/quickfix-reflector.vim")
 
-    -- https://github.com/kevinhwang91/nvim-hlslens
-    use({ "kevinhwang91/nvim-hlslens" })
+    -- Hlsearch Lens for Neovim
+    use({
+      "kevinhwang91/nvim-hlslens",
+      config = GetSetup("nvim-hlslens")
+    })
 
     -- Extensible Neovim Scrollbar
     use({
@@ -253,42 +219,45 @@ return require("packer").startup({
     ----------------------------------------
     -- colorschemes
     ----------------------------------------
-    -- https://github.com/rebelot/kanagawa.nvim
-    use("rebelot/kanagawa.nvim")
+    local disable_extra_themes = false
 
-    use({ "aonemd/kuroi.vim", disable = true })
-    use({ "sainnhe/edge", disable = true, config = GetSetup("edge") })
-
-    -- https://github.com/savq/melange
-    use({ "savq/melange", disable = true })
-
-    -- https://github.com/EdenEast/nightfox.nvim
-    use({ "EdenEast/nightfox.nvim", disable = true, config = GetSetup("nightfox-nvim") })
-
-    -- https://github.com/rakr/vim-one
-    use({ "rakr/vim-one", config = GetSetup("vim-one") })
-
-    -- https://github.com/adisen99/codeschool.nvim
+    -- NeoVim dark colorscheme inspired by the colors of the famous painting by Katsushika Hokusai.
     use({
-      "adisen99/codeschool.nvim",
-      requires = { "rktjmp/lush.nvim" },
-      disable = true,
-      config = GetSetup("codeschool-nvim"),
+      "rebelot/kanagawa.nvim",
+      disable = disable_extra_themes
     })
 
     use({
+      "aonemd/kuroi.vim",
+      disable = disable_extra_themes,
+    })
+
+    use({
+      "EdenEast/nightfox.nvim",
+      disable = disable_extra_themes,
+      config = GetSetup("nightfox-nvim"),
+    })
+
+    use({
+      "navarasu/onedark.nvim",
+      disable = disable_extra_themes,
+      config = GetSetup("onedark-nvim")
+    })
+
+    -- NOTE: To enable this, edit the setup file.
+    use({
       "sainnhe/everforest",
+      disable = disable_extra_themes,
       config = GetSetup("everforest"),
     })
 
-    -- https://github.com/marko-cerovac/material.nvim
+    -- NOTE: To enable this, edit the setup file.
     use({
       "marko-cerovac/material.nvim",
       config = GetSetup("material-nvim"),
     })
 
     -- Hyperfocus-writing in Vim
-    -- https://github.com/junegunn/limelight.vim
     use({
       "junegunn/limelight.vim",
       cmd = "Limelight",
@@ -296,7 +265,6 @@ return require("packer").startup({
     })
 
     -- Show vertical line for indentation level
-    -- https://github.com/lukas-reineke/indent-blankline.nvim
     use({
       "lukas-reineke/indent-blankline.nvim",
       config = GetSetup("indent-blankline-nvim"),
@@ -306,128 +274,133 @@ return require("packer").startup({
     -- 6. multiple windows
     --===========================================================================
     -- Delete all the buffers except the current/named buffer
-    use({ "vim-scripts/BufOnly.vim", cmd = "BufOnly" })
+    use({
+      "vim-scripts/BufOnly.vim",
+      cmd = "BufOnly",
+    })
 
     --===========================================================================
     -- 13. editing text
     --===========================================================================
     -- Closes brackets. Perfect companion to vim-endwise. Basically, a more
     -- conservative version of auto-pairs that only works when you press Enter.
-    -- https://github.com/rstacruz/vim-closer
     -- use({
     --   "rstacruz/vim-closer",
     --   requires = "tpope/vim-endwise",
     --   ft = { "sh", "zsh", "bash", "c", "cpp", "cmake", "html", "markdown", "vim", "ruby"}
     -- })
-    use({ "steelsojka/pears.nvim" })
 
-    -- https://github.com/tpope/vim-endwise
-    use({ "tpope/vim-endwise" })
+    -- Auto close parentheses and repeat by dot dot dot...
+    use("cohama/lexima.vim")
 
-    -- https://github.com/numToStr/Comment.nvim
+    -- Wisely add
+    use("tpope/vim-endwise")
+
+    -- 🧠 💪 // Smart and powerful comment plugin for neovim.
     use({
       "numToStr/Comment.nvim",
       config = GetSetup("Comment-nvim"),
     })
 
     -- A better annotation generator.
-    -- https://github.com/danymat/neogen
     use({
       "danymat/neogen",
-      config = function()
-        require("neogen").setup({})
-      end,
-      requires = "nvim-treesitter/nvim-treesitter"
+      requires = "nvim-treesitter/nvim-treesitter",
+      config = GetSetup("neogen"),
     })
 
     -- quoting/parenthesizing made simple
-    -- https://github.com/tpope/vim-surround
     use("tpope/vim-surround")
 
     -- Adds gS and gJ to split/join code blocks.
-    -- https://github.com/AndrewRadev/splitjoin.vim
     use("AndrewRadev/splitjoin.vim")
 
+    use({
+      'Wansmer/treesj',
+      requires = { 'nvim-treesitter' },
+      config = GetSetup("treesj")
+    })
+
     -- Easy text exchange operator
-    -- https://github.com/tommcdo/vim-exchange
     use("tommcdo/vim-exchange")
 
     -- Protect against weird unicode copy/paste
-    -- https://github.com/vim-utils/vim-troll-stopper
     use({
       "vim-utils/vim-troll-stopper",
       config = GetSetup("vim-troll-stopper"),
     })
 
     -- For case swapping
-    -- https://github.com/idanarye/vim-casetrate
     use({
       "idanarye/vim-casetrate",
       cmd = "Casetrate",
     })
 
     -- Vim script for text filtering and alignment
-    -- https://github.com/godlygeek/tabular
-    use({ "godlygeek/tabular", cmd = "Tabularize" })
+    use({
+      "godlygeek/tabular",
+      cmd = "Tabularize",
+    })
 
     --===========================================================================
     -- 21. executing external commands
     --===========================================================================
-    -- Asynchronous build and test dispatcher. Used for running specs in a separate
-    -- tmux pane.
-    -- https://github.com/tpope/vim-dispatch
-    use({ "tpope/vim-dispatch", cmd = { "Dispatch", "Make", "Focus", "Start" } })
-
-    -- Vim sugar for the UNIX shell commands that need it the most
-    -- https://github.com/tpope/vim-eunuch
+    -- Asynchronous build and test dispatcher. Used for running specs in a separate tmux pane.
     use({
-      "tpope/vim-eunuch",
-      cmd = { "Delete", "Unlink", "Move", "Rename", "Remove", "Mkdir" },
+      "tpope/vim-dispatch",
+      config = GetSetup("vim-dispatch"),
+      cmd = {
+        "AbortDispatch",
+        "Copen",
+        "Copen!",
+        "Dispatch",
+        "Dispatch!",
+        "FocusDispatch",
+        "FocusDispatch!",
+        "Make",
+        "Make!",
+        "Spawn",
+        "Spawn!",
+        "Start",
+        "Start!",
+      },
     })
 
+    -- Vim sugar for the UNIX shell commands that need it the most
+    use({
+      "tpope/vim-eunuch",
+      cmd = {
+        "Chmod",
+        "Delete",
+        "Delete!",
+        "Mkdir",
+        "Move",
+        "Remove",
+        "Remove!",
+        "Rename",
+        "Unlink",
+      },
+    })
+
+    -- 🌟 Terminal manager for (neo)vim
     use({
       "voldikss/vim-floaterm",
-      config = function()
-        -- vim.keymap.set("n", "<leader>ff",
-        --   "<cmd>FloatermNew --name=myfloat --height=0.8 --width=0.7 --autoclose=2 zsh <CR>")
-
-        vim.keymap.set("n", "t", "<cmd>FloatermToggle myfloat<CR>")
-        vim.keymap.set('t', "<Esc>", "<C-\\><C-n>:q<CR>")
-      end
+      config = GetSetup("vim-floaterm")
     })
 
     --===========================================================================
     -- 22. running make and jumping to errors (quickfix)
     --===========================================================================
-    -- use({
-    --   "klen/nvim-test",
-    --   config = function()
-    --     require('nvim-test').setup({})
-    --   end
-    -- })
     use({
       "nvim-neotest/neotest",
       requires = {
+        "antoinemadec/FixCursorHold.nvim",
         "nvim-lua/plenary.nvim",
         "nvim-treesitter/nvim-treesitter",
-        "antoinemadec/FixCursorHold.nvim",
         "olimorris/neotest-rspec",
         "rouge8/neotest-rust"
       },
-      config = function()
-        local neotest = require("neotest")
-
-        neotest.setup({
-          adapters = {
-            require('neotest-rspec'),
-            require("neotest-rust")
-          }
-        })
-
-        vim.keymap.set("n", "<leader>tn", "neotest.run.run()")
-        vim.keymap.set("n", "<leader>tf", "neotest.run.run(vim.fn.expand('%'))")
-        vim.keymap.set("n", "<leader>td", "neotest.run.run({strategy = 'dap'})")
-      end
+      config = GetSetup("neotest")
     })
 
     --===========================================================================
@@ -444,15 +417,10 @@ return require("packer").startup({
     -- Git
     ------------------
     -- A Vim plugin for more pleasant editing on commit messages
-    -- https://github.com/rhysd/committia.vim
     use({
       "rhysd/committia.vim",
       config = GetSetup("committia-vim"),
     })
-
-    -- use({
-    --   "Joorem/vim-haproxy", opt = true, ft = { "haproxy" }
-    -- })
 
     ------------------
     -- HTML
@@ -461,29 +429,22 @@ return require("packer").startup({
     use({ "mattn/emmet-vim", opt = true, ft = { "html" } })
 
     ------------------
-    -- handlebars
-    ------------------
-    -- use({
-    --   "mustache/vim-mustache-handlebars",
-    --   opt = true,
-    --   ft = { "html.handlebars", "handlebars", "mustache" }
-    -- })
-
-    ------------------
-    -- just
-    ------------------
-    -- use({ "NoahTheDuke/vim-just" })
-
-    ------------------
     -- markdown
     ------------------
     -- use({ "plasticboy/vim-markdown", config = GetSetup("vim-markdown") })
+    use({
+      'toppair/peek.nvim',
+      run = 'deno task --quiet build:fast',
+      config = function()
+        require("peek").setup({})
+        vim.api.nvim_create_user_command('PeekOpen', require('peek').open, {})
+        vim.api.nvim_create_user_command('PeekClose', require('peek').close, {})
+      end
+    })
 
     ------------------
     -- Ruby
     ------------------
-    -- use({ "vim-ruby/vim-ruby", ft = { "ruby", "eruby", "rspec" } })
-
     -- Ruby on Rails power tools
     use({ "tpope/vim-rails", ft = { "ruby", "eruby", "rspec" } })
 
@@ -499,17 +460,8 @@ return require("packer").startup({
     use({ "turboladen/vim-rbs", ft = { "ruby", "rbs", "ruby.rbs", "rspec" } })
 
     ------------------
-    -- Rust
-    ------------------
-    -- https://github.com/rust-lang/rust.vim
-    -- use({ "rust-lang/rust.vim", ft = "rust" })
-
-    ------------------
     -- tmux
     ------------------
-    -- Syntax, navigation, building
-    -- use("tmux-plugins/vim-tmux")
-
     -- Restores `FocusGained` and `FocusLost` autocommand events work when using
     -- vim inside Tmux.
     use("tmux-plugins/vim-tmux-focus-events")
@@ -522,23 +474,21 @@ return require("packer").startup({
     --===========================================================================
     -- 25. various
     --===========================================================================
-    -- plenary: full; complete; entire; absolute; unqualified. All the lua
-    -- functions I don't want to write twice.
-    -- https://github.com/nvim-lua/plenary.nvim/
-    use("nvim-lua/plenary.nvim")
-
+    -- Debug Adapter Protocol client implementation for Neovim
     use({
       "mfussenegger/nvim-dap",
       requires = "nvim-lua/plenary.nvim",
       config = GetSetup("nvim-dap"),
     })
 
+    -- A UI for nvim-dap
     use({
       "rcarriga/nvim-dap-ui",
       requires = "mfussenegger/nvim-dap",
       config = GetSetup("nvim-dap-ui"),
     })
 
+    -- This plugin adds virtual text support to nvim-dap.
     use({
       "theHamsta/nvim-dap-virtual-text",
       requires = {
@@ -549,55 +499,68 @@ return require("packer").startup({
       config = GetSetup("nvim-dap-virtual-text"),
     })
 
-    -- https://github.com/nvim-lua/lsp-status.nvim
+    -- Quickstart configs for Nvim LSP
     use({
       "neovim/nvim-lspconfig",
       requires = {
-        "nvim-lua/lsp-status.nvim",
-        "stevearc/aerial.nvim",
+        "b0o/schemastore.nvim",
         "j-hui/fidget.nvim",
+        "nvim-lua/lsp-status.nvim",
         "p00f/clangd_extensions.nvim",
+        "stevearc/aerial.nvim",
       },
       config = GetSetup("nvim-lspconfig"),
     })
 
+    -- Neovim plugin for a code outline window
     use({
       "stevearc/aerial.nvim",
       config = GetSetup("aerial-nvim"),
     })
 
-    use("folke/lsp-colors.nvim")
+    -- 🌈 Plugin that creates missing LSP diagnostics highlight groups for color
+    -- schemes that don't yet support the Neovim 0.5 builtin LSP client.
+    use({
+      "folke/lsp-colors.nvim",
+      config = GetSetup("lsp-colors-nvim")
+    })
 
     -- Tools for better development in rust using neovim's builtin lsp
-    -- https://github.com/simrat39/rust-tools.nvim
     use({
       "simrat39/rust-tools.nvim",
       requires = {
-        "neovim/nvim-lspconfig",
-        "nvim-lua/plenary.nvim",
         "mfussenegger/nvim-dap",
+        "neovim/nvim-lspconfig",
         "nvim-lua/lsp-status.nvim",
+        "nvim-lua/plenary.nvim",
       },
       after = "nvim-lspconfig",
       config = GetSetup("rust-tools-nvim"),
     })
 
-    -- https://github.com/nvim-telescope/telescope.nvim
-    -- https://github.com/nvim-telescope/telescope-github.nvim
-    -- requires `gh` and don't forget to auth the first use!
+    -- Find, Filter, Preview, Pick. All lua, all the time.
     use({
       "nvim-telescope/telescope.nvim",
       requires = {
-        "nvim-lua/plenary.nvim",
         "kyazdani42/nvim-web-devicons",
-        "nvim-treesitter/nvim-treesitter",
+        "nvim-lua/plenary.nvim",
         "nvim-telescope/telescope-symbols.nvim",
+        "nvim-treesitter/nvim-treesitter",
+        "otavioschwanck/telescope-alternate",
       },
       -- cmd = "Telescope",
       config = GetSetup("telescope-nvim"),
     })
 
-    -- https://github.com/folke/trouble.nvim
+    -- Alternate between common files using pre-defined regexp. Just map the
+    -- patterns and starting navigating between files that are related.
+    use({
+      "otavioschwanck/telescope-alternate",
+      config = GetSetup("telescope-alternate")
+    })
+
+    -- 🚦 A pretty diagnostics, references, telescope results, quickfix and
+    -- location list to help you solve all the trouble your code is causing.
     use({
       "folke/trouble.nvim",
       requires = "kyazdani42/nvim-web-devicons",
@@ -605,6 +568,6 @@ return require("packer").startup({
     })
   end,
   config = {
-    max_jobs = 20,
-  },
+    max_jobs = 20
+  }
 })

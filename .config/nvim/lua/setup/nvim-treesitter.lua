@@ -7,7 +7,12 @@ require("nvim-treesitter.configs").setup({
     "cpp",
     "css",
     "dockerfile",
-    "graphql",
+    "git_rebase",
+    "gitattributes",
+    "gitcommit",
+    "gitignore",
+    "hcl",
+    "help",
     "html",
     "http",
     "javascript",
@@ -18,6 +23,10 @@ require("nvim-treesitter.configs").setup({
     "llvm",
     "lua",
     "make",
+    "markdown",
+    "markdown_inline",
+    "proto",
+    "python",
     "regex",
     "ruby",
     "rust",
@@ -29,7 +38,7 @@ require("nvim-treesitter.configs").setup({
   },
   highlight = {
     enable = true,
-    disable = { "lua" },
+    -- disable = { "lua" },
   },
   incremental_selection = { enable = true },
   indent = {
@@ -37,7 +46,10 @@ require("nvim-treesitter.configs").setup({
     disable = { "ruby" },
   },
   -- https://github.com/andymass/vim-matchup
-  matchup = { enable = true, disable = { "rust" } },
+  matchup = {
+    enable = true,
+    -- disable = { "rust" },
+  },
   rainbow = {
     enable = true,
     extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean

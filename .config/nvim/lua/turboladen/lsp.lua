@@ -30,9 +30,8 @@ local function setup_lsp()
 
   local lspconfig = require("lspconfig")
   local capabilities = make_capabilities()
-  local flags = make_flags()
 
-  require("turboladen.lsp.bashls").setup(capabilities)
+  require("turboladen.lsp.bashls").setup(lspconfig, capabilities)
   require("turboladen.lsp.clangd_extensions").setup(capabilities)
   require("turboladen.lsp.cmake").setup(lspconfig, capabilities)
   require("turboladen.lsp.deno").setup(lspconfig, capabilities)
@@ -40,7 +39,7 @@ local function setup_lsp()
   require("turboladen.lsp.efm").setup(lspconfig, capabilities)
   require("turboladen.lsp.emmet_ls").setup(lspconfig, capabilities)
   require("turboladen.lsp.eslint").setup(lspconfig, capabilities)
-  -- require("turboladen.lsp.html").setup(lspconfig, capabilities)
+  require("turboladen.lsp.html").setup(lspconfig, capabilities)
   require("turboladen.lsp.jsonls").setup(lspconfig, capabilities)
   require("turboladen.lsp.prosemd_lsp").setup(lspconfig, capabilities)
   -- require("turboladen.lsp.ruby_analyzer").setup(lspconfig, capabilities)
@@ -54,6 +53,19 @@ local function setup_lsp()
   require("turboladen.lsp.vimls").setup(lspconfig, capabilities)
   require("turboladen.lsp.yamlls").setup(lspconfig, capabilities)
 
+  lspconfig.tilt_ls.setup({
+    capabilities = capabilities,
+    on_attach = require("turboladen.lsp.make_on_attach").with_formatting,
+    filetypes = { "tiltfile", "bzn" }
+  })
+  lspconfig.marksman.setup({
+    capabilities = capabilities,
+    on_attach = require("turboladen.lsp.make_on_attach").for_any,
+  })
+  lspconfig.zk.setup({
+    capabilities = capabilities,
+    on_attach = require("turboladen.lsp.make_on_attach").for_any,
+  })
 
   local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 

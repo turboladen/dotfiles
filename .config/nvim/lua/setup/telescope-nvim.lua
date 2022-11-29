@@ -1,4 +1,8 @@
+-- Setup telescope-alternate
 local telescope = require("telescope")
+
+telescope.load_extension("telescope-alternate")
+telescope.load_extension("aerial")
 
 telescope.setup({
   defaults = {
@@ -27,6 +31,7 @@ telescope.setup({
   },
 })
 
+-- Setup nvim config file finder
 local nvim_config_files = function()
   require("telescope.builtin").find_files({
     cwd = "~/.config/nvim",
@@ -80,6 +85,20 @@ vim.keymap.set(
   "n",
   "<leader>fy",
   yadm_files,
+  { noremap = true, silent = true }
+)
+
+vim.keymap.set(
+  "n",
+  "<leader>fa",
+  ":Telescope telescope-alternate alternate_file<CR>",
+  { noremap = true, silent = true }
+)
+
+vim.keymap.set(
+  "n",
+  "<leader>sa",
+  "<cmd>Telescope aerial<CR>",
   { noremap = true, silent = true }
 )
 
