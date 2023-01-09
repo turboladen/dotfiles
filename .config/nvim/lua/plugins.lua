@@ -12,10 +12,7 @@ return require("packer").startup({
     -- ╭───────────────────────────────────────────────────╮
     -- │ A use-package inspired plugin manager for Neovim. │
     -- ╰───────────────────────────────────────────────────╯
-    use({
-      "wbthomason/packer.nvim",
-      config = GetSetup("packer"),
-    })
+    use({ "wbthomason/packer.nvim" })
 
     -- ╭──────────────────────────────────────────────────────────╮
     -- │ Improve startup time for Neovim                          │
@@ -657,6 +654,11 @@ return require("packer").startup({
     -- │ vim inside Tmux.                                                          │
     -- ╰───────────────────────────────────────────────────────────────────────────╯
     use("tmux-plugins/vim-tmux-focus-events")
+
+    -- ┌╌╌╌╌╌╌╌╌╌╌┐
+    -- ╎ wren     ╎
+    -- └╌╌╌╌╌╌╌╌╌╌┘
+    use({ "kettek/vim-wren-syntax", ft = "wren" })
 
     -- ┌╌╌╌╌╌╌╌╌╌╌┐
     -- ╎ YAML     ╎
