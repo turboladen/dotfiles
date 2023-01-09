@@ -17,22 +17,20 @@ let g:maplocalleader = ' '
 
 let g:loaded_perl_provider = 0
 
-lua << RUST
-local ffi = require("ffi")
-
-ffi.cdef [[ void init(void); ]]
-
-local project_path = vim.env.HOME .. "/Development/projects/init.rs"
-local suffix = ffi.os == "OSX" and ".dylib" or ".so"
-
-local lib = ffi.load(project_path .. "/target/release/libinit_rs" .. suffix)
--- local lib = ffi.load(project_path .. "/target/debug/libnvim_rust_init" .. suffix)
-lib.init()
-RUST
+" Note to self: When I switched to nvim-oxi, I switched to follow its
+" convention for loading the .so: put it in a dir that's in rtp, letting us
+" load that by simply doing:
+lua require('init_rs')
 
 ""===========================================================================""
 " 0. Load packer stuff first
 ""===========================================================================""
+augroup packer_user_config
+  autocmd!
+  " autocmd BufWritePost plugins.lua source <afile> | PackerCompile
+  autocmd BufWritePost plugins.lua PackerCompile
+augroup end
+
 lua require('plugins')
 lua require('impatient')
 
@@ -48,7 +46,8 @@ lua require('impatient')
 " set breakat=90
 " set conceallevel=0
 
-set guifont=JetBrainsMono\ Nerd\ Font:h14
+set guifont=MonoLisaCustom\ Nerd\ Font:h13:i
+
 " colorscheme kanagawa
 colorscheme nightfox
 " colorscheme everforest
