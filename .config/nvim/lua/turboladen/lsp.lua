@@ -66,6 +66,14 @@ local function setup_lsp()
     capabilities = capabilities,
     on_attach = require("turboladen.lsp.make_on_attach").for_any,
   })
+  lspconfig.asm_lsp.setup({
+    capabilities = capabilities,
+    on_attach = require("turboladen.lsp.make_on_attach").for_any,
+    filetypes = { "asm", "nasm", "vmasm" },
+    root_dir = function()
+      return "./"
+    end
+  })
 
   local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 
