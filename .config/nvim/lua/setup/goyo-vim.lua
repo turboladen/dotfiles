@@ -1,1 +1,1 @@
-vim.g.goyo_width = 101
+vim.g.goyo_width = 102
