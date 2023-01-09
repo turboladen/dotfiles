@@ -11,4 +11,4 @@ function CustomOpenFloaterm()
 end
 
 vim.keymap.set("n", "t", "<cmd>lua CustomOpenFloaterm()<CR>")
-vim.keymap.set("t", "<C-c>", "<C-\\><C-n>:q<CR>")
+vim.keymap.set("t", "<C-h>", "<C-\\><C-n>:q<CR>")
