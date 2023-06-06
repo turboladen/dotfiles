@@ -14,6 +14,14 @@ env:
   TERM: xterm-256color
 
 window:
+  # https://github.com/helix-editor/helix/issues/2469#issuecomment-1416845029
+  # Make `Option` key behave as `Alt` (macOS only):
+  #   - OnlyLeft
+  #   - OnlyRight
+  #   - Both
+  #   - None (default)
+  # option_as_alt: OnlyLeft
+
   # Window dimensions in character columns and lines
   # (changes require restart)
   dimensions:
@@ -407,3 +415,5 @@ key_bindings:
   - { key: F11, mods: Command, chars: "\x1b[23;3~" }
   - { key: F12, mods: Command, chars: "\x1b[24;3~" }
   - { key: NumpadEnter, chars: "\n" }
+  # https://github.com/helix-editor/helix/issues/2469#issuecomment-1411073164
+  - { key: Grave, mods: Alt, chars: "\x1b`" }
