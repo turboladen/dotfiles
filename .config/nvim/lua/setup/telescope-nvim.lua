@@ -1,8 +1,10 @@
 -- Setup telescope-alternate
 local telescope = require("telescope")
+local icons = require("nvim-nonicons")
 
 telescope.load_extension("telescope-alternate")
-telescope.load_extension("aerial")
+-- Plugin for fuzzy-finding and jumpting to symbols.
+-- telescope.load_extension("aerial")
 
 telescope.setup({
   defaults = {
@@ -11,6 +13,9 @@ telescope.setup({
         ["<esc>"] = require("telescope.actions").close,
       },
     },
+    prompt_prefix = "  " .. icons.get("telescope") .. "  ",
+    selection_caret = " ❯ ",
+    entry_prefix = "   ",
   },
   pickers = {
     buffers = {

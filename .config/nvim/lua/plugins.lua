@@ -6,9 +6,9 @@ local disable_treesitter = false
 
 return require("packer").startup({
   function(use)
-    -- ╔════════════════════════════════════════════════════════════════════════════════════════╗
-    -- ║ 0.                                                                                     ║
-    -- ╚════════════════════════════════════════════════════════════════════════════════════════╝
+    -- ╔════════════════════════════════════════════════════════════════════╗
+    -- ║ 0.                                                                 ║
+    -- ╚════════════════════════════════════════════════════════════════════╝
     -- ╭───────────────────────────────────────────────────╮
     -- │ A use-package inspired plugin manager for Neovim. │
     -- ╰───────────────────────────────────────────────────╯
@@ -22,7 +22,10 @@ return require("packer").startup({
     -- ╭──────────────────────────────────────────────────────────╮
     -- │ ⏲️ A Vim plugin for profiling Vim's startup time.         │
     -- ╰──────────────────────────────────────────────────────────╯
-    use('dstein64/vim-startuptime')
+    use({
+      'dstein64/vim-startuptime',
+      cmd = "StartupTime"
+    })
 
     -- ╭──────────────────────────────────────────────────────────────────────────╮
     -- │  Portable package manager for Neovim that runs everywhere Neovim         │
@@ -46,7 +49,10 @@ return require("packer").startup({
     -- │  This plugin is a replacement for the included filetype.vim that is  │
     -- │  sourced on startup.                                                 │
     -- ╰──────────────────────────────────────────────────────────────────────╯
-    use({ "nathom/filetype.nvim" })
+    use({
+      "nathom/filetype.nvim",
+      config = GetSetup("filetype-nvim")
+    })
 
     -- ╭───────────────────────────────────────────────────────────────────────────╮
     -- │ Open the current word with custom openers, GitHub shorthands for example. │
@@ -104,19 +110,28 @@ return require("packer").startup({
     use({
       "hrsh7th/nvim-cmp",
       requires = {
-        "SirVer/ultisnips",
-        "honza/vim-snippets",
+        "neovim/nvim-lspconfig",
+
+        -- Sources
+        "hrsh7th/cmp-buffer",
+        "hrsh7th/cmp-cmdline",
         "hrsh7th/cmp-nvim-lsp",
         "hrsh7th/cmp-nvim-lsp-signature-help",
         "hrsh7th/cmp-nvim-lua",
         "hrsh7th/cmp-path",
         "lukas-reineke/cmp-rg",
-        "neovim/nvim-lspconfig",
+        "saecki/crates.nvim",
+        -- /Sources
+
+        -- Snippets
+        'dcampos/nvim-snippy',
+        'dcampos/cmp-snippy',
+        "honza/vim-snippets",
+        -- /Snippets
+
         "nvim-lua/lsp-status.nvim",
         "nvim-treesitter/nvim-treesitter",
         "onsails/lspkind-nvim",
-        "quangnguyen30192/cmp-nvim-ultisnips",
-        "saecki/crates.nvim",
       },
       config = GetSetup("nvim-cmp"),
     })
@@ -147,11 +162,16 @@ return require("packer").startup({
     -- ╭───────────────────────────────────────────╮
     -- │ A good looking and efficient status line. │
     -- ╰───────────────────────────────────────────╯
-    use({
-      "datwaft/bubbly.nvim",
-      requires = "nvim-lua/lsp-status.nvim",
-      config = GetSetup("bubbly-nvim"),
-    })
+    -- use({
+    --  "datwaft/bubbly.nvim",
+    --  requires = "nvim-lua/lsp-status.nvim",
+    --  config = GetSetup("bubbly-nvim"),
+    -- })
+    use {
+      'nvim-lualine/lualine.nvim',
+      requires = { 'nvim-tree/nvim-web-devicons' },
+      config = GetSetup("lualine-nvim")
+    }
 
     -- ╭────────────────────────────────────────────────────────────╮
     -- │ A neovim plugin that helps managing crates.io dependencies │
@@ -196,7 +216,10 @@ return require("packer").startup({
     -- ╰─────────────────────────────────────╯
     use({
       "code-biscuits/nvim-biscuits",
-      requires = "nvim-treesitter/nvim-treesitter",
+      requires = {
+        "nvim-treesitter/nvim-treesitter",
+        run = ":TSUpdate"
+      },
       config = GetSetup("nvim-biscuits")
     })
 
@@ -213,6 +236,16 @@ return require("packer").startup({
     -- │ Neovim plugin to improve the default vim.ui interfaces │
     -- ╰────────────────────────────────────────────────────────╯
     use('stevearc/dressing.nvim')
+
+    use({
+      "rcarriga/nvim-notify",
+      config = function()
+        vim.notify = require("notify")
+        require("notify").setup({
+          icons = require("nvim-nonicons.extentions.nvim-notify").icons
+        })
+      end
+    })
 
     -- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
     -- ┃ 2. moving around, searching and patterns                                               ┃
@@ -250,12 +283,18 @@ return require("packer").startup({
     -- ╭──────────────────────────╮
     -- │ Directory viewer for Vim │
     -- ╰──────────────────────────╯
-    use("justinmk/vim-dirvish")
+    -- use("justinmk/vim-dirvish")
 
     -- ╭──────────────────────────────╮
     -- │ Show git status of each file │
     -- ╰──────────────────────────────╯
-    use({ "kristijanhusak/vim-dirvish-git", requires = "justinmk/vim-dirvish" })
+    -- use({ "kristijanhusak/vim-dirvish-git", requires = "justinmk/vim-dirvish" })
+
+    -- ╭──────────────────────────────────────────────────────────╮
+    -- │    A file manager for Neovim which lets you edit your    │
+    -- │              filesystem like you edit text               │
+    -- ╰──────────────────────────────────────────────────────────╯
+    use({ "elihunter173/dirbuf.nvim" })
 
     -- ╭──────────────────────────────────────────╮
     -- │ Change code right in the quickfix window │
@@ -282,13 +321,13 @@ return require("packer").startup({
     -- │ -- Space Age seD in Neovim. A project-wide find and replace plugin       │
     -- │ for Neovim.                                                              │
     -- ╰──────────────────────────────────────────────────────────────────────────╯
-    use({
-      "ray-x/sad.nvim",
-      requires = { "ray-x/guihua.lua" },
-      config = function()
-        require("sad").setup({})
-      end
-    })
+    -- use({
+    --   "ray-x/sad.nvim",
+    --   requires = { "ray-x/guihua.lua" },
+    --   config = function()
+    --     require("sad").setup({})
+    --   end
+    -- })
 
     -- ╔════════════════════════════════════════════════════════════════════════════════════════╗
     -- ║ 5. syntax, highlighting and spelling                                                   ║
@@ -304,7 +343,7 @@ return require("packer").startup({
     -- ╰──────────────────────────────────────────────────────────────────────────╯
     use({
       "rebelot/kanagawa.nvim",
-      disable = disable_extra_themes
+      disable = disable_extra_themes,
     })
 
     -- ╭──────────────────────────────────────────────────────╮
@@ -321,7 +360,6 @@ return require("packer").startup({
     -- ╰────────────────────────────────────────────────────────────────────────╯
     use({
       "EdenEast/nightfox.nvim",
-      disable = disable_extra_themes,
       config = GetSetup("nightfox-nvim"),
     })
 
@@ -389,14 +427,6 @@ return require("packer").startup({
     -- ╔══════════════════════════════════════════════════════════════════════════════╗
     -- ║ 13. editing text                                                             ║
     -- ╚══════════════════════════════════════════════════════════════════════════════╝
-    -- Closes brackets. Perfect companion to vim-endwise. Basically, a more
-    -- conservative version of auto-pairs that only works when you press Enter.
-    -- use({
-    --   "rstacruz/vim-closer",
-    --   requires = "tpope/vim-endwise",
-    --   ft = { "sh", "zsh", "bash", "c", "cpp", "cmake", "html", "markdown", "vim", "ruby"}
-    -- })
-
     -- ╭─────────────────────────────────────────────────────╮
     -- │ Auto close parentheses and repeat by dot dot dot... │
     -- ╰─────────────────────────────────────────────────────╯
@@ -478,13 +508,13 @@ return require("packer").startup({
     use({
       "LudoPinelli/comment-box.nvim",
       cmd = {
-        "CBlbox", -- Left aligned box of fixed size with Left aligned text
-        "CBclbox", -- Centered box of fixed size with Left aligned text
-        "CBcbox", -- Left aligned box of fixed size with centered text
-        "CBccbox", -- Centered box of fixed size with centered text
-        "CBalbox", -- Left aligned adapted box with Left aligned text
+        "CBlbox",   -- Left aligned box of fixed size with Left aligned text
+        "CBclbox",  -- Centered box of fixed size with Left aligned text
+        "CBcbox",   -- Left aligned box of fixed size with centered text
+        "CBccbox",  -- Centered box of fixed size with centered text
+        "CBalbox",  -- Left aligned adapted box with Left aligned text
         "CBaclbox", -- Centered adapted box with Left aligned text
-        "CBacbox", -- Left aligned adapted box with centered text
+        "CBacbox",  -- Left aligned adapted box with centered text
         "CBaccbox", -- Centered adapted box with centered text
       }
     })
@@ -548,17 +578,17 @@ return require("packer").startup({
     -- ╭───────────────────────────────────────────────────────────────────╮
     -- │ An extensible framework for interacting with tests within NeoVim. │
     -- ╰───────────────────────────────────────────────────────────────────╯
-    use({
-      "nvim-neotest/neotest",
-      requires = {
-        "antoinemadec/FixCursorHold.nvim",
-        "nvim-lua/plenary.nvim",
-        "nvim-treesitter/nvim-treesitter",
-        "olimorris/neotest-rspec",
-        "rouge8/neotest-rust"
-      },
-      config = GetSetup("neotest")
-    })
+    -- use({
+    --   "nvim-neotest/neotest",
+    --   requires = {
+    --     "antoinemadec/FixCursorHold.nvim",
+    --     "nvim-lua/plenary.nvim",
+    --     "nvim-treesitter/nvim-treesitter",
+    --     "olimorris/neotest-rspec",
+    --     "rouge8/neotest-rust"
+    --   },
+    --   config = GetSetup("neotest")
+    -- })
 
     -- ╔══════════════════════════════════════════════════════════════════════════════╗
     -- ║ 23. language specific                                                        ║
@@ -612,6 +642,8 @@ return require("packer").startup({
     use({
       'toppair/peek.nvim',
       run = 'deno task --quiet build:fast',
+      ft = { "markdown" },
+      cmd = { "PeekOpen", "PeekClose" },
       config = function()
         require("peek").setup({})
         vim.api.nvim_create_user_command('PeekOpen', require('peek').open, {})
@@ -658,7 +690,7 @@ return require("packer").startup({
     -- ┌╌╌╌╌╌╌╌╌╌╌┐
     -- ╎ wren     ╎
     -- └╌╌╌╌╌╌╌╌╌╌┘
-    use({ "kettek/vim-wren-syntax", ft = "wren" })
+    -- use({ "kettek/vim-wren-syntax", ft = "wren" })
 
     -- ┌╌╌╌╌╌╌╌╌╌╌┐
     -- ╎ YAML     ╎
@@ -676,33 +708,33 @@ return require("packer").startup({
     -- ╭─────────────────────────────────────────────────────────╮
     -- │ Debug Adapter Protocol client implementation for Neovim │
     -- ╰─────────────────────────────────────────────────────────╯
-    use({
-      "mfussenegger/nvim-dap",
-      requires = "nvim-lua/plenary.nvim",
-      config = GetSetup("nvim-dap"),
-    })
+    -- use({
+    --   "mfussenegger/nvim-dap",
+    --   requires = "nvim-lua/plenary.nvim",
+    --   config = GetSetup("nvim-dap"),
+    -- })
 
     -- ╭───────────────────╮
     -- │ A UI for nvim-dap │
     -- ╰───────────────────╯
-    use({
-      "rcarriga/nvim-dap-ui",
-      requires = "mfussenegger/nvim-dap",
-      config = GetSetup("nvim-dap-ui"),
-    })
+    -- use({
+    --   "rcarriga/nvim-dap-ui",
+    --   requires = "mfussenegger/nvim-dap",
+    --   config = GetSetup("nvim-dap-ui"),
+    -- })
 
     -- ╭────────────────────────────────────────────────────╮
     -- │ This plugin adds virtual text support to nvim-dap. │
     -- ╰────────────────────────────────────────────────────╯
-    use({
-      "theHamsta/nvim-dap-virtual-text",
-      requires = {
-        "nvim-treesitter/nvim-treesitter",
-        "mfussenegger/nvim-dap",
-      },
-      disable = disable_treesitter,
-      config = GetSetup("nvim-dap-virtual-text"),
-    })
+    -- use({
+    --   "theHamsta/nvim-dap-virtual-text",
+    --   requires = {
+    --     "nvim-treesitter/nvim-treesitter",
+    --     "mfussenegger/nvim-dap",
+    --   },
+    --   disable = disable_treesitter,
+    --   config = GetSetup("nvim-dap-virtual-text"),
+    -- })
 
     -- ╭─────────────────────────────────╮
     -- │ Quickstart configs for Nvim LSP │
@@ -710,10 +742,10 @@ return require("packer").startup({
     use({
       "neovim/nvim-lspconfig",
       requires = {
+        "p00f/clangd_extensions.nvim",
         "b0o/schemastore.nvim",
         "j-hui/fidget.nvim",
         "nvim-lua/lsp-status.nvim",
-        "p00f/clangd_extensions.nvim",
         "stevearc/aerial.nvim",
       },
       config = GetSetup("nvim-lspconfig"),
@@ -724,6 +756,7 @@ return require("packer").startup({
     -- ╰─────────────────────────────────────────╯
     use({
       "stevearc/aerial.nvim",
+      -- cmd = { "AerialToggle!*", "AerialPrev", "AerialNext" },
       config = GetSetup("aerial-nvim"),
     })
 
@@ -762,6 +795,7 @@ return require("packer").startup({
         "nvim-telescope/telescope-symbols.nvim",
         "nvim-treesitter/nvim-treesitter",
         "otavioschwanck/telescope-alternate",
+        "yamatsum/nvim-nonicons"
       },
       -- cmd = "Telescope",
       config = GetSetup("telescope-nvim"),
@@ -784,9 +818,10 @@ return require("packer").startup({
       "folke/trouble.nvim",
       requires = "kyazdani42/nvim-web-devicons",
       config = GetSetup("trouble-nvim"),
+      cmd = { "Trouble", "TroubleRefresh", "TroubleToggle" }
     })
   end,
   config = {
-    max_jobs = 20
+    max_jobs = 25
   }
 })

@@ -1,6 +1,6 @@
 require("turboladen.lsp").setup_lsp()
 
-  -- autocmd BufWritePost * lua vim.lsp.buf.formatting_sync()
+-- autocmd BufWritePost * lua vim.lsp.buf.formatting_sync()
 vim.cmd(
   [[
 augroup lsp_format_config

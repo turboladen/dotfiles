@@ -30,6 +30,7 @@ local rust_tools_opts = {
       -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
       ["rust-analyzer"] = {
         assist = {
+          emitMustUse = true,
           importPrefix = "by_self",
         },
         cargo = {
@@ -38,10 +39,32 @@ local rust_tools_opts = {
         checkOnSave = {
           command = "clippy",
         },
-        lens = {
-          references = true,
-          methodReferences = true,
+        inlayHints = {
+          closureCaptureHints = {
+            enable = true
+          }
         },
+        lens = {
+          references = {
+            adt = {
+              enable = true
+            },
+            enumVariant = {
+              enable = true
+            },
+            method = {
+              enable = true
+            },
+            trait = {
+              enable = true
+            },
+          },
+        },
+        typing = {
+          autoClosingAngleBrackets = {
+            enable = true
+          }
+        }
       },
     },
   },

@@ -6,7 +6,7 @@ require("nvim-treesitter.configs").setup({
     "comment",
     "cpp",
     "css",
-    "dockerfile",
+    -- "dockerfile",
     "git_rebase",
     "gitattributes",
     "gitcommit",
