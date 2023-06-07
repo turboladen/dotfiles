@@ -38,16 +38,6 @@ void init_options(void);
   lib.init_options()
 end
 
-local function define_packer_autocmd()
-  local packer_user_config_group = vim.api.nvim_create_augroup("packer_user_config", {})
-
-  vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
-    pattern = "plugins.lua",
-    group = packer_user_config_group,
-    command = "source <afile> | PackerCompile"
-  })
-end
-
 local function define_language_autocmds()
   local filetype_group = vim.api.nvim_create_augroup("filetype", {})
 
@@ -133,17 +123,37 @@ end
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.g.loaded_perl_provider = 0
+vim.opt.termguicolors = true
+
+-- lazy.nvim things
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+
+vim.opt.rtp:prepend(lazypath)
+
+-- require("lazy").setup(require("plugins"), {})
+require("lazy").setup("plugins")
+-- require("lazy").setup({
+--   spec = {
+--     { import = "plugins" }
+--   }
+-- })
 
 -- Set the global var for the homebrew prefix.
 require('turboladen/homebrew').prefix()
 
 set_host_progs()
 load_init_rs()
-
-require('plugins')
-require('impatient')
-
-define_packer_autocmd()
 
 -- ╭────────────────────╮
 -- │ 4. displaying text │
