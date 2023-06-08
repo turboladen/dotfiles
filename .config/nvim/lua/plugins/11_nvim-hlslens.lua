@@ -32,7 +32,7 @@ return {
     {
       "g#",
       [[g#<cmd>lua require('hlslens').start()<CR>]],
-      { desc = "Search backware for word under cursor" }
+      { desc = "Search backward for word under cursor" }
     },
     { "<leader>l", ":noh<CR>", { desc = "Stop highlighting the hlsearch" } },
   },
