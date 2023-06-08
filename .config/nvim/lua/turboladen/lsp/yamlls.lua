@@ -1,8 +1,8 @@
---
--- https://github.com/redhat-developer/yaml-language-server
--- yarn global add yaml-language-server
--- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#yamlls
---
+-- ╭─────────────────────────────────────────────────────────────────────────────────────────╮
+-- │ https://github.com/redhat-developer/yaml-language-server                                │
+-- │ yarn global add yaml-language-server                                                    │
+-- │ https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#yamlls│
+-- ╰─────────────────────────────────────────────────────────────────────────────────────────╯
 local function setup(lspconfig, base_capabilities)
   -- Stole schemastore config from https://github.com/b0o/SchemaStore.nvim/issues/9#issuecomment-1140321123
   local json_schemas = require('schemastore').json.schemas {}
@@ -13,7 +13,6 @@ local function setup(lspconfig, base_capabilities)
 
   lspconfig.yamlls.setup({
     capabilities = base_capabilities,
-    on_attach = require("turboladen.lsp.make_on_attach").for_any,
     settings = {
       yaml = {
         schemas = yaml_schemas,
@@ -21,7 +20,6 @@ local function setup(lspconfig, base_capabilities)
       },
     }
   })
-
 end
 
 return {

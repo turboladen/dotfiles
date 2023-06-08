@@ -1,11 +1,10 @@
---
--- https://github.com/aca/emmet-ls
--- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#emmet_ls
---
+-- ╭───────────────────────────────────────────────────────────────────────────────────────────╮
+-- │ https://github.com/aca/emmet-ls                                                           │
+-- │ https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#emmet_ls│
+-- ╰───────────────────────────────────────────────────────────────────────────────────────────╯
 local function setup(lspconfig, base_capabilities)
   lspconfig.emmet_ls.setup({
     capabilities = base_capabilities,
-    on_attach = require("turboladen.lsp.make_on_attach").with_formatting,
     init_options = {
       html = {
         options = {

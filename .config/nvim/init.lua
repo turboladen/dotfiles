@@ -141,13 +141,18 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
--- require("lazy").setup(require("plugins"), {})
-require("lazy").setup("plugins")
--- require("lazy").setup({
---   spec = {
---     { import = "plugins" }
---   }
--- })
+require("lazy").setup("plugins", {
+  dev = {
+    path = "~/Development/projects/",
+    patterns = { "turboladen" },
+  },
+  install = {
+    colorscheme = { "nightfox" }
+  },
+  checker = {
+    enabled = true
+  }
+})
 
 -- Set the global var for the homebrew prefix.
 require('turboladen/homebrew').prefix()
@@ -160,7 +165,6 @@ load_init_rs()
 -- ╰────────────────────╯
 -- set guifont=MonoLisaCustom\ Nerd\ Font:h13:i
 vim.opt.guifont = 'MonoLisaCustom Nerd Font:h13:i'
--- vim.cmd("set guifont=MonoLisaCustom\\ Nerd\\ Font:h13:i")
 
 vim.cmd.colorscheme("nightfox")
 -- vim.cmd.colorscheme("kanagawa")
@@ -187,10 +191,22 @@ define_language_autocmds()
 -- │ to their proper spot).                                                 │
 -- ╰────────────────────────────────────────────────────────────────────────╯
 
+vim.cmd([[setglobal expandtab]])
+
 -- ╭──────────────────────────╮
 -- │ 20. command line editing │
 -- ╰──────────────────────────╯
 set_wild_opts()
+
+vim.api.nvim_create_autocmd('BufRead', {
+  group = vim.api.nvim_create_augroup('meowersdfsd', {}),
+  pattern = "lua",
+  callback = function(ev)
+    vim.opt_local.expandtab = true
+  end,
+})
+
+vim.keymap.set("n", "<leader>st", require("turboladen").strip_tabs, { desc = "Strip tabs!" })
 
 -- ╭─────────────────────────╮
 -- │ XX. No :options section │
