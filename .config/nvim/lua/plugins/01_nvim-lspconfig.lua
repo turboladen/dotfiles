@@ -61,7 +61,7 @@ local function setup_regular_lsps(lsp_config, capabilities)
   require("turboladen.lsp").setup_lsp("taplo", lsp_config, capabilities)      -- (TOML)
   require("turboladen.lsp").setup_lsp("terraformls", lsp_config, capabilities)
   require("turboladen.lsp").setup_lsp("tsserver", lsp_config, capabilities)
-  require("turboladen.lsp").setup_lsp("typeprof", lsp_config, capabilities) -- (Ruby)
+  -- require("turboladen.lsp").setup_lsp("typeprof", lsp_config, capabilities) -- (Ruby)
   require("turboladen.lsp").setup_lsp("vimls", lsp_config, capabilities)
 
   -- Special cases
@@ -112,7 +112,7 @@ return {
   dependencies = {
     "p00f/clangd_extensions.nvim",
     "b0o/schemastore.nvim",
-    "j-hui/fidget.nvim",
+    { "j-hui/fidget.nvim", tag = "legacy" },
     "nvim-lua/lsp-status.nvim",
     "stevearc/aerial.nvim",
   },
@@ -166,13 +166,13 @@ return {
 
     -- NOTE: 07-jun-23. Commenting out for now since this would try to format all filetypes,
     -- even if it doesn't have an LSP.
-    -- vim.api.nvim_create_autocmd('BufWritePre', {
-    --  group = vim.api.nvim_create_augroup('lsp_formatting', {}),
-    --  callback = function(ev)
-    --    -- TODO: Should check, if possible, if the LSP supports this before calling it.
-    --    vim.lsp.buf.format()
-    --  end
-    -- })
+    vim.api.nvim_create_autocmd('BufWritePre', {
+      group = vim.api.nvim_create_augroup('lsp_formatting', {}),
+      callback = function(ev)
+        -- TODO: Should check, if possible, if the LSP supports this before calling it.
+        vim.lsp.buf.format()
+      end
+    })
 
     vim.api.nvim_create_autocmd('CursorHold', {
       group = vim.api.nvim_create_augroup('lsp_open_float_on_cursor_hold', {}),

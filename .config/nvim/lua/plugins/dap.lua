@@ -1,42 +1,29 @@
--- dap.adapters.ruby = {
---   type = "executable",
---   command = "readapt",
---   args = { "stdio" }
--- }
-
--- dap.configurations.ruby = {
---   {
---     type = "ruby",
---     request = "launch",
---     name = "Ruby",
---     program = "bundle",
---     programArgs = { "exec", "rspec" },
---     useBundler = false
---   }
--- }
-
+-- ╭─────────────────────────────────────────────────────────╮
+-- │ Debug Adapter Protocol client implementation for Neovim │
+-- ╰─────────────────────────────────────────────────────────╯
 -- NOTES!
 -- 1. To debug rust stuff, I'm using rust-tools setup... which means, I need to run :RustDebuggables
 --    instead of pressing F5.
 return {
   "mfussenegger/nvim-dap",
   dependencies = {
+    { "nvim-lua/plenary.nvim" },
+    -- ╭───────────────────╮
+    -- │ A UI for nvim-dap │
+    -- ╰───────────────────╯
+    { "rcarriga/nvim-dap-ui", opts = {} },
     {
-      "rcarriga/nvim-dap-ui",
-      opts = {},
-    },
-    {
+      -- ╭────────────────────────────────────────────────────╮
+      -- │ This plugin adds virtual text support to nvim-dap. │
+      -- ╰────────────────────────────────────────────────────╯
       "theHamsta/nvim-dap-virtual-text",
       dependencies = {
         "nvim-treesitter/nvim-treesitter",
+        "mfussenegger/nvim-dap",
       },
-      opts = {
-        commented = true
-      },
+      opts = { commented = true },
     },
-    {
-      "suketa/nvim-dap-ruby"
-    }
+    { "suketa/nvim-dap-ruby" }
   },
   opts = {},
   config = function(_, opts)
@@ -55,6 +42,23 @@ return {
     --     },
     --   }
     -- end
+
+    -- dap.adapters.ruby = {
+    --   type = "executable",
+    --   command = "readapt",
+    --   args = { "stdio" }
+    -- }
+
+    -- dap.configurations.ruby = {
+    --   {
+    --     type = "ruby",
+    --     request = "launch",
+    --     name = "Ruby",
+    --     program = "bundle",
+    --     programArgs = { "exec", "rspec" },
+    --     useBundler = false
+    --   }
+    -- }
 
     dap.configurations.rust = {
       {

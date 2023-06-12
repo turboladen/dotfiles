@@ -208,11 +208,10 @@ vim.api.nvim_create_autocmd('BufRead', {
 
 vim.keymap.set("n", "<leader>st", require("turboladen").strip_tabs, { desc = "Strip tabs!" })
 
--- ╭─────────────────────────╮
--- │ XX. No :options section │
--- ╰─────────────────────────╯
-
--- OCaml
--- set rtp^="/Users/steve.loveless/.opam/default/share/ocp-indent/vim"
--- let g:opamshare = substitute(system('opam var share'),'\n$','','''')
--- execute "set rtp+=" . g:opamshare . "/merlin/vim"
+vim.api.nvim_create_autocmd({"BufNewFile", 'BufRead' }, {
+  group = vim.api.nvim_create_augroup('justfile_detect', {}),
+  pattern = "justfile",
+  callback = function()
+    vim.opt_local.filetype = "just"
+  end,
+})
