@@ -1,6 +1,6 @@
 return {
   "rcarriga/nvim-notify",
-  priority = 900,
+  priority = 1000,
   dependencies = {
     "yamatsum/nvim-nonicons",
     "nvim-telescope/telescope.nvim",

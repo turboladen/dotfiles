@@ -183,6 +183,11 @@ vim.env.NVIM_TUI_ENABLE_TRUE_COLOR = true
 -- ╭──────────────────────────────────────╮
 -- │ 5. syntax, highlighting and spelling │
 -- ╰──────────────────────────────────────╯
+vim.opt.tabstop = 2
+vim.opt.softtabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.expandtab = true
+
 define_language_autocmds()
 
 -- ╭────────────────────────────────────────────────────────────────────────╮
@@ -208,7 +213,7 @@ vim.api.nvim_create_autocmd('BufRead', {
 
 vim.keymap.set("n", "<leader>st", require("turboladen").strip_tabs, { desc = "Strip tabs!" })
 
-vim.api.nvim_create_autocmd({"BufNewFile", 'BufRead' }, {
+vim.api.nvim_create_autocmd({ "BufNewFile", 'BufRead' }, {
   group = vim.api.nvim_create_augroup('justfile_detect', {}),
   pattern = "justfile",
   callback = function()

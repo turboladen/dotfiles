@@ -24,11 +24,11 @@ return {
     }
   end,
   opts = {},
-  config = function()
-    vim.keymap.set("n", "<space>xn", "<cmd>TestNearest<CR>")
-    vim.keymap.set("n", "<space>xf", "<cmd>TestFile<CR>")
-    vim.keymap.set("n", "<space>xa", "<cmd>TestSuite<CR>")
-    vim.keymap.set("n", "<space>xl", "<cmd>TestLast<CR>")
-    vim.keymap.set("n", "<space>xg", "<cmd>TestVisit<CR>")
-  end,
+  keys = {
+    { "<leader>tn", "<cmd>TestNearest<CR>", desc = "Run nearest test" },
+    { "<leader>tf", "<cmd>TestFile<CR>",    desc = "Run all tests in file" },
+    { "<leader>ta", "<cmd>TestSuite<CR>",   desc = "Run all tests in project" },
+    { "<leader>tl", "<cmd>TestLast<CR>",    desc = "Re-run the last test command" },
+    { "<leader>tg", "<cmd>TestVisit<CR>",   desc = "Visit the last test file" }
+  }
 }

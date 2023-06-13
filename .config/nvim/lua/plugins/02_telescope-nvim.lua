@@ -85,13 +85,14 @@ return {
     "nvim-lua/plenary.nvim",
     "nvim-telescope/telescope-symbols.nvim",
     "nvim-treesitter/nvim-treesitter",
-    "yamatsum/nvim-nonicons"
+    "yamatsum/nvim-nonicons",
+
   },
   opts = telescope_opts,
   keys = {
     { "<leader>fn", nvim_config_files,                                       { desc = "Show files in ~/.config/nvim/" } },
     { "<leader>fy", yadm_files,                                              { desc = "Show YADM files" } },
     { "<leader>fa", "<cmd>Telescope telescope-alternate alternate_file<CR>", { desc = "Show alternate file" } },
-    { "<leader>sa", "<cmd>Telescope aerial<CR>",                             { desc = "Show symbols via aerial" } },
+    { "<leader>fs", "<cmd>Telescope aerial<CR>",                             { desc = "Show symbols via aerial" } },
   }
 }

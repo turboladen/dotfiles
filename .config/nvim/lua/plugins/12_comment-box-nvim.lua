@@ -12,12 +12,20 @@ local function cc_box(style)
   vim.lsp.buf.format({ async = false })
 end
 
+function TurboladenCcBox(style)
+  cc_box(style)
+end
+
 ---Make an adapted box with left-aligned text, then format.
 --
 ---@param style number
 local function al_box(style)
   require("comment-box").albox(style)
   vim.lsp.buf.format({ async = false })
+end
+
+function TurboladenAlBox(style)
+  al_box(style)
 end
 
 return {
@@ -62,8 +70,8 @@ return {
     -- Show the catalog
     "CBcatalog"
   },
-  keys = {
-    { "<leader>bb", al_box, mode = { "n", "v" }, desc = "Left-aligned box; left-aligned text"  },
-    { "<leader>bt", cc_box,  desc = "Title box"  },
-  }
+  -- keys = {
+  --   { "<leader>bb", al_box, mode = { "n", "v" }, desc = "Left-aligned box; left-aligned text" },
+  --   { "<leader>bt", cc_box, desc = "Title box" },
+  -- }
 }
