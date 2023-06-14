@@ -1,9 +1,31 @@
+local function select_next(cmp, snippy)
+  return cmp.mapping(function(fallback)
+    if cmp.visible() then
+      cmp.select_next_item()
+    elseif snippy.can_expand_or_advance() then
+      snippy.expand_or_advance()
+    else
+      fallback()
+    end
+  end, { "i", "s", "c" })
+end
+
+local function select_prev(cmp, snippy)
+  return cmp.mapping(function(fallback)
+    if cmp.visible() then
+      cmp.select_prev_item()
+    elseif snippy.can_jump(-1) then
+      snippy.previous()
+    else
+      fallback()
+    end
+  end, { "i", "s", "c" })
+end
+
 return {
   {
     "dcampos/nvim-snippy",
-    dependencies = {
-      "honza/vim-snippets",
-    },
+    dependencies = { "honza/vim-snippets" },
     lazy = true,
     opts = {},
   },
@@ -43,7 +65,7 @@ return {
   {
     "hrsh7th/nvim-cmp",
     version = false,
-    event = "InsertEnter",
+    -- event = "InsertEnter",
     dependencies = {
       -- "neovim/nvim-lspconfig",
 
@@ -80,97 +102,30 @@ return {
       return {
         completion = {
           keyword_length = 1,
-          completeopt = "menu,menuone,noselect"
         },
         formatting = {
           format = require("lspkind").cmp_format(),
         },
         mapping = {
-          -- ["<Tab>"] = cmp.mapping(function(fallback)
-          ["<C-j>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_next_item()
-            elseif snippy.can_expand_or_advance() then
-              snippy.expand_or_advance()
-            elseif has_words_before() then
-              cmp.complete()
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
-
-          -- ["<S-Tab>"] = cmp.mapping(function(fallback)
-          ["<C-k>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_prev_item()
-            elseif snippy.can_jump(-1) then
-              snippy.previous()
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
-
+          ["<C-j>"] = select_next(cmp, snippy),
+          ["<Tab>"] = select_next(cmp, snippy),
+          ["<C-k>"] = select_prev(cmp, snippy),
+          ["<S-Tab>"] = select_prev(cmp, snippy),
           ["<CR>"] = cmp.mapping({
             i = function(fallback)
               if cmp.visible() and cmp.get_active_entry() then
                 cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+                -- cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true })
               else
                 fallback()
               end
             end,
             s = cmp.mapping.confirm({ select = true }),
-            c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+            -- c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+            c = cmp.mapping.confirm()
           }),
         },
-        -- mapping = cmp.mapping.preset.insert({
-        --   ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-        --   ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        --   --   ['<Down>'] = {
-        --   --     i = cmp.mapping.select_next_item({ behavior = types.cmp.SelectBehavior.Select }),
-        --   --   },
-        --   --   -- ["<C-j>"] = cmp.mapping(
-        --   --   --   function(fallback)
-        --   --   --     cmp_ultisnips_mappings.expand_or_jump_forwards(fallback)
-        --   --   --   end,
-        --   --   --   { "i", "s", --[[ "c" (to enable the mapping in command mode) ]] }
-        --   --   -- ),
-        --   --   ["<C-k>"] = cmp.mapping(
-        --   --   -- function(fallback)
-        --   --   --   cmp_ultisnips_mappings.jump_backwards(fallback)
-        --   --   -- end,
-        --   --     { "i", "s", --[[ "c" (to enable the mapping in command mode) ]] }
-        --   --   ),
-        --   -- mapping = {
-        --   ['<Tab>'] = function(fallback)
-        --     if cmp.visible() then
-        --       cmp.select_next_item()
-        --     else
-        --       fallback()
-        --     end
-        --   end,
-        --   ['<C-j>'] = function(fallback)
-        --     if cmp.visible() then
-        --       cmp.select_next_item()
-        --     else
-        --       fallback()
-        --     end
-        --   end,
-        --   ['<C-k>'] = function(fallback)
-        --     if cmp.visible() then
-        --       cmp.select_prev_item()
-        --     else
-        --       fallback()
-        --     end
-        --   end,
-        --   ['<CR>'] = function(fallback)
-        --     if cmp.visible() then
-        --       cmp.confirm({ select = true })
-        --     else
-        --       fallback() -- If you use vim-endwise, this fallback will behave the same as vim-endwise.
-        --     end
-        --   end
-        -- },
-        -- }),
+
         snippet = {
           expand = function(args)
             require('snippy').expand_snippet(args.body)
