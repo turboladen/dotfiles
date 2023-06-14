@@ -1,16 +1,17 @@
 -- ╭─────────────────────────────────────────────────────────────────────────────────────────╮
--- │ https://github.com/hrsh7th/vscode-langservers-extracted                                 │
--- │ https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#eslint│
+-- │ https://deno.land/manual@v1.27.1/language_server                                        │
+-- │ https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#denols│
 -- ╰─────────────────────────────────────────────────────────────────────────────────────────╯
-local function setup(lspconfig, base_capabilities)
-  lspconfig.eslint.setup({
-    capabilities = base_capabilities,
-    settings = {
-      packageManger = "yarn",
-    }
-  })
-end
+-- local function setup(lspconfig, base_capabilities)
+--   vim.g.markdown_fenced_languages = {
+--     "ts=typescript"
+--   }
 
-return {
-  setup = setup
-}
+--   lspconfig.denols.setup({
+--     capabilities = base_capabilities,
+--   })
+-- end
+
+-- return {
+--   setup = setup
+-- }

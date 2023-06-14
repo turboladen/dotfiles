@@ -111,7 +111,7 @@ return {
       text = { "typos_cli", "vale" },
       toml = { "typos_cli" },
       typescript = { "typos_cli" },
-      yaml = { "typos_cli" },
+      yaml = { "typos_cli", "yamllint" },
     }
 
     vim.api.nvim_create_autocmd({ "BufReadPre", "BufWritePost" }, {

@@ -1,6 +1,3 @@
--- ╭─────────────────────────────────────────────────────────────────╮
--- │ Tools for better development in rust using neovim's builtin lsp │
--- ╰─────────────────────────────────────────────────────────────────╯
 local function make_attach_things(rust_tools)
   -- Use LspAttach autocommand to only map the following keys
   -- after the language server attaches to the current buffer
@@ -42,7 +39,7 @@ local function rust_tools_opts()
     -- these override the defaults set by rust-tools.nvim
     -- see https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#rust_analyzer
     server = {
-      capabilities = require("turboladen.lsp").make_capabilities(),
+      capabilities = require("plugins.lsp.utils").make_capabilities({}),
       flags = {
         debounce_text_changes = 350
       },
@@ -95,22 +92,6 @@ local function rust_tools_opts()
 end
 
 return {
-  "simrat39/rust-tools.nvim",
-  dependencies = {
-    "mfussenegger/nvim-dap",
-    "neovim/nvim-lspconfig",
-    "nvim-lua/lsp-status.nvim",
-    "nvim-lua/plenary.nvim",
-    "nvim-lspconfig",
-  },
-  opts = rust_tools_opts,
-  config = function(_, opts)
-    local lsp_status = require("lsp-status")
-    lsp_status.register_progress()
-
-    local rust_tools = require("rust-tools")
-    rust_tools.setup(opts)
-
-    make_attach_things(rust_tools)
-  end
+  rust_tools_opts = rust_tools_opts,
+  make_attach_things = make_attach_things
 }

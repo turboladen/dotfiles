@@ -1,11 +1,3 @@
-local function make_capabilities()
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
-  capabilities = vim.tbl_extend("keep", capabilities, require("cmp_nvim_lsp").default_capabilities())
-  capabilities = vim.tbl_extend("keep", capabilities, require("lsp-status").capabilities)
-
-  return capabilities
-end
-
 local function hover()
   local filetype = vim.bo.filetype
 
@@ -32,7 +24,7 @@ end
 
 return {
   hover = hover,
-  make_capabilities = make_capabilities,
+  -- make_capabilities = make_capabilities,
   make_flags = make_flags,
   setup_lsp = setup_lsp
 }

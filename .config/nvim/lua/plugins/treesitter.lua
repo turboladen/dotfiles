@@ -66,12 +66,19 @@ local ts_opts = {
   },
   highlight = {
     enable = true,
-    -- disable = { "lua" },
   },
-  incremental_selection = { enable = true },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "<C-space>",
+      node_incremental = "<C-space>",
+      scope_incremental = false,
+      node_decremental = "<bs>",
+    },
+  },
   indent = {
     enable = true,
-    disable = { "ruby" },
+    -- disable = { "ruby" },
   },
   --  ╭─────────────────────────────────────────╮
   --  │ https://github.com/andymass/vim-matchup │
@@ -115,25 +122,10 @@ local ts_opts = {
 }
 
 return {
-  --  ╭─────────────────────────────────────────────────────────────────╮
-  --  │ Location and syntax aware text objects which *do what you mean* │
-  --  ╰─────────────────────────────────────────────────────────────────╯
-  {
-    "RRethy/nvim-treesitter-textsubjects",
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-  },
-  -- ╭──────────────────────────────────────────────────────────────────────────╮
-  -- │ Lightweight alternative to context.vim implemented with nvim-treesitter. │
-  -- ╰──────────────────────────────────────────────────────────────────────────╯
-  {
-    "nvim-treesitter/nvim-treesitter-context",
-    enabled = false,
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-    opts = {}
-  },
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
+    event = { "BufReadPost", "BufNewFile" },
     dependencies = {
       --  ╭─────────────────────────────────────────────────────────────────────────╮
       --  │ nvim-ts-context-commentstring: Neovim treesitter plugin for setting the │
@@ -152,13 +144,30 @@ return {
       "p00f/nvim-ts-rainbow",
     },
     opts = ts_opts,
-    config = function(_, options)
-      require("nvim-treesitter.configs").setup(options)
+    config = function(_, opts)
+      require("nvim-treesitter.configs").setup(opts)
 
       -- Treesitter folding
       vim.wo.foldmethod = 'expr'
       vim.wo.foldexpr = 'nvim_treesitter#foldexpr()'
       vim.o.foldlevel = 99
     end
+  },
+
+  --  ╭─────────────────────────────────────────────────────────────────╮
+  --  │ Location and syntax aware text objects which *do what you mean* │
+  --  ╰─────────────────────────────────────────────────────────────────╯
+  {
+    "RRethy/nvim-treesitter-textsubjects",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+  },
+  -- ╭──────────────────────────────────────────────────────────────────────────╮
+  -- │ Lightweight alternative to context.vim implemented with nvim-treesitter. │
+  -- ╰──────────────────────────────────────────────────────────────────────────╯
+  {
+    "nvim-treesitter/nvim-treesitter-context",
+    enabled = false,
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    opts = {}
   },
 }

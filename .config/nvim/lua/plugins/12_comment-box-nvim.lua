@@ -70,8 +70,8 @@ return {
     -- Show the catalog
     "CBcatalog"
   },
-  -- keys = {
-  --   { "<leader>bb", al_box, mode = { "n", "v" }, desc = "Left-aligned box; left-aligned text" },
-  --   { "<leader>bt", cc_box, desc = "Title box" },
-  -- }
+  keys = {
+    { "<leader>bb", al_box, mode = { "n", "v" }, desc = "Left-aligned box; left-aligned text" },
+    { "<leader>bt", cc_box, desc = "Title box" },
+  }
 }
