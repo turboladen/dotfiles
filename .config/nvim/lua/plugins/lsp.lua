@@ -449,6 +449,7 @@ return {
           -- end
         end
       end
+      require("plugins.lsp.ruby_analyzer").setup()
 
       -- if have_mason then
       --   mlsp.setup({ ensure_installed = ensure_installed, handlers = { setup } })

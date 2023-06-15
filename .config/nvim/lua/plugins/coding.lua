@@ -113,9 +113,8 @@ return {
           ["<S-Tab>"] = select_prev(cmp, snippy),
           ["<CR>"] = cmp.mapping({
             i = function(fallback)
-              if cmp.visible() and cmp.get_active_entry() then
-                cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
-                -- cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true })
+              if cmp.visible() then
+                cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true })
               else
                 fallback()
               end

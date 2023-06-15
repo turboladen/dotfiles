@@ -5,7 +5,6 @@
 
 return {
   "nathom/filetype.nvim",
-  priority = 999,
   opts = {
     overrides = {
       extensions = {

@@ -38,20 +38,7 @@ void init_options(void);
   lib.init_options()
 end
 
-local function define_language_autocmds()
-  local filetype_group = vim.api.nvim_create_augroup("filetype", {})
-
-  vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
-    pattern = "*.mm",
-    group = filetype_group,
-    command = "set ft=objcpp"
-  })
-  vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
-    pattern = "Tiltfile",
-    group = filetype_group,
-    command = "setf=tiltfile"
-  })
-
+local function define_wasm_autocmds()
   -- vim -b : edit binary using xxd-format!
   local wasm_group = vim.api.nvim_create_augroup("WasmGroup", {})
 
@@ -188,7 +175,7 @@ vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 
-define_language_autocmds()
+define_wasm_autocmds()
 
 -- ╭────────────────────────────────────────────────────────────────────────╮
 -- │ 17. mappings                                                           │
