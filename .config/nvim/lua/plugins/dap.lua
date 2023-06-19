@@ -175,11 +175,6 @@ return {
     -- end)
   end,
   keys = function()
-    -- local dapui = require("dapui")
-
-    -- return {
-    --   { "<leader>du", function() dapui.toggle({}) end,  desc = "Dap UI" },
-    -- }
     return {
       {
         "<leader>dB",
@@ -201,7 +196,7 @@ return {
       { "<leader>dr", require("dap").repl.toggle,       desc = "Toggle REPL" },
       { "<leader>ds", require("dap").session,           desc = "Session" },
       { "<leader>dt", require("dap").terminate,         desc = "Terminate" },
-      { "<leader>d?", require("dap.ui.widgets").scopes, desc = "dap: show scopes" },
+      { "<leader>dt", require("dapui").toggle,          desc = "Toggle dapui" },
       {
         "<leader>dw",
         require("dap.ui.widgets").hover,
