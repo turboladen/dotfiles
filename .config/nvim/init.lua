@@ -207,3 +207,5 @@ vim.api.nvim_create_autocmd({ "BufNewFile", 'BufRead' }, {
     vim.opt_local.filetype = "just"
   end,
 })
+
+vim.keymap.set("t", "<Esc>", "<C-\\><C-N>", { desc = "Exit terminal" })

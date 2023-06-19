@@ -1,3 +1,12 @@
+function CustomOpenFloaterm()
+  if vim.g.floaterm_already_opened then
+    vim.cmd("FloatermToggle myfloat")
+  else
+    vim.g.floaterm_already_opened = true
+    vim.cmd("FloatermNew --wintype=split --height=20 --position=botright --autoclose=2 --name=myfloat zsh")
+  end
+end
+
 return {
   {
     "rcarriga/nvim-notify",
@@ -27,6 +36,59 @@ return {
   {
     'stevearc/dressing.nvim',
     event = "VeryLazy",
+  },
+
+  -- ╭─────────────────────────────────────╮
+  -- │ A neovim port of Assorted Biscuits. │
+  -- ╰─────────────────────────────────────╯
+  {
+    "code-biscuits/nvim-biscuits",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+    },
+    event = "VeryLazy",
+    opts = function()
+      -- local icon = ""
+      local icon = "✨"
+
+      return {
+        toggle_keybind = "<leader>cb",
+        show_on_start = true,
+        cursor_line_only = true,
+        default_config = {
+          max_distance = 25,
+          prefix_string = " " .. icon .. " ",
+        }
+      }
+    end
+  },
+
+  -- ╭─────────────────────────────────────────────────────────╮
+  -- │ Prismatic line decorations for the adventurous vim user │
+  -- ╰─────────────────────────────────────────────────────────╯
+  {
+    "mvllow/modes.nvim",
+    tag = "v0.2.0",
+    event = "VeryLazy",
+    init = function()
+      vim.opt.cursorline = true
+    end,
+    config = function()
+      require("modes").setup()
+    end
+  },
+
+  -- ╭──────────────────────────────────╮
+  -- │ 🌟 Terminal manager for (neo)vim │
+  -- ╰──────────────────────────────────╯
+  {
+    "voldikss/vim-floaterm",
+    keys = {
+      { "<leader>ww", CustomOpenFloaterm, desc = "Open a floating term" },
+    },
+    init = function()
+      vim.g.floaterm_already_opened = false
+    end,
   },
 
   --  ╭────────────────────────────────────────────────────╮

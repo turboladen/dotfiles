@@ -230,7 +230,9 @@ return {
           underline = true,
           severity_sort = true
         },
-        autoformat = true,
+        -- autoformat = true,
+        -- LSP Server Settings
+        ---@type lspconfig.options
         servers = {
           asm_lsp = {
             filetypes = { "asm", "nasm", "vmasm" },
@@ -367,9 +369,11 @@ return {
           },
           prosemd_lsp = {},
           pyright = {},
+          ruby_analyzer = {
+          },
           ruff_lsp = {},
-          solargraph = {},
-          steep = {},
+          -- solargraph = {},
+          -- steep = {},
           sourcekit = {
             -- cmd = { "xcrun", "sourcekit-lsp" },
             filetypes = { "swift", "c", "cpp", "objc", "objcpp", "objective-c", "objective-cpp" },
@@ -400,7 +404,12 @@ return {
             }
           }
         },
-        setup = {}
+        -- you can do any additional lsp server setup here
+        -- return true if you don't want this server to be setup with lspconfig
+        ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
+        setup = {
+          -- ruby_analyzer = {},
+        }
       }
     end,
     config = function(_, opts)
@@ -430,12 +439,7 @@ return {
         require("lspconfig")[server].setup(server_opts)
       end
 
-      -- Get all the servers that are available through mason-lspconfig
-      -- local have_mason, mlsp = pcall(require, "mason-lspconfig")
-      -- local all_mslp_servers = {}
-      -- if have_mason then
-      --   all_mslp_servers = vim.tbl_keys(require("mason-lspconfig.mappings.server").lspconfig_to_package)
-      -- end
+      require("plugins.lsp.ruby_analyzer").add_server()
 
       -- local ensure_installed = {} ---@type string[]
       for server, server_opts in pairs(opts.servers) do
@@ -449,7 +453,6 @@ return {
           -- end
         end
       end
-      require("plugins.lsp.ruby_analyzer").setup()
 
       -- if have_mason then
       --   mlsp.setup({ ensure_installed = ensure_installed, handlers = { setup } })

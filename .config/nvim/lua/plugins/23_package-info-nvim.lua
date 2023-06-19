@@ -1,7 +1,6 @@
 -- ╭──────────────────────────────────────────────────╮
 -- │ ✍️ All the npm/yarn commands I don't want to type │
 -- ╰──────────────────────────────────────────────────╯
-
 return {
   "vuki656/package-info.nvim",
   dependencies = { "MunifTanjim/nui.nvim" },
@@ -18,3 +17,4 @@ return {
       { desc = "Install a different dependency version" })
   end
 }
+
