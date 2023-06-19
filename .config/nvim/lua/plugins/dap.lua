@@ -13,21 +13,21 @@ return {
     -- ╰───────────────────╯
     {
       "rcarriga/nvim-dap-ui",
-      keys = {
-        { "<leader>du", function() require("dapui").toggle({}) end, desc = "Dap UI" },
-        { "<leader>de", function() require("dapui").eval() end,     desc = "Eval",  mode = { "n", "v" } },
-      },
       opts = {},
       config = function(_, opts)
         local dap = require("dap")
         local dapui = require("dapui")
+
         dapui.setup(opts)
+
         dap.listeners.after.event_initialized["dapui_config"] = function()
           dapui.open({})
         end
+
         dap.listeners.before.event_terminated["dapui_config"] = function()
           dapui.close({})
         end
+
         dap.listeners.before.event_exited["dapui_config"] = function()
           dapui.close({})
         end
@@ -161,7 +161,6 @@ return {
     -- vim.keymap.set('n', '<Leader>dr', require('dap').repl.open)
     -- vim.keymap.set('n', '<Leader>dl', require('dap').run_last)
 
-    -- vim.keymap.set({ 'n', 'v' }, '<Leader>dh', require('dap.ui.widgets').hover)
     -- vim.keymap.set({ 'n', 'v' }, '<Leader>dp', require('dap.ui.widgets').preview)
     -- vim.keymap.set({ 'n', 'v' }, '<Leader>du', require('dapui').toggle)
 
@@ -175,94 +174,53 @@ return {
     --   widgets.centered_float(widgets.scopes)
     -- end)
   end,
-  keys = {
-    {
-      "<leader>dB",
-      function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end,
-      desc =
-      "Breakpoint Condition"
-    },
-    {
-      "<leader>db",
-      function() require("dap").toggle_breakpoint() end,
-      desc =
-      "Toggle Breakpoint"
-    },
-    {
-      "<leader>dc",
-      function() require("dap").continue() end,
-      desc =
-      "Continue"
-    },
-    {
-      "<leader>dC",
-      function() require("dap").run_to_cursor() end,
-      desc =
-      "Run to Cursor"
-    },
-    {
-      "<leader>dg",
-      function() require("dap").goto_() end,
-      desc =
-      "Go to line (no execute)"
-    },
-    {
-      "<leader>di",
-      function() require("dap").step_into() end,
-      desc =
-      "Step Into"
-    },
-    { "<leader>dj", function() require("dap").down() end, desc = "Down" },
-    { "<leader>dk", function() require("dap").up() end,   desc = "Up" },
-    {
-      "<leader>dl",
-      function() require("dap").run_last() end,
-      desc =
-      "Run Last"
-    },
-    {
-      "<leader>do",
-      function() require("dap").step_out() end,
-      desc =
-      "Step Out"
-    },
-    {
-      "<leader>dO",
-      function() require("dap").step_over() end,
-      desc =
-      "Step Over"
-    },
-    { "<leader>dp", function() require("dap").pause() end, desc = "Pause" },
-    {
-      "<leader>dr",
-      function() require("dap").repl.toggle() end,
-      desc =
-      "Toggle REPL"
-    },
-    {
-      "<leader>ds",
-      function() require("dap").session() end,
-      desc =
-      "Session"
-    },
-    {
-      "<leader>dt",
-      function() require("dap").terminate() end,
-      desc =
-      "Terminate"
-    },
-    {
-      "<leader>dw",
-      function() require("dap.ui.widgets").hover() end,
-      desc =
-      "Widgets"
-    },
-  },
+  keys = function()
+    -- local dapui = require("dapui")
+
+    -- return {
+    --   { "<leader>du", function() dapui.toggle({}) end,  desc = "Dap UI" },
+    -- }
+    return {
+      {
+        "<leader>dB",
+        function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end,
+        desc =
+        "Breakpoint Condition"
+      },
+      { "<leader>dC", require("dap").run_to_cursor,     desc = "Run to Cursor" },
+      { "<leader>dO", require("dap").step_over,         desc = "Step Over" },
+      { "<leader>db", require("dap").toggle_breakpoint, desc = "Toggle Breakpoint" },
+      { "<leader>dc", require("dap").continue,          desc = "Continue" },
+      { "<leader>dg", require("dap").goto_,             desc = "Go to line (no execute)" },
+      { "<leader>di", require("dap").step_into,         desc = "Step Into" },
+      { "<leader>dj", require("dap").down,              desc = "Down" },
+      { "<leader>dk", require("dap").up,                desc = "Up" },
+      { "<leader>dl", require("dap").run_last,          desc = "Run Last" },
+      { "<leader>do", require("dap").step_out,          desc = "Step Out" },
+      { "<leader>dp", require("dap").pause,             desc = "Pause" },
+      { "<leader>dr", require("dap").repl.toggle,       desc = "Toggle REPL" },
+      { "<leader>ds", require("dap").session,           desc = "Session" },
+      { "<leader>dt", require("dap").terminate,         desc = "Terminate" },
+      { "<leader>d?", require("dap.ui.widgets").scopes, desc = "dap: show scopes" },
+      {
+        "<leader>dw",
+        require("dap.ui.widgets").hover,
+        { "n", "v" },
+        desc = "Widgets"
+      },
+      {
+        "<leader>de",
+        require("dap.ui").eval,
+        { "n", "v" },
+        desc = "Eval",
+      },
+    }
+  end,
   init = function()
     vim.fn.sign_define("DapBreakpoint", { text = "🛑", texthl = "", linehl = "", numhl = "" })
     vim.api.nvim_set_hl(0, "DapStoppedLine", { default = true, link = "Visual" })
 
     -- au FileType dap-repl lua require('dap.ext.autocompl').attach()
     vim.cmd [[autocmd FileType dap-repl lua require('dap.ext.autocompl').attach()]]
-  end
+  end,
 }

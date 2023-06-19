@@ -1,50 +1,3 @@
--- ╭─────────────────────────────────────────────────────╮
--- │ Find, Filter, Preview, Pick. All lua, all the time. │
--- ╰─────────────────────────────────────────────────────╯
--- Setup nvim config file finder
-local nvim_config_files = function()
-  require("telescope.builtin").find_files({
-    cwd = "~/.config/nvim",
-    prompt_title = "Find neovim config files"
-  })
-end
-
--- Function for defining a telescope picker over all the files that I manage using yadm.io.
-local yadm_files = function()
-  local pickers = require("telescope.pickers")
-  local finders = require("telescope.finders")
-  local conf = require("telescope.config").values
-
-  local opts = {
-    theme = "dropdown",
-    previewer = false,
-    layout_config = {
-      height = 20,
-      width = 80,
-    },
-  }
-  local files_string = vim.fn.system("yadm list -a")
-  local files = vim.split(files_string, "\n")
-
-  pickers.new(opts, {
-    prompt_title = "YADM Config Files",
-    finder = finders.new_table({
-      results = files,
-      entry_maker = function(entry)
-        -- meow
-        return {
-          value = "~/" .. entry,
-          display = entry,
-          ordinal = entry,
-        }
-      end,
-    }),
-    previewer = conf.file_previewer(opts),
-    sorter = conf.file_sorter(opts),
-  }):find()
-end
-
-
 return {
   -- ╭──────────────────────────────────────────────────────────╮
   -- │    A file manager for Neovim which lets you edit your    │
@@ -55,6 +8,9 @@ return {
     event = "VeryLazy"
   },
 
+  -- ╭─────────────────────────────────────────────────────╮
+  -- │ Find, Filter, Preview, Pick. All lua, all the time. │
+  -- ╰─────────────────────────────────────────────────────╯
   {
     "nvim-telescope/telescope.nvim",
     branch = "0.1.x",
@@ -99,17 +55,63 @@ return {
         },
       }
     end,
-    keys = {
-      -- { "<leader><space>", desc = "Fuzzy find" },
-      -- { "<leader><CR>",    desc = "Fuzzy find open buffers" },
-      { "<leader>fn", nvim_config_files, {
-        desc =
-        "Show files in ~/.config/nvim/"
-      } },
-      { "<leader>fy", yadm_files,                                              { desc = "Show YADM files" } },
-      { "<leader>fa", "<cmd>Telescope telescope-alternate alternate_file<CR>", { desc = "Show alternate file" } },
-      { "<leader>fs", "<cmd>Telescope aerial<CR>",                             { desc = "Show symbols via aerial" } },
-    }
+    keys = function()
+      local utils = require("plugins.editor.telescope_utils")
+      local builtins = require("telescope.builtin")
+
+      return {
+        {
+          "<leader><space>",
+          builtins.find_files,
+          desc = "tele: find",
+        },
+        {
+          "<leader><cr>",
+          builtins.buffers,
+          desc = "tele: buffers find",
+        },
+        {
+          "<leader>/",
+          builtins.live_grep,
+          desc = "tele: live grep",
+        },
+        {
+          "<leader>fk",
+          builtins.grep_string,
+          desc = "tele: string grep",
+        },
+        {
+          "<leader>fm",
+          builtins.marks,
+          desc = "tele: marks",
+        },
+        {
+          "<leader>fo",
+          builtins.oldfiles,
+          desc = "tele: old files",
+        },
+        {
+          "<leader>fn",
+          utils.nvim_config_files,
+          desc = "Show files in ~/.config/nvim/",
+        },
+        {
+          "<leader>fy",
+          utils.yadm_files,
+          desc = "Show YADM files",
+        },
+        {
+          "<leader>fa",
+          "<cmd>Telescope telescope-alternate alternate_file<CR>",
+          desc = "Show alternate file",
+        },
+        {
+          "<leader>fs",
+          "<cmd>Telescope aerial<CR>",
+          desc = "Show symbols via aerial",
+        },
+      }
+    end
   },
 
   -- ╭───────────────────────────────────────────────────────────────────────╮
@@ -252,7 +254,64 @@ return {
     },
     config = function(_, opts)
       require("trouble").setup(opts)
-    end
+    end,
+    keys = {
+      {
+        "<leader>xx",
+        "<cmd>Trouble<cr>",
+        desc = "Trouble",
+      },
+      {
+        "<leader>xr",
+        "<cmd>TroubleRefresh<cr>",
+        desc = "Trouble: refresh",
+      },
+      {
+        "<leader>xl",
+        "<cmd>Trouble loclist<cr>",
+        desc = "Trouble: -> loclist",
+      },
+      {
+        "<leader>xq",
+        "<cmd>Trouble quickfix<cr>",
+        desc = "Trouble: -> quickfix",
+      },
+      {
+        "<leader>xw",
+        "<cmd>Trouble workspace_diagnostics<cr>",
+        desc = "Trouble: workspace diags",
+      },
+      {
+        "<leader>xd",
+        "<cmd>Trouble document_diagnostics<cr>",
+        desc = "Trouble: doc diags",
+      },
+      {
+        "<leader>xR",
+        "<cmd>Trouble lsp_references<cr>",
+        desc = "Trouble: LSP references",
+      },
+      {
+        "<leader>xD",
+        "<cmd>Trouble lsp_definitions<cr>",
+        desc = "Trouble: LSP definitions",
+      },
+      {
+        "<leader>xT",
+        "<cmd>Trouble lsp_type_definitions<cr>",
+        desc = "Trouble: LSP type defs",
+      },
+      {
+        "<leader>]",
+        "<cmd>lua require('trouble').next({skip_groups = true, jump = true})<cr>",
+        desc = "Trouble: next",
+      },
+      {
+        "<leader>[",
+        "<cmd>lua require('trouble').prev({skip_groups = true, jump = true})<cr>",
+        desc = "Trouble: prev",
+      },
+    }
   },
 
   -- ╭─────────────────────────────────────────╮

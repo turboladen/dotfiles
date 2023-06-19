@@ -1,33 +1,34 @@
-local function select_next(cmp, snippy)
-  return cmp.mapping(function(fallback)
-    if cmp.visible() then
-      cmp.select_next_item()
-    elseif snippy.can_expand_or_advance() then
-      snippy.expand_or_advance()
-    else
-      fallback()
-    end
-  end, { "i", "s", "c" })
-end
-
-local function select_prev(cmp, snippy)
-  return cmp.mapping(function(fallback)
-    if cmp.visible() then
-      cmp.select_prev_item()
-    elseif snippy.can_jump(-1) then
-      snippy.previous()
-    else
-      fallback()
-    end
-  end, { "i", "s", "c" })
-end
-
 return {
   {
     "dcampos/nvim-snippy",
     dependencies = { "honza/vim-snippets" },
     lazy = true,
-    opts = {},
+    opts = {
+      mappings = {
+        is = {
+          ['<Tab>'] = 'expand_or_advance',
+          ['<S-Tab>'] = 'previous',
+        },
+        nx = {
+          ['<leader>x'] = 'cut_text',
+        },
+      },
+    },
+    keys = function()
+      local mappings = require('snippy.mapping')
+
+      -- TODO: Haven't yet confirmed these do what I want.
+      return {
+        { "<Tab>",   mappings.expand_or_advance("<Tab>"), "i" },
+
+        { "<Tab>",   mappings.next("<Tab>"),              "s" },
+        { "<C-j>",   mappings.next("<Tab>"),              "s" },
+        { "<S-Tab>", mappings.previous("<S-Tab>"),        { "i", "s" } },
+        { "<C-j>",   mappings.previous("<C-j>"),          { "i", "s" } },
+        { "<Tab>",   mappings.cut_text,                   "x",         { remap = true } },
+        { "g<Tab>",  mappings.cut_text,                   "n",         { remap = true } },
+      }
+    end
   },
 
   --  ╭────────────────────────────────────────────────────────────╮
@@ -46,17 +47,36 @@ return {
         group = crates_group,
         command = "nnoremap <silent> K :lua require('crates').show_popup()<CR>"
       })
-    end,
-    opts = {},
-    config = function()
-      local crates = require("crates")
-      crates.setup()
 
-      vim.keymap.set("n", "<leader>ct", crates.toggle, { desc = "Enable/disable crate info" })
-      vim.keymap.set("n", "<leader>cr", crates.reload, { desc = "Reload (clear cache)" })
-      vim.keymap.set("n", "<leader>cv", crates.show_versions_popup, { desc = "Show crate details w/version info" })
-      vim.keymap.set("n", "<leader>cf", crates.show_features_popup, { desc = "Show crate details w/feature info" })
+      vim.api.nvim_create_autocmd({ 'BufEnter Cargo.toml' }, {
+        group = crates_group,
+
+        callback = function(ev)
+          local function opts(desc)
+            return {
+              -- buffer = ev.buf,
+              buffer = true,
+              desc = desc
+            }
+          end
+
+          vim.keymap.set('n', '<leader>ct', "<cmd>lua require('crates').toggle<cr>", opts("crates: enable/disable info"))
+        end
+      })
     end,
+    config = function()
+      require("crates").setup()
+    end,
+    keys = function()
+      local crates = require("crates")
+
+      return {
+        -- { "<leader>ct", crates.toggle,              desc = "crates: enable/disable info" },
+        { "<leader>cr", crates.reload,              desc = "crates: reload cache" },
+        { "<leader>cv", crates.show_versions_popup, desc = "crates: details w/version info" },
+        { "<leader>cf", crates.show_features_popup, desc = "crates: details w/feature info" },
+      }
+    end
   },
 
   --  ╭──────────────────────────────────────────────────────╮
@@ -90,14 +110,15 @@ return {
       "onsails/lspkind-nvim",
     },
     opts = function()
-      local has_words_before = function()
-        unpack = unpack or table.unpack
-        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-      end
+      -- local has_words_before = function()
+      --   unpack = unpack or table.unpack
+      --   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+      --   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+      -- end
 
       local snippy = require("snippy")
       local cmp = require("cmp")
+      local cmp_utils = require("plugins.coding.cmp_utils")
 
       return {
         completion = {
@@ -107,10 +128,10 @@ return {
           format = require("lspkind").cmp_format(),
         },
         mapping = {
-          ["<C-j>"] = select_next(cmp, snippy),
-          ["<Tab>"] = select_next(cmp, snippy),
-          ["<C-k>"] = select_prev(cmp, snippy),
-          ["<S-Tab>"] = select_prev(cmp, snippy),
+          ["<C-j>"] = cmp_utils.select_next(cmp, snippy),
+          ["<Tab>"] = cmp_utils.select_next(cmp, snippy),
+          ["<C-k>"] = cmp_utils.select_prev(cmp, snippy),
+          ["<S-Tab>"] = cmp_utils.select_prev(cmp, snippy),
           ["<CR>"] = cmp.mapping({
             i = function(fallback)
               if cmp.visible() then
@@ -316,15 +337,18 @@ return {
     config = function(_, opts)
       local neogen = require("neogen")
       neogen.setup(opts)
+    end,
+    keys = function()
+      local neogen = require("neogen")
 
-      local map_opts = { noremap = true, silent = true }
-
-      vim.keymap.set("n", "<leader>ng", neogen.generate, map_opts)
-
-      vim.keymap.set("i", "<C-l>", neogen.jump_next, map_opts)
-      vim.keymap.set("i", "<C-h>", neogen.jump_prev, map_opts)
+      return {
+        { "<leader>cg", neogen.generate,  desc = "Generate annotation" },
+        { "<Tab>",      neogen.jump_next, desc = "Next annotation" },
+        { "<S-Tab>",    neogen.jump_prev, desc = "Next annotation" },
+      }
     end
   },
+
   -- ╭────────────────────────────────────────────────────────╮
   -- │ 🧠 💪 // Smart and powerful comment plugin for neovim. │
   -- ╰────────────────────────────────────────────────────────╯

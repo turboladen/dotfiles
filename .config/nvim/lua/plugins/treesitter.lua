@@ -2,7 +2,6 @@
 --         ┃   Treesitter configurations and abstraction layer for    ┃
 --         ┃                         Neovim.                          ┃
 --         ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-
 local ts_opts = {
   ensure_installed = {
     "bash",
