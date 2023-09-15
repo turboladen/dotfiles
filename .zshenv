@@ -4,9 +4,17 @@
 # ╰─────────────────────────────────────────────────────────────────────────╯
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-source "$HOME/.config/zsh/chruby.zsh"
+#  ╭──────╮
+#  │ Rust │
+#  ╰──────╯
+PATH=$PATH:"$HOME/.cargo/bin"
 source "$HOME/.cargo/env"
-. "$HOME/.cargo/env"
+
+#  ╭──────╮
+#  │ Ruby │
+#  ╰──────╯
+source "$HOME/.config/zsh/chruby.zsh"
+chruby 3
 
 # ╭──────────────────────────────╮
 # │ Make pyenv pythons available │
