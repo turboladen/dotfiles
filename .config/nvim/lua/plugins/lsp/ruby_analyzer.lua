@@ -16,7 +16,7 @@ local function add_server()
       },
     }
   end
-  vim.lsp.set_log_level 'trace'
+  -- vim.lsp.set_log_level 'trace'
 end
 
 return {

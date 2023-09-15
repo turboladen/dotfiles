@@ -8,6 +8,9 @@ function CustomOpenFloaterm()
 end
 
 return {
+  --  ╭────────────────────────────────────────────────────────╮
+  --  │ A fancy, configurable, notification manager for NeoVim │
+  --  ╰────────────────────────────────────────────────────────╯
   {
     "rcarriga/nvim-notify",
     priority = 1000,
@@ -30,6 +33,7 @@ return {
       telescope.load_extension("notify")
     end
   },
+
   -- ╭────────────────────────────────────────────────────────╮
   -- │ Neovim plugin to improve the default vim.ui interfaces │
   -- ╰────────────────────────────────────────────────────────╯
@@ -46,6 +50,7 @@ return {
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
     },
+    enabled = false,
     event = "VeryLazy",
     opts = function()
       -- local icon = ""
@@ -97,6 +102,7 @@ return {
   -- https://github.com/LazyVim/LazyVim/blob/2e7ad2b8257b7d25df0264a5b193da7af35f5a53/lua/lazyvim/plugins/ui.lua#L53
   {
     "akinsho/bufferline.nvim",
+    enabled = false,
     event = "VeryLazy",
     keys = {
       { "<leader>bp", "<Cmd>BufferLineTogglePin<CR>",            desc = "Toggle pin" },
@@ -292,5 +298,30 @@ return {
     "petertriho/nvim-scrollbar",
     event = "VeryLazy",
     opts = {},
+  },
+
+  {
+    'Bekaboo/dropbar.nvim',
+    enabled = false,
+    opts = {}
+  },
+
+  {
+    "SmiteshP/nvim-navbuddy",
+    dependencies = {
+      "neovim/nvim-lspconfig",
+      "SmiteshP/nvim-navic",
+      "MunifTanjim/nui.nvim",
+      "numToStr/Comment.nvim",        -- Optional
+      "nvim-telescope/telescope.nvim" -- Optional
+    },
+    opts = {
+      -- lsp = {
+      --   auto_attach = true
+      -- }
+    },
+    -- keys = {
+    --   { "<leader>cn", function() require("nvim-navbuddy").open() end, desc = "Navbuddy" }
+    -- }
   }
 }

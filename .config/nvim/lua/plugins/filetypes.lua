@@ -6,6 +6,7 @@ return {
   {
     "nathom/filetype.nvim",
     lazy = false,
+    enabled = false,
     opts = {
       overrides = {
         extensions = {
@@ -21,6 +22,7 @@ return {
       require("filetype").setup(opts)
     end
   },
+
   -- ╭────────────────────────────────╮
   -- │ A solid language pack for Vim. │
   -- ╰────────────────────────────────╯
@@ -81,6 +83,15 @@ return {
     opts = {}
   },
 
+  --  ╭───────────────────────╮
+  --  │ KDL: https://kdl.dev/ │
+  --  ╰───────────────────────╯
+  {
+    "imsnif/kdl.vim",
+    config = function()
+    end
+  },
+
   -- ╭───────────────────────────╮
   -- │ Ruby on Rails power tools │
   -- ╰───────────────────────────╯
@@ -88,6 +99,7 @@ return {
     "tpope/vim-rails",
     ft = { "ruby", "eruby", "rspec" },
   },
+
   -- ╭───────────────────────────────────────╮
   -- │ It's like rails.vim without the rails │
   -- ╰───────────────────────────────────────╯
@@ -107,6 +119,11 @@ return {
     "turboladen/vim-rbs",
     ft = { "ruby", "rbs", "ruby.rbs", "rspec" }
   },
+
+  --  ╭────────────────────────────╮
+  --  │ RON (Rusy Object Notation) │
+  --  ╰────────────────────────────╯
+  { "ron-rs/ron.vim" },
 
   -- ╭───────────────────────────────────────────────────────────────────────────╮
   -- │ Restores `FocusGained` and `FocusLost` autocommand events work when using │
@@ -131,5 +148,13 @@ return {
   {
     "stephpy/vim-yaml",
     ft = "yaml",
-  }
+  },
+
+  --  ╭────────────╮
+  --  │ eww's yuck │
+  --  ╰────────────╯
+  {
+    "elkowar/yuck.vim",
+    -- ft = "yuck",
+  },
 }

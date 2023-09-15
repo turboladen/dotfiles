@@ -16,15 +16,7 @@ local function make_flags()
   }
 end
 
-local function setup_lsp(name, lspconfig, base_capabilities)
-  lspconfig[name].setup({
-    capabilities = base_capabilities,
-  })
-end
-
 return {
   hover = hover,
-  -- make_capabilities = make_capabilities,
   make_flags = make_flags,
-  setup_lsp = setup_lsp
 }

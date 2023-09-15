@@ -77,6 +77,9 @@ local function rust_tools_opts()
               },
             },
           },
+          procMacro = {
+            enable = true
+          },
           typing = {
             autoClosingAngleBrackets = {
               enable = true
