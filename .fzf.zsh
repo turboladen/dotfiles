@@ -10,4 +10,4 @@ fi
 
 # Key bindings
 # ------------
-source "${HOMEBREW_PREFIX}/opt/fzf/shell/key-bindings.zsh"
+# source "${HOMEBREW_PREFIX}/opt/fzf/shell/key-bindings.zsh"
