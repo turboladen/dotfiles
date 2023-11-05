@@ -258,7 +258,8 @@ live_config_reload: true
 #   args:
 #     - --login
 shell:
-  program: /opt/homebrew/bin/zsh
+  # program: /opt/homebrew/bin/zsh
+  program: /bin/zsh
 
 # Key bindings
 #
