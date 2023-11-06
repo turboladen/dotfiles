@@ -51,7 +51,7 @@ return {
       "nvim-treesitter/nvim-treesitter",
     },
     enabled = false,
-    event = "VeryLazy",
+    -- event = "VeryLazy",
     opts = function()
       -- local icon = ""
       local icon = "✨"
@@ -73,8 +73,8 @@ return {
   -- ╰─────────────────────────────────────────────────────────╯
   {
     "mvllow/modes.nvim",
-    tag = "v0.2.0",
-    event = "VeryLazy",
+    tag = "v0.2.1",
+    -- event = "VeryLazy",
     init = function()
       vim.opt.cursorline = true
     end,
@@ -88,6 +88,7 @@ return {
   -- ╰──────────────────────────────────╯
   {
     "voldikss/vim-floaterm",
+    enabled = false,
     keys = {
       { "<leader>ww", CustomOpenFloaterm, desc = "Open a floating term" },
     },
@@ -127,7 +128,7 @@ return {
   -- ╰──────────────────────────────────────────────────────────────────────────────╯
   {
     'nvim-lualine/lualine.nvim',
-    event = "VeryLazy",
+    -- event = "VeryLazy",
     dependencies = {
       'nvim-tree/nvim-web-devicons',
       'stevearc/aerial.nvim',
@@ -172,7 +173,7 @@ return {
       return {
         options = {
           theme = bubbles_theme,
-          component_separators = "",
+          component_separators = "󰇙",
           section_separators = { left = "", right = "" },
         },
         sections = {
@@ -180,9 +181,9 @@ return {
             { 'mode', separator = { left = '' }, right_padding = 2 },
           },
           lualine_b = {
-            { 'branch',   color = { bg = colors.darkorange } },
-            { 'diff',     separator = { right = "" },     color = { bg = "#000000" } },
-            { 'filename', path = 1,                          separator = { right = "" } },
+            { 'branch', color = { bg = colors.darkorange } },
+            { 'diff', separator = { right = "" }, color = { bg = "#000000" } },
+            { 'filename', path = 1, separator = { right = "" } },
           },
           lualine_c = { 'tabs' },
           lualine_x = {
@@ -220,27 +221,46 @@ return {
   -- ╰──────────────────────────────────────────╯
   {
     "lukas-reineke/indent-blankline.nvim",
+    enabled = false,
+    main = "ibl",
     event = { "BufReadPost", "BufNewFile" },
     opts = {
-      char = "┊",
-      char_highlight = "LineNr",
-      buftype_exclude = { "terminal", "nofile" },
-      filetype_exclude = {
-        "Trouble",
-        "help",
-        "lazy",
-        "lua",
-        "mason",
-        "notify",
-        "ruby",
-        "rust",
+      indent = {
+        char = "┊",
+        highlight = "LineNr",
       },
-      space_char_blankline = " ",
-      show_current_context = true,
-      show_current_context_start = true,
+      exclude = {
+        filetypes = {
+          "Trouble",
+          "help",
+          "lazy",
+          "lua",
+          "mason",
+          "notify",
+          -- "ruby",
+          -- "rust",
+        },
+      },
+      -- char = "┊",
+      -- char_highlight = "LineNr",
+      -- buftype_exclude = { "terminal", "nofile" },
+      -- filetype_exclude = {
+      --   "Trouble",
+      --   "help",
+      --   "lazy",
+      --   "lua",
+      --   "mason",
+      --   "notify",
+      --   "ruby",
+      --   "rust",
+      -- },
+      --
+      -- space_char_blankline = " ",
+      -- show_current_context = true,
+      -- show_current_context_start = true,
     },
     config = function(_, opts)
-      require("indent_blankline").setup(opts)
+      require("ibl").setup(opts)
     end,
     init = function()
       vim.opt.list = true
@@ -253,7 +273,7 @@ return {
   {
     "echasnovski/mini.indentscope",
     version = false, -- wait till new 0.7.0 release to put it back on semver
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "VeryLazy", "BufReadPre", "BufNewFile" },
     opts = {
       -- symbol = "▏",
       symbol = "│",
@@ -296,7 +316,7 @@ return {
   -- ╰─────────────────────────────╯
   {
     "petertriho/nvim-scrollbar",
-    event = "VeryLazy",
+    -- event = "VeryLazy",
     opts = {},
   },
 
@@ -320,6 +340,9 @@ return {
       --   auto_attach = true
       -- }
     },
+    config = function(_, opts)
+      require('nvim-navbuddy').setup(opts)
+    end
     -- keys = {
     --   { "<leader>cn", function() require("nvim-navbuddy").open() end, desc = "Navbuddy" }
     -- }

@@ -1,6 +1,7 @@
 return {
   {
     "vim-test/vim-test",
+    event = "VeryLazy",
     dependencies = {
       "tpope/vim-dispatch",
       "voldikss/vim-floaterm",
@@ -35,7 +36,7 @@ return {
   -- ╰───────────────────────────────────────────────────────────────────╯
   {
     "nvim-neotest/neotest",
-    lazy = true,
+    event = "VeryLazy",
     enabled = false,
     dependencies = {
       "antoinemadec/FixCursorHold.nvim",

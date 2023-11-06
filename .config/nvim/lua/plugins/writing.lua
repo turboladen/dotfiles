@@ -10,6 +10,7 @@ return {
       vim.g.limelight_paragraph_span = 1
     end
   },
+
   -- ╭──────────────────────────────────╮
   -- │ Distraction-free writing in Vim. │
   -- ╰──────────────────────────────────╯
@@ -20,6 +21,7 @@ return {
       vim.g.goyo_width = 102
     end
   },
+
   -- ╭────────────────────────────────────╮
   -- │ Markdown preview plugin for Neovim │
   -- ╰────────────────────────────────────╯

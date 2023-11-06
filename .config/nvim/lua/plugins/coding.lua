@@ -4,8 +4,9 @@ return {
   --  ╰──────────────────────────────────────────╯
   {
     "dcampos/nvim-snippy",
-    dependencies = { "honza/vim-snippets" },
+    event = "VeryLazy",
     lazy = true,
+    dependencies = { "honza/vim-snippets" },
     opts = {
       mappings = {
         is = {
@@ -39,9 +40,10 @@ return {
   --  ╰────────────────────────────────────────────────────────────╯
   {
     "saecki/crates.nvim",
-    -- version = "v0.3.0",
+    tag = "v0.4.0",
     dependencies = { "nvim-lua/plenary.nvim" },
     event = { "BufRead Cargo.toml" },
+    lazy = true,
     init = function()
       local crates_group = vim.api.nvim_create_augroup("crates", {})
 
@@ -51,7 +53,8 @@ return {
         command = "nnoremap <silent> K :lua require('crates').show_popup()<CR>"
       })
 
-      vim.api.nvim_create_autocmd({ 'BufEnter Cargo.toml' }, {
+      vim.api.nvim_create_autocmd({ 'BufEnter' }, {
+        pattern = 'Cargo.toml',
         group = crates_group,
 
         callback = function(ev)
@@ -91,7 +94,7 @@ return {
   {
     "hrsh7th/nvim-cmp",
     version = false,
-    -- event = "InsertEnter",
+    event = "VeryLazy",
     dependencies = {
       -- "neovim/nvim-lspconfig",
 
@@ -277,6 +280,7 @@ return {
   -- ╰────────────────────────────────────────────────────╯
   {
     'Wansmer/treesj',
+    event = "VeryLazy",
     dependencies = { 'nvim-treesitter' },
     opts = {
       use_default_keymaps = false,
@@ -309,7 +313,7 @@ return {
   -- ╰───────────────────╯
   {
     "idanarye/vim-casetrate",
-    lazy = true,
+    event = "VeryLazy",
     cmd = "Casetrate",
   },
 
@@ -318,7 +322,7 @@ return {
   -- ╰─────────────────────────────────────────────╯
   {
     "godlygeek/tabular",
-    lazy = true,
+    event = "VeryLazy",
     cmd = "Tabularize",
   },
 
@@ -327,7 +331,7 @@ return {
   -- ╰──────────────────────────────────────────╯
   {
     "vim-utils/vim-troll-stopper",
-    lazy = false,
+    event = "VeryLazy",
     init = function()
       vim.cmd([[highlight TrollStopper ctermbg = red guibg = #FF0000 ]])
     end
@@ -338,6 +342,7 @@ return {
   -- ╰────────────────────────────────╯
   {
     "danymat/neogen",
+    event = "VeryLazy",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     opts = {},
     config = function(_, opts)
@@ -371,6 +376,7 @@ return {
   -- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
   {
     "folke/neodev.nvim",
+    event = "VeryLazy",
     opts = {
       library = {
         plugins = { "neotest" },
@@ -385,6 +391,7 @@ return {
   --  ╰──────────────────────────────────────────────────────────────────────────────╯
   {
     "simrat39/symbols-outline.nvim",
+    event = "VeryLazy",
     cmd = { "SymbolsOutline", "SymbolsOutlineOpen", "SymbolsOutlineClose" },
     opts = {},
     keys = {
@@ -397,6 +404,7 @@ return {
   -- ╰──────────────────────────────────────────────────╯
   {
     "vuki656/package-info.nvim",
+    event = "VeryLazy",
     dependencies = { "MunifTanjim/nui.nvim" },
     config = function()
       local package_info = require('package-info')

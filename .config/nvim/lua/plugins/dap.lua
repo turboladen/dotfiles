@@ -6,6 +6,8 @@
 --    instead of pressing F5.
 return {
   "mfussenegger/nvim-dap",
+  enabled = false,
+  event = "VeryLazy",
   dependencies = {
     "nvim-lua/plenary.nvim",
     -- ╭───────────────────╮
@@ -13,6 +15,8 @@ return {
     -- ╰───────────────────╯
     {
       "rcarriga/nvim-dap-ui",
+      enabled = false,
+      event = "VeryLazy",
       opts = {},
       config = function(_, opts)
         local dap = require("dap")
@@ -38,13 +42,19 @@ return {
       -- │ This plugin adds virtual text support to nvim-dap. │
       -- ╰────────────────────────────────────────────────────╯
       "theHamsta/nvim-dap-virtual-text",
+      enabled = false,
+      event = "VeryLazy",
       dependencies = {
         "nvim-treesitter/nvim-treesitter",
         "mfussenegger/nvim-dap",
       },
       opts = { commented = true },
     },
-    { "suketa/nvim-dap-ruby" },
+    {
+      "suketa/nvim-dap-ruby",
+      enabled = false,
+      event = "VeryLazy",
+    },
     -- which key integration
     {
       "folke/which-key.nvim",
@@ -59,6 +69,8 @@ return {
     -- mason.nvim integration
     {
       "jay-babu/mason-nvim-dap.nvim",
+      enabled = false,
+      event = "VeryLazy",
       dependencies = "mason.nvim",
       cmd = { "DapInstall", "DapUninstall" },
       opts = {

@@ -93,6 +93,7 @@ end
 
 return {
   'mfussenegger/nvim-lint',
+  event = "VeryLazy",
   config = function()
     require('lint').linters.typos_cli = typos_cli()
 

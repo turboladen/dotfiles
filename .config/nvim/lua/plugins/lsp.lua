@@ -109,7 +109,6 @@ end
 return {
   {
     "nvim-lua/lsp-status.nvim",
-    lazy = false,
     opts = {},
     config = function(_, opts)
       require("lsp-status").config(opts)
@@ -188,6 +187,7 @@ return {
   -- ╰─────────────────────────────────────────────────────────────────╯
   {
     "simrat39/rust-tools.nvim",
+    ft = { "rust" },
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-lua/lsp-status.nvim",
@@ -213,7 +213,7 @@ return {
   -- ╰─────────────────────────────────╯
   {
     "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "VeryLazy", "BufReadPre", "BufNewFile" },
     dependencies = {
       "mason.nvim",
       "williamboman/mason-lspconfig.nvim",
@@ -491,6 +491,7 @@ return {
 
   {
     "onsails/lspkind-nvim",
+    lazy = true,
     opts = {
       mode = "symbol"
     },

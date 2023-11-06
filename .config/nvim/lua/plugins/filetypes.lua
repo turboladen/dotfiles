@@ -28,7 +28,6 @@ return {
   -- ╰────────────────────────────────╯
   {
     "sheerun/vim-polyglot",
-    priority = 900,
     init = function()
       -- https://github.com/tbastos/vim-lua
       vim.g.lua_syntax_fancynotequal = 1
@@ -52,6 +51,7 @@ return {
   -- ╰───────────────────────────────────────────────────────────╯
   {
     "rhysd/committia.vim",
+    event = "VeryLazy",
     init = function()
       vim.g.committia_hooks = {}
 
@@ -80,6 +80,7 @@ return {
   --  ╰──────────╯
   {
     "IndianBoy42/tree-sitter-just",
+    ft = { "just" },
     opts = {}
   },
 
@@ -88,8 +89,8 @@ return {
   --  ╰───────────────────────╯
   {
     "imsnif/kdl.vim",
-    config = function()
-    end
+    ft = { "kdl" },
+    opts = {}
   },
 
   -- ╭───────────────────────────╮
@@ -123,7 +124,10 @@ return {
   --  ╭────────────────────────────╮
   --  │ RON (Rusy Object Notation) │
   --  ╰────────────────────────────╯
-  { "ron-rs/ron.vim" },
+  {
+    "ron-rs/ron.vim",
+    ft = "ron"
+  },
 
   -- ╭───────────────────────────────────────────────────────────────────────────╮
   -- │ Restores `FocusGained` and `FocusLost` autocommand events work when using │
@@ -137,7 +141,7 @@ return {
   {
     "kettek/vim-wren-syntax",
     enabled = false,
-    ft = "wren",
+    ft = { "wren", }
   },
 
   -- ╭────────────────────────────────────────────╮
@@ -147,7 +151,7 @@ return {
   -- ╰────────────────────────────────────────────╯
   {
     "stephpy/vim-yaml",
-    ft = "yaml",
+    ft = { "yaml", }
   },
 
   --  ╭────────────╮
@@ -155,6 +159,6 @@ return {
   --  ╰────────────╯
   {
     "elkowar/yuck.vim",
-    -- ft = "yuck",
+    ft = { "yuck", }
   },
 }

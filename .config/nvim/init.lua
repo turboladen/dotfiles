@@ -121,7 +121,7 @@ require("lazy").setup("plugins", {
 })
 
 -- Set the global var for the homebrew prefix.
-require('turboladen/homebrew').prefix()
+-- require('turboladen/homebrew').prefix()
 
 set_host_progs()
 
@@ -290,20 +290,20 @@ wk.register({
     t = { require("turboladen").cc_box, "Title box" }
   },
 
-  ["<leader>d"] = {
-    name = "+dap",
-    c = { require('dap').continue, "DAP: continue" },
-    k = { require('dap').step_out, "DAP: step out" },
-    l = { require('dap').step_into, "DAP: step into" },
-    j = { require('dap').step_over, "DAP: step over" },
-    b = { require('dap').toggle_breakpoint, "DAP: toggle breakpoint" },
-    r = { require('dap').repl.open, "DAP: open REPL" },
-    L = { require('dap').run_last, "DAP: open REPL" },
-    e = { "lua require('dap').set_exception_breakpoints({'all'})", "DAP: set breakpoints on all exceptions" },
-    t = { require('dap.ui').toggle, "DAP UI: toggle" },
-    -- i = { require('dap.ui.variables').visual_hover },
-    -- ["?"] = { require('dap.ui.variables').scopes },
-  },
+  -- ["<leader>d"] = {
+  --   name = "+dap",
+  --   c = { require('dap').continue, "DAP: continue" },
+  --   k = { require('dap').step_out, "DAP: step out" },
+  --   l = { require('dap').step_into, "DAP: step into" },
+  --   j = { require('dap').step_over, "DAP: step over" },
+  --   b = { require('dap').toggle_breakpoint, "DAP: toggle breakpoint" },
+  --   r = { require('dap').repl.open, "DAP: open REPL" },
+  --   L = { require('dap').run_last, "DAP: open REPL" },
+  --   e = { "lua require('dap').set_exception_breakpoints({'all'})", "DAP: set breakpoints on all exceptions" },
+  --   t = { require('dap.ui').toggle, "DAP UI: toggle" },
+  --   -- i = { require('dap.ui.variables').visual_hover },
+  --   -- ["?"] = { require('dap.ui.variables').scopes },
+  -- },
 
   ["<leader>e"] = {
     name = "+edit",
@@ -389,6 +389,15 @@ wk.register({
 -- Visual mode mappings
 wk.register({
   p = { "\"_dP", "Paste, then move to end of text" },
+
+  ["<leader>b"] = {
+    b = { require("turboladen").al_box, "Left-aligned box; left-aligned text" },
+    t = { require("turboladen").cc_box, "Title box" }
+  },
+
+  ["<leader>l"] = {
+    a = { vim.lsp.buf.code_action, "Code action" },
+  },
 }, {
   mode = "v"
 })

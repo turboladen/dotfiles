@@ -162,6 +162,7 @@ return {
   --  ╰─────────────────────────────────────────────────────────────────╯
   {
     "RRethy/nvim-treesitter-textsubjects",
+    lazy = true,
     dependencies = { "nvim-treesitter/nvim-treesitter" },
   },
   -- ╭──────────────────────────────────────────────────────────────────────────╮
@@ -169,7 +170,8 @@ return {
   -- ╰──────────────────────────────────────────────────────────────────────────╯
   {
     "nvim-treesitter/nvim-treesitter-context",
-    enabled = false,
+    -- enabled = false,
+    lazy = true,
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     opts = {}
   },

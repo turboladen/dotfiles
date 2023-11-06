@@ -15,6 +15,7 @@ return {
     "nvim-telescope/telescope.nvim",
     branch = "0.1.x",
     -- lazy = false,
+    event = "VeryLazy",
     dependencies = {
       "yamatsum/nvim-nonicons",
       "nvim-lua/plenary.nvim",
@@ -63,6 +64,8 @@ return {
   -- ╰───────────────────────────────────────────────────────────────────────╯
   {
     "otavioschwanck/telescope-alternate",
+    enabled = false,
+    event = "VeryLazy",
     dependencies = { "nvim-telescope/telescope.nvim" },
     opts = {
       mappings = {
@@ -309,7 +312,10 @@ return {
   -- ╭────────────────────────────────────────────────────────╮
   -- │ Delete all the buffers except the current/named buffer │
   -- ╰────────────────────────────────────────────────────────╯
-  { "vim-scripts/BufOnly.vim", cmd = "BufOnly" },
+  {
+    "vim-scripts/BufOnly.vim",
+    cmd = "BufOnly",
+  },
 
   -- ╭────────────────────────────────────────╮
   -- │ Enhanced terminal integration for Vim. │
