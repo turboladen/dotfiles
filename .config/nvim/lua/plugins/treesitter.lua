@@ -101,15 +101,15 @@ local ts_opts = {
   --  ╭─────────────────────────────────────────────╮
   --  │ JoosepAlviste/nvim-ts-context-commentstring │
   --  ╰─────────────────────────────────────────────╯
-  context_commentstring = {
-    enable = true,
-    config = {
-      rust = {
-        __default = "// %s",
-        comment = "// %s",
-      },
-    },
-  },
+  -- context_commentstring = {
+  --   enable = true,
+  --   config = {
+  --     rust = {
+  --       __default = "// %s",
+  --       comment = "// %s",
+  --     },
+  --   },
+  -- },
   --  ╭─────────────────────────────────────╮
   --  │ RRethy/nvim-treesitter-textsubjects │
   --  ╰─────────────────────────────────────╯
