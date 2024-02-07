@@ -13,6 +13,7 @@ config.font = wezterm.font({ family = 'MonoLisa' })
 config.font_size = 13.0
 config.native_macos_fullscreen_mode = true
 config.dpi = 144.0
+-- config.dpi = 96.0
 config.use_fancy_tab_bar = false
 config.adjust_window_size_when_changing_font_size = true
 
@@ -84,10 +85,10 @@ config.keys = {
     action = wezterm.action.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' },
   },
   {
-    key = 'n', mods = 'CTRL', action = wezterm.action.SwitchWorkspaceRelative(1)
+    key = 'n', mods = 'SUPER', action = wezterm.action.SwitchWorkspaceRelative(1)
   },
   {
-    key = 'p', mods = 'CTRL', action = wezterm.action.SwitchWorkspaceRelative(-1)
+    key = 'p', mods = 'SUPER', action = wezterm.action.SwitchWorkspaceRelative(-1)
   },
 }
 
