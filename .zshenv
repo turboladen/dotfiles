@@ -4,6 +4,8 @@
 # ╰─────────────────────────────────────────────────────────────────────────╯
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
+export HOMEBREW_CASK_OPTS="--appdir=~/Applications"
+
 #  ╭──────╮
 #  │ Rust │
 #  ╰──────╯
@@ -16,10 +18,11 @@ source "$HOME/.cargo/env"
 source "$HOME/.config/zsh/chruby.zsh"
 chruby 3
 
-# ╭──────────────────────────────╮
-# │ Make pyenv pythons available │
-# ╰──────────────────────────────╯
-PATH=$(pyenv root)/shims:$PATH
+# ╭───────────────╮
+# │ Python        │
+# ╰───────────────╯
+source "$HOME/.rye/env"
+export PATH="$HOME/.rye/lib:$PATH"
 
 # ╭───────────────────────────╮
 # │ Trying out homebrew's nvm │
