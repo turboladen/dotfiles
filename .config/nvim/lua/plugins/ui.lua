@@ -8,38 +8,113 @@ function CustomOpenFloaterm()
 end
 
 return {
+  -- ╭─────────────────────────────────────────────────────────╮
+  -- │ 💥 Highly experimental plugin that completely           │
+  -- │ replaces the UI for messages, cmdline and the popupmenu.│
+  -- ╰─────────────────────────────────────────────────────────╯
+  -- {
+  --   "folke/noice.nvim",
+  --   event = "VeryLazy",
+  --   opts = {
+  --     -- cmdline = {
+  --     --   view = "cmdline",
+  --     -- },
+  --     lsp = {
+  --       -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+  --       override = {
+  --         ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+  --         ["vim.lsp.util.stylize_markdown"] = true,
+  --         ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+  --       },
+  --     },
+  --     -- you can enable a preset for easier configuration
+  --     presets = {
+  --       bottom_search = true,         -- use a classic bottom cmdline for search
+  --       -- command_palette = true,       -- position the cmdline and popupmenu together
+  --       long_message_to_split = true, -- long messages will be sent to a split
+  --       inc_rename = false,           -- enables an input dialog for inc-rename.nvim
+  --       lsp_doc_border = false,       -- add a border to hover docs and signature help
+  --     },
+  --   },
+  --   dependencies = {
+  --     -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+  --     "MunifTanjim/nui.nvim",
+  --     -- OPTIONAL:
+  --     --   `nvim-notify` is only needed, if you want to use the notification view.
+  --     --   If not available, we use `mini` as the fallback
+  --     -- "rcarriga/nvim-notify",
+  --     -- {
+  --     --   "rcarriga/nvim-notify",
+  --     --   dependencies = {
+  --     --     "yamatsum/nvim-nonicons",
+  --     --   },
+  --     --   init = function()
+  --     --     vim.opt.termguicolors = true
+  --     --   end,
+  --     --   opts = {
+  --     --     timeout = 3000,
+  --     --     icons = require("nvim-nonicons.extentions.nvim-notify").icons
+  --     --   },
+  --     -- },
+  --   }
+  -- },
+
   --  ╭────────────────────────────────────────────────────────╮
   --  │ A fancy, configurable, notification manager for NeoVim │
   --  ╰────────────────────────────────────────────────────────╯
   {
     "rcarriga/nvim-notify",
-    priority = 1000,
+    event = "VeryLazy",
     dependencies = {
-      "yamatsum/nvim-nonicons",
       "nvim-telescope/telescope.nvim",
     },
     init = function()
       vim.opt.termguicolors = true
     end,
     opts = {
-      timeout = 3000,
-      icons = require("nvim-nonicons.extentions.nvim-notify").icons
+      render = "wrapped-compact"
     },
-    config = function(_, opts)
-      vim.notify = require("notify")
-      require("notify").setup(opts)
+    config = function(opts)
+      local notify = require("notify")
+      vim.notify = notify
+      notify.setup(opts)
 
       local telescope = require("telescope")
       telescope.load_extension("notify")
+
+      vim.lsp.handlers['window/showMessage'] = function(_, result, ctx)
+        local client = vim.lsp.get_client_by_id(ctx.client_id)
+        local lvl = ({
+          'ERROR',
+          'WARN',
+          'INFO',
+          'DEBUG',
+        })[result.type]
+        notify({ result.message }, lvl, {
+          title = 'LSP | ' .. client.name,
+          timeout = 10000,
+          keep = function()
+            return lvl == 'ERROR' or lvl == 'WARN'
+          end,
+        })
+      end
     end
   },
 
+  {
+    "j-hui/fidget.nvim",
+    tag = "v1.0.0",
+    opts = {
+    },
+  },
+  --
   -- ╭────────────────────────────────────────────────────────╮
   -- │ Neovim plugin to improve the default vim.ui interfaces │
   -- ╰────────────────────────────────────────────────────────╯
   {
     'stevearc/dressing.nvim',
     event = "VeryLazy",
+    opts = {}
   },
 
   -- ╭─────────────────────────────────────╮
@@ -51,7 +126,7 @@ return {
       "nvim-treesitter/nvim-treesitter",
     },
     enabled = false,
-    -- event = "VeryLazy",
+    event = "VeryLazy",
     opts = function()
       -- local icon = ""
       local icon = "✨"
@@ -74,7 +149,7 @@ return {
   {
     "mvllow/modes.nvim",
     tag = "v0.2.1",
-    -- event = "VeryLazy",
+    event = "VeryLazy",
     init = function()
       vim.opt.cursorline = true
     end,
@@ -97,38 +172,13 @@ return {
     end,
   },
 
-  --  ╭────────────────────────────────────────────────────╮
-  --  │ A snazzy 💅 buffer line (with tabpage integration) │
-  --  ╰────────────────────────────────────────────────────╯
-  -- https://github.com/LazyVim/LazyVim/blob/2e7ad2b8257b7d25df0264a5b193da7af35f5a53/lua/lazyvim/plugins/ui.lua#L53
-  {
-    "akinsho/bufferline.nvim",
-    enabled = false,
-    event = "VeryLazy",
-    keys = {
-      { "<leader>bp", "<Cmd>BufferLineTogglePin<CR>",            desc = "Toggle pin" },
-      { "<leader>bP", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "Delete non-pinned buffers" },
-    },
-    opts = {
-      options = {
-        diagnostics = "nvim_lsp",
-        diagnostics_indicator = function(_, _, diag)
-          local icons = require("turboladen").signs
-          local ret = (diag.error and icons.Error .. diag.error .. " " or "")
-              .. (diag.warning and icons.Warn .. diag.warning or "")
-          return vim.trim(ret)
-        end,
-      }
-    }
-  },
-
   -- ╭──────────────────────────────────────────────────────────────────────────────╮
   -- │ A blazing fast and easy to configure neovim statusline plugin written        │
   -- │  in pure lua.                                                                │
   -- ╰──────────────────────────────────────────────────────────────────────────────╯
   {
     'nvim-lualine/lualine.nvim',
-    -- event = "VeryLazy",
+    event = "VeryLazy",
     dependencies = {
       'nvim-tree/nvim-web-devicons',
       'stevearc/aerial.nvim',
@@ -267,37 +317,6 @@ return {
     end
   },
 
-  --  ╭─────────────────────────────────────────────╮
-  --  │ active indent guide and indent text objects │
-  --  ╰─────────────────────────────────────────────╯
-  {
-    "echasnovski/mini.indentscope",
-    version = false, -- wait till new 0.7.0 release to put it back on semver
-    event = { "VeryLazy", "BufReadPre", "BufNewFile" },
-    opts = {
-      -- symbol = "▏",
-      symbol = "│",
-      options = { try_as_border = true },
-    },
-    init = function()
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = {
-          "Trouble",
-          "help",
-          "lazy",
-          "lazyterm",
-          "mason",
-          "notify",
-          "ruby",
-          "rust"
-        },
-        callback = function()
-          vim.b.miniindentscope_disable = true
-        end,
-      })
-    end,
-  },
-
   -- ╭─────────────────────────────────────────────────────────╮
   -- │ Icon set using nonicons for neovim plugins and settings │
   -- ╰─────────────────────────────────────────────────────────╯
@@ -307,15 +326,17 @@ return {
     dependencies = {
       "nvim-tree/nvim-web-devicons",
     },
-    config = function(_, opts)
-      require('nvim-nonicons').setup(opts)
-    end
+    opts = {},
+    -- config = function(_, opts)
+    --   require('nvim-nonicons').setup(opts)
+    -- end
   },
   -- ╭─────────────────────────────╮
   -- │ Extensible Neovim Scrollbar │
   -- ╰─────────────────────────────╯
   {
     "petertriho/nvim-scrollbar",
+    enabled = false,
     -- event = "VeryLazy",
     opts = {},
   },
@@ -328,6 +349,7 @@ return {
 
   {
     "SmiteshP/nvim-navbuddy",
+    enabled = false,
     dependencies = {
       "neovim/nvim-lspconfig",
       "SmiteshP/nvim-navic",
@@ -340,9 +362,9 @@ return {
       --   auto_attach = true
       -- }
     },
-    config = function(_, opts)
-      require('nvim-navbuddy').setup(opts)
-    end
+    -- config = function(_, opts)
+    --   require('nvim-navbuddy').setup(opts)
+    -- end
     -- keys = {
     --   { "<leader>cn", function() require("nvim-navbuddy").open() end, desc = "Navbuddy" }
     -- }

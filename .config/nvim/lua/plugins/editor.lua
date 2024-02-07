@@ -1,4 +1,12 @@
 return {
+  {
+    "turboladen/init.rs",
+    dev = true,
+    config = function(_opts)
+      vim.o.completefunc = "v:lua.require'init_rs'.regex_buffer_completer"
+    end
+  },
+
   -- ╭──────────────────────────────────────────────────────────╮
   -- │    A file manager for Neovim which lets you edit your    │
   -- │              filesystem like you edit text               │
@@ -14,7 +22,6 @@ return {
   {
     "nvim-telescope/telescope.nvim",
     branch = "0.1.x",
-    -- lazy = false,
     event = "VeryLazy",
     dependencies = {
       "yamatsum/nvim-nonicons",
@@ -174,7 +181,7 @@ return {
       "nvim-treesitter/nvim-treesitter",
       "nvim-tree/nvim-web-devicons"
     },
-    enabled = false,
+    -- enabled = false,
     lazy = true,
     opts = {
       filter_kind = false,

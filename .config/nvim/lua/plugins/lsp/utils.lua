@@ -3,8 +3,8 @@ local function make_capabilities(capabilities)
     "force",
     {},
     vim.lsp.protocol.make_client_capabilities(),
-    require("cmp_nvim_lsp").default_capabilities(),
-    require("lsp-status").capabilities,
+    -- require("cmp_nvim_lsp").default_capabilities(),
+    -- require("lsp-status").capabilities,
     capabilities or {}
   )
 end

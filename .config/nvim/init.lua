@@ -3,6 +3,7 @@
 -- │                                   init.lua                                   │
 -- │                                                                              │
 -- ╰──────────────────────────────────────────────────────────────────────────────╯
+--
 -- ╭────────────────────────────────╮
 -- │ 0.1. Define functions for init │
 -- ╰────────────────────────────────╯
@@ -110,15 +111,23 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup("plugins", {
   dev = {
     path = "~/Development/projects/",
-    patterns = { "turboladen" },
   },
   install = {
     colorscheme = { "nightfox" }
   },
-  checker = {
-    enabled = true
+  performance = {
+    rtp = {
+      disabled_plugins = {
+        "gzip",
+        "matchit",
+        "tarPlugin",
+        "tutor",
+        "zipPlugin"
+      }
+    }
   }
 })
+
 
 -- Set the global var for the homebrew prefix.
 -- require('turboladen/homebrew').prefix()
@@ -275,10 +284,15 @@ wk.register({
   ["<C-h>"] = { "<C-w>h", "Move to left pane" },
   ["<C-j>"] = { "<C-w>j", "Move to down pane" },
   ["<C-k>"] = { "<C-w>k", "Move to up pane" },
+  ["<C->"] = {
+    ["j"] = { "<C-w>j", "Move to down pane" },
+  },
 
   ["<leader>"] = {
     ["<space>"] = { require('telescope.builtin').find_files, "tele: find" },
     ["<cr>"] = { require('telescope.builtin').buffers, "tele: buffers" },
+    -- for some reason, I can't just call the lua function directly here
+    ["="] = { ":lua vim.lsp.buf.format({ async = false })<cr>", "Reformat buffer" },
     ["/"] = { require('telescope.builtin').live_grep, "tele: live grep" },
     ["."] = { ":Rg<space>", "rg" },
     l = { ":noh<CR>", "Stop highlighting the hlsearch" },
@@ -455,3 +469,5 @@ vim.opt.grepprg = "rg --vimgrep --files"
 --  │  24. various │
 --  ╰──────────────╯
 vim.opt.signcolumn = "yes"
+
+vim.keymap.set("n", "<C-j>", "<C-w>j")

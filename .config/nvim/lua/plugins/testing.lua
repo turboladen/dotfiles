@@ -1,6 +1,7 @@
 return {
   {
     "vim-test/vim-test",
+    enabled = false,
     event = "VeryLazy",
     dependencies = {
       "tpope/vim-dispatch",

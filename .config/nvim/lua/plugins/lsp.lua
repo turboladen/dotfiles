@@ -37,7 +37,7 @@ local function make_attach_things()
       })
 
       -- vim.keymap.set('n', 'gK', vim.lsp.buf.signature_help, opts("Signature help"))
-      vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, opts("Signature help"))
+      -- vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, opts("Signature help"))
 
       -- vim.keymap.set('n', '<leader>cr', vim.lsp.buf.rename, opts("Rename"))
       -- vim.keymap.set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action, opts("Code action"))
@@ -78,7 +78,7 @@ local function build_yaml_schemas()
 end
 
 local function configure_diagnostic_signs()
-  for type, icon in pairs(require("turboladen").signs) do
+  for type, icon in pairs(require("turboladen").lsp_diagnostic_signs) do
     local hl = "DiagnosticSign" .. type
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
   end
@@ -93,7 +93,7 @@ local function set_diagnostic_config()
     signs = true,
     update_in_insert = false,
     underline = true,
-    severity_sort = false,
+    severity_sort = true,
     float = {
       border = 'rounded',
       source = 'always',
@@ -109,6 +109,7 @@ end
 return {
   {
     "nvim-lua/lsp-status.nvim",
+    enabled = false,
     opts = {},
     config = function(_, opts)
       require("lsp-status").config(opts)
@@ -135,26 +136,6 @@ return {
     },
     opts = {
       automatic_installation = false,
-      -- ensure_installed = {
-      --   -- "bashls",
-      --   -- "cmake",
-      --   -- "denols",
-      --   -- "dockerls",
-      --   "efm", -- general purpose LS
-      --   -- "emmet_ls", -- HTML fanciness
-      --   -- "eslint",
-      --   "jsonls",
-      --   "prosemd_lsp",
-      --   -- "rust_analyzer",
-      --   "solargraph",
-      --   "lua_ls",
-      --   -- "taplo", -- TOML
-      --   -- "terraformls",
-      --   -- "tsserver",
-      --   "vimls",
-      --   -- "yamlls",
-      --   -- "zk", -- zk notes, markdown
-      -- }
     },
     config = function(_, opts)
       require("mason").setup()
@@ -198,9 +179,6 @@ return {
       return require("plugins.lsp.rust-utils").rust_tools_opts()
     end,
     config = function(_, opts)
-      local lsp_status = require("lsp-status")
-      lsp_status.register_progress()
-
       local rust_tools = require("rust-tools")
       rust_tools.setup(opts)
 
@@ -219,7 +197,8 @@ return {
       "williamboman/mason-lspconfig.nvim",
       "p00f/clangd_extensions.nvim",
       "b0o/schemastore.nvim",
-      { "j-hui/fidget.nvim", tag = "legacy" },
+      -- { "j-hui/fidget.nvim", tag = "legacy" },
+      "j-hui/fidget.nvim",
       "nvim-lua/lsp-status.nvim",
       "stevearc/aerial.nvim",
     },
@@ -373,10 +352,10 @@ return {
           prosemd_lsp = {},
           pyright = {},
           reason_ls = {},
-          ruby_analyzer = {
-          },
+          -- ruby_analyzer = {
+          -- },
           ruff_lsp = {},
-          -- solargraph = {},
+          solargraph = {},
           -- steep = {},
           -- sourcekit = {
           --   -- cmd = { "xcrun", "sourcekit-lsp" },
@@ -408,18 +387,12 @@ return {
             }
           }
         },
-        -- you can do any additional lsp server setup here
-        -- return true if you don't want this server to be setup with lspconfig
-        ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
         setup = {
           -- ruby_analyzer = {},
         }
       }
     end,
     config = function(_, opts)
-      local lsp_status = require("lsp-status")
-      lsp_status.register_progress()
-
       make_attach_things()
       configure_diagnostic_signs()
       set_diagnostic_config()
@@ -443,7 +416,7 @@ return {
         require("lspconfig")[server].setup(server_opts)
       end
 
-      require("plugins.lsp.ruby_analyzer").add_server()
+      -- require("plugins.lsp.ruby_analyzer").add_server()
 
       -- local ensure_installed = {} ---@type string[]
       for server, server_opts in pairs(opts.servers) do
@@ -491,7 +464,8 @@ return {
 
   {
     "onsails/lspkind-nvim",
-    lazy = true,
+    -- event = "LspAttach",
+    event = "BufEnter",
     opts = {
       mode = "symbol"
     },

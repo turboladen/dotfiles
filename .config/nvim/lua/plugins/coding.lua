@@ -88,6 +88,69 @@ return {
     end
   },
 
+  {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    -- event = "VeryLazy",
+    opts = {
+      suggestion = {
+        auto_trigger = true,
+        debounce = 300,
+      },
+      filetypes = {
+        markdown = true,
+        gitcommit = true,
+        gitrebase = true,
+      }
+    },
+    config = function(opts)
+      require("copilot").setup(opts)
+    end
+  },
+
+  -- { "github/copilot.vim" },
+
+  {
+    'echasnovski/mini.nvim',
+    version = false,
+    config = function()
+      require("mini.basics").setup()
+      require("mini.bracketed").setup()
+      require("mini.comment").setup()
+      require("mini.cursorword").setup()
+      require("mini.indentscope").setup({
+        symbol = "│",
+        options = { try_as_border = true },
+      })
+      -- require("mini.pairs").setup()
+      -- require("mini.sessions").setup({
+      --   autoread = true
+      -- })
+
+      -- require("mini.completion").setup()
+      -- vim.keymap.set('i', '<C-j>', [[pumvisible() ? "\<C-n>" : "\<C-j>"]], { expr = true })
+      -- vim.keymap.set('i', '<C-k>', [[pumvisible() ? "\<C-p>" : "\<C-k>"]], { expr = true })
+    end,
+    init = function()
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = {
+          "Trouble",
+          "help",
+          "lazy",
+          "lazyterm",
+          "mason",
+          "notify",
+          "ruby",
+          "rust",
+        },
+        callback = function()
+          vim.b.miniindentscope_disable = true
+        end,
+      })
+    end
+  },
+
   --  ╭──────────────────────────────────────────────────────╮
   --  │ A completion engine plugin for neovim written in Lua │
   --  ╰──────────────────────────────────────────────────────╯
@@ -95,6 +158,7 @@ return {
     "hrsh7th/nvim-cmp",
     version = false,
     event = "VeryLazy",
+    enabled = false,
     dependencies = {
       -- "neovim/nvim-lspconfig",
 
@@ -114,7 +178,6 @@ return {
       'dcampos/cmp-snippy',
       -- /Snippets
 
-      -- "nvim-lua/lsp-status.nvim",
       -- "nvim-treesitter/nvim-treesitter",
       "onsails/lspkind-nvim",
     },
@@ -134,7 +197,11 @@ return {
           keyword_length = 1,
         },
         formatting = {
-          format = require("lspkind").cmp_format(),
+          format = require("lspkind").cmp_format({
+            mode = "symbol_text",
+            max_width = 50,
+            symbol_map = { Copilot = "" }
+          }),
         },
         mapping = {
           ["<C-j>"] = cmp_utils.select_next(cmp, snippy),
@@ -168,6 +235,7 @@ return {
           { name = "path" },
           { name = "rg" },
           { name = "snippy" },
+          { name = "copilot" },
         }),
         window = {
           completion = cmp.config.window.bordered(),
@@ -223,27 +291,6 @@ return {
     "Raimondi/delimitMate",
     event = "VeryLazy",
   },
-
-  -- ╭─────────────────────────────────╮
-  -- │ pairs of handy bracket mappings │
-  -- ╰─────────────────────────────────╯
-  {
-    "tpope/vim-unimpaired",
-    event = "VeryLazy",
-  },
-
-  -- ╭─────────────────────────────────────────────────────╮
-  -- │ Auto close parentheses and repeat by dot dot dot... │
-  -- ╰─────────────────────────────────────────────────────╯
-  {
-    "cohama/lexima.vim",
-    event = "VeryLazy",
-  },
-
-  -- {
-  --   "echasnovski/mini.pairs",
-  --   event = "VeryLazy"
-  -- }
 
   -- ╭───────────────────────────────────────────────────────────────────────╮
   -- │ match-up is a plugin that lets you highlight, navigate, and operate   │
@@ -360,15 +407,6 @@ return {
     end
   },
 
-  -- ╭────────────────────────────────────────────────────────╮
-  -- │ 🧠 💪 // Smart and powerful comment plugin for neovim. │
-  -- ╰────────────────────────────────────────────────────────╯
-  {
-    "numToStr/Comment.nvim",
-    event = "VeryLazy",
-    opts = {}
-  },
-
   -- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
   -- ┃         💻 Neovim setup for init.lua and plugin          ┃
   -- ┃      development with full signature help, docs and      ┃
@@ -391,6 +429,7 @@ return {
   --  ╰──────────────────────────────────────────────────────────────────────────────╯
   {
     "simrat39/symbols-outline.nvim",
+    enabled = false,
     event = "VeryLazy",
     cmd = { "SymbolsOutline", "SymbolsOutlineOpen", "SymbolsOutlineClose" },
     opts = {},
@@ -404,6 +443,7 @@ return {
   -- ╰──────────────────────────────────────────────────╯
   {
     "vuki656/package-info.nvim",
+    enabled = false,
     event = "VeryLazy",
     dependencies = { "MunifTanjim/nui.nvim" },
     config = function()

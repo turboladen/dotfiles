@@ -89,6 +89,7 @@ return {
   --  ╰───────────────────────╯
   {
     "imsnif/kdl.vim",
+    enabled = false,
     ft = { "kdl" },
     opts = {}
   },
@@ -126,6 +127,7 @@ return {
   --  ╰────────────────────────────╯
   {
     "ron-rs/ron.vim",
+    enabled = false,
     ft = "ron"
   },
 
@@ -159,6 +161,7 @@ return {
   --  ╰────────────╯
   {
     "elkowar/yuck.vim",
+    enabled = false,
     ft = { "yuck", }
   },
 }
