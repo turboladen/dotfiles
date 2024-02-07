@@ -25,9 +25,9 @@ source "$HOME/.rye/env"
 export PATH="$HOME/.rye/lib:$PATH"
 
 # ╭───────────────────────────╮
-# │ Trying out homebrew's nvm │
+# │ Fast Node Manager         │
 # ╰───────────────────────────╯
-# Try fnm instead of nvm
+export PATH="$HOME/Library/Application Support/fnm:$PATH"
 eval "$(fnm env --use-on-cd)"
 
 # ╭────────────────────────────╮

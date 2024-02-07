@@ -85,6 +85,7 @@ install_completions() {
     zsh-users/zsh-completions.git/zsh-completions.plugin.zsh
   )
   eval "$(fnm completions --shell zsh)"
+  eval "$(wezterm shell-completion --shell zsh)"
 }
 install_completions
 
@@ -164,3 +165,6 @@ export MCFLY_INTERFACE_VIEW=BOTTOM
 export MCFLY_RESULTS_SORT=LAST_RUN
 export MCFLY_KEY_SCHEME=vim
 eval "$(mcfly init zsh)"
+
+# For SkyPilot shell completion
+. ~/.sky/.sky-complete.zsh
