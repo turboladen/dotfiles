@@ -12,10 +12,9 @@ end
 load('user.variables')
 load('user.options')
 load('user.commands')
-load('user.lazy_init')
+require('user.lazy_init')
 
--- require('user.plugins')
--- load('user.keymaps')
+load('user.keymaps')
 
 pcall(vim.cmd.colorscheme, 'nightfox')
 
