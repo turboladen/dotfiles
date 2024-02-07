@@ -3,7 +3,19 @@
 -- │                                   init.lua                                   │
 -- │                                                                              │
 -- ╰──────────────────────────────────────────────────────────────────────────────╯
---
+
+local load = function(mod)
+  package.loaded[mod] = nil
+  require(mod)
+end
+
+load('user.options')
+load('user.commands')
+-- load('user.keymaps')
+-- require('user.plugins')
+
+-- pcall(vim.cmd.colorscheme, 'tokyonight')
+
 -- ╭────────────────────────────────╮
 -- │ 0.1. Define functions for init │
 -- ╰────────────────────────────────╯
@@ -14,50 +26,6 @@ local function set_host_progs()
   vim.g.node_host_prog = 'Users/steve.loveless/.nvm/versions/node/v16.16.0/lib/node_modules'
   -- vim.g.python_host_prog = vim.g.turboladen_homebrew_prefix .. '/bin/python2'
   -- vim.g.python3_host_prog = vim.g.turboladen_homebrew_prefix .. '/bin/python3'
-end
-
-local function define_wasm_autocmds()
-  -- vim -b : edit binary using xxd-format!
-  local wasm_group = vim.api.nvim_create_augroup("WasmGroup", {})
-
-  vim.api.nvim_create_autocmd({ 'BufReadPre' }, {
-    pattern = "*.wasm",
-    group = wasm_group,
-    command = "let &bin=1"
-  })
-
-  vim.api.nvim_create_autocmd({ 'BufReadPost' }, {
-    pattern = "*.wasm",
-    group = wasm_group,
-    command = "if &bin | %!xxd"
-  })
-  vim.api.nvim_create_autocmd({ 'BufReadPost' }, {
-    pattern = "*.wasm",
-    group = wasm_group,
-    command = "set ft=xxd | endif"
-  })
-
-  vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
-    pattern = "*.wasm",
-    group = wasm_group,
-    command = "if &bin | %!xxd -r"
-  })
-  vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
-    pattern = "*.wasm",
-    group = wasm_group,
-    command = "endif"
-  })
-
-  vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
-    pattern = "*.wasm",
-    group = wasm_group,
-    command = "if &bin | %!xxd"
-  })
-  vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
-    pattern = "*.wasm",
-    group = wasm_group,
-    command = "set nomod | endif"
-  })
 end
 
 -- ╭───────────────────────────────────────────────────╮
@@ -125,8 +93,6 @@ vim.cmd.colorscheme("nightfox")
 -- For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
 -- vim.env.NVIM_TUI_ENABLE_TRUE_COLOR = true
 
-
-define_wasm_autocmds()
 
 --  ╭───────────────╮
 --  │ 15. diff mode │
@@ -313,23 +279,7 @@ wk.register({
 
 vim.cmd([[setglobal expandtab]])
 
-vim.api.nvim_create_autocmd('BufRead', {
-  group = vim.api.nvim_create_augroup('meowersdfsd', {}),
-  pattern = "lua",
-  callback = function(ev)
-    vim.opt_local.expandtab = true
-  end,
-})
-
 vim.keymap.set("n", "<leader>st", require("turboladen").strip_tabs, { desc = "Strip tabs!" })
-
-vim.api.nvim_create_autocmd({ "BufNewFile", 'BufRead' }, {
-  group = vim.api.nvim_create_augroup('justfile_detect', {}),
-  pattern = "justfile",
-  callback = function()
-    vim.opt_local.filetype = "just"
-  end,
-})
 
 vim.keymap.set("t", "<Esc>", "<C-\\><C-N>", { desc = "Exit terminal" })
 
