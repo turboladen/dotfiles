@@ -5,8 +5,7 @@ return {
   -- ╰────────────────────────────────────────────────────────────────────────╯
   {
     "EdenEast/nightfox.nvim",
-    lazy = false,
-    priority = 999,
+    -- lazy = false,
     opts = {
       options = {
         dim_inactive = true,
@@ -17,9 +16,6 @@ return {
         },
       },
     },
-    config = function(_, opts)
-      require("nightfox").setup(opts)
-    end
   },
 
   -- ╭────────────────────────────────────────────────╮
@@ -71,7 +67,6 @@ return {
   {
     "marko-cerovac/material.nvim",
     lazy = true,
-    priority = 999,
     dependencies = {
       "nvim-telescope/telescope.nvim",
     },

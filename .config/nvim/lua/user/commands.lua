@@ -44,10 +44,31 @@ end
 
 define_wasm_autocmds()
 
-vim.api.nvim_create_autocmd('BufRead', {
-  group = vim.api.nvim_create_augroup('user_lua', { clear = true }),
-  pattern = "lua",
+local group = vim.api.nvim_create_augroup('user_ft', { clear = true })
+
+vim.api.nvim_create_autocmd('BufEnter', {
+  desc = "Lua-specific options",
+  group = group,
+  pattern = "*.lua",
   callback = function()
     vim.opt_local.expandtab = true
+  end,
+})
+
+vim.api.nvim_create_autocmd('BufEnter', {
+  desc = "Ruby-specific options",
+  group = group,
+  pattern = "*.rb",
+  callback = function()
+    vim.opt_local.colorcolumn = "80,120"
+  end,
+})
+
+vim.api.nvim_create_autocmd('BufEnter', {
+  desc = "Rust-specific options",
+  group = group,
+  pattern = "*.rs",
+  callback = function()
+    vim.opt_local.colorcolumn = "100"
   end,
 })

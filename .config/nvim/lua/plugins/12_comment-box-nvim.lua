@@ -2,6 +2,7 @@
 --         │    ✨ Clarify and beautify your comments using boxes     │
 --         │                        and lines.                        │
 --         ╰──────────────────────────────────────────────────────────╯
+
 return {
   "LudoPinelli/comment-box.nvim",
   lazy = true,

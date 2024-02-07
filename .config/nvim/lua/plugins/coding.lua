@@ -18,21 +18,21 @@ return {
         },
       },
     },
-    keys = function()
-      local mappings = require('snippy.mapping')
-
-      -- TODO: Haven't yet confirmed these do what I want.
-      return {
-        { "<Tab>",   mappings.expand_or_advance("<Tab>"), "i" },
-
-        { "<Tab>",   mappings.next("<Tab>"),              "s" },
-        { "<C-j>",   mappings.next("<Tab>"),              "s" },
-        { "<S-Tab>", mappings.previous("<S-Tab>"),        { "i", "s" } },
-        { "<C-j>",   mappings.previous("<C-j>"),          { "i", "s" } },
-        { "<Tab>",   mappings.cut_text,                   "x",         { remap = true } },
-        { "g<Tab>",  mappings.cut_text,                   "n",         { remap = true } },
-      }
-    end
+    -- keys = function()
+    --   local mappings = require('snippy.mapping')
+    --
+    --   -- TODO: Haven't yet confirmed these do what I want.
+    --   return {
+    --     { "<Tab>",   mappings.expand_or_advance("<Tab>"), "i" },
+    --
+    --     { "<Tab>",   mappings.next("<Tab>"),              "s" },
+    --     { "<C-j>",   mappings.next("<Tab>"),              "s" },
+    --     { "<S-Tab>", mappings.previous("<S-Tab>"),        { "i", "s" } },
+    --     { "<C-j>",   mappings.previous("<C-j>"),          { "i", "s" } },
+    --     { "<Tab>",   mappings.cut_text,                   "x",         { remap = true } },
+    --     { "g<Tab>",  mappings.cut_text,                   "n",         { remap = true } },
+    --   }
+    -- end
   },
 
   --  ╭────────────────────────────────────────────────────────────╮

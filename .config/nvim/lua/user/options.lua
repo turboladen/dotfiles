@@ -29,7 +29,7 @@ vim.opt.synmaxcol = 250
 vim.opt.termguicolors = true
 vim.opt.cursorcolumn = false -- this defaults to false, but is getting set somewhere
 -- vim.opt.cursorline = true
-vim.opt.colorcolumn = "80,120"
+-- vim.opt.colorcolumn = "80,120"
 
 vim.opt.spell = true
 vim.opt.spelllang = "en_us"

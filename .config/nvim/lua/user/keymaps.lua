@@ -41,9 +41,6 @@ wk.register({
   ["<C-h>"] = { "<C-w>h", "Move to left pane" },
   ["<C-j>"] = { "<C-w>j", "Move to down pane" },
   ["<C-k>"] = { "<C-w>k", "Move to up pane" },
-  ["<C->"] = {
-    ["j"] = { "<C-w>j", "Move to down pane" },
-  },
 
   ["<leader>"] = {
     ["<space>"] = { require('telescope.builtin').find_files, "tele: find" },
@@ -173,6 +170,4 @@ wk.register({
   mode = "v"
 })
 
-vim.keymap.set("n", "<leader>st", require("turboladen").strip_tabs, { desc = "Strip tabs!" })
 vim.keymap.set("t", "<Esc>", "<C-\\><C-N>", { desc = "Exit terminal" })
-vim.keymap.set("n", "<C-j>", "<C-w>j")
