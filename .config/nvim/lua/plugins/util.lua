@@ -20,7 +20,7 @@ return {
     event = "VeryLazy",
     dependencies = {
       'nvim-lua/plenary.nvim',
-      "stevearc/dressing.nvim",
+      -- "stevearc/dressing.nvim",
       -- Opener of open.nvim that opens shorthands of Jira tickets, E.g: JRASERVER-63928.
       {
         'ofirgall/open-jira.nvim',

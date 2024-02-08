@@ -42,7 +42,7 @@ return {
   --     -- OPTIONAL:
   --     --   `nvim-notify` is only needed, if you want to use the notification view.
   --     --   If not available, we use `mini` as the fallback
-  --     -- "rcarriga/nvim-notify",
+  --     "rcarriga/nvim-notify",
   --     -- {
   --     --   "rcarriga/nvim-notify",
   --     --   dependencies = {
@@ -63,16 +63,6 @@ return {
     "j-hui/fidget.nvim",
     tag = "v1.0.0",
     opts = {},
-  },
-  --
-  -- ╭────────────────────────────────────────────────────────╮
-  -- │ Neovim plugin to improve the default vim.ui interfaces │
-  -- ╰────────────────────────────────────────────────────────╯
-  {
-    'stevearc/dressing.nvim',
-    enabled = false,
-    event = "VeryLazy",
-    opts = {}
   },
 
   -- ╭─────────────────────────────────────────────────────────╮

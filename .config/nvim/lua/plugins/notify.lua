@@ -4,6 +4,7 @@
 local Plugin = { "rcarriga/nvim-notify" }
 
 Plugin.event = "VeryLazy"
+-- Plugin.enabled = false
 
 Plugin.dependencies = {
   "nvim-telescope/telescope.nvim",
