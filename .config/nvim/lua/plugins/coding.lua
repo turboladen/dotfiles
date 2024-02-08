@@ -1,28 +1,5 @@
 return {
   {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    event = "InsertEnter",
-    -- event = "VeryLazy",
-    opts = {
-      suggestion = {
-        auto_trigger = true,
-        debounce = 300,
-      },
-      filetypes = {
-        markdown = true,
-        gitcommit = true,
-        gitrebase = true,
-      }
-    },
-    config = function(opts)
-      require("copilot").setup(opts)
-    end
-  },
-
-  -- { "github/copilot.vim" },
-
-  {
     'echasnovski/mini.nvim',
     version = false,
     config = function()
@@ -61,7 +38,6 @@ return {
       })
     end
   },
-
 
   -- ╭─────────────────────────────╮
   -- │ Easy text exchange operator │
