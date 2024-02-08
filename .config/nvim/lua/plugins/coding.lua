@@ -158,7 +158,7 @@ return {
     "hrsh7th/nvim-cmp",
     version = false,
     event = "VeryLazy",
-    enabled = false,
+    enabled = true,
     dependencies = {
       -- "neovim/nvim-lspconfig",
 

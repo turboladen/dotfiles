@@ -101,12 +101,6 @@ return {
     end
   },
 
-  {
-    "j-hui/fidget.nvim",
-    tag = "v1.0.0",
-    opts = {
-    },
-  },
   --
   -- ╭────────────────────────────────────────────────────────╮
   -- │ Neovim plugin to improve the default vim.ui interfaces │

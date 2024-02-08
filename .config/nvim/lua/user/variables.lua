@@ -18,3 +18,7 @@ vim.g.loaded_perl_provider = 0
 -- needs lazy to set keymaps.
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+
+vim.g.markdown_fenced_languages = {
+  "ts=typescript"
+}

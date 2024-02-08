@@ -147,7 +147,7 @@ return {
       "p00f/nvim-ts-rainbow",
     },
     opts = ts_opts,
-    config = function(_, opts)
+    config = function(opts)
       require("nvim-treesitter.configs").setup(opts)
 
       -- Treesitter folding

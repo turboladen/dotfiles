@@ -99,16 +99,17 @@ wk.register({
     g = { "<cmd>LazyGit<CR>", "Open lazygit" }
   },
 
+  -- See `lua/plugins/nvim-lspconfig.lua`
   ["<leader>l"] = {
     name = "+lsp",
-    a = { vim.lsp.buf.code_action, "Code action" },
-    r = { vim.lsp.buf.rename, "Rename" },
-    o = { require("telescope.builtin").lsp_document_symbols, "Show doc symbols" },
-    w = { require("telescope.builtin").lsp_dynamic_workspace_symbols, "Show workspace symbols" },
+    --   a = { vim.lsp.buf.code_action, "Code action" },
+    --   r = { vim.lsp.buf.rename, "Rename" },
+    --   o = { require("telescope.builtin").lsp_document_symbols, "Show doc symbols" },
+    --   w = { require("telescope.builtin").lsp_dynamic_workspace_symbols, "Show workspace symbols" },
     l = { require('lint').try_lint, "Lint" },
-    f = { function()
-      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end, "List workspace folders" },
+    --   f = { function()
+    --     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    --   end, "List workspace folders" },
   },
 
   ["<leader>p"] = {
@@ -134,7 +135,7 @@ wk.register({
     r = { require('trouble').refresh, "Trouble: refresh" },
     w = { "<cmd>TroubleToggle workspace_diagnostics<cr>", "Trouble: workspace diags" },
     d = { "<cmd>TroubleToggle document_diagnostics<cr>", "Trouble: doc diags" },
-    R = { "<cmd>TroubleToggle lsp_references<cr>", "Trouble: LSP references" },
+    -- R = { "<cmd>TroubleToggle lsp_references<cr>", "Trouble: LSP references" },
     D = { "<cmd>TroubleToggle lsp_definitions<cr>", "Trouble: LSP [D]efinitions" },
     y = { "<cmd>TroubleToggle lsp_type_definitions<cr>", "Trouble: LSP t[y]pedefs" },
     l = { "<cmd>TroubleToggle loclist<cr>", "Trouble: loclist" },

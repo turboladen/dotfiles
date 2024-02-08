@@ -39,7 +39,9 @@ local function rust_tools_opts()
     -- these override the defaults set by rust-tools.nvim
     -- see https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#rust_analyzer
     server = {
-      capabilities = require("plugins.lsp.utils").make_capabilities({}),
+      -- capabilities = require("plugins.lsp.utils").make_capabilities({}),
+      -- capabilities = require('cmp_nvim_lsp').default_capabilities(),
+      capabilities = vim.lsp.protocol.make_client_capabilities(),
       flags = {
         debounce_text_changes = 350
       },
