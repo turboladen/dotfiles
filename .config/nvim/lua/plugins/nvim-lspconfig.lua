@@ -284,23 +284,31 @@ function Plugin.opts()
 end
 
 function Plugin.config(_, opts)
-  local lspconfig = require('lspconfig')
-
-  -- local capabilities = require('cmp_nvim_lsp').default_capabilities()
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  local group = vim.api.nvim_create_augroup('lsp_cmds', { clear = true })
 
   vim.api.nvim_create_autocmd('LspAttach', {
-    group = vim.api.nvim_create_augroup('lsp_cmds', { clear = true }),
+    group = group,
     desc = 'LSP actions',
     callback = user.on_attach
   })
 
   vim.api.nvim_create_autocmd('CursorHold', {
-    group = vim.api.nvim_create_augroup('lsp_open_float_on_cursor_hold', {}),
+    group = group,
     callback = function()
       vim.diagnostic.open_float(nil, { focusable = false })
     end
   })
+
+  vim.api.nvim_create_autocmd('BufWritePre', {
+    group = group,
+    callback = function()
+      vim.lsp.buf.format()
+    end
+  })
+
+  local lspconfig = require('lspconfig')
+  -- local capabilities = require('cmp_nvim_lsp').default_capabilities()
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
 
   local function setup(server)
     local server_opts = vim.tbl_deep_extend("force", {
