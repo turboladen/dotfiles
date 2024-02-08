@@ -180,24 +180,6 @@ return {
     event = "VeryLazy"
   },
 
-  -- ╭──────────────────────────────────────────────────────────────────────╮
-  -- │ 🚦 A pretty diagnostics, references, telescope results, quickfix and │
-  -- │ location list to help you solve all the trouble your code is causing.│
-  -- ╰──────────────────────────────────────────────────────────────────────╯
-  {
-    "folke/trouble.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    cmd = { "Trouble", "TroubleRefresh", "TroubleToggle" },
-    opts = {
-      -- auto_preview = false,
-      auto_close = true,
-      use_diagnostic_signs = true
-    },
-    config = function(_, opts)
-      require("trouble").setup(opts)
-    end,
-  },
-
   -- ╭──────────────────────────────────────────────────────────────────────────╮
   -- │ Highlight and search for todo comments like TODO, HACK, BUG in your      │
   -- │ code base.                                                               │
