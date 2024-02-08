@@ -4,12 +4,8 @@ wk.register({
   g = {
     ["*"] = { "g*<cmd>lua require('hlslens').start()<CR>" },
     ["#"] = { "g#<cmd>lua require('hlslens').start()<CR>" },
-    -- K = { vim.lsp.buf.signature_help, "Signature help" },
-    K = { require('turboladen.lsp').hover, "Show docs" },
-    y = { vim.lsp.buf.type_definition, "Goto: t[y]pe definition" }
   },
 
-  -- K = { vim.lsp.buf.hover, "Show docs" },
   n = { [[<cmd>execute('normal! ' . v:count1 . 'n')<CR><cmd>lua require('hlslens').start()<CR>]], "Next search match" },
   N = {
     [[<cmd>execute('normal! ' . v:count1 . 'N')<CR><cmd>lua require('hlslens').start()<CR>]], "Previous search match"
@@ -45,8 +41,6 @@ wk.register({
   ["<leader>"] = {
     ["<space>"] = { require('telescope.builtin').find_files, "tele: find" },
     ["<cr>"] = { require('telescope.builtin').buffers, "tele: buffers" },
-    -- for some reason, I can't just call the lua function directly here
-    ["="] = { ":lua vim.lsp.buf.format({ async = false })<cr>", "Reformat buffer" },
     ["/"] = { require('telescope.builtin').live_grep, "tele: live grep" },
     ["."] = { ":Rg<space>", "rg" },
     l = { ":noh<CR>", "Stop highlighting the hlsearch" },
@@ -73,13 +67,6 @@ wk.register({
   --   -- ["?"] = { require('dap.ui.variables').scopes },
   -- },
 
-  ["<leader>e"] = {
-    name = "+edit",
-    v = { "vsplit $MYVIMRC", "Edit init.lua" },
-    p = { "vsplit $HOME/.config/nvim/lua/plugins", "Edit plugins/" },
-    l = { "vsplit $HOME/.config/nvim/lua/plugins/lsp.lua", "Edit lsp.lua" },
-  },
-
   ["<leader>f"] = {
     name = "+find",
     k = { require('telescope.builtin').grep_string, "tele: string grep" },
@@ -102,14 +89,7 @@ wk.register({
   -- See `lua/plugins/nvim-lspconfig.lua`
   ["<leader>l"] = {
     name = "+lsp",
-    --   a = { vim.lsp.buf.code_action, "Code action" },
-    --   r = { vim.lsp.buf.rename, "Rename" },
-    --   o = { require("telescope.builtin").lsp_document_symbols, "Show doc symbols" },
-    --   w = { require("telescope.builtin").lsp_dynamic_workspace_symbols, "Show workspace symbols" },
     l = { require('lint').try_lint, "Lint" },
-    --   f = { function()
-    --     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    --   end, "List workspace folders" },
   },
 
   ["<leader>p"] = {
@@ -144,12 +124,12 @@ wk.register({
     t = { "<cmd>TodoTrouble keywords=TODO,FIXME<CR>", "Trouble: TODO/FIXME" }, -- folke/todo-comments.nvim
 
     ["["] = {
-      "lua require('trouble').next({skip_groups = true, jump = true})",
+      "<cmd>lua require('trouble').next({skip_groups = true, jump = true})<cr>",
       "Trouble: next item"
     },
 
     ["]"] = {
-      "lua require('trouble').previous({skip_groups = true, jump = true})",
+      "<cmd>lua require('trouble').previous({skip_groups = true, jump = true})<cr>",
       "Trouble: previous item"
     },
   },

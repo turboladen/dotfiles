@@ -9,7 +9,7 @@ Plugin.dependencies = {
   { "j-hui/fidget.nvim" },
   {
     'mrcjkb/rustaceanvim',
-    version = '^4', -- Recommended
+    version = '^4',
     ft = { 'rust' },
   },
   -- {
@@ -341,10 +341,13 @@ function user.on_attach(_, bufnr)
       -- bufmap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>')
       i = { vim.lsp.buf.implementation, "Goto: implementation", buffer = bufnr },
 
+      c = { vim.lsp.buf.incoming_calls, "Goto: incoming_calls", buffer = bufnr },
+
       -- bufmap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>')
-      R = { "<cmd>TroubleToggle lsp_references<cr>", "Trouble: LSP references" },
+      R = { "<cmd>TroubleToggle lsp_references<cr>", "Trouble: LSP references", buffer = bufnr },
 
       -- bufmap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>')
+      -- K = { vim.lsp.buf.signature_help, "Signature help" },
       K = { require('turboladen.lsp').hover, "Show docs", buffer = bufnr },
 
       -- bufmap('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>')
@@ -352,6 +355,12 @@ function user.on_attach(_, bufnr)
 
       -- bufmap('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>')
       y = { vim.lsp.buf.type_definition, "Goto: t[y]pe definition", buffer = bufnr }
+    },
+
+    ["="] = {
+      vim.lsp.buf.format,
+      "Reformat buffer",
+      buffer = bufnr,
     },
 
     -- bufmap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<cr>')
