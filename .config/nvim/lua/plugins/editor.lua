@@ -7,6 +7,123 @@ return {
     end
   },
 
+  -- ╭─────────────────────────────╮
+  -- │ Easy text exchange operator │
+  -- ╰─────────────────────────────╯
+  {
+    "tommcdo/vim-exchange",
+    event = "VeryLazy",
+  },
+
+  -- ╭────────────────────────────────────╮
+  -- │ quoting/parenthesizing made simple │
+  -- ╰────────────────────────────────────╯
+  {
+    "tpope/vim-surround",
+    event = "VeryLazy",
+  },
+
+  -- ╭──────────────────────────────────────────────────────────────────────────╮
+  -- │ Vim plugin, provides insert mode auto-completion for quotes,             │
+  -- │ parens, brackets, etc.                                                   │
+  -- ╰──────────────────────────────────────────────────────────────────────────╯
+  {
+    "Raimondi/delimitMate",
+    event = "VeryLazy",
+  },
+
+  -- ╭───────────────────────────────────────────────────────────────────────╮
+  -- │ match-up is a plugin that lets you highlight, navigate, and operate   │
+  -- │ on sets of matching text. It extends vim's % key to language-specific │
+  -- │ words instead of just single characters.                              │
+  -- ╰───────────────────────────────────────────────────────────────────────╯
+  {
+    "andymass/vim-matchup",
+    event = "VeryLazy",
+    init = function()
+      vim.g.matchup_surround_enabled = 1
+      vim.g.matchup_matchparen_offscreen = { method = "popup" }
+    end
+  },
+
+  -- ╭────────────╮
+  -- │ Wisely add │
+  -- ╰────────────╯
+  {
+    "tpope/vim-endwise",
+    event = "VeryLazy",
+  },
+
+  -- ╭───────────────────────────────────────────╮
+  -- │ Adds gS and gJ to split/join code blocks. │
+  -- ╰───────────────────────────────────────────╯
+  {
+    "AndrewRadev/splitjoin.vim",
+    event = "VeryLazy",
+  },
+
+  -- ╭────────────────────────────────────────────────────╮
+  -- │ Neovim plugin for splitting/joining blocks of code │
+  -- ╰────────────────────────────────────────────────────╯
+  {
+    'Wansmer/treesj',
+    event = "VeryLazy",
+    dependencies = { 'nvim-treesitter' },
+    opts = {
+      use_default_keymaps = false,
+    },
+    config = function(_, opts)
+      require('treesj').setup(opts)
+
+      -- Fallback to splitjoin on unsupported language: https://github.com/Wansmer/treesj/discussions/19
+      local langs = require('treesj.langs')['presets']
+
+      vim.api.nvim_create_autocmd({ 'FileType' }, {
+        pattern = '*',
+        callback = function()
+          local map_opts = { buffer = true }
+
+          if langs[vim.bo.filetype] then
+            vim.keymap.set('n', 'gS', '<Cmd>TSJSplit<CR>', map_opts)
+            vim.keymap.set('n', 'gJ', '<Cmd>TSJJoin<CR>', map_opts)
+          else
+            vim.keymap.set('n', 'gS', '<Cmd>SplitjoinSplit<CR>', map_opts)
+            vim.keymap.set('n', 'gJ', '<Cmd>SplitjoinJoin<CR>', map_opts)
+          end
+        end,
+      })
+    end
+  },
+
+  -- ╭───────────────────╮
+  -- │ For case swapping │
+  -- ╰───────────────────╯
+  {
+    "idanarye/vim-casetrate",
+    event = "VeryLazy",
+    cmd = "Casetrate",
+  },
+
+  -- ╭─────────────────────────────────────────────╮
+  -- │ Vim script for text filtering and alignment │
+  -- ╰─────────────────────────────────────────────╯
+  {
+    "godlygeek/tabular",
+    event = "VeryLazy",
+    cmd = "Tabularize",
+  },
+
+  -- ╭──────────────────────────────────────────╮
+  -- │ Protect against weird unicode copy/paste │
+  -- ╰──────────────────────────────────────────╯
+  {
+    "vim-utils/vim-troll-stopper",
+    event = "VeryLazy",
+    init = function()
+      vim.cmd([[highlight TrollStopper ctermbg = red guibg = #FF0000 ]])
+    end
+  },
+
   --  ╭──────────────────────────────────────────────────────────╮
   --  │    ✨ Clarify and beautify your comments using boxes     │
   --  │                        and lines.                        │
