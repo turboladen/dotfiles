@@ -74,7 +74,7 @@ Plugin.opts = function()
 
   local snippy = require("snippy")
   local cmp = require("cmp")
-  local cmp_utils = require("plugins.coding.cmp_utils")
+  local cmp_utils = require("plugins.coding.cmp.utils")
 
   return {
     completion = {
@@ -127,6 +127,7 @@ Plugin.opts = function()
     }
   }
 end
+
 Plugin.config = function(_, opts)
   local cmp = require("cmp")
   cmp.setup(opts)
@@ -149,6 +150,5 @@ Plugin.config = function(_, opts)
     })
   })
 end
-
 
 return Plugin

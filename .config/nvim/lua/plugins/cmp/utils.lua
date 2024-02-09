@@ -1,4 +1,6 @@
-local function select_next(cmp, snippy)
+local M = {}
+
+M.select_next = function(cmp, snippy)
   return cmp.mapping(function(fallback)
     if cmp.visible() then
       cmp.select_next_item()
@@ -10,7 +12,7 @@ local function select_next(cmp, snippy)
   end, { "i", "s", "c" })
 end
 
-local function select_prev(cmp, snippy)
+M.select_prev = function(cmp, snippy)
   return cmp.mapping(function(fallback)
     if cmp.visible() then
       cmp.select_prev_item()
@@ -23,7 +25,4 @@ local function select_prev(cmp, snippy)
 end
 
 
-return {
-  select_next = select_next,
-  select_prev = select_prev,
-}
+return M
