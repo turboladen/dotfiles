@@ -46,6 +46,10 @@ wk.register({
     l = { ":noh<CR>", "Stop highlighting the hlsearch" },
   },
 
+  ["<leader>a"] = {
+    g = { require("neogen").generate, "neogen: Generate annotation" },
+  },
+
   ["<leader>b"] = {
     name = "+boxes",
     b = { require("turboladen").al_box, "Left-aligned box; left-aligned text" },

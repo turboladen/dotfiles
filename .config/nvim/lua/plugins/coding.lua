@@ -3,23 +3,17 @@ return {
   -- │ A better annotation generator. │
   -- ╰────────────────────────────────╯
   {
+    ---
     "danymat/neogen",
     event = "VeryLazy",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
-    opts = {},
+    opts = {
+      snippet_engine = "snippy"
+    },
     config = function(_, opts)
       local neogen = require("neogen")
       neogen.setup(opts)
     end,
-    keys = function()
-      local neogen = require("neogen")
-
-      return {
-        { "<leader>cg", neogen.generate,  desc = "Generate annotation" },
-        { "<Tab>",      neogen.jump_next, desc = "Next annotation" },
-        { "<S-Tab>",    neogen.jump_prev, desc = "Next annotation" },
-      }
-    end
   },
 
   -- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
