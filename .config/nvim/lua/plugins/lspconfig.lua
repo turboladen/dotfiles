@@ -302,24 +302,7 @@ function Plugin.opts()
 end
 
 function Plugin.config(_, opts)
-  local group = vim.api.nvim_create_augroup('lsp_cmds', { clear = true })
-
-  vim.api.nvim_create_autocmd('LspAttach', {
-    group = group,
-    desc = 'LSP actions',
-    callback = user.on_attach
-  })
-
-  -- ╭────────────────────────────────────────────╮
-  -- │ Disabling while trying out lsp_lines.nvim. │
-  -- ╰────────────────────────────────────────────╯
-  -- vim.api.nvim_create_autocmd('CursorHold', {
-  --   group = group,
-  --   callback = function()
-  --     vim.diagnostic.open_float(nil, { focusable = false })
-  --   end
-  -- })
-
+  require("user.commands").lspconfig()
 
   local lspconfig = require('lspconfig')
   -- local capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -347,97 +330,6 @@ function Plugin.config(_, opts)
     server_opts = server_opts == true and {} or server_opts
     setup(server)
   end
-end
-
-function user.on_attach(_, bufnr)
-  local wk = require("which-key")
-  wk.register({
-    g = {
-      -- bufmap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>')
-      d = { vim.lsp.buf.definition, "Goto: definition", buffer = bufnr },
-
-      -- bufmap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>')
-      D = { vim.lsp.buf.declaration, "Goto: declaration", buffer = bufnr },
-
-      -- bufmap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>')
-      i = { vim.lsp.buf.implementation, "Goto: implementation", buffer = bufnr },
-
-      c = { vim.lsp.buf.incoming_calls, "Goto: incoming_calls", buffer = bufnr },
-
-      -- bufmap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>')
-      R = { "<cmd>TroubleToggle lsp_references<cr>", "Trouble: LSP references", buffer = bufnr },
-
-      -- bufmap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>')
-      -- K = { vim.lsp.buf.signature_help, "Signature help" },
-      K = { require('turboladen.lsp').hover, "Show docs", buffer = bufnr },
-
-      -- bufmap('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>')
-      s = { vim.lsp.buf.signature_help, "Signature help", buffer = bufnr },
-
-      -- bufmap('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>')
-      y = { vim.lsp.buf.type_definition, "Goto: t[y]pe definition", buffer = bufnr }
-    },
-
-    -- bufmap({ 'n', 'x' }, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>')
-    ["<leader>="] = { vim.lsp.buf.format, "Reformat buffer", buffer = bufnr },
-
-    ["]"] = {
-      -- bufmap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<cr>')
-      g = { vim.diagnostic.goto_next, "diagnostic", buffer = bufnr },
-    },
-
-    ["["] = {
-      -- bufmap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<cr>')
-      g = { vim.diagnostic.goto_prev, "diagnostic", buffer = bufnr },
-    },
-
-    ["<leader>l"] = {
-      name = "+lsp",
-
-      -- bufmap('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>')
-      a = { vim.lsp.buf.code_action, "Code action", buffer = bufnr },
-
-      -- bufmap('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>')
-      r = { vim.lsp.buf.rename, "Rename", buffer = bufnr },
-
-      -- bufmap('n', 'gl', '<cmd>lua vim.diagnostic.open_float()<cr>')
-      l = { vim.lsp.buf.open_float, "Open float", buffer = bufnr },
-
-      s = { vim.lsp.buf.signature_help, "Sig help", buffer = bufnr },
-      o = { require("telescope.builtin").lsp_document_symbols, "Show doc symbols", buffer = bufnr },
-      w = { require("telescope.builtin").lsp_dynamic_workspace_symbols, "Show workspace symbols", buffer = bufnr },
-      f = {
-        function()
-          print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-        end,
-        "List workspace folders",
-        buffer = bufnr
-      },
-    },
-  })
-
-  -- ╭──────────────────────╮
-  -- │ Visual mode mappings │
-  -- ╰──────────────────────╯
-  wk.register({
-    ["<leader>l"] = {
-      a = { vim.lsp.buf.code_action, "Code action" },
-    },
-  }, {
-    mode = "v"
-  })
-
-  vim.api.nvim_create_autocmd('BufWritePre', {
-    group = vim.api.nvim_create_augroup('lsp_format', { clear = true }),
-    callback = function()
-      vim.lsp.buf.format({ bufnr = bufnr })
-    end
-  })
-
-  -- ╭───────────────────────────────────╮
-  -- │ Disabling while trying out noice. │
-  -- ╰───────────────────────────────────╯
-  -- require("fidget").setup({})
 end
 
 return Plugin

@@ -5,6 +5,7 @@
 local Plugin = { 'mfussenegger/nvim-lint' }
 
 Plugin.event = "VeryLazy"
+
 Plugin.config = function()
   require('lint').linters_by_ft = {
     c = { 'clang-tidy' },
@@ -27,11 +28,7 @@ Plugin.config = function()
     zsh = { "typos", "zsh" }
   }
 
-  vim.api.nvim_create_autocmd({ "BufReadPre", "BufWritePost" }, {
-    callback = function()
-      require("lint").try_lint()
-    end,
-  })
+  require("user.commands").lint()
 end
 
 return Plugin

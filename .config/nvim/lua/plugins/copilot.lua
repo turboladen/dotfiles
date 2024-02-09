@@ -1,3 +1,4 @@
+-- { "github/copilot.vim" },
 local Plugin  = { "zbirenbaum/copilot.lua" }
 
 Plugin.cmd    = "Copilot"
@@ -19,7 +20,5 @@ Plugin.opts   = {
 Plugin.config = function(opts)
   require("copilot").setup(opts)
 end
-
--- { "github/copilot.vim" },
 
 return Plugin

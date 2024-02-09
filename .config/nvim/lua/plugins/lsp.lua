@@ -7,14 +7,7 @@ return {
     "williamboman/mason-lspconfig.nvim",
     lazy = true,
     dependencies = {
-      {
-        "williamboman/mason.nvim",
-        cmd = "Mason",
-        keys = {
-          { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" },
-        },
-        opts = {},
-      },
+      "williamboman/mason.nvim",
       "neovim/nvim-lspconfig",
     },
     opts = {

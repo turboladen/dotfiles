@@ -31,9 +31,6 @@ return {
         },
       }
     },
-    config = function(_, opts)
-      require("open").setup(opts)
-      vim.keymap.set('n', 'gx', require("open").open_cword, { desc = "Try to open thing under cursor" })
-    end
+    opts = {}
   },
 }

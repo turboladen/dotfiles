@@ -25,9 +25,6 @@ return {
     event = "VeryLazy",
     cmd = { "SymbolsOutline", "SymbolsOutlineOpen", "SymbolsOutlineClose" },
     opts = {},
-    keys = {
-      { "<leader>aa", "<cmd>SymbolsOutline<cr>", desc = "Toggle symbols" }
-    }
   },
 
   -- ╭──────────────────────────────────────────────────╮

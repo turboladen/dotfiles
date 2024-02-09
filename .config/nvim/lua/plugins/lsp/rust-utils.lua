@@ -1,23 +1,3 @@
-local function make_attach_things(rust_tools)
-  -- Use LspAttach autocommand to only map the following keys
-  -- after the language server attaches to the current buffer
-  vim.api.nvim_create_autocmd('LspAttach', {
-    group = vim.api.nvim_create_augroup('UserRustLspConfig', {}),
-    pattern = "*.rs",
-    callback = function(ev)
-      -- Buffer local mappings.
-      -- See `:help vim.lsp.*` for documentation on any of the below functions
-      local opts = { buffer = ev.buf }
-
-      vim.keymap.set('n', 'K', rust_tools.hover_actions.hover_actions, opts)
-      vim.keymap.set('n', '<leader>cg', rust_tools.code_action_group.code_action_group, opts)
-      vim.keymap.set('n', '<leader>ff', "<cmd>RustFmt<CR>", opts)
-      vim.keymap.set('n', 'gJ', "<cmd>RustJoinLines<CR>", opts)
-      -- vim.keymap.set({'n', 'v'}, '<leader>ca', "<cmd>RustCodeAction<CR>", opts)
-    end,
-  })
-end
-
 local extension_path = vim.fn.stdpath("data") .. "/mason/packages/codelldb/extension/"
 local codelldb_path = extension_path .. "adapter/codelldb"
 local liblldb_path = extension_path .. "lldb/lib/liblldb.dylib"

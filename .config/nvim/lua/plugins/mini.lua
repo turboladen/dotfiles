@@ -22,21 +22,7 @@ Plugin.config = function()
 end
 
 Plugin.init = function()
-  vim.api.nvim_create_autocmd("FileType", {
-    pattern = {
-      "Trouble",
-      "help",
-      "lazy",
-      "lazyterm",
-      "mason",
-      "notify",
-      "ruby",
-      "rust",
-    },
-    callback = function()
-      vim.b.miniindentscope_disable = true
-    end,
-  })
+  require("user.commands").mini()
 end
 
 return Plugin

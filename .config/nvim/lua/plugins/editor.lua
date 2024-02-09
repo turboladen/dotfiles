@@ -54,44 +54,26 @@ return {
     event = "VeryLazy",
   },
 
-  -- ╭───────────────────────────────────────────╮
-  -- │ Adds gS and gJ to split/join code blocks. │
-  -- ╰───────────────────────────────────────────╯
-  {
-    "AndrewRadev/splitjoin.vim",
-    event = "VeryLazy",
-  },
-
   -- ╭────────────────────────────────────────────────────╮
   -- │ Neovim plugin for splitting/joining blocks of code │
   -- ╰────────────────────────────────────────────────────╯
   {
     'Wansmer/treesj',
     event = "VeryLazy",
-    dependencies = { 'nvim-treesitter' },
+    dependencies = {
+      'nvim-treesitter',
+      -- ╭───────────────────────────────────────────╮
+      -- │ Adds gS and gJ to split/join code blocks. │
+      -- ╰───────────────────────────────────────────╯
+      "AndrewRadev/splitjoin.vim",
+    },
     opts = {
       use_default_keymaps = false,
+      max_join_length = 100,
     },
     config = function(_, opts)
       require('treesj').setup(opts)
-
-      -- Fallback to splitjoin on unsupported language: https://github.com/Wansmer/treesj/discussions/19
-      local langs = require('treesj.langs')['presets']
-
-      vim.api.nvim_create_autocmd({ 'FileType' }, {
-        pattern = '*',
-        callback = function()
-          local map_opts = { buffer = true }
-
-          if langs[vim.bo.filetype] then
-            vim.keymap.set('n', 'gS', '<Cmd>TSJSplit<CR>', map_opts)
-            vim.keymap.set('n', 'gJ', '<Cmd>TSJJoin<CR>', map_opts)
-          else
-            vim.keymap.set('n', 'gS', '<Cmd>SplitjoinSplit<CR>', map_opts)
-            vim.keymap.set('n', 'gJ', '<Cmd>SplitjoinJoin<CR>', map_opts)
-          end
-        end,
-      })
+      require("user.commands").treesj()
     end
   },
 
