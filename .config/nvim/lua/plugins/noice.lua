@@ -5,6 +5,7 @@
 local Plugin = { "folke/noice.nvim" }
 
 Plugin.event = "VeryLazy"
+
 Plugin.opts = {
   cmdline = {
     view = "cmdline",

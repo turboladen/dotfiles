@@ -4,6 +4,7 @@
 -- ╰──────────────────────────────────────────────────────────────────────╯
 local Plugin = { "folke/trouble.nvim" }
 
+Plugin.enabled = false
 Plugin.dependencies = { "nvim-tree/nvim-web-devicons" }
 Plugin.cmd = { "Trouble", "TroubleRefresh", "TroubleToggle" }
 

@@ -18,13 +18,11 @@ wk.register({
 
   ["]"] = {
     name = "+next",
-    g = { vim.diagnostic.goto_next, "diagnostic" },
     t = { require("todo-comments").jump_next, "todo-comment" }, -- folke/todo-comments
   },
 
   ["["] = {
     name = "+prev",
-    g = { vim.diagnostic.goto_prev, "diagnostic" },
     t = { require("todo-comments").jump_prev, "todo-comment" }, -- folke/todo-comments
   },
 
@@ -56,20 +54,29 @@ wk.register({
     t = { require("turboladen").cc_box, "Title box" }
   },
 
-  -- ["<leader>d"] = {
-  --   name = "+dap",
-  --   c = { require('dap').continue, "DAP: continue" },
-  --   k = { require('dap').step_out, "DAP: step out" },
-  --   l = { require('dap').step_into, "DAP: step into" },
-  --   j = { require('dap').step_over, "DAP: step over" },
-  --   b = { require('dap').toggle_breakpoint, "DAP: toggle breakpoint" },
-  --   r = { require('dap').repl.open, "DAP: open REPL" },
-  --   L = { require('dap').run_last, "DAP: open REPL" },
-  --   e = { "lua require('dap').set_exception_breakpoints({'all'})", "DAP: set breakpoints on all exceptions" },
-  --   t = { require('dap.ui').toggle, "DAP UI: toggle" },
-  --   -- i = { require('dap.ui.variables').visual_hover },
-  --   -- ["?"] = { require('dap.ui.variables').scopes },
-  -- },
+  ["<leader>d"] = {
+    name = "+dap",
+    -- vim.keymap.set('n', '<Leader>dB', require('dap').set_breakpoint)
+    B = { require('dap').set_breakpoint, "DAP: set breakpoint" },
+    -- vim.keymap.set('n', '<F5>', require('dap').continue)
+    c = { require('dap').continue, "DAP: continue" },
+    -- vim.keymap.set('n', '<F12>', require('dap').step_out)
+    k = { require('dap').step_out, "DAP: step out" },
+    -- vim.keymap.set('n', '<F11>', require('dap').step_into)
+    l = { require('dap').step_into, "DAP: step into" },
+    -- vim.keymap.set('n', '<F10>', require('dap').step_over)
+    j = { require('dap').step_over, "DAP: step over" },
+    -- vim.keymap.set('n', '<Leader>db', require('dap').toggle_breakpoint)
+    b = { require('dap').toggle_breakpoint, "DAP: toggle breakpoint" },
+    -- vim.keymap.set('n', '<Leader>dr', require('dap').repl.open)
+    r = { require('dap').repl.open, "DAP: open REPL" },
+    -- vim.keymap.set('n', '<Leader>dl', require('dap').run_last)
+    L = { require('dap').run_last, "DAP: open REPL" },
+    --   e = { "lua require('dap').set_exception_breakpoints({'all'})", "DAP: set breakpoints on all exceptions" },
+    --   t = { require('dap.ui').toggle, "DAP UI: toggle" },
+    --   -- i = { require('dap.ui.variables').visual_hover },
+    --   -- ["?"] = { require('dap.ui.variables').scopes },
+  },
 
   ["<leader>f"] = {
     name = "+find",
@@ -86,7 +93,6 @@ wk.register({
 
   ["<leader>g"] = {
     name = "+git",
-    s = { "<cmd>lua require('neogit').open({kind = 'split'})<CR>", "Open neogit" },
     g = { "<cmd>LazyGit<CR>", "Open lazygit" }
   },
 
@@ -113,30 +119,30 @@ wk.register({
     v = { "<cmd>TestVisit<cr>", "Test: visit" },
   },
 
-  ["<leader>x"] = {
-    name = "+diagnostics",
-    x = { require('trouble').toggle, "Trouble" },
-    r = { require('trouble').refresh, "Trouble: refresh" },
-    w = { "<cmd>TroubleToggle workspace_diagnostics<cr>", "Trouble: workspace diags" },
-    d = { "<cmd>TroubleToggle document_diagnostics<cr>", "Trouble: doc diags" },
-    -- R = { "<cmd>TroubleToggle lsp_references<cr>", "Trouble: LSP references" },
-    D = { "<cmd>TroubleToggle lsp_definitions<cr>", "Trouble: LSP [D]efinitions" },
-    y = { "<cmd>TroubleToggle lsp_type_definitions<cr>", "Trouble: LSP t[y]pedefs" },
-    l = { "<cmd>TroubleToggle loclist<cr>", "Trouble: loclist" },
-    q = { "<cmd>TroubleToggle quickfix<cr>", "Trouble: quickfix" },
-    -- q = { vim.diagnostic.setloclist, "Add buffer diagnostics to loclist" },
-    t = { "<cmd>TodoTrouble keywords=TODO,FIXME<CR>", "Trouble: TODO/FIXME" }, -- folke/todo-comments.nvim
-
-    ["["] = {
-      "<cmd>lua require('trouble').next({skip_groups = true, jump = true})<cr>",
-      "Trouble: next item"
-    },
-
-    ["]"] = {
-      "<cmd>lua require('trouble').previous({skip_groups = true, jump = true})<cr>",
-      "Trouble: previous item"
-    },
-  },
+  -- ["<leader>x"] = {
+  --   name = "+diagnostics",
+  --   x = { require('trouble').toggle, "Trouble" },
+  --   r = { require('trouble').refresh, "Trouble: refresh" },
+  --   w = { "<cmd>TroubleToggle workspace_diagnostics<cr>", "Trouble: workspace diags" },
+  --   d = { "<cmd>TroubleToggle document_diagnostics<cr>", "Trouble: doc diags" },
+  --   -- R = { "<cmd>TroubleToggle lsp_references<cr>", "Trouble: LSP references" },
+  --   D = { "<cmd>TroubleToggle lsp_definitions<cr>", "Trouble: LSP [D]efinitions" },
+  --   y = { "<cmd>TroubleToggle lsp_type_definitions<cr>", "Trouble: LSP t[y]pedefs" },
+  --   l = { "<cmd>TroubleToggle loclist<cr>", "Trouble: loclist" },
+  --   q = { "<cmd>TroubleToggle quickfix<cr>", "Trouble: quickfix" },
+  --   -- q = { vim.diagnostic.setloclist, "Add buffer diagnostics to loclist" },
+  --   t = { "<cmd>TodoTrouble keywords=TODO,FIXME<CR>", "Trouble: TODO/FIXME" }, -- folke/todo-comments.nvim
+  --
+  --   ["["] = {
+  --     "<cmd>lua require('trouble').next({skip_groups = true, jump = true})<cr>",
+  --     "Trouble: next item"
+  --   },
+  --
+  --   ["]"] = {
+  --     "<cmd>lua require('trouble').previous({skip_groups = true, jump = true})<cr>",
+  --     "Trouble: previous item"
+  --   },
+  -- },
 })
 
 -- Visual mode mappings
@@ -146,10 +152,6 @@ wk.register({
   ["<leader>b"] = {
     b = { require("turboladen").al_box, "Left-aligned box; left-aligned text" },
     t = { require("turboladen").cc_box, "Title box" }
-  },
-
-  ["<leader>l"] = {
-    a = { vim.lsp.buf.code_action, "Code action" },
   },
 }, {
   mode = "v"

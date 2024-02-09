@@ -6,7 +6,10 @@ Plugin.dependencies = {
   { 'hrsh7th/cmp-nvim-lsp' },
   { 'williamboman/mason-lspconfig.nvim' },
   { "b0o/schemastore.nvim" },
-  { "j-hui/fidget.nvim" },
+  -- ╭─────────────────────────────────────────────────────────────╮
+  -- │ Disabling because noice provides its own version of fidget. │
+  -- ╰─────────────────────────────────────────────────────────────╯
+  -- { "j-hui/fidget.nvim" },
   {
     'mrcjkb/rustaceanvim',
     version = '^4',
@@ -50,6 +53,18 @@ Plugin.dependencies = {
       }
     }
   },
+  -- ╭─────────────────────────────────────────────────────────╮
+  -- │ lsp_lines is a simple neovim plugin that renders        │
+  -- │ diagnostics using virtual lines on top of the real      │
+  -- │ line of code.                                           │
+  -- ╰─────────────────────────────────────────────────────────╯
+  {
+    "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+    config = function()
+      require("lsp_lines").setup()
+      vim.diagnostic.config({ virtual_lines = { only_current_line = true } })
+    end,
+  }
 }
 
 Plugin.cmd = { 'LspInfo', 'LspInstall', 'LspUnInstall' }
@@ -79,10 +94,13 @@ function Plugin.init()
     }
   })
 
-  vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
-    vim.lsp.handlers.hover,
-    { border = 'rounded' }
-  )
+  -- ╭──────────────────────────────────────────╮
+  -- │ Disabling while trying out lsp_line.nvim │
+  -- ╰──────────────────────────────────────────╯
+  -- vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
+  --   vim.lsp.handlers.hover,
+  --   { border = 'rounded' }
+  -- )
 
   vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
     vim.lsp.handlers.signature_help,
@@ -292,12 +310,15 @@ function Plugin.config(_, opts)
     callback = user.on_attach
   })
 
-  vim.api.nvim_create_autocmd('CursorHold', {
-    group = group,
-    callback = function()
-      vim.diagnostic.open_float(nil, { focusable = false })
-    end
-  })
+  -- ╭────────────────────────────────────────────╮
+  -- │ Disabling while trying out lsp_lines.nvim. │
+  -- ╰────────────────────────────────────────────╯
+  -- vim.api.nvim_create_autocmd('CursorHold', {
+  --   group = group,
+  --   callback = function()
+  --     vim.diagnostic.open_float(nil, { focusable = false })
+  --   end
+  -- })
 
 
   local lspconfig = require('lspconfig')
@@ -329,8 +350,6 @@ function Plugin.config(_, opts)
 end
 
 function user.on_attach(_, bufnr)
-  -- bufmap({ 'n', 'x' }, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>')
-
   local wk = require("which-key")
   wk.register({
     g = {
@@ -359,14 +378,19 @@ function user.on_attach(_, bufnr)
       y = { vim.lsp.buf.type_definition, "Goto: t[y]pe definition", buffer = bufnr }
     },
 
-    ["="] = {
-      vim.lsp.buf.format,
-      "Reformat buffer",
-      buffer = bufnr,
+    -- bufmap({ 'n', 'x' }, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>')
+    ["<leader>="] = { vim.lsp.buf.format, "Reformat buffer", buffer = bufnr },
+
+    ["]"] = {
+      -- bufmap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<cr>')
+      g = { vim.diagnostic.goto_next, "diagnostic", buffer = bufnr },
     },
 
-    -- bufmap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<cr>')
-    -- bufmap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<cr>')
+    ["["] = {
+      -- bufmap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<cr>')
+      g = { vim.diagnostic.goto_prev, "diagnostic", buffer = bufnr },
+    },
+
     ["<leader>l"] = {
       name = "+lsp",
 
@@ -392,6 +416,17 @@ function user.on_attach(_, bufnr)
     },
   })
 
+  -- ╭──────────────────────╮
+  -- │ Visual mode mappings │
+  -- ╰──────────────────────╯
+  wk.register({
+    ["<leader>l"] = {
+      a = { vim.lsp.buf.code_action, "Code action" },
+    },
+  }, {
+    mode = "v"
+  })
+
   vim.api.nvim_create_autocmd('BufWritePre', {
     group = vim.api.nvim_create_augroup('lsp_format', { clear = true }),
     callback = function()
@@ -399,7 +434,10 @@ function user.on_attach(_, bufnr)
     end
   })
 
-  require("fidget").setup({})
+  -- ╭───────────────────────────────────╮
+  -- │ Disabling while trying out noice. │
+  -- ╰───────────────────────────────────╯
+  -- require("fidget").setup({})
 end
 
 return Plugin

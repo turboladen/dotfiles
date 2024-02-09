@@ -10,13 +10,6 @@ local function hover()
   end
 end
 
-local function make_flags()
-  return {
-    debounce_text_changes = 350,
-  }
-end
-
 return {
   hover = hover,
-  make_flags = make_flags,
 }
