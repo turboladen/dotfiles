@@ -26,28 +26,21 @@ Plugin.init = function()
           desc = desc
         }
       end
+      local crates = require("crates")
 
       -- vim.keymap.set('n', '<leader>ct', "<cmd>lua require('crates').toggle<cr>", opts("crates: enable/disable info"))
-      vim.keymap.set('n', '<leader>ct', require('crates').toggle, opts("crates: enable/disable info"))
-      vim.keymap.set('n', '<leader>cu', require('crates').upgrade_crate, opts("crates: update current"))
-      vim.keymap.set('n', '<leader>cl', require('crates').upgrade_all_crates, opts("crates: update all"))
+      vim.keymap.set('n', '<leader>ct', crates.toggle, opts("crates: enable/disable info"))
+      vim.keymap.set('n', '<leader>cu', crates.upgrade_crate, opts("crates: update current"))
+      vim.keymap.set('n', '<leader>cl', crates.upgrade_all_crates, opts("crates: update all"))
+      vim.keymap.set("n", "<leader>cr", crates.reload, opts("crates: reload cache"))
+      vim.keymap.set("n", "<leader>cv", crates.show_versions_popup, opts("crates: details w/version info"))
+      vim.keymap.set("n", "<leader>cf", crates.show_features_popup, opts("crates: details w/feature info"))
     end
   })
 end
 
 Plugin.config = function()
   require("crates").setup()
-end
-
-Plugin.keys = function()
-  local crates = require("crates")
-
-  return {
-    -- { "<leader>ct", crates.toggle,              desc = "crates: enable/disable info" },
-    { "<leader>cr", crates.reload,              desc = "crates: reload cache" },
-    { "<leader>cv", crates.show_versions_popup, desc = "crates: details w/version info" },
-    { "<leader>cf", crates.show_features_popup, desc = "crates: details w/feature info" },
-  }
 end
 
 return Plugin

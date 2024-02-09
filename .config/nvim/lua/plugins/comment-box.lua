@@ -2,8 +2,8 @@
 --  │    ✨ Clarify and beautify your comments using boxes     │
 --  │                        and lines.                        │
 --  ╰──────────────────────────────────────────────────────────╯
-
 local Plugin = { "LudoPinelli/comment-box.nvim" }
+
 Plugin.lazy = true
 Plugin.cmd = {
   --  ╭──────────────────────────────────────────────────────────╮
