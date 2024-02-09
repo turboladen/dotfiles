@@ -15,7 +15,6 @@ vim.opt.breakindent = true
 vim.opt.sidescroll = 4
 vim.opt.sidescrolloff = 5
 vim.opt.cmdheight = 2
-vim.opt.lazyredraw = true
 vim.opt.list = true
 vim.opt.listchars = "tab:▸ ,trail:.,nbsp:_,extends:❯,precedes:❮"
 vim.opt.number = true

@@ -299,12 +299,6 @@ function Plugin.config(_, opts)
     end
   })
 
-  vim.api.nvim_create_autocmd('BufWritePre', {
-    group = group,
-    callback = function()
-      vim.lsp.buf.format()
-    end
-  })
 
   local lspconfig = require('lspconfig')
   -- local capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -397,6 +391,14 @@ function user.on_attach(_, bufnr)
       },
     },
   })
+
+  vim.api.nvim_create_autocmd('BufWritePre', {
+    group = vim.api.nvim_create_augroup('lsp_format', { clear = true }),
+    callback = function()
+      vim.lsp.buf.format({ bufnr = bufnr })
+    end
+  })
+
   require("fidget").setup({})
 end
 
