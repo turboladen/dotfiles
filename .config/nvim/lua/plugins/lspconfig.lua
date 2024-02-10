@@ -10,30 +10,8 @@ Plugin.dependencies = {
   -- │ Disabling because noice provides its own version of fidget. │
   -- ╰─────────────────────────────────────────────────────────────╯
   -- { "j-hui/fidget.nvim" },
-  {
-    'mrcjkb/rustaceanvim',
-    version = '^4',
-    ft = { 'rust' },
-  },
-  -- {
-  --   "simrat39/rust-tools.nvim",
-  --   ft = { "rust" },
-  --   dependencies = {
-  --     "nvim-lua/plenary.nvim",
-  --     "nvim-lua/lsp-status.nvim",
-  --     "neovim/nvim-lspconfig",
-  --     "mfussenegger/nvim-dap",
-  --   },
-  --   opts = function()
-  --     return require("plugins.lsp.rust-utils").rust_tools_opts()
-  --   end,
-  --   config = function(_, opts)
-  --     local rust_tools = require("rust-tools")
-  --     rust_tools.setup(opts)
-  --
-  --     require("plugins.lsp.rust-utils").make_attach_things(rust_tools)
-  --   end
-  -- },
+  require("plugins.lspconfig.rustaceanvim"),
+
   --  ╭────────────────────────────────────────────────────╮
   --  │ Clangd's off-spec features for neovim's LSP client │
   --  ╰────────────────────────────────────────────────────╯
@@ -118,7 +96,6 @@ function Plugin.opts()
         end
       },
       bashls = {},
-      cmake = {},
 
       -- ╭─────────────────────────────────────────────────────────────────────────────────────────╮
       -- │ https://deno.land/manual@v1.27.1/language_server                                        │
@@ -250,6 +227,7 @@ function Plugin.opts()
       },
       prosemd_lsp = {},
       pyright = {},
+      neocmake = {},
       reason_ls = {},
       -- ruby_analyzer = {
       -- },
