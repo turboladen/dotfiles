@@ -5,7 +5,11 @@ local Plugin = { "jay-babu/mason-nvim-dap.nvim" }
 
 Plugin.enabled = false
 Plugin.event = "VeryLazy"
-Plugin.dependencies = "mason.nvim"
+
+Plugin.dependencies = {
+  require("plugins.mason_nvim"),
+}
+
 Plugin.cmd = { "DapInstall", "DapUninstall" }
 
 Plugin.opts = {

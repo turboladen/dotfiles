@@ -1,11 +1,10 @@
 local Plugin = { "neovim/nvim-lspconfig" }
-local user = {}
 
 
 Plugin.dependencies = {
-  { 'hrsh7th/cmp-nvim-lsp' },
-  { 'williamboman/mason-lspconfig.nvim' },
-  { "b0o/schemastore.nvim" },
+  'hrsh7th/cmp-nvim-lsp',
+  require("plugins.mason_lspconfig_nvim"),
+  "b0o/schemastore.nvim",
   -- ╭─────────────────────────────────────────────────────────────╮
   -- │ Disabling because noice provides its own version of fidget. │
   -- ╰─────────────────────────────────────────────────────────────╯

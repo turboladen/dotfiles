@@ -7,8 +7,8 @@ local Plugin        = { 'nvim-lualine/lualine.nvim' }
 Plugin.event        = "VeryLazy"
 
 Plugin.dependencies = {
-  'nvim-tree/nvim-web-devicons',
-  'stevearc/aerial.nvim',
+  require("plugins.nvim_web_devicons"),
+  require("plugins.aerial_nvim"),
 }
 
 Plugin.opts         = function()

@@ -9,7 +9,7 @@ Plugin.event = "VeryLazy"
 Plugin.enabled = true
 
 Plugin.dependencies = {
-  "neovim/nvim-lspconfig",
+  require("plugins.nvim_lspconfig"),
 
   -- Sources
   "hrsh7th/cmp-nvim-lsp",
@@ -19,7 +19,7 @@ Plugin.dependencies = {
   "hrsh7th/cmp-nvim-lua",
   "hrsh7th/cmp-path",
   "lukas-reineke/cmp-rg",
-  "saecki/crates.nvim",
+  require("plugins.crates_nvim"),
   -- /Sources
 
   -- Snippets

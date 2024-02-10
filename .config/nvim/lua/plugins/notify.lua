@@ -7,7 +7,7 @@ Plugin.event = "VeryLazy"
 Plugin.enabled = false
 
 Plugin.dependencies = {
-  "nvim-telescope/telescope.nvim",
+  require("plugins.telescope_nvim"),
 }
 
 Plugin.init = function()

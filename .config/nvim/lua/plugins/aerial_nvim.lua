@@ -4,9 +4,9 @@
 local Plugin = { "stevearc/aerial.nvim" }
 
 Plugin.dependencies = {
-  "nvim-treesitter/nvim-treesitter",
-  "nvim-tree/nvim-web-devicons",
-  "nvim-telescope/telescope.nvim",
+  require("plugins.nvim_treesitter"),
+  require("plugins.nvim_web_devicons"),
+  require("plugins.telescope_nvim"),
 }
 
 -- Plugin.enabled = false

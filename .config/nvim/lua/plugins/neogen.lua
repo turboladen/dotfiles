@@ -4,7 +4,9 @@
 local Plugin = { "danymat/neogen" }
 
 Plugin.event = "VeryLazy"
-Plugin.dependencies = { "nvim-treesitter/nvim-treesitter" }
+Plugin.dependencies = {
+  require("plugins.nvim_treesitter")
+}
 
 Plugin.opts = {
   snippet_engine = "snippy"

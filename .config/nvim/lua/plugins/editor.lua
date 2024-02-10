@@ -32,49 +32,12 @@ return {
     event = "VeryLazy",
   },
 
-  -- ╭───────────────────────────────────────────────────────────────────────╮
-  -- │ match-up is a plugin that lets you highlight, navigate, and operate   │
-  -- │ on sets of matching text. It extends vim's % key to language-specific │
-  -- │ words instead of just single characters.                              │
-  -- ╰───────────────────────────────────────────────────────────────────────╯
-  {
-    "andymass/vim-matchup",
-    event = "VeryLazy",
-    init = function()
-      vim.g.matchup_surround_enabled = 1
-      vim.g.matchup_matchparen_offscreen = { method = "popup" }
-    end
-  },
-
   -- ╭────────────╮
   -- │ Wisely add │
   -- ╰────────────╯
   {
     "tpope/vim-endwise",
     event = "VeryLazy",
-  },
-
-  -- ╭────────────────────────────────────────────────────╮
-  -- │ Neovim plugin for splitting/joining blocks of code │
-  -- ╰────────────────────────────────────────────────────╯
-  {
-    'Wansmer/treesj',
-    event = "VeryLazy",
-    dependencies = {
-      'nvim-treesitter',
-      -- ╭───────────────────────────────────────────╮
-      -- │ Adds gS and gJ to split/join code blocks. │
-      -- ╰───────────────────────────────────────────╯
-      "AndrewRadev/splitjoin.vim",
-    },
-    opts = {
-      use_default_keymaps = false,
-      max_join_length = 100,
-    },
-    config = function(_, opts)
-      require('treesj').setup(opts)
-      require("user.commands").treesj()
-    end
   },
 
   -- ╭───────────────────╮
@@ -151,38 +114,6 @@ return {
     },
   },
 
-  -- ╭──────────────────────────────────────────────────────────────────────────╮
-  -- │ Asynchronous build and test dispatcher. Used for running specs in a      │
-  -- │ separate tmux pane.                                                      │
-  -- ╰──────────────────────────────────────────────────────────────────────────╯
-  {
-    "tpope/vim-dispatch",
-    cmd = {
-      "AbortDispatch",
-      "Copen",
-      "Dispatch",
-      "FocusDispatch",
-      "Make",
-      "Spawn",
-      "Start",
-    },
-    init = function()
-      vim.g.dispatch_no_maps = 1
-    end
-  },
-
-  -- ╭───────────────────────────────────────────────────────────╮
-  -- │ Use RipGrep in Vim and display results in a quickfix list │
-  -- ╰───────────────────────────────────────────────────────────╯
-  {
-    "jremmen/vim-ripgrep",
-    cmd = "Rg",
-    init = function()
-      vim.g.rg_command = "rg --vimgrep --ignore-vcs"
-      -- vim.g.rg_highlight = 1
-    end
-  },
-
   -- ╭────────────────────────────────────────────────────────╮
   -- │ Delete all the buffers except the current/named buffer │
   -- ╰────────────────────────────────────────────────────────╯
@@ -196,6 +127,7 @@ return {
   -- ╰────────────────────────────────────────╯
   {
     "wincent/terminus",
+    enabled = false,
     event = "VeryLazy"
   },
 

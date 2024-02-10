@@ -2,7 +2,6 @@
 local Plugin  = { "zbirenbaum/copilot.lua" }
 
 Plugin.cmd    = "Copilot"
--- event = "VeryLazy"
 Plugin.event  = "InsertEnter"
 
 Plugin.opts   = {

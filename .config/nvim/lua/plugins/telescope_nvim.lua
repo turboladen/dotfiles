@@ -8,16 +8,12 @@ Plugin.branch = "0.1.x"
 Plugin.event = "VeryLazy"
 
 Plugin.dependencies = {
-  "yamatsum/nvim-nonicons",
   "nvim-lua/plenary.nvim",
-  "nvim-tree/nvim-web-devicons",
   "nvim-telescope/telescope-symbols.nvim",
-  "nvim-treesitter/nvim-treesitter",
-
-  -- ╭────────────────────────────────────╮
-  -- │ It sets vim.ui.select to telescope │
-  -- ╰────────────────────────────────────╯
-  'nvim-telescope/telescope-ui-select.nvim',
+  require("plugins.nvim_treesitter"),
+  require("plugins.telescope_fzf_native_nvim"),
+  require("plugins.nvim_nonicons"),
+  require("plugins.telescope_ui_select_nvim"),
 }
 
 Plugin.opts = function()
@@ -52,36 +48,20 @@ Plugin.opts = function()
         theme = "dropdown",
       },
     },
+    extensions = {
+      ["ui-select"] = require("plugins.telescope_ui_select_nvim").extension_config(),
+      fzf = require("plugins.telescope_fzf_native_nvim").extension_config(),
+    },
   }
 end
 
 Plugin.config = function(_, opts)
-  require("telescope").setup {
-    extensions = {
-      ["ui-select"] = {
-        require("telescope.themes").get_dropdown {
-          -- even more opts
-        }
+  require("telescope").setup(opts)
 
-        -- pseudo code / specification for writing custom displays, like the one
-        -- for "codeactions"
-        -- specific_opts = {
-        --   [kind] = {
-        --     make_indexed = function(items) -> indexed_items, width,
-        --     make_displayer = function(widths) -> displayer
-        --     make_display = function(displayer) -> function(e)
-        --     make_ordinal = function(e) -> string
-        --   },
-        --   -- for example to disable the custom builtin "codeactions" display
-        --      do the following
-        --   codeactions = false,
-        -- }
-      }
-    }
-  }
   -- To get ui-select loaded and working with telescope, you need to call
   -- load_extension, somewhere after setup function:
   require("telescope").load_extension("ui-select")
+  require('telescope').load_extension('fzf')
 end
 
 return Plugin
