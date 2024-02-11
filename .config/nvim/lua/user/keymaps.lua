@@ -20,11 +20,13 @@ wk.register({
   ["]"] = {
     name = "+next",
     t = { require("todo-comments").jump_next, "todo-comment" }, -- folke/todo-comments
+    n = { require("plugins.nvim_neotest").next_failed, "Test: next failure" }
   },
 
   ["["] = {
     name = "+prev",
     t = { require("todo-comments").jump_prev, "todo-comment" }, -- folke/todo-comments
+    n = { require("plugins.nvim_neotest").prev_failed, "Test: previous failure" }
   },
 
   --  ╭─────────╮
@@ -56,29 +58,29 @@ wk.register({
     t = { require("turboladen").cc_box, "Title box" }
   },
 
-  -- ["<leader>d"] = {
-  --   name = "+dap",
-  --   -- vim.keymap.set('n', '<Leader>dB', require('dap').set_breakpoint)
-  --   B = { require('dap').set_breakpoint, "DAP: set breakpoint" },
-  --   -- vim.keymap.set('n', '<F5>', require('dap').continue)
-  --   c = { require('dap').continue, "DAP: continue" },
-  --   -- vim.keymap.set('n', '<F12>', require('dap').step_out)
-  --   k = { require('dap').step_out, "DAP: step out" },
-  --   -- vim.keymap.set('n', '<F11>', require('dap').step_into)
-  --   l = { require('dap').step_into, "DAP: step into" },
-  --   -- vim.keymap.set('n', '<F10>', require('dap').step_over)
-  --   j = { require('dap').step_over, "DAP: step over" },
-  --   -- vim.keymap.set('n', '<Leader>db', require('dap').toggle_breakpoint)
-  --   b = { require('dap').toggle_breakpoint, "DAP: toggle breakpoint" },
-  --   -- vim.keymap.set('n', '<Leader>dr', require('dap').repl.open)
-  --   r = { require('dap').repl.open, "DAP: open REPL" },
-  --   -- vim.keymap.set('n', '<Leader>dl', require('dap').run_last)
-  --   L = { require('dap').run_last, "DAP: open REPL" },
-  --   --   e = { "lua require('dap').set_exception_breakpoints({'all'})", "DAP: set breakpoints on all exceptions" },
-  --   --   t = { require('dap.ui').toggle, "DAP UI: toggle" },
-  --   --   -- i = { require('dap.ui.variables').visual_hover },
-  --   --   -- ["?"] = { require('dap.ui.variables').scopes },
-  -- },
+  ["<leader>d"] = {
+    name = "+dap",
+    -- vim.keymap.set('n', '<Leader>dB', require('dap').set_breakpoint)
+    B = { require('dap').set_breakpoint, "DAP: set breakpoint" },
+    -- vim.keymap.set('n', '<F5>', require('dap').continue)
+    c = { require('dap').continue, "DAP: continue" },
+    -- vim.keymap.set('n', '<F12>', require('dap').step_out)
+    k = { require('dap').step_out, "DAP: step out" },
+    -- vim.keymap.set('n', '<F11>', require('dap').step_into)
+    l = { require('dap').step_into, "DAP: step into" },
+    -- vim.keymap.set('n', '<F10>', require('dap').step_over)
+    j = { require('dap').step_over, "DAP: step over" },
+    -- vim.keymap.set('n', '<Leader>db', require('dap').toggle_breakpoint)
+    b = { require('dap').toggle_breakpoint, "DAP: toggle breakpoint" },
+    -- vim.keymap.set('n', '<Leader>dr', require('dap').repl.open)
+    r = { require('dap').repl.open, "DAP: open REPL" },
+    -- vim.keymap.set('n', '<Leader>dl', require('dap').run_last)
+    L = { require('dap').run_last, "DAP: open REPL" },
+    --   e = { "lua require('dap').set_exception_breakpoints({'all'})", "DAP: set breakpoints on all exceptions" },
+    --   t = { require('dap.ui').toggle, "DAP UI: toggle" },
+    --   -- i = { require('dap.ui.variables').visual_hover },
+    --   -- ["?"] = { require('dap.ui.variables').scopes },
+  },
 
   ["<leader>f"] = {
     name = "+find",
@@ -114,11 +116,22 @@ wk.register({
 
   ["<leader>t"] = {
     name = "+test",
-    n = { "<cmd>TestNearest<cr>", "Test: nearest" },
-    f = { "<cmd>TestFile<cr>", "Test: file" },
-    a = { "<cmd>TestSuite<cr>", "Test: all" },
-    l = { "<cmd>TestLast<cr>", "Test: last" },
-    v = { "<cmd>TestVisit<cr>", "Test: visit" },
+    n = { require("plugins.nvim_neotest").test_cmds.nearest, "Test: nearest" },
+    N = { require("plugins.nvim_neotest").test_cmds.watch_nearest, "Test: watch nearest" },
+
+    f = { require("plugins.nvim_neotest").test_cmds.file, "Test: test this file" },
+    F = { require("plugins.nvim_neotest").test_cmds.watch_file, "Test: test this file" },
+
+    a = { require("plugins.nvim_neotest").test_cmds.all, "Test: all tests" },
+    A = { require("plugins.nvim_neotest").test_cmds.watch_all, "Test: watch all tests" },
+
+    l = { require("neotest").run.run_last, "Test: Run last test cmd" },
+
+    s = { require("neotest").summary.toggle, "Test: toggle summary" },
+    o = { require("plugins.nvim_neotest").toggle_output, "Test: show output" },
+    O = { require("neotest").output_panel.toggle, "Test: toggle panel" },
+
+    S = { require("neotest").run.stop, "Test: stop!" },
   },
 
   -- ["<leader>x"] = {

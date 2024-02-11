@@ -21,5 +21,4 @@ Plugin.config = function(_, opts)
   require("mason-lspconfig").setup(opts)
 end
 
-
 return Plugin

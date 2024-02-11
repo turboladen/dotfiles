@@ -1,15 +1,14 @@
 local Plugin = { "neovim/nvim-lspconfig" }
 
-
 Plugin.dependencies = {
   'hrsh7th/cmp-nvim-lsp',
   require("plugins.mason_lspconfig_nvim"),
-  "b0o/schemastore.nvim",
+  require("plugins.schemastore_nvim"),
   -- ╭─────────────────────────────────────────────────────────────╮
   -- │ Disabling because noice provides its own version of fidget. │
   -- ╰─────────────────────────────────────────────────────────────╯
   -- { "j-hui/fidget.nvim" },
-  require("plugins.lspconfig.rustaceanvim"),
+  require("plugins.nvim_lspconfig.rustaceanvim"),
 
   --  ╭────────────────────────────────────────────────────╮
   --  │ Clangd's off-spec features for neovim's LSP client │
@@ -257,16 +256,7 @@ function Plugin.opts()
       yamlls = {
         settings = {
           yaml = {
-            -- Stole schemastore config from https://github.com/b0o/SchemaStore.nvim/issues/9#issuecomment-1140321123
-            schemas = function()
-              local json_schemas = require('schemastore').json.schemas {}
-              local yaml_schemas = {}
-              vim.tbl_map(function(schema)
-                yaml_schemas[schema.url] = schema.fileMatch
-              end, json_schemas)
-
-              return yaml_schemas
-            end,
+            schemas = require("plugins.schemastore_nvim").lspconfig_yaml_schemas(),
             validate = { enable = true }
           },
         }

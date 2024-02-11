@@ -6,7 +6,6 @@
 --    instead of pressing F5.
 local Plugin = { "mfussenegger/nvim-dap" }
 
-Plugin.enabled = false
 Plugin.event = "VeryLazy"
 
 Plugin.dependencies = {
@@ -83,12 +82,12 @@ Plugin.dependencies = {
 --   }
 -- end
 
--- Plugin.init = function()
---   vim.fn.sign_define("DapBreakpoint", { text = "🛑", texthl = "", linehl = "", numhl = "" })
---   vim.api.nvim_set_hl(0, "DapStoppedLine", { default = true, link = "Visual" })
---
---   -- au FileType dap-repl lua require('dap.ext.autocompl').attach()
---   vim.cmd [[autocmd FileType dap-repl lua require('dap.ext.autocompl').attach()]]
--- end
+Plugin.init = function()
+  vim.fn.sign_define("DapBreakpoint", { text = "🛑", texthl = "", linehl = "", numhl = "" })
+  vim.api.nvim_set_hl(0, "DapStoppedLine", { default = true, link = "Visual" })
+
+  -- au FileType dap-repl lua require('dap.ext.autocompl').attach()
+  -- vim.cmd [[autocmd FileType dap-repl lua require('dap.ext.autocompl').attach()]]
+end
 
 return Plugin

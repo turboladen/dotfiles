@@ -5,23 +5,24 @@ return {
   -- ╰────────────────────────────────────────────────────────────────────────╯
   {
     "EdenEast/nightfox.nvim",
-    -- lazy = false,
+    lazy = false,
     opts = {
       options = {
         dim_inactive = true,
-        inverse = {
-          match_paren = true,
-          visual = true,
-          search = true,
+        colorblind = {
+          enable = true
         },
+        styles = {
+          comments = "italic",
+          keywords = "italic",
+          types = "italic,bold",
+        }
       },
     },
   },
 
   -- ╭────────────────────────────────────────────────╮
   -- │ 🌲 Comfortable & Pleasant Color Scheme for Vim │
-  -- │                                                │
-  -- │ NOTE: To enable this, edit the setup file.     │
   -- ╰────────────────────────────────────────────────╯
   {
     "sainnhe/everforest",
@@ -61,33 +62,35 @@ return {
   -- ╭─────────────────────────────────────────────────────────────────────────╮
   -- │ 🔱 Material colorscheme for NeoVim written in Lua with built-in support │
   -- │ for native LSP, TreeSitter and many more plugins .                      │
-  -- │                                                                         │
-  -- │ NOTE: To enable this, edit the setup file.                              │
   -- ╰─────────────────────────────────────────────────────────────────────────╯
   {
     "marko-cerovac/material.nvim",
     lazy = true,
     dependencies = {
-      "nvim-telescope/telescope.nvim",
+      require("plugins.telescope_nvim")
     },
     opts = {
       contrast = {
         floating_windows = true,
         cursor_line = true,
         non_current_windows = true,
+        sidebars = true,
       },
       plugins = {
         "dap",
         "gitsigns",
-        "indent-blankline",
+        "mini",
+        "neotest",
+        "noice",
         "nvim-cmp",
         "nvim-web-devicons",
         "telescope",
-        "trouble"
+        "trouble",
+        "which-key",
       }
     },
     init = function()
-      vim.g.material_style = "palenight"
+      vim.g.material_style = "deep ocean"
     end,
     config = function(_, opts)
       require("material").setup(opts)

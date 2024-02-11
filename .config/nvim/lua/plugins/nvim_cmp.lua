@@ -5,7 +5,6 @@
 local Plugin = { "hrsh7th/nvim-cmp" }
 
 Plugin.version = false
-Plugin.event = "VeryLazy"
 Plugin.enabled = true
 
 Plugin.dependencies = {
@@ -14,7 +13,7 @@ Plugin.dependencies = {
   -- Sources
   "hrsh7th/cmp-nvim-lsp",
   "hrsh7th/cmp-buffer",
-  "hrsh7th/cmp-cmdline",
+  require("plugins.nvim_cmp.cmp_cmdline"),
   "hrsh7th/cmp-nvim-lsp-signature-help",
   "hrsh7th/cmp-nvim-lua",
   "hrsh7th/cmp-path",
@@ -23,41 +22,7 @@ Plugin.dependencies = {
   -- /Sources
 
   -- Snippets
-  --  ╭──────────────────────────────────────────╮
-  --  │ Snippet plugin for Neovim written in Lua │
-  --  ╰──────────────────────────────────────────╯
-  {
-    "dcampos/nvim-snippy",
-    event = "VeryLazy",
-    lazy = true,
-    dependencies = { "honza/vim-snippets" },
-    opts = {
-      mappings = {
-        is = {
-          ['<Tab>'] = 'expand_or_advance',
-          ['<S-Tab>'] = 'previous',
-        },
-        nx = {
-          ['<leader>x'] = 'cut_text',
-        },
-      },
-    },
-    -- keys = function()
-    --   local mappings = require('snippy.mapping')
-    --
-    --   -- TODO: Haven't yet confirmed these do what I want.
-    --   return {
-    --     { "<Tab>",   mappings.expand_or_advance("<Tab>"), "i" },
-    --
-    --     { "<Tab>",   mappings.next("<Tab>"),              "s" },
-    --     { "<C-j>",   mappings.next("<Tab>"),              "s" },
-    --     { "<S-Tab>", mappings.previous("<S-Tab>"),        { "i", "s" } },
-    --     { "<C-j>",   mappings.previous("<C-j>"),          { "i", "s" } },
-    --     { "<Tab>",   mappings.cut_text,                   "x",         { remap = true } },
-    --     { "g<Tab>",  mappings.cut_text,                   "n",         { remap = true } },
-    --   }
-    -- end
-  },
+  require("plugins.nvim_snippy"),
   'dcampos/cmp-snippy',
   -- /Snippets
 
@@ -66,15 +31,9 @@ Plugin.dependencies = {
 }
 
 Plugin.opts = function()
-  -- local has_words_before = function()
-  --   unpack = unpack or table.unpack
-  --   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-  --   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-  -- end
-
   local snippy = require("snippy")
   local cmp = require("cmp")
-  local cmp_utils = require("plugins.cmp.utils")
+  local cmp_utils = require("plugins.nvim_cmp.utils")
 
   return {
     completion = {
@@ -132,23 +91,7 @@ Plugin.config = function(_, opts)
   local cmp = require("cmp")
   cmp.setup(opts)
 
-  -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
-  cmp.setup.cmdline({ '/', '?' }, {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = {
-      { name = 'buffer' }
-    }
-  })
-
-  -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-  cmp.setup.cmdline(':', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources({
-      { name = 'path' }
-    }, {
-      { name = 'cmdline' }
-    })
-  })
+  require("plugins.nvim_cmp.cmp_cmdline").cmp_config(cmp)
 end
 
 return Plugin
