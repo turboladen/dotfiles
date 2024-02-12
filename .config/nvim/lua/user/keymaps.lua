@@ -245,7 +245,7 @@ end
 --- Defines keymaps for `treesj`'s autocmd.
 ---@param langs table
 M.treesj = function(langs)
-  local map_opts = { buffer = true }
+  local map_opts = { buffer = true, noremap = true }
 
   -- Fallback to splitjoin on unsupported language: https://github.com/Wansmer/treesj/discussions/19
   if langs[vim.bo.filetype] then
@@ -304,8 +304,6 @@ M.lspconfig = function(bufnr)
     },
 
     ["<leader>l"] = {
-      name = "+lsp",
-
       -- bufmap('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>')
       a = {
         vim.lsp.buf.code_action,
@@ -321,8 +319,8 @@ M.lspconfig = function(bufnr)
 
       -- bufmap('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>')
       s = { vim.lsp.buf.signature_help, "Signature help", buffer = bufnr },
-      o = { require("telescope.builtin").lsp_document_symbols, "Show doc symbols", buffer = bufnr },
       w = { require("telescope.builtin").lsp_dynamic_workspace_symbols, "Show workspace symbols", buffer = bufnr },
+      W = { require("telescope.builtin").lsp_document_symbols, "Show doc symbols", buffer = bufnr },
       f = {
         function()
           print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
@@ -330,6 +328,12 @@ M.lspconfig = function(bufnr)
         "List workspace folders",
         buffer = bufnr
       },
+
+      -- Diagnostics
+      x = { function() require("telescope.builtin").diagnostics({ bufnr = 0, severity = "Error" }) end, "LSP: Buffer errors" },
+      X = { function() require("telescope.builtin").diagnostics({ severity = "Error" }) end, "LSP: All errors" },
+      d = { function() require("telescope.builtin").diagnostics({ bufnr = 0 }) end, "LSP: Buffer diagnostics" },
+      D = { require("telescope.builtin").diagnostics, "LSP: All Diagnostics" },
     },
   })
 
