@@ -34,30 +34,36 @@ end
 local TestCmds = {}
 --- Run the nearest test.
 TestCmds.nearest = function()
+  require("neotest").summary.toggle()
   require("neotest").run.run()
 end
 
 --- Run the nearest test.
 TestCmds.watch_nearest = function()
+  require("neotest").summary.toggle()
   require("neotest").watch()
 end
 
 --- Run all tests in the current file.
 TestCmds.file = function()
+  require("neotest").summary.toggle()
   require("neotest").run.run(vim.fn.expand("%"))
 end
 
 TestCmds.watch_file = function()
+  require("neotest").summary.toggle()
   require("neotest").watch(vim.fn.expand("%"))
 end
 
 --- Run all tests in all files.
 TestCmds.all = function()
+  require("neotest").summary.toggle()
   require("neotest").run.run(vim.loop.cwd())
 end
 
 --- Watch all tests in all files.
 TestCmds.watch_all = function()
+  require("neotest").summary.toggle()
   require("neotest").watch(vim.loop.cwd())
 end
 

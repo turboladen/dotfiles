@@ -120,7 +120,7 @@ wk.register({
     N = { require("plugins.nvim_neotest").test_cmds.watch_nearest, "Test: watch nearest" },
 
     f = { require("plugins.nvim_neotest").test_cmds.file, "Test: test this file" },
-    F = { require("plugins.nvim_neotest").test_cmds.watch_file, "Test: test this file" },
+    F = { require("plugins.nvim_neotest").test_cmds.watch_file, "Test: watch this file" },
 
     a = { require("plugins.nvim_neotest").test_cmds.all, "Test: all tests" },
     A = { require("plugins.nvim_neotest").test_cmds.watch_all, "Test: watch all tests" },

@@ -28,6 +28,7 @@ return {
   -- ╰────────────────────────────────╯
   {
     "sheerun/vim-polyglot",
+    event = "VeryLazy",
     init = function()
       -- https://github.com/tbastos/vim-lua
       vim.g.lua_syntax_fancynotequal = 1
@@ -44,7 +45,10 @@ return {
   -- ╭────────────────────────────────────────────────────╮
   -- │ Vim syntax file & snippets for Docker's Dockerfile │
   -- ╰────────────────────────────────────────────────────╯
-  { "ekalinin/Dockerfile.vim" },
+  {
+    "ekalinin/Dockerfile.vim",
+    event = "VeryLazy",
+  },
 
   -- ╭───────────────────────────────────────────────────────────╮
   -- │ A Vim plugin for more pleasant editing on commit messages │

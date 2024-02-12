@@ -4,6 +4,13 @@
 -- ╰─────────────────────────────────────────────────────────╯
 local Plugin = { "folke/noice.nvim" }
 
+-- ╭──────────────────────────────────────────────────────────────╮
+-- │ 2024-02-12 If I'm disabling this, I probably want to enable: │
+-- │ * dressing.nvim                                              │
+-- │ * fidget.nvim                                                │
+-- ╰──────────────────────────────────────────────────────────────╯
+Plugin.enabled = false
+
 Plugin.dependencies = {
   -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
   "MunifTanjim/nui.nvim",
