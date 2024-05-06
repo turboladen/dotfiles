@@ -1,47 +1,84 @@
+# ╭─────────╮
+# │ General │
+# ╰─────────╯
 import = [
   "~/.config/alacritty/colors.toml",
   "~/.config/alacritty/keyboard.toml",
 ]
 
+# working_directory = "~/Development"
 live_config_reload = true
 
+# ╭─────╮
+# │ Env │
+# ╰─────╯
+# [env]
+# TERM = "xterm-256color"
+
+# ╭────────╮
+# │ Window │
+# ╰────────╯
+[window]
+startup_mode = "Fullscreen"
+
+[window.dimensions]
+columns = 80
+lines = 24
+
+[window.padding]
+x = 2
+y = 2
+
+# ╭───────────╮
+# │ Scrolling │
+# ╰───────────╯
+[scrolling]
+history = 10000
+multiplier = 3
+
+# ╭──────╮
+# │ Font │
+# ╰──────╯
+[font]
+size = 13.0
+
+[font.normal]
+family = "MonoLisa"
+
+# ╭──────╮
+# │ Bell │
+# ╰──────╯
 [bell]
 animation = "EaseOutExpo"
 duration = 0
 
+# ╭───────────╮
+# │ Selection │
+# ╰───────────╯
+[selection]
+# semantic_escape_chars = ",│`|:\"' ()[]{}<>"
+save_to_clipboard = true
+
+# ╭────────╮
+# │ Cursor │
+# ╰────────╯
 [cursor]
-style = "Block"
-unfocused_hollow = true
 
-[debug]
-render_timer = false
+[cursor.style]
+blinking = "On"
 
-[env]
-TERM = "xterm-256color"
+[cursor.vi_mode_style]
+shape = "Beam"
+blinking = "On"
 
-[font]
-size = 13.0
+# ╭──────────╮
+# │ Terminal │
+# ╰──────────╯
 
-[font.bold]
-family = "MonoLisaCustom Nerd Font"
-style = "Bold"
 
-[font.glyph_offset]
-x = 0
-y = 0
-
-[font.italic]
-family = "MonoLisaCustom Nerd Font"
-style = "Regular Italic"
-
-[font.normal]
-family = "MonoLisaCustom Nerd Font"
-style = "Regular Italic"
-
-[font.offset]
-x = 0
-y = 0
-
+# ╭───────╮
+# │ Mouse │
+# ╰───────╯
 [mouse]
 hide_when_typing = true
 
@@ -55,25 +92,12 @@ mouse = "Middle"
 # [mouse.triple_click]
 # threshold = 300
 
-[scrolling]
-history = 10000
-multiplier = 3
+# ╭───────╮
+# │ Hints │
+# ╰───────╯
 
-[selection]
-semantic_escape_chars = ",│`|:\"' ()[]{}<>"
-
-[shell]
-program = "/bin/zsh"
-
-[window]
-decorations = "full"
-dynamic_title = true
-opacity = 1.0
-
-[window.dimensions]
-columns = 80
-lines = 24
-
-[window.padding]
-x = 2
-y = 2
+# ╭───────╮
+# │ Debug │
+# ╰───────╯
+# [debug]
+# render_timer = false
