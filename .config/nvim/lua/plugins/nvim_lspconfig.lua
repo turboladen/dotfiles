@@ -29,18 +29,7 @@ Plugin.dependencies = {
       }
     }
   },
-  -- ╭─────────────────────────────────────────────────────────╮
-  -- │ lsp_lines is a simple neovim plugin that renders        │
-  -- │ diagnostics using virtual lines on top of the real      │
-  -- │ line of code.                                           │
-  -- ╰─────────────────────────────────────────────────────────╯
-  {
-    "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-    config = function()
-      require("lsp_lines").setup()
-      vim.diagnostic.config({ virtual_lines = { only_current_line = true } })
-    end,
-  }
+  require("plugins.nvim_lspconfig.lsp_lines_nvim")
 }
 
 Plugin.cmd = { 'LspInfo', 'LspInstall', 'LspUnInstall' }
@@ -54,10 +43,12 @@ function Plugin.init()
   end
 
   vim.diagnostic.config({
-    -- virtual_text = true,
+    virtual_text = {
+      severity = "ERROR"
+    },
     -- Setting this to false turns off all the annoying rust-analyzer long loop warnings
     -- https://github.com/neovim/nvim-lspconfig/issues/96
-    virtual_text = false,
+    -- virtual_text = false,
     severity_sort = true,
     float = {
       border = 'rounded',
@@ -272,8 +263,8 @@ function Plugin.config(_, opts)
   require("user.commands").lspconfig()
 
   local lspconfig = require('lspconfig')
-  -- local capabilities = require('cmp_nvim_lsp').default_capabilities()
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  local capabilities = require('cmp_nvim_lsp').default_capabilities()
+  -- local capabilities = vim.lsp.protocol.make_client_capabilities()
 
   local function setup(server)
     local server_opts = vim.tbl_deep_extend("force", {

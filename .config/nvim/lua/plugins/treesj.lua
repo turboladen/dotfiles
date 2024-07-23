@@ -18,8 +18,13 @@ Plugin.opts = {
   max_join_length = 100,
 }
 
-Plugin.config = function(_, opts)
-  require('treesj').setup(opts)
+Plugin.init = function()
   require("user.commands").treesj()
 end
+
+-- Plugin.config = function(_, opts)
+--   require('treesj').setup(opts)
+--   require("user.commands").treesj()
+-- end
+
 return Plugin

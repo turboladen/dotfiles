@@ -26,8 +26,7 @@ Plugin.dependencies = {
   'dcampos/cmp-snippy',
   -- /Snippets
 
-  -- "nvim-treesitter/nvim-treesitter",
-  "onsails/lspkind-nvim",
+  require("plugins.lspkind_nvim"),
 }
 
 Plugin.opts = function()
@@ -43,7 +42,6 @@ Plugin.opts = function()
       format = require("lspkind").cmp_format({
         mode = "symbol_text",
         max_width = 50,
-        symbol_map = { Copilot = "" }
       }),
     },
     mapping = {

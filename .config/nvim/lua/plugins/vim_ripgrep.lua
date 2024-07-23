@@ -3,7 +3,8 @@
 -- ╰───────────────────────────────────────────────────────────╯
 local Plugin = { "jremmen/vim-ripgrep" }
 
-Plugin.cmd = "Rg"
+Plugin.enabled = false
+Plugin.cmd = { "Rg", "RgRoot" }
 
 Plugin.init = function()
   vim.g.rg_command = "rg --vimgrep --ignore-vcs"

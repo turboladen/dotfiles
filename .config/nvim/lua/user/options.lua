@@ -5,6 +5,8 @@
 --  ╭──────────────────────────────────────────╮
 --  │ 2. moving around, searching and patterns │
 --  ╰──────────────────────────────────────────╯
+vim.opt.ignorecase = false
+vim.opt.smartcase = false
 
 --  ╭────────────────────╮
 --  │ 4. displaying text │

@@ -5,7 +5,7 @@ return {
   -- ╰────────────────────────────────────────────────────────────────────────╯
   {
     "EdenEast/nightfox.nvim",
-    lazy = false,
+    event = "VeryLazy",
     opts = {
       options = {
         dim_inactive = true,
@@ -26,7 +26,7 @@ return {
   -- ╰────────────────────────────────────────────────╯
   {
     "sainnhe/everforest",
-    lazy = true,
+    event = "VeryLazy",
     init = function()
       vim.g.everforest_background = "hard"
 
@@ -48,7 +48,7 @@ return {
   -- ╰──────────────────────────────────────────────────────────────────────────╯
   {
     "rebelot/kanagawa.nvim",
-    lazy = true,
+    event = "VeryLazy",
   },
 
   -- ╭──────────────────────────────────────────────────────╮
@@ -56,7 +56,7 @@ return {
   -- ╰──────────────────────────────────────────────────────╯
   {
     "aonemd/kuroi.vim",
-    lazy = true
+    event = "VeryLazy",
   },
 
   -- ╭─────────────────────────────────────────────────────────────────────────╮
@@ -65,7 +65,7 @@ return {
   -- ╰─────────────────────────────────────────────────────────────────────────╯
   {
     "marko-cerovac/material.nvim",
-    lazy = true,
+    event = "VeryLazy",
     dependencies = {
       require("plugins.telescope_nvim")
     },
@@ -113,11 +113,21 @@ return {
   -- │ on Atom's One Dark and Light theme. Additionally, it comes with 5 color  │
   -- │ variant styles.                                                          │
   -- ╰──────────────────────────────────────────────────────────────────────────╯
+  -- {
+  --   "navarasu/onedark.nvim",
+  --   event = "VeryLazy",
+  --   opts = {
+  --     style = "darker"
+  --   }
+  -- }
   {
-    "navarasu/onedark.nvim",
-    lazy = true,
-    opts = {
-      style = "darker"
-    }
+    "olimorris/onedarkpro.nvim"
+  },
+
+  {
+    "ray-x/aurora",
+    init = function()
+      vim.g.aurora_italic = 1
+    end
   }
 }

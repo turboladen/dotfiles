@@ -45,4 +45,22 @@ Plugin.cmd = {
   "CBcatalog"
 }
 
+---Make an adapted box with left-aligned text, then format.
+--
+---@param style number
+Plugin.al_box = function(style)
+  require("comment-box").albox(style)
+  vim.lsp.buf.format({ async = false })
+end
+
+
+---Make an centered box with centered text, then format. Good for file headers.
+--
+---@param style number
+Plugin.cc_box = function(style)
+  style = style or 3
+  require("comment-box").ccbox(style)
+  vim.lsp.buf.format({ async = false })
+end
+
 return Plugin

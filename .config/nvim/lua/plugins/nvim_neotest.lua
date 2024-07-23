@@ -8,11 +8,13 @@ local Plugin = { "nvim-neotest/neotest" }
 Plugin.event = "VeryLazy"
 
 Plugin.dependencies = {
-  "antoinemadec/FixCursorHold.nvim",
+  "nvim-neotest/nvim-nio",
   "nvim-lua/plenary.nvim",
+  "antoinemadec/FixCursorHold.nvim",
   require("plugins.nvim_treesitter"),
   "olimorris/neotest-rspec",
-  require("plugins.nvim_lspconfig.rustaceanvim"),
+  -- require("plugins.nvim_lspconfig.rustaceanvim"),
+  "rouge8/neotest-rust", -- rustacean.neotest doesn't pick up tests most of the time
   require("plugins.neodev_nvim"),
 }
 
@@ -20,7 +22,8 @@ Plugin.opts = function()
   return {
     adapters = {
       require('neotest-rspec'),
-      require('rustaceanvim.neotest'),
+      require('neotest-rust'),
+      -- require('rustaceanvim.neotest'),
     },
     output = {
       enabled = false
@@ -34,30 +37,30 @@ end
 local TestCmds = {}
 --- Run the nearest test.
 TestCmds.nearest = function()
-  require("neotest").summary.toggle()
+  require("neotest").summary.open()
   require("neotest").run.run()
 end
 
 --- Run the nearest test.
 TestCmds.watch_nearest = function()
-  require("neotest").summary.toggle()
+  require("neotest").summary.open()
   require("neotest").watch()
 end
 
 --- Run all tests in the current file.
 TestCmds.file = function()
-  require("neotest").summary.toggle()
+  require("neotest").summary.open()
   require("neotest").run.run(vim.fn.expand("%"))
 end
 
 TestCmds.watch_file = function()
-  require("neotest").summary.toggle()
+  require("neotest").summary.open()
   require("neotest").watch(vim.fn.expand("%"))
 end
 
 --- Run all tests in all files.
 TestCmds.all = function()
-  require("neotest").summary.toggle()
+  require("neotest").summary.open()
   require("neotest").run.run(vim.loop.cwd())
 end
 
@@ -74,9 +77,12 @@ end
 --   require("neotest").run.run({ strategy = 'dap' })
 -- end
 
---- Toggle showing test output.
-Plugin.toggle_output = function()
-  require("neotest").output.open({ enter = true, auto_close = true })
+Plugin.toggle_output_panel = function()
+  require("neotest").output_panel.toggle()
+
+  -- Resize the windows since neotest's window takes up the whole view
+  local resize = vim.api.nvim_replace_termcodes('<C-w>=', true, false, true)
+  vim.api.nvim_input(resize)
 end
 
 --- Jump to next failed test.

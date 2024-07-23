@@ -3,16 +3,22 @@
 --  ╰────────────────────────────────────────────────────────────╯
 local Plugin = { "saecki/crates.nvim" }
 
-Plugin.tag = "v0.4.0"
-Plugin.dependencies = { "nvim-lua/plenary.nvim" }
-Plugin.event = { "BufRead Cargo.toml" }
+Plugin.tag = "stable"
+Plugin.event = { "BufRead Cargo.toml", "BufRead *.rs" }
 Plugin.lazy = true
-Plugin.init = function()
-  require("user.commands").crates()
-end
 
 Plugin.config = function()
-  require("crates").setup()
+  require("crates").setup({
+    lsp = {
+      enabled = true,
+      on_attach = function(_, bufnr)
+        require("user.keymaps").crates(bufnr)
+      end,
+      actions = true,
+      completion = true,
+      hover = true
+    }
+  })
 end
 
 return Plugin

@@ -73,6 +73,15 @@ vim.api.nvim_create_autocmd('BufEnter', {
   end,
 })
 
+vim.api.nvim_create_autocmd('BufEnter', {
+  desc = "YAML-specific options",
+  group = group,
+  pattern = "*.yml,*.yaml",
+  callback = function()
+    vim.opt_local.colorcolumn = "80"
+  end,
+})
+
 local M = {}
 
 M.crates = function()
@@ -101,10 +110,10 @@ M.lint = function()
 end
 
 M.lspconfig = function()
-  local group = vim.api.nvim_create_augroup('lsp_cmds', { clear = true })
+  local outer_group = vim.api.nvim_create_augroup('lsp_cmds', { clear = true })
 
   vim.api.nvim_create_autocmd('LspAttach', {
-    group = group,
+    group = outer_group,
     desc = 'LSP actions',
     callback = function(_, bufnr)
       require("user.keymaps").lspconfig(bufnr)

@@ -1,5 +1,7 @@
+local M = {}
+
 -- Setup nvim config file finder
-local nvim_config_files = function()
+M.nvim_config_files = function()
   require("telescope.builtin").find_files({
     cwd = "~/.config/nvim",
     prompt_title = "Find neovim config files"
@@ -7,7 +9,7 @@ local nvim_config_files = function()
 end
 
 -- Function for defining a telescope picker over all the files that I manage using yadm.io.
-local yadm_files = function()
+M.yadm_files = function()
   local pickers = require("telescope.pickers")
   local finders = require("telescope.finders")
   local conf = require("telescope.config").values
@@ -41,7 +43,4 @@ local yadm_files = function()
   }):find()
 end
 
-return {
-  nvim_config_files = nvim_config_files,
-  yadm_files = yadm_files
-}
+return M

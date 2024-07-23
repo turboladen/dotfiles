@@ -9,10 +9,6 @@ Plugin.dependencies = {
   require("plugins.telescope_nvim"),
 }
 
--- Plugin.enabled = false
-
-Plugin.lazy = true
-
 Plugin.opts = {
   filter_kind = false,
   on_attach = function(bufnr)
