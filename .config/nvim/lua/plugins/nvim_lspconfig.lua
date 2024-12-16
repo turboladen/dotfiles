@@ -164,6 +164,9 @@ function Plugin.opts()
               }
             }
           }
+        },
+        init_options = {
+          provideFormatter = false
         }
       },
 
