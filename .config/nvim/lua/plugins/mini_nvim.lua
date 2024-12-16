@@ -11,6 +11,9 @@ Plugin.config = function()
     symbol = "│",
     options = { try_as_border = true },
   })
+
+  -- NOTE: This works well--except with Rust lifetimes. It *always* adds
+  -- a closing ', which is super annoying.
   -- require("mini.pairs").setup()
   -- require("mini.sessions").setup({
   --   autoread = true
