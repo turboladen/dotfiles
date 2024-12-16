@@ -240,7 +240,7 @@ function Plugin.opts()
       tilt_ls = {
         filetypes = { "tiltfile", "bzl" }
       },
-      tsserver = {},
+      ts_ls = {},
       -- typeprof = {},
       vimls = {},
 
