@@ -94,6 +94,8 @@ function Plugin.opts()
 
       dockerls = {},
 
+      dprint = {},
+
       -- ╭───────────────────────────────────────────────────────────────────────────────────────╮
       -- │ https://github.com/mattn/efm-langserver                                               │
       -- │ brew install efm-langserver                                                           │
