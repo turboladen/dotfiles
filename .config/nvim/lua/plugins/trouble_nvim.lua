@@ -6,7 +6,7 @@ local Plugin = { "folke/trouble.nvim" }
 
 -- Plugin.enabled = false
 Plugin.dependencies = { require("plugins.nvim_web_devicons") }
-Plugin.cmd = { "Trouble", "TroubleRefresh", "TroubleToggle" }
+Plugin.cmd = { "Trouble" }
 
 Plugin.opts = {
   -- auto_preview = false,
