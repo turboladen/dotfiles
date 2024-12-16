@@ -27,3 +27,7 @@ if status is-interactive
 
   fastfetch
 end
+
+# Postgres.app
+fish_add_path ~/Applications/Postgres.app/Contents/Versions/latest/bin
+fish_add_path ~/Applications/Postgres.app/Contents/Versions/latest/lib
