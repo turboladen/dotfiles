@@ -222,8 +222,8 @@ function Plugin.opts()
       reason_ls = {},
       -- ruby_analyzer = {
       -- },
-      ruff_lsp = {},
       solargraph = {},
+      ruff = {},
       -- steep = {},
       -- sourcekit = {
       --   -- cmd = { "xcrun", "sourcekit-lsp" },
