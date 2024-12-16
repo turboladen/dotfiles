@@ -25,7 +25,7 @@ require("lazy").setup("plugins", {
     path = "~/Development/projects/",
   },
   install = {
-    colorscheme = { "everforest" }
+    colorscheme = { "duskfox" }
   },
   performance = {
     rtp = {
