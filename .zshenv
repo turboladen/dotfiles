@@ -21,8 +21,6 @@ chruby 3
 # ╭───────────────╮
 # │ Python        │
 # ╰───────────────╯
-source "$HOME/.rye/env"
-export PATH="$HOME/.rye/lib:$PATH"
 
 # ╭───────────────────────────╮
 # │ Fast Node Manager         │
