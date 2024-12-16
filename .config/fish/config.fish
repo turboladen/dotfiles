@@ -28,6 +28,13 @@ if status is-interactive
   fastfetch
 end
 
+# pnpm
+set -gx PNPM_HOME "/Users/steve.loveless/Library/pnpm"
+if not string match -q -- $PNPM_HOME $PATH
+  set -gx PATH "$PNPM_HOME" $PATH
+end
+# pnpm end
+
 # Postgres.app
 fish_add_path ~/Applications/Postgres.app/Contents/Versions/latest/bin
 fish_add_path ~/Applications/Postgres.app/Contents/Versions/latest/lib
