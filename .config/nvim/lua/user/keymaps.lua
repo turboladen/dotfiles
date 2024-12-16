@@ -156,15 +156,16 @@ local M = {}
 ---@param bufnr number The buffer to attach to.
 M.aerial = function(bufnr)
   wk.add({
-    { "<leader>ba", require("aerial").toggle,  desc = "aerial: Toggle symbols", buffer = bufnr },
+    { "<leader>ba", require("aerial").toggle,   desc = "aerial: Toggle symbols",     buffer = bufnr },
+    { "<leader>bn", "<CMD>AerialNavToggle<CR>", desc = "aerial: Toggle nav symbols", buffer = bufnr },
 
     -- Jump forwards/backwards with '{' and '}'
-    { "{",          require("aerial").prev,    desc = "aerial: Previous",       buffer = bufnr },
-    { "}",          require("aerial").next,    desc = "aerial: Next",           buffer = bufnr },
+    { "{",          require("aerial").prev,     desc = "aerial: Previous",           buffer = bufnr },
+    { "}",          require("aerial").next,     desc = "aerial: Next",               buffer = bufnr },
 
     -- Jump up the tree with '[[' or ']]'
-    { "[[",         require("aerial").prev_up, desc = "aerial: Previous up",    buffer = bufnr },
-    { "]]",         require("aerial").next_up, desc = "aerial: Next up",        buffer = bufnr },
+    { "[[",         require("aerial").prev_up,  desc = "aerial: Previous up",        buffer = bufnr },
+    { "]]",         require("aerial").next_up,  desc = "aerial: Next up",            buffer = bufnr },
   })
 end
 
