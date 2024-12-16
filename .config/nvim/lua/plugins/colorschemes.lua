@@ -1,4 +1,45 @@
 return {
+
+  -- Dark: Ok. Very blue
+  -- Light: Fantastic. Great contrast.
+  -- Comments: In light mode, when cursor is on a word, the background is so
+  -- dark that it's almost impossible to read the text underneath. This would be
+  -- a top theme if not for that. Maybe it's fixable?
+  {
+    "miikanissi/modus-themes.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {
+      dim_inactive = true
+    }
+  },
+
+  -- ╭─────────────────────────────────────────────╮
+  -- │ Lua port of the most famous vim colorscheme │
+  -- ╰─────────────────────────────────────────────╯
+  {
+    "ellisonleao/gruvbox.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {
+      dim_inactive = true,
+    }
+  },
+
+  -- ╭─────────────────────────────────────────────────────────╮
+  -- │ High Contrast & Vivid Color Scheme based on Monokai Pro │
+  -- ╰─────────────────────────────────────────────────────────╯
+  {
+    "sainnhe/sonokai",
+    event = "VeryLazy",
+    config = function()
+      vim.g.sonokai_style = "shusia"
+      -- vim.g.sonokai_style = "espresso"
+      vim.g.sonokai_better_performance = 1
+      vim.g.sonokai_dim_inactive_windows = 1
+    end
+  },
+
   -- ╭────────────────────────────────────────────────────────────────────────╮
   -- │ 🦊A highly customizable theme for vim and neovim with support for lsp, │
   -- │ treesitter and a variety of plugins.                                   │
@@ -21,113 +62,369 @@ return {
     },
   },
 
-  -- ╭────────────────────────────────────────────────╮
-  -- │ 🌲 Comfortable & Pleasant Color Scheme for Vim │
-  -- ╰────────────────────────────────────────────────╯
+  -- ╭────────────────────────────────────────────╮
+  -- │ A Lua port of the Everforest colour scheme │
+  -- ╰────────────────────────────────────────────╯
+  -- Dark: Wonderful and greenish
+  -- Light: Background is yellowish (nice). With `background=hard`, text is pretty washed out
+  -- against the background. This gets better with different settings.
   {
-    "sainnhe/everforest",
+    "neanias/everforest-nvim",
+    version = false,
+    -- lazy = false,
+    -- priority = 1000,
     event = "VeryLazy",
-    init = function()
-      vim.g.everforest_background = "hard"
-
-      -- Without this, the background is too light.
-      vim.g.everforest_transparent_background = 1
-      -- vim.g.everforest_ui_contrast = "low"
-
-      vim.g.everforest_diagnostic_text_highlight = 1
-      vim.g.everforest_diagnostic_line_highlight = 1
-      vim.g.everforest_diagnostic_virtual_text = "colored"
-
-      vim.g.everforest_enable_italic = 1
-    end
+    config = function()
+      require("everforest").setup({
+        -- background = "hard",
+        italics = true,
+        ui_contrast = "high",
+        dim_inactive_windows = true,
+        diagnostic_line_highlight = true,
+        spell_foreground = true,
+        -- inlay_hints_background = "dimmed"
+      })
+    end,
   },
 
   -- ╭──────────────────────────────────────────────────────────────────────────╮
   -- │ NeoVim dark colorscheme inspired by the colors of the famous             │
   -- │ painting by Katsushika Hokusai.                                          │
   -- ╰──────────────────────────────────────────────────────────────────────────╯
+  -- Dark: Not too bright; good for when eyes are tired & I'm squinting.
+  -- Light: Crazy yellow everywhere. Tough to see/find cursor.
   {
     "rebelot/kanagawa.nvim",
     event = "VeryLazy",
-  },
-
-  -- ╭──────────────────────────────────────────────────────╮
-  -- │ A very dark colorscheme for Vim. JOIN THE DARK SIDE! │
-  -- ╰──────────────────────────────────────────────────────╯
-  {
-    "aonemd/kuroi.vim",
-    event = "VeryLazy",
-  },
-
-  -- ╭─────────────────────────────────────────────────────────────────────────╮
-  -- │ 🔱 Material colorscheme for NeoVim written in Lua with built-in support │
-  -- │ for native LSP, TreeSitter and many more plugins .                      │
-  -- ╰─────────────────────────────────────────────────────────────────────────╯
-  {
-    "marko-cerovac/material.nvim",
-    event = "VeryLazy",
-    dependencies = {
-      require("plugins.telescope_nvim")
-    },
     opts = {
-      contrast = {
-        floating_windows = true,
-        cursor_line = true,
-        non_current_windows = true,
-        sidebars = true,
-      },
-      plugins = {
-        "dap",
-        "gitsigns",
-        "mini",
-        "neotest",
-        "noice",
-        "nvim-cmp",
-        "nvim-web-devicons",
-        "telescope",
-        "trouble",
-        "which-key",
-      }
+      compile = true,
+      dimInactive = true
+    }
+  },
+
+  -- I got this for a light color theme.
+  -- Dark: N/A
+  -- Light: Background is grey-ish, which is fine, but takes away from contrast
+  -- a tad. Would be nice to use as a base for customization.
+  {
+    "yorik1984/newpaper.nvim",
+    event = "VeryLazy",
+    -- lazy = false,
+    -- priority = 1000,
+  },
+
+  -- I got this for its light colorscheme ("day"), but it's a little on the blue
+  -- side; not sure if I like it for that.
+  {
+    "folke/tokyonight.nvim",
+    -- lazy = false,
+    -- priority = 1000,
+    event = "VeryLazy",
+    opts = {
+      dim_inactive = true,
+      lualine_bold = true
     },
-    init = function()
-      vim.g.material_style = "deep ocean"
-    end,
-    config = function(_, opts)
-      require("material").setup(opts)
-      -- vim.keymap.set("n", "<leader>C", require("material.functions").find_style(),
-      --   { desc = "Pick 'material-nvim' colorscheme style" })
-    end,
-    keys = {
-      {
-        "<leader>mm",
-        function()
-          require("material.functions").find_style()
-        end,
-        desc = "Pick material-nvim colorscheme style"
+  },
+
+  -- I got this for a light colorscheme, which I do like, but it's a tad basic.
+  -- Could maybe be really nice if I customized it to my liking. Also not a bad
+  -- idea since the owner has deprecated it.
+  {
+    "yorickpeterse/vim-paper",
+    event = "VeryLazy",
+  },
+
+  -- I got this for a light colorscheme ("lux" (a little too yellow?), "lilac"
+  -- (a little too blue?), "hibernus"), which they're all decent, but just a bit
+  -- too on the blue side of things and not contrast-y enough.
+  {
+    'talha-akram/noctis.nvim',
+    event = "VeryLazy",
+  },
+
+
+  -- Got this for the light theme. It's great!
+  {
+    "ribru17/bamboo.nvim",
+    event = "VeryLazy",
+    -- lazy = false,
+    -- priority = 1000,
+    opts = {
+      dim_inactive = true,
+      ending_tildes = true,
+      lualine = {
+        transparent = true
+      },
+      diagnostics = {
+        darker = true
       }
     }
   },
 
-  -- ╭──────────────────────────────────────────────────────────────────────────╮
-  -- │ One dark and light colorscheme for neovim >= 0.5.0 written in lua based  │
-  -- │ on Atom's One Dark and Light theme. Additionally, it comes with 5 color  │
-  -- │ variant styles.                                                          │
-  -- ╰──────────────────────────────────────────────────────────────────────────╯
-  -- {
-  --   "navarasu/onedark.nvim",
-  --   event = "VeryLazy",
-  --   opts = {
-  --     style = "darker"
-  --   }
-  -- }
+  -- Pretty good for a light theme
   {
-    "olimorris/onedarkpro.nvim"
+    "mkarmona/materialbox",
+    event = "VeryLazy",
   },
 
+
+
+  -- Has dark theme, but light theme is decent.
   {
-    "ray-x/aurora",
-    init = function()
-      vim.g.aurora_italic = 1
-    end
-  }
+    "owickstrom/vim-colors-paramount",
+    event = "VeryLazy",
+  },
+
+  -- Light: Pretty good light color scheme.
+  -- Comments: Has lualine integration.
+  {
+    "Verf/deepwhite.nvim",
+    event = "VeryLazy",
+    opts = {
+      low_blue_light = true
+    }
+  },
+
+  -- Dark: nice and green/red.
+  -- Light: so flat, it's unusable.
+  {
+    "projekt0n/caret.nvim",
+    event = "VeryLazy",
+  },
+
+  -- Dark theme: good.
+  -- Light theme: N/A.
+  -- Comments: Leans toward red and yellow--maybe too much? But totally nice and
+  -- usable.
+  {
+    "sebasruiz09/fizz.nvim",
+    event = "VeryLazy",
+  },
+
+  -- Dark: N/A
+  -- Light: Good. Just enough contrast on off-white background.
+  -- Comments: No bells & whistles.
+  {
+    "dericktseng/balance-theme.nvim",
+    event = "VeryLazy"
+  },
+
+  -- Dark: Pretty average; not bad.
+  -- Light: Pretty good! Enough contrast and color to make it usable.
+  -- Comments: With there was inactive pane dimming.
+  {
+    "e-q/okcolors.nvim",
+    name = "okcolors",
+    event = "VeryLazy"
+  },
 }
+
+-- ╭──────────────────╮
+-- │ Discarded themes │
+-- ╰──────────────────╯
+-- Dark: N/A
+-- Light: Comment highlighting is super bright; can't read against the light
+-- background.
+-- { "kordyte/collaterlie-nvim" },
+--------------------------------------------
+-- {
+--   "nyoom-engineering/oxocarbon.nvim",
+--   event = "VeryLazy",
+-- },
+--------------------------------------------
+-- Has lualine support. Too dark overall; can barely see comments and line
+-- numbers.
+-- {
+--   "luisiacc/gruvbox-baby",
+--   event = "VeryLazy",
+--   init = function()
+--     vim.gruvbox_baby_telescope_theme = 1
+--   end
+-- },
+--------------------------------------------
+-- Dark theme: Ok, muted. hard to read comments. I want to like it.
+-- Light theme: N/A
+-- { "gmr458/cold.nvim" }
+--
+--------------------------------------------
+-- Dark: N/A
+-- Light: Too flat.
+-- Comments: Has tmux, lualine themes.
+-- { "mvpopuk/inspired-github.vim" },
+--------------------------------------------
+-- Dark: Decent. Nothing special.
+-- Light: Almost great, but I lose my cursor.
+-- {
+--   "NTBBloodbath/sweetie.nvim",
+--   init = function()
+--     vim.g.sweetie = {
+--       cursor_color = false
+--     }
+--   end
+-- },
+--------------------------------------------
+-- Dark: The 'moon' version is slightly reddish and ok, but not enough to make
+-- me want to use it.
+-- Light: Way too flat to be usable.
+-- {
+--   "rose-pine/neovim",
+--   name = "rose-pine",
+--   opts = {
+--     variant = "dawn",
+--     dim_inactive_windows = true
+--   }
+-- },
+-- I got this for its light colorschemes; forestbones is nice, but I hate how
+-- lush.nvim gets in the way of other color schemes; and having to use
+-- vimscript for config is annoying.
+-- {
+--   "zenbones-theme/zenbones.nvim",
+--   -- enabled = false,
+--   -- Optionally install Lush. Allows for more configuration or extending the colorscheme
+--   -- If you don't want to install lush, make sure to set g:zenbones_compat = 1
+--   -- In Vim, compat mode is turned on as Lush only works in Neovim.
+--   -- dependencies = "rktjmp/lush.nvim",
+--   -- lazy = false,
+--   -- priority = 1000,
+--   config = function(opts)
+--     vim.g.zenbones_compat = 1
+--     vim.g.forestbones = {
+--       solid_line_nr = true,
+--       darken_noncurrent_window = true,
+--       colorize_diagnostic_underline_text = true
+--     }
+--   end,
+--   -- init = function()
+--   -- end
+-- },
+--
+-- I got this for a light colorscheme, but since it's old school neovim
+-- wouldn't recognize it, so I just copied the .vim file to my `colors/` dir.
+-- Could be nice to update that and make it current; it's *almost* great.
+-- {
+--   "sonph/onehalf",
+--   lazy = false,
+--   priority = 1000
+-- }
+
+-- I like this for its light colorscheme
+-- {
+--   'rmehri01/onenord.nvim',
+--   event = "VeryLazy",
+--   -- lazy = false,
+--   -- priority = 1000,
+--   opts = {
+--     fade_nc = true,
+--     disable = {
+--       eob_lines = false
+--     }
+--   }
+-- },
+-- Dark: Nothing special.
+-- Light: Not bad, but not quite enough contrast, even in "high" mode
+-- {
+--   "daschw/leaf.nvim",
+--   opts = {
+--     contrast = "high"
+--   }
+-- }
+-- Dark: Not bad--not too bright and red-leaning.
+-- Light: Not enough contrast.
+-- {
+--   "savq/melange-nvim",
+-- },
+
+-- Dark: N/A
+-- Light: Meh. Next to 0 highlighting.
+-- { 'echasnovski/mini.hues',  version = false },
+
+-- Dark: Simple, not bad.
+-- Light: Too muted.
+-- { "cseelus/nvim-colors-tone" }
+
+-- Dark: Meh. Simple. Pretty constrasty (in a not so good way).
+-- Light: Blue/grey background (not bad), but other highlighting is pretty
+-- one-note (maybe that's the intention via "paper").
+-- {
+--   "SebastianZaha/nvim-solar-paper"
+-- }
+
+-- Dark: VERY green text on black; kinda retro. I dig, but maybe not super
+-- practical.
+-- Light: Similar to some others where active background is bluish, inactive
+-- is white. Tough to see highlighting like this
+-- {
+--   "Skullamortis/forest.nvim",
+--   opts = {
+--     dim_inactive = true,
+--     lualine_bold = true
+--   }
+-- }
+-- Pretty good dark themes, but can't see vim numbers. Light theme might be
+-- too flat.
+-- {
+--   "TheNiteCoder/mountaineer.vim",
+--   event = "VeryLazy",
+-- },
+-- ╭─────────────────────────────────────────────────────────────────────────────╮
+-- │ 🎨 Atom's iconic One Dark theme. Cacheable, fully customisable, Tree-sitter │
+-- │ and LSP semantic token support. Comes with variants                         │
+-- ╰─────────────────────────────────────────────────────────────────────────────╯
+-- {
+--   "olimorris/onedarkpro.nvim",
+--   event = "VeryLazy",
+--   config = function()
+--     require("onedarkpro").setup({
+--       opts = {
+--         plugins = {
+--           barbar = false,
+--           codecompanion = false,
+--           copilot = false,
+--           dashboard = false,
+--           hop = false,
+--           neo_tree = false,
+--           nvim_bqf = false,
+--           nvim_tree = false,
+--           startify = false,
+--           toggleterm = false,
+--           vim_ultest = false,
+--           vim_dadbod_ui = false,
+--         },
+--         options = {
+--           cursorline = true,
+--           lualine_transparency = true,
+--           highlight_inactive_windows = true
+--         }
+--       }
+--     })
+--   end
+-- },
+-- Got for light theme. It's a big on the grey side--maybe too much?
+-- {
+--   "ramojus/mellifluous.nvim",
+--   event = "VeryLazy",
+--   opts = {
+--     mellifluous = {
+--       neutral = false,
+--       bg_contrast = "hard",
+--     },
+--     dim_inactive = true,
+--     plugins = {
+--       nvim_tree = {
+--         enabled = false
+--       },
+--       neow_tree = {
+--         enabled = false
+--       },
+--       startify = false
+--     }
+--   }
+-- },
+-- Dark: Meh.
+-- Light: Got it for this; red/browns.
+-- Comments: I lose my cursor too easily.
+-- {
+--   "jsit/toast.vim",
+--   event = "VeryLazy",
+-- },
+--
