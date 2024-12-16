@@ -5,27 +5,14 @@ local Plugin = { "lewis6991/gitsigns.nvim" }
 
 Plugin.dependencies = {
   "nvim-lua/plenary.nvim",
-  {
-    "seanbreckenridge/gitsigns-yadm.nvim",
-    opts = {
-      shell_timeout_ms = 1000
-    }
-  }
 }
 
-Plugin.event = { "BufReadPre", "BufNewFile" }
+-- Plugin.event = { "BufReadPre", "BufNewFile" }
 
 Plugin.opts = {
   signs = {
     changedelete = { text = "⇄" },
   },
-  _on_attach_pre = function(_, callback)
-    if vim.fn.executable("yadm") == 1 then
-      require("gitsigns-yadm").yadm_signs(callback)
-    else
-      callback()
-    end
-  end,
   on_attach = function(bufnr)
     require("user.keymaps").gitsigns(bufnr)
   end,
