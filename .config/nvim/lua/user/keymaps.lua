@@ -68,6 +68,7 @@ wk.add({
   -- ╰──────╯
   { "<leader><space>", require('telescope.builtin').find_files,                     desc = "tele: find" },
   { "<leader><cr>",    require('telescope.builtin').buffers,                        desc = "tele: buffers" },
+  { "<leader>fg",      require('telescope.builtin').git_status,                     desc = "tele: git status" },
 
   { "<leader>fk",      require('telescope.builtin').grep_string,                    desc = "tele: string grep" },
   { "<leader>fm",      require('telescope.builtin').marks,                          desc = "tele: marks" },
