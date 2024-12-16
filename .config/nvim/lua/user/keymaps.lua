@@ -171,6 +171,10 @@ M.aerial = function(bufnr)
 end
 
 
+--          ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+--          ┃                    - Crates callback                    ┃
+--          ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+---@param bufnr number The buffer number.
 M.crates = function(bufnr)
   wk.add({
     { "<leader>rt", require("crates").toggle,                             desc = "crates: enable/disable info",       buffer = bufnr },
