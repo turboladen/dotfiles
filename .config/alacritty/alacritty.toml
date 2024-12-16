@@ -1,13 +1,3 @@
-# ╭─────────╮
-# │ General │
-# ╰─────────╯
-import = [
-  "~/.config/alacritty/colors.toml",
-  "~/.config/alacritty/keyboard.toml",
-]
-
-# working_directory = "~/Development"
-live_config_reload = true
 
 # ╭─────╮
 # │ Env │
@@ -85,6 +75,18 @@ hide_when_typing = true
 [[mouse.bindings]]
 action = "PasteSelection"
 mouse = "Middle"
+
+[general]
+
+# working_directory = "~/Development"
+live_config_reload = true
+# ╭─────────╮
+# │ General │
+# ╰─────────╯
+import = [
+  "~/.config/alacritty/colors.toml",
+  "~/.config/alacritty/keyboard.toml",
+]
 
 # [mouse.double_click]
 # threshold = 300
