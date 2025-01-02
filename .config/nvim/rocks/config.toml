@@ -1,0 +1,100 @@
+
+# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+# ┃            Organized according to `:options`            ┃
+# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+[config.options]
+#  ╭──────────────────────────────────────────╮
+#  │ 2. moving around, searching and patterns │
+#  ╰──────────────────────────────────────────╯
+ignorecase = false
+smartcase = false
+
+#  ╭────────────────────╮
+#  │ 4. displaying text │
+#  ╰────────────────────╯
+scrolloff = 2
+linebreak = true
+breakindent = true
+sidescroll = 4
+sidescrolloff = 5
+cmdheight = 2
+list = true
+listchars = "tab:▸ ,trail:.,nbsp:_,extends:❯,precedes:❮" 
+number = true
+
+guifont = 'MonoLisaCustom Nerd Font:h13:i'
+
+# ╭──────────────────────────────────────╮
+# │ 5. syntax, highlighting and spelling │
+# ╰──────────────────────────────────────╯
+synmaxcol = 250
+termguicolors = true
+cursorcolumn = false # this defaults to false, but is getting set somewhere
+# cursorline = true
+# colorcolumn = "80,120"
+
+spell = true
+spelllang = "en_us"
+
+#  ╭─────────────────────╮
+#  │ 6. Multiple windows │
+#  ╰─────────────────────╯
+splitbelow = true
+splitright = true
+splitkeep = "screen"
+
+#  ╭───────────────────────╮
+#  │ 7. multiple tab pages │
+#  ╰───────────────────────╯
+showtabline = 2
+
+#  ╭─────────────╮
+#  │ 8. terminal │
+#  ╰─────────────╯
+#  ╭─────────────────────╮
+#  │  9. using the mouse │
+#  ╰─────────────────────╯
+#  ╭───────────────────────╮
+#  │ 10. Messages and info │
+#  ╰───────────────────────╯
+# shortmess:append('c')
+
+#  ╭────────────────────╮
+#  │ 11. Selecting text │
+#  ╰────────────────────╯
+
+#  ╭──────────────────╮
+#  │ 12. Editing text │
+#  ╰──────────────────╯
+# undofile = true
+completeopt = "menu,menuone,noselect"
+
+#  ╭────────────────────────╮
+#  │ 13. Tabs and indenting │
+#  ╰────────────────────────╯
+tabstop = 2
+shiftwidth = 2
+expandtab = true
+softtabstop = 2
+smartindent = true
+
+#  ╭─────────────╮
+#  │ 14. Folding │
+#  ╰─────────────╯
+foldenable = false
+
+#  ╭───────────────╮
+#  │ 15. diff mode │
+#  ╰───────────────╯
+#  ╭───────────────╮
+#  │ 16. mapping   │
+#  ╰───────────────╯
+#  ╭───────────────────────────────╮
+#  │ 17. reading and writing files │
+#  ╰───────────────────────────────╯
+writebackup = false
+
+#  ╭───────────────────╮
+#  │ 18. the swap file │
+#  ╰───────────────────╯
+swapfile = false

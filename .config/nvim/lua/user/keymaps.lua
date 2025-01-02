@@ -24,8 +24,8 @@ wk.add({
   -- ╰─────────────╯
   { "]t",              require("todo-comments").jump_next,                          desc = "todo-comment: next" },
   { "[t",              require("todo-comments").jump_prev,                          desc = "todo-comment: previous" },
-  { "]n",              require("plugins.nvim_neotest").next_failed,                 desc = "Test: next failure" },
-  { "[n",              require("plugins.nvim_neotest").prev_failed,                 desc = "Test: previous failure" },
+  { "]n",              require("plugins.neotest").next_failed,                 desc = "Test: next failure" },
+  { "[n",              require("plugins.neotest").prev_failed,                 desc = "Test: previous failure" },
 
   -- ╭──────╮
   -- │ goto │
@@ -39,10 +39,10 @@ wk.add({
   -- ╭──────╮
   -- │ Code │
   -- ╰──────╯
-  { "<leader>cb",      require("plugins.comment_box_nvim").al_box,                  desc = "Left-aligned box; left-aligned text" },
-  { "<leader>cb",      require("plugins.comment_box_nvim").al_box,                  desc = "Left-aligned box; left-aligned text", mode = "v" },
-  { "<leader>cB",      require("plugins.comment_box_nvim").cc_box,                  desc = "Title box" },
-  { "<leader>cB",      require("plugins.comment_box_nvim").cc_box,                  desc = "Title box",                           mode = "v" },
+  { "<leader>cb",      require("plugins.comment-box").al_box,                  desc = "Left-aligned box; left-aligned text" },
+  { "<leader>cb",      require("plugins.comment-box").al_box,                  desc = "Left-aligned box; left-aligned text", mode = "v" },
+  { "<leader>cB",      require("plugins.comment-box").cc_box,                  desc = "Title box" },
+  { "<leader>cB",      require("plugins.comment-box").cc_box,                  desc = "Title box",                           mode = "v" },
 
   { "<leader>cg",      require("neogen").generate,                                  desc = "neogen: Generate annotation" },
   { "<leader>ct",      require("turboladen").strip_tabs,                            desc = "Strip tabs!" },
@@ -50,18 +50,18 @@ wk.add({
   -- ╭─────╮
   -- │ DAP │
   -- ╰─────╯
-  { "<leader>dB",      require('dap').set_breakpoint,                               desc = "DAP: set breakpoint" },
-  -- { "<F5>",      require('dap').continue,                          desc = "DAP: continue" },
-  { "<leader>dc",      require('dap').continue,                                     desc = "DAP: continue" },
-  -- { "<F12>",      require('dap').step_out,                          desc = "DAP: step out" },
-  { "<leader>dk",      require('dap').step_out,                                     desc = "DAP: step out" },
-  -- { "<F11>",      require('dap').step_into,                         desc = "DAP: step into" },
-  { "<leader>dl",      require('dap').step_into,                                    desc = "DAP: step into" },
-  -- { "<F10>",      require('dap').step_over,                         desc = "DAP: step over" },
-  { "<leader>dj",      require('dap').step_over,                                    desc = "DAP: step over" },
-  { "<leader>db",      require('dap').toggle_breakpoint,                            desc = "DAP: toggle breakpoint" },
-  { "<leader>dr",      require('dap').repl.open,                                    desc = "DAP: open REPL" },
-  { "<leader>dL",      require('dap').run_last,                                     desc = "DAP: open REPL" },
+  -- { "<leader>dB",      require('dap').set_breakpoint,                               desc = "DAP: set breakpoint" },
+  -- -- { "<F5>",      require('dap').continue,                          desc = "DAP: continue" },
+  -- { "<leader>dc",      require('dap').continue,                                     desc = "DAP: continue" },
+  -- -- { "<F12>",      require('dap').step_out,                          desc = "DAP: step out" },
+  -- { "<leader>dk",      require('dap').step_out,                                     desc = "DAP: step out" },
+  -- -- { "<F11>",      require('dap').step_into,                         desc = "DAP: step into" },
+  -- { "<leader>dl",      require('dap').step_into,                                    desc = "DAP: step into" },
+  -- -- { "<F10>",      require('dap').step_over,                         desc = "DAP: step over" },
+  -- { "<leader>dj",      require('dap').step_over,                                    desc = "DAP: step over" },
+  -- { "<leader>db",      require('dap').toggle_breakpoint,                            desc = "DAP: toggle breakpoint" },
+  -- { "<leader>dr",      require('dap').repl.open,                                    desc = "DAP: open REPL" },
+  -- { "<leader>dL",      require('dap').run_last,                                     desc = "DAP: open REPL" },
 
   -- ╭──────╮
   -- │ Find │
@@ -73,8 +73,8 @@ wk.add({
   { "<leader>fk",      require('telescope.builtin').grep_string,                    desc = "tele: string grep" },
   { "<leader>fm",      require('telescope.builtin').marks,                          desc = "tele: marks" },
   { "<leader>fo",      require('telescope.builtin').oldfiles,                       desc = "tele: oldfiles" },
-  { "<leader>fn",      require('plugins.editor.telescope_utils').nvim_config_files, desc = "tele: ~/.config/nvim/" },
-  { "<leader>fy",      require('plugins.editor.telescope_utils').yadm_files,        desc = "tele: YADM files" },
+  { "<leader>fn",      require('plugins.telescope').nvim_config_files, desc = "tele: ~/.config/nvim/" },
+  { "<leader>fy",      require('plugins.telescope').yadm_files,        desc = "tele: YADM files" },
   { "<leader>fa",      "<cmd>Telescope telescope-alternate alternate_file<CR>",     desc = "tele: alternate files" },
   { "<leader>fs",      "<cmd>Telescope aerial<CR>",                                 desc = "tele: aerial symbols" },
   -- t = { "<cmd>lua require('telescope.builtin').grep_string({search = 'TODO'})", "Telescope: TODOs" },
@@ -108,22 +108,22 @@ wk.add({
   -- ╭──────╮
   -- │ Test │
   -- ╰──────╯
-  { "<leader>tn",      require("plugins.nvim_neotest").test_cmds.nearest,           desc = "Test: nearest" },
-  { "<leader>tN",      require("plugins.nvim_neotest").test_cmds.watch_nearest,     desc = "Test: watch nearest" },
+  { "<leader>tn",      require("plugins.neotest").test_cmds.nearest,           desc = "Test: nearest" },
+  { "<leader>tN",      require("plugins.neotest").test_cmds.watch_nearest,     desc = "Test: watch nearest" },
 
-  { "<leader>tf",      require("plugins.nvim_neotest").test_cmds.file,              desc = "Test: test this file" },
-  { "<leader>tF",      require("plugins.nvim_neotest").test_cmds.watch_file,        desc = "Test: watch this file" },
+  { "<leader>tf",      require("plugins.neotest").test_cmds.file,              desc = "Test: test this file" },
+  { "<leader>tF",      require("plugins.neotest").test_cmds.watch_file,        desc = "Test: watch this file" },
 
-  { "<leader>ta",      require("plugins.nvim_neotest").test_cmds.all,               desc = "Test: all tests" },
-  { "<leader>tA",      require("plugins.nvim_neotest").test_cmds.watch_all,         desc = "Test: watch all tests" },
+  { "<leader>ta",      require("plugins.neotest").test_cmds.all,               desc = "Test: all tests" },
+  { "<leader>tA",      require("plugins.neotest").test_cmds.watch_all,         desc = "Test: watch all tests" },
 
-  { "<leader>tl",      require("neotest").run.run_last,                             desc = "Test: Run last test cmd" },
+  -- { "<leader>tl",      require("neotest").run.run_last,                             desc = "Test: Run last test cmd" },
 
-  { "<leader>ts",      require("neotest").summary.toggle,                           desc = "Test: toggle summary" },
-  { "<leader>tC",      require("neotest").summary.clear_marked,                     desc = "Test: summary clear marked" },
-  { "<leader>to",      require("plugins.nvim_neotest").toggle_output_panel,         desc = "Test: toggle panel" },
+  -- { "<leader>ts",      require("neotest").summary.toggle,                           desc = "Test: toggle summary" },
+  -- { "<leader>tC",      require("neotest").summary.clear_marked,                     desc = "Test: summary clear marked" },
+  { "<leader>to",      require("plugins.neotest").toggle_output_panel,         desc = "Test: toggle panel" },
 
-  { "<leader>tS",      require("neotest").run.stop,                                 desc = "Test: stop!" },
+  -- { "<leader>tS",      require("neotest").run.stop,                                 desc = "Test: stop!" },
 
   -- ╭─────────╮
   -- │ Windows │
@@ -155,20 +155,20 @@ local M = {}
 --          ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 --- Callback function for `aerial.nvim` that sets maps on_attach.
 ---@param bufnr number The buffer to attach to.
-M.aerial = function(bufnr)
-  wk.add({
-    { "<leader>ba", require("aerial").toggle,   desc = "aerial: Toggle symbols",     buffer = bufnr },
-    { "<leader>bn", "<CMD>AerialNavToggle<CR>", desc = "aerial: Toggle nav symbols", buffer = bufnr },
-
-    -- Jump forwards/backwards with '{' and '}'
-    { "{",          require("aerial").prev,     desc = "aerial: Previous",           buffer = bufnr },
-    { "}",          require("aerial").next,     desc = "aerial: Next",               buffer = bufnr },
-
-    -- Jump up the tree with '[[' or ']]'
-    { "[[",         require("aerial").prev_up,  desc = "aerial: Previous up",        buffer = bufnr },
-    { "]]",         require("aerial").next_up,  desc = "aerial: Next up",            buffer = bufnr },
-  })
-end
+-- M.aerial = function(aerial, bufnr)
+--   wk.add({
+--     { "<leader>ba", aerial.toggle,   desc = "aerial: Toggle symbols",     buffer = bufnr },
+--     { "<leader>bn", "<CMD>AerialNavToggle<CR>", desc = "aerial: Toggle nav symbols", buffer = bufnr },
+--
+--     -- Jump forwards/backwards with '{' and '}'
+--     { "{",          aerial.prev,     desc = "aerial: Previous",           buffer = bufnr },
+--     { "}",          aerial.next,     desc = "aerial: Next",               buffer = bufnr },
+--
+--     -- Jump up the tree with '[[' or ']]'
+--     { "[[",         aerial.prev_up,  desc = "aerial: Previous up",        buffer = bufnr },
+--     { "]]",         aerial.next_up,  desc = "aerial: Next up",            buffer = bufnr },
+--   })
+-- end
 
 
 --          ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -204,7 +204,7 @@ end
 --- Maps for `gitsigns.nvim`'s `on_attach`.
 ---@param bufnr number The buffer number.
 M.gitsigns = function(bufnr)
-  local gs = require("plugins.gitsigns_nvim")
+  local gs = require("plugins.gitsigns")
 
   wk.add({
     { "]c",         gs.get_next_hunk, desc = "gitsigns: Next hunk",        buffer = bufnr },

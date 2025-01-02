@@ -1,30 +1,20 @@
 -- ╭────────────────────────────────────────────────────╮
 -- │ Neovim plugin for splitting/joining blocks of code │
 -- ╰────────────────────────────────────────────────────╯
-local Plugin = { 'Wansmer/treesj' }
-
-Plugin.event = "VeryLazy"
-
-Plugin.dependencies = {
-  require("plugins.nvim_treesitter"),
-  -- ╭───────────────────────────────────────────╮
-  -- │ Adds gS and gJ to split/join code blocks. │
-  -- ╰───────────────────────────────────────────╯
-  "AndrewRadev/splitjoin.vim",
-}
-
-Plugin.opts = {
+-- local Plugin = { 'Wansmer/treesj' }
+require("treesj").setup({
   use_default_keymaps = false,
   max_join_length = 100,
-}
+})
 
-Plugin.init = function()
-  require("user.commands").treesj()
-end
+-- require("user.commands").treesj()
 
--- Plugin.config = function(_, opts)
---   require('treesj').setup(opts)
---   require("user.commands").treesj()
--- end
-
-return Plugin
+  -- local langs = require('treesj.langs')['presets']
+  --
+  -- vim.api.nvim_create_autocmd({ 'FileType' }, {
+  --   group = vim.api.nvim_create_augroup('user_treesj_keymaps', { clear = true }),
+  --   pattern = '*',
+  --   callback = function()
+  --     require("user.keymaps").treesj(langs)
+  --   end
+  -- })
