@@ -92,6 +92,7 @@ disable = ["ruby_gems", "helm"]
 #"Python Environment" = "~/dev/.env/bin/pip install -i https://pypi.python.org/simple -U --upgrade-strategy eager jupyter"
 "[steve] Update rubies" = "ruby-install --latest && ruby-install ruby 3 --no-reinstall --cleanup"
 "[steve] Install gems for latest Ruby" = "chruby 3 && gem update --system && gem update"
+# "[steve] Update neovim" = "nvim --headless '+Rocks update'"
 
 [python]
 # enable_pip_review = true                         ###disabled by default
