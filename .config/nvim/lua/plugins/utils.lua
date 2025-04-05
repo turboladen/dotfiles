@@ -26,5 +26,12 @@ require('open').setup({
 -- Leave empty for default values
 require('open-jira').setup {
   -- string|function(shorthand: string): string
-    url = "https://telusagriculture.atlassian.net/browse/"
+  url = "https://telusagriculture.atlassian.net/browse/"
 }
+
+-- vim-dispatch
+-- ╭──────────────────────────────────────────────────────────────────────────╮
+-- │ Asynchronous build and test dispatcher. Used for running specs in a      │
+-- │ separate tmux pane.                                                      │
+-- ╰──────────────────────────────────────────────────────────────────────────╯
+vim.g.dispatch_no_maps = 1

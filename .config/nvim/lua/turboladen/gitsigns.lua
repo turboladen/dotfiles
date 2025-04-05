@@ -1,12 +1,3 @@
-require("gitsigns").setup({
-  signs = {
-    changedelete = { text = "⇄" },
-  },
-  on_attach = function(bufnr)
-    require("user.keymaps").gitsigns(bufnr)
-  end,
-})
-
 local M = {}
 
 M.get_next_hunk = function()

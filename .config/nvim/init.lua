@@ -172,3 +172,6 @@ vim.api.nvim_create_user_command(
     nargs = 0,
   }
 )
+
+-- require("init_rs")
+-- vim.o.completefunc = "v:lua.require'init_rs'.regex_buffer_completer"

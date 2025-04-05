@@ -1,7 +1,7 @@
 local wk = require("which-key")
 
 wk.add({
-  { "<Esc>",           "<C-\\><C-N>",                                               desc = "Exit terminal",                       mode = "t" },
+  { "<Esc>",           "<C-\\><C-N>",                                             desc = "Exit terminal",                       mode = "t" },
 
   {
     "n",
@@ -15,37 +15,37 @@ wk.add({
     desc = "Previous search match"
   },
 
-  { "p",               "p`]",                                                       desc = "Paste, then move to end of text" },
-  { "S",               "i<CR><ESC>^mwgk:silent! s/\v +$/<CR>:noh<CR>",              desc = "Split line, remove whitespace" },
-  { "y",               "y`]",                                                       desc = "Yank, then move to end of text",      mode = "v" },
+  { "p",               "p`]",                                                     desc = "Paste, then move to end of text" },
+  { "S",               "i<CR><ESC>^mwgk:silent! s/\v +$/<CR>:noh<CR>",            desc = "Split line, remove whitespace" },
+  { "y",               "y`]",                                                     desc = "Yank, then move to end of text",      mode = "v" },
 
   -- ╭─────────────╮
   -- │ Next & Prev │
   -- ╰─────────────╯
-  { "]t",              require("todo-comments").jump_next,                          desc = "todo-comment: next" },
-  { "[t",              require("todo-comments").jump_prev,                          desc = "todo-comment: previous" },
-  { "]n",              require("plugins.neotest").next_failed,                 desc = "Test: next failure" },
-  { "[n",              require("plugins.neotest").prev_failed,                 desc = "Test: previous failure" },
+  { "]t",              require("todo-comments").jump_next,                        desc = "todo-comment: next" },
+  { "[t",              require("todo-comments").jump_prev,                        desc = "todo-comment: previous" },
+  { "]n",              require("plugins.neotest").next_failed,                    desc = "Test: next failure" },
+  { "[n",              require("plugins.neotest").prev_failed,                    desc = "Test: previous failure" },
 
   -- ╭──────╮
   -- │ goto │
   -- ╰──────╯
   { "*",               desc = "*<cmd>lua require('hlslens').start()<CR>" },
   { "#",               desc = "#<cmd>lua require('hlslens').start()<CR>" },
-  { "gx",              require("open").open_cword,                                  desc = "Open item under cursor" },
+  { "gx",              require("open").open_cword,                                desc = "Open item under cursor" },
   { "g*",              "g*<cmd>lua require('hlslens').start()<CR>" },
   { "g#",              "g#<cmd>lua require('hlslens').start()<CR>" },
 
   -- ╭──────╮
   -- │ Code │
   -- ╰──────╯
-  { "<leader>cb",      require("plugins.comment-box").al_box,                  desc = "Left-aligned box; left-aligned text" },
-  { "<leader>cb",      require("plugins.comment-box").al_box,                  desc = "Left-aligned box; left-aligned text", mode = "v" },
-  { "<leader>cB",      require("plugins.comment-box").cc_box,                  desc = "Title box" },
-  { "<leader>cB",      require("plugins.comment-box").cc_box,                  desc = "Title box",                           mode = "v" },
+  { "<leader>cb",      require("turboladen.comment-box").al_box,                  desc = "Left-aligned box; left-aligned text" },
+  { "<leader>cb",      require("turboladen.comment-box").al_box,                  desc = "Left-aligned box; left-aligned text", mode = "v" },
+  { "<leader>cB",      require("turboladen.comment-box").cc_box,                  desc = "Title box" },
+  { "<leader>cB",      require("turboladen.comment-box").cc_box,                  desc = "Title box",                           mode = "v" },
 
-  { "<leader>cg",      require("neogen").generate,                                  desc = "neogen: Generate annotation" },
-  { "<leader>ct",      require("turboladen").strip_tabs,                            desc = "Strip tabs!" },
+  { "<leader>cg",      require("neogen").generate,                                desc = "neogen: Generate annotation" },
+  { "<leader>ct",      require("turboladen").strip_tabs,                          desc = "Strip tabs!" },
 
   -- ╭─────╮
   -- │ DAP │
@@ -66,86 +66,87 @@ wk.add({
   -- ╭──────╮
   -- │ Find │
   -- ╰──────╯
-  { "<leader><space>", require('telescope.builtin').find_files,                     desc = "tele: find" },
-  { "<leader><cr>",    require('telescope.builtin').buffers,                        desc = "tele: buffers" },
-  { "<leader>fg",      require('telescope.builtin').git_status,                     desc = "tele: git status" },
+  { "<leader><space>", require('telescope.builtin').find_files,                   desc = "tele: find" },
+  { "<leader><cr>",    require('telescope.builtin').buffers,                      desc = "tele: buffers" },
+  { "<leader>fg",      require('telescope.builtin').git_status,                   desc = "tele: git status" },
 
-  { "<leader>fk",      require('telescope.builtin').grep_string,                    desc = "tele: string grep" },
-  { "<leader>fm",      require('telescope.builtin').marks,                          desc = "tele: marks" },
-  { "<leader>fo",      require('telescope.builtin').oldfiles,                       desc = "tele: oldfiles" },
-  { "<leader>fn",      require('plugins.telescope').nvim_config_files, desc = "tele: ~/.config/nvim/" },
-  { "<leader>fy",      require('plugins.telescope').yadm_files,        desc = "tele: YADM files" },
-  { "<leader>fa",      "<cmd>Telescope telescope-alternate alternate_file<CR>",     desc = "tele: alternate files" },
-  { "<leader>fs",      "<cmd>Telescope aerial<CR>",                                 desc = "tele: aerial symbols" },
+  { "<leader>fk",      require('telescope.builtin').grep_string,                  desc = "tele: string grep" },
+  { "<leader>fm",      require('telescope.builtin').marks,                        desc = "tele: marks" },
+  { "<leader>fo",      require('telescope.builtin').oldfiles,                     desc = "tele: oldfiles" },
+  { "<leader>fn",      require('plugins.telescope').nvim_config_files,            desc = "tele: ~/.config/nvim/" },
+  { "<leader>fy",      require('plugins.telescope').yadm_files,                   desc = "tele: YADM files" },
+  { "<leader>fa",      "<cmd>Telescope telescope-alternate alternate_file<CR>",   desc = "tele: alternate files" },
+  { "<leader>fs",      "<cmd>Telescope aerial<CR>",                               desc = "tele: aerial symbols" },
   -- t = { "<cmd>lua require('telescope.builtin').grep_string({search = 'TODO'})", "Telescope: TODOs" },
-  { "<leader>ft",      "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>",            desc = "Todo/Fix/Fixme" },
+  { "<leader>ft",      "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>",          desc = "Todo/Fix/Fixme" },
 
   -- ╭─────╮
   -- │ Git │
   -- ╰─────╯
-  { "<leader>gg",      "<cmd>LazyGit<CR>",                                          desc = "Open lazygit" },
+  { "<leader>gg",      "<cmd>LazyGit<CR>",                                        desc = "Open lazygit" },
 
   -- ╭─────╮
   -- │ LSP │
   -- ╰─────╯
   -- See `lua/plugins/nvim-lspconfig.lua`
-  { "<leader>ll",      require('lint').try_lint,                                    desc = "Lint" },
-  { "<leader>la",      vim.lsp.buf.code_action,                                     desc = "Code action",                         mode = "v" },
+  { "<leader>ll",      require('lint').try_lint,                                  desc = "Lint" },
+  { "<leader>la",      vim.lsp.buf.code_action,                                   desc = "Code action",                         mode = "v" },
 
   -- ╭──────────╮
   -- │ Packages │
   -- ╰──────────╯
-  { "<leader>pu",      "<cmd>Lazy update<CR>",                                      desc = "Lazy: update" },
-  { "<leader>pm",      "<cmd>Mason<CR>",                                            desc = "Mason" },
+  { "<leader>pu",      "<cmd>Lazy update<CR>",                                    desc = "Lazy: update" },
+  { "<leader>pm",      "<cmd>Mason<CR>",                                          desc = "Mason" },
 
   -- ╭────────╮
   -- │ Search │
   -- ╰────────╯
-  { "<leader>/",       require('telescope.builtin').live_grep,                      desc = "tele: live grep" },
-  { "<leader>.",       ":Rg2<space>",                                               desc = "rg" },
-  { "<leader>sl",      ":noh<CR>",                                                  desc = "Stop highlighting the hlsearch" },
+  { "<leader>/",       require('telescope.builtin').live_grep,                    desc = "tele: live grep" },
+  -- { "<leader>.",       ":Rg2<space>",                                             desc = "rg" },
+  { "<leader>.",       ":Rg<space>",                                              desc = "rg" },
+  { "<leader>sl",      ":noh<CR>",                                                desc = "Stop highlighting the hlsearch" },
 
   -- ╭──────╮
   -- │ Test │
   -- ╰──────╯
-  { "<leader>tn",      require("plugins.neotest").test_cmds.nearest,           desc = "Test: nearest" },
-  { "<leader>tN",      require("plugins.neotest").test_cmds.watch_nearest,     desc = "Test: watch nearest" },
+  { "<leader>tn",      require("plugins.neotest").test_cmds.nearest,              desc = "Test: nearest" },
+  { "<leader>tN",      require("plugins.neotest").test_cmds.watch_nearest,        desc = "Test: watch nearest" },
 
-  { "<leader>tf",      require("plugins.neotest").test_cmds.file,              desc = "Test: test this file" },
-  { "<leader>tF",      require("plugins.neotest").test_cmds.watch_file,        desc = "Test: watch this file" },
+  { "<leader>tf",      require("plugins.neotest").test_cmds.file,                 desc = "Test: test this file" },
+  { "<leader>tF",      require("plugins.neotest").test_cmds.watch_file,           desc = "Test: watch this file" },
 
-  { "<leader>ta",      require("plugins.neotest").test_cmds.all,               desc = "Test: all tests" },
-  { "<leader>tA",      require("plugins.neotest").test_cmds.watch_all,         desc = "Test: watch all tests" },
+  { "<leader>ta",      require("plugins.neotest").test_cmds.all,                  desc = "Test: all tests" },
+  { "<leader>tA",      require("plugins.neotest").test_cmds.watch_all,            desc = "Test: watch all tests" },
 
   -- { "<leader>tl",      require("neotest").run.run_last,                             desc = "Test: Run last test cmd" },
 
   -- { "<leader>ts",      require("neotest").summary.toggle,                           desc = "Test: toggle summary" },
   -- { "<leader>tC",      require("neotest").summary.clear_marked,                     desc = "Test: summary clear marked" },
-  { "<leader>to",      require("plugins.neotest").toggle_output_panel,         desc = "Test: toggle panel" },
+  { "<leader>to",      require("plugins.neotest").toggle_output_panel,            desc = "Test: toggle panel" },
 
   -- { "<leader>tS",      require("neotest").run.stop,                                 desc = "Test: stop!" },
 
   -- ╭─────────╮
   -- │ Windows │
   -- ╰─────────╯
-  { "<C-l>",           "<C-w>l",                                                    desc = "Move to right pane" },
-  { "<C-h>",           "<C-w>h",                                                    desc = "Move to left pane" },
-  { "<C-j>",           "<C-w>j",                                                    desc = "Move to down pane" },
-  { "<C-k>",           "<C-w>k",                                                    desc = "Move to up pane" },
+  { "<C-l>",           "<C-w>l",                                                  desc = "Move to right pane" },
+  { "<C-h>",           "<C-w>h",                                                  desc = "Move to left pane" },
+  { "<C-j>",           "<C-w>j",                                                  desc = "Move to down pane" },
+  { "<C-k>",           "<C-w>k",                                                  desc = "Move to up pane" },
 
   -- ╭─────────────╮
   -- │ Diagnostics │
   -- ╰─────────────╯
-  { "<leader>xx",      "<CMD>Trouble diagnostics toggle<CR>",                       desc = "Diagnostics (Trouble)" },
-  { "<leader>xX",      "<CMD>Trouble diagnostics toggle filter.buf=0<CR>",          desc = "Buffer Diagnostics (Trouble)" },
-  { "<leader>xs",      "<CMD>Trouble symbols toggle focus=false<CR>",               desc = "Symbols (Trouble)" },
+  { "<leader>xx",      "<CMD>Trouble diagnostics toggle<CR>",                     desc = "Diagnostics (Trouble)" },
+  { "<leader>xX",      "<CMD>Trouble diagnostics toggle filter.buf=0<CR>",        desc = "Buffer Diagnostics (Trouble)" },
+  { "<leader>xs",      "<CMD>Trouble symbols toggle focus=false<CR>",             desc = "Symbols (Trouble)" },
   -- R = { "<cmd>TroubleToggle lsp_references<cr>", "Trouble: LSP references" },
-  { "<leader>xl",      "<CMD>Trouble lsp_definitions toggle<CR>",                   desc = "Trouble: LSP Definitions" },
-  { "<leader>xL",      "<CMD>Trouble loclist toggle<CR>",                           desc = "Trouble: loclist" },
-  { "<leader>xQ",      "<CMD>Trouble quickfix toggle<CR>",                          desc = "Trouble: quickfix" },
+  { "<leader>xl",      "<CMD>Trouble lsp_definitions toggle<CR>",                 desc = "Trouble: LSP Definitions" },
+  { "<leader>xL",      "<CMD>Trouble loclist toggle<CR>",                         desc = "Trouble: loclist" },
+  { "<leader>xQ",      "<CMD>Trouble quickfix toggle<CR>",                        desc = "Trouble: quickfix" },
 
-  { "<leader>xt",      "<CMD>TodoQuickFix<CR>",                                     desc = "todo-comments: quickfix" },
-  { "<leader>xT",      "<CMD>Trouble todo filter = {tag = {TODO,FIX,FIXME}}<CR>",   desc = "todo-comments: via trouble" },
+  { "<leader>xt",      "<CMD>TodoQuickFix<CR>",                                   desc = "todo-comments: quickfix" },
+  { "<leader>xT",      "<CMD>Trouble todo filter = {tag = {TODO,FIX,FIXME}}<CR>", desc = "todo-comments: via trouble" },
 })
 
 local M = {}
@@ -204,7 +205,7 @@ end
 --- Maps for `gitsigns.nvim`'s `on_attach`.
 ---@param bufnr number The buffer number.
 M.gitsigns = function(bufnr)
-  local gs = require("plugins.gitsigns")
+  local gs = require("turboladen.gitsigns")
 
   wk.add({
     { "]c",         gs.get_next_hunk, desc = "gitsigns: Next hunk",        buffer = bufnr },

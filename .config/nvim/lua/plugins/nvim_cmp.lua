@@ -1,24 +1,24 @@
 local snippy = require("snippy")
 local cmp = require("cmp")
 
-local select_next = function(cmp, snippy)
-  return cmp.mapping(function(fallback)
-    if cmp.visible() then
-      cmp.select_next_item()
-    elseif snippy.can_expand_or_advance() then
-      snippy.expand_or_advance()
+local select_next = function(cmp_mod, snippy_mod)
+  return cmp_mod.mapping(function(fallback)
+    if cmp_mod.visible() then
+      cmp_mod.select_next_item()
+    elseif snippy_mod.can_expand_or_advance() then
+      snippy_mod.expand_or_advance()
     else
       fallback()
     end
   end, { "i", "s", "c" })
 end
 
-local select_prev = function(cmp, snippy)
-  return cmp.mapping(function(fallback)
-    if cmp.visible() then
-      cmp.select_prev_item()
-    elseif snippy.can_jump(-1) then
-      snippy.previous()
+local select_prev = function(cmp_mod, snippy_mod)
+  return cmp_mod.mapping(function(fallback)
+    if cmp_mod.visible() then
+      cmp_mod.select_prev_item()
+    elseif snippy_mod.can_jump(-1) then
+      snippy_mod.previous()
     else
       fallback()
     end
@@ -64,7 +64,7 @@ cmp.setup({
     { name = "path" },
     { name = "rg" },
     { name = "snippy" },
-    { name = "copilot" },
+    { name = "codecompanion" },
   }),
 
   {

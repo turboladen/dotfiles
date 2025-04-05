@@ -6,6 +6,8 @@ require('lualine').setup {
   options = {
     component_separators = "󰇙",
     section_separators = { left = "", right = "" },
+    theme = "auto",
+    globalstatus = vim.o.laststatus == 3,
   },
   sections = {
     lualine_a = {
@@ -21,7 +23,13 @@ require('lualine').setup {
     lualine_x = {
       {
         'diagnostics',
-        sources = { 'nvim_lsp', 'nvim_diagnostic' }
+        sources = { 'nvim_lsp', 'nvim_diagnostic' },
+        symbols = {
+          error = require("turboladen").lsp_diagnostic_signs.Error,
+          warn = require("turboladen").lsp_diagnostic_signs.Warn,
+          info = require("turboladen").lsp_diagnostic_signs.Info,
+          hint = require("turboladen").lsp_diagnostic_signs.Hint,
+        },
       }
     },
     lualine_y = { 'filetype', 'progress' },
@@ -42,3 +50,6 @@ require('lualine').setup {
   tabline = {},
   extensions = { "aerial", "fugitive", "mason", "quickfix", "trouble" },
 }
+
+
+vim.o.laststatus = vim.g.lualine_laststatus
