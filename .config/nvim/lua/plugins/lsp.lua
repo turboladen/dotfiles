@@ -95,6 +95,22 @@ local opts = {
       end,
     },
     bashls = {},
+    clangd = {
+      cmd = {
+        "clangd",
+        "--background-index",
+        "--clang-tidy",
+        "--header-insertion=iwyu",
+        "--completion-style=detailed",
+        "--function-arg-placeholders",
+        "--fallback-style=llvm",
+      },
+      init_options = {
+        usePlaceholders = true,
+        completeUnimported = true,
+        clangdFileStatus = true,
+      },
+    },
     -- ╭─────────────────────────────────────────────────────────────────────────────────────────╮
     -- │ https://deno.land/manual@v1.27.1/language_server                                        │
     -- │ https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#denols│
@@ -116,7 +132,6 @@ local opts = {
       filetypes = {
         "bash",
         "make",
-        "markdown",
         "sh",
         "text",
         "yaml",
@@ -154,6 +169,7 @@ local opts = {
         packageManger = "yarn",
       },
     },
+    gleam = {},
 
     -- ╭───────────────────────────────────────────────────────────────────────────────────────╮
     -- │ https://github.com/hrsh7th/vscode-langservers-extracted                               │
@@ -290,31 +306,38 @@ local opts = {
 
 require("user.commands").lspconfig()
 local lspconfig = require("lspconfig")
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
 -- local capabilities = vim.lsp.protocol.make_client_capabilities()
+-- local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-local function setup_server(server)
-  local server_opts = vim.tbl_deep_extend("force", {
-    capabilities = vim.deepcopy(capabilities),
-  }, opts.servers[server] or {})
-
-  if opts.setup[server] then
-    if opts.setup[server](server, server_opts) then
-      return
-    end
-  elseif opts.setup["*"] then
-    if opts.setup["*"](server, server_opts) then
-      return
-    end
-  end
-  lspconfig[server].setup(server_opts)
+for server, config in pairs(opts.servers) do
+  -- passing config.capabilities to blink.cmp merges with the capabilities in your
+  -- `opts[server].capabilities, if you've defined it
+  config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
+  lspconfig[server].setup(config)
 end
 
--- local ensure_installed = {} ---@type string[]
-for server, server_opts in pairs(opts.servers) do
-  server_opts = server_opts == true and {} or server_opts
-  setup_server(server)
-end
+-- local function setup_server(server)
+--   local server_opts = vim.tbl_deep_extend("force", {
+--     capabilities = vim.deepcopy(capabilities),
+--   }, opts.servers[server] or {})
+--
+--   if opts.setup[server] then
+--     if opts.setup[server](server, server_opts) then
+--       return
+--     end
+--   elseif opts.setup["*"] then
+--     if opts.setup["*"](server, server_opts) then
+--       return
+--     end
+--   end
+--   lspconfig[server].setup(server_opts)
+-- end
+--
+-- -- local ensure_installed = {} ---@type string[]
+-- for server, server_opts in pairs(opts.servers) do
+--   server_opts = server_opts == true and {} or server_opts
+--   setup_server(server)
+-- end
 
 -- for server, server_opts in pairs(opts.servers) do
 --   -- passing config.capabilities to blink.cmp merges with the capabilities in your
@@ -338,18 +361,12 @@ end
 ------------------------------------------------------------
 -- Package-specific setup
 ------------------------------------------------------------
--- ╭───────╮
--- │ C/C++ │
--- ╰───────╯
-require("clangd_extensions").setup({
-  server = {
-    default_config = {
-      cmd = { "clangd", "--enable-config", "--clang-tidy", "--background-index" },
-    },
-  },
-  extensions = {
-    inlay_hints = {
-      only_current_line = true,
-    },
-  },
+-- ╭──────────────────────────────────────────────────────────────────────────╮
+-- │  Portable package manager for Neovim that runs everywhere Neovim         │
+-- │  runs.                                                                   │
+-- ╰──────────────────────────────────────────────────────────────────────────╯
+require("mason").setup()
+
+require("mason-lspconfig").setup({
+  automatic_installation = false,
 })

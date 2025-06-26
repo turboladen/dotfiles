@@ -11,63 +11,65 @@ colorscheme = "kanagawa"
 # - If the plugin name contains a dot then you must add quotes to the key name!
 # - Non-git plugins need to come before git-based plugins, otherwise Rocks will not recognize the rocks ones.
 [plugins]
-"rocks.nvim" = "2.44.0"
-"rocks-config.nvim" = "3.1.0"
+"rocks.nvim" = "2.45.0"
+"rocks-config.nvim" = "3.1.1"
 "rocks-git.nvim" = "2.5.3"
 "rocks-treesitter.nvim" = "1.3.0"
 
 # ╭───────────╮
 # │ Core deps │
 # ╰───────────╯
-nvim-web-devicons = "0.100"
-nvim-lspconfig = "1.8.0"
-nvim-snippy = "1.0.0"
-
+"comment-box.nvim" = "1.0.2"
+"gitsigns.nvim" = "1.0.2"
+"lualine.nvim" = "scm"
 "which-key.nvim" = { version = "3.17.0", config = "plugins.which_key" }
+nvim-lspconfig = "2.3.0"
+nvim-web-devicons = "0.100"
+
+# ╭──────────────────────────────╮
+# │ Dependencies                 │
+# │ (I don't use these directly) │
+# ╰──────────────────────────────╯
+"plenary.nvim" = "scm"
+"nui.nvim" = "0.4.0"
+
+#### Haven't re-evaluated these
 
 "aerial.nvim" = "2.5.0"
-"todo-comments.nvim" = "1.4.0"
-
-tabular = "0.4"
-"comment-box.nvim" = "1.0.2"
-"dressing.nvim" = "3.1.1"
+"dirbuf.nvim" = "scm"
 "fidget.nvim" = "1.6.0"
-"gitsigns.nvim" = "1.0.2"
+"mason-lspconfig.nvim" = "2.0.0"
+"mason.nvim" = "2.0.0"
+"mini.nvim" = "0.16.0"
 "neodev.nvim" = "3.0.0"
+"schemastore.nvim" = "0.2.0"
+"snacks.nvim" = "2.22.0"
+"telescope-ui-select.nvim" = "scm"
+"telescope.nvim" = "scm"
+"todo-comments.nvim" = "1.4.0"
+"tokyonight.nvim" = "4.11.0"
+"trouble.nvim" = "3.7.1"
+"ts-comments.nvim" = "1.5.0"
+"yazi.nvim" = "11.5.1"
 neogen = "2.20.0"
 neotest = "5.8.0"
 nvim-nio = "1.10.1"
-"schemastore.nvim" = "0.2.0"
-"trouble.nvim" = "3.7.1"
-"mason.nvim" = "1.11.0"
-"mason-lspconfig.nvim" = "1.32.0"
-"yazi.nvim" = "10.0.1"
-"mini.nvim" = "0.15.0"
-"dirbuf.nvim" = "scm"
-"plenary.nvim" = "scm"
-"lualine.nvim" = "scm"
-"ts-comments.nvim" = "1.5.0"
-nvim-treesitter = "scm"
-
-"nui.nvim" = "0.3.0"
-
-
-# ╭───────────╮
-# │ Telescope │
-# ╰───────────╯
-"telescope.nvim" = "scm"
-"telescope-ui-select.nvim" = "scm"
-"tokyonight.nvim" = "4.11.0"
-
-# ╭─────╮
-# │ CMP │
-# ╰─────╯
-nvim-cmp = "scm"
-cmp-nvim-lsp = "scm"
-cmp-buffer = "scm"
-cmp-path = "scm"
-
-rustaceanvim = "6.0.0"
+rustaceanvim = "6.3.0"
+tabular = "0.4"
+tree-sitter-rust = "0.0.50"
+tree-sitter-just = "0.0.37"
+tree-sitter-jsonc = "0.0.29"
+tree-sitter-toml = "0.0.31"
+tree-sitter-yaml = "0.0.36"
+tree-sitter-ruby = "0.0.35"
+tree-sitter-gitignore = "0.0.29"
+tree-sitter-fish = "0.0.30"
+tree-sitter-python = "0.0.46"
+tree-sitter-git_rebase = "0.0.29"
+tree-sitter-bash = "0.0.43"
+tree-sitter-ini = "0.0.32"
+tree-sitter-properties = "0.0.31"
+tree-sitter-starlark = "0.0.31"
 
 ################################################################
 # Start git-based plugins
@@ -83,40 +85,9 @@ rev = "1f08ed60cafc8f6168b72b80be2b2ea149813e55"
 branch = "main"
 build = "make"
 
-# ╭───────────╮
-# │ CMP (git) │
-# ╰───────────╯
-[plugins.cmp-snippy]
-git = "dcampos/cmp-snippy"
-rev = "6e39210aa3a74e2bf6462f492eaf0d436cd2b7d3"
-branch = "main"
-
-[plugins."cmp-nvim-lsp-signature-help"]
-git = "hrsh7th/cmp-nvim-lsp-signature-help"
-rev = "031e6ba70b0ad5eee49fd2120ff7a2e325b17fa7"
-branch = "main"
-
-[plugins."cmp-nvim-lua"]
-git = "hrsh7th/cmp-nvim-lua"
-rev = "f12408bdb54c39c23e67cab726264c10db33ada8"
-branch = "main"
-
-[plugins.cmp-cmdline]
-git = "hrsh7th/cmp-cmdline"
-rev = "d250c63aa13ead745e3a40f61fdd3470efde3923"
-branch = "main"
-
-[plugins."cmp-rg"]
-git = "lukas-reineke/cmp-rg"
-rev = "v1.3.11"
-#############################################
-
-# ╭──────╮
-# │ Rust │
-# ╰──────╯
 [plugins."crates.nvim"]
 git = "Saecki/crates.nvim"
-rev = "v0.6.0"
+rev = "v0.7.1"
 
 #############################################
 
@@ -178,19 +149,10 @@ rev = "0.1"
 git = "stefandtw/quickfix-reflector.vim"
 rev = "v0.1"
 
-[plugins."goyo.vim"]
-git = "junegunn/goyo.vim"
-rev = "1.6.0"
-
 [plugins."lazygit.nvim"]
 git = "kdheepak/lazygit.nvim"
 rev = "b9eae3badab982e71abab96d3ee1d258f0c07961"
 branch = "main"
-
-[plugins."limelight.vim"]
-git = "junegunn/limelight.vim"
-rev = "0c8cc7f503a775c505dc9c67f1f5041ab4d5f1fd"
-branch = "master"
 
 [plugins."lspkind.nvim"]
 git = "onsails/lspkind.nvim"
@@ -212,10 +174,10 @@ git = "ya2s/nvim-nonicons"
 rev = "ceda07dc7339f35444b5f4c4016f76a9eb42ac16"
 branch = "main"
 
-[plugins.nvim-treesitter-textsubjects]
-git = "rrethy/nvim-treesitter-textsubjects"
-rev = "abcbb0e537c9c24800b03b9ca33bee5806604629"
-branch = "master"
+# [plugins.nvim-treesitter-textsubjects]
+# git = "rrethy/nvim-treesitter-textsubjects"
+# rev = "abcbb0e537c9c24800b03b9ca33bee5806604629"
+# branch = "master"
 
 [plugins.treesj]
 git = "wansmer/treesj"
@@ -242,6 +204,9 @@ rev = "v0.7.3"
 git = "tpope/vim-dispatch"
 rev = "v1.8"
 
+# ╭────────────────────────────────╮
+# │ A solid language pack for Vim. │
+# ╰────────────────────────────────╯
 [plugins."clangd_extensions.nvim"]
 git = "p00f/clangd_extensions.nvim"
 rev = "db28f29be928d18cbfb86fbfb9f83f584f658feb"
@@ -251,9 +216,6 @@ branch = "main"
 git = "nathom/filetype.nvim"
 rev = "v0.4"
 
-# ╭────────────────────────────────╮
-# │ A solid language pack for Vim. │
-# ╰────────────────────────────────╯
 [plugins.vim-polyglot]
 git = "sheerun/vim-polyglot"
 rev = "v4.17.1"
@@ -300,9 +262,9 @@ branch = "main"
 # │ Restores `FocusGained` and `FocusLost` autocommand events work when using │
 # │ vim inside Tmux.                                                          │
 # ╰───────────────────────────────────────────────────────────────────────────╯
-[plugins.vim-tmux-focus-events]
-git = "tmux-plugins/vim-tmux-focus-events"
-rev = "v1.0.0"
+# [plugins.vim-tmux-focus-events]
+# git = "tmux-plugins/vim-tmux-focus-events"
+# rev = "v1.0.0"
 
 [plugins.vim-yaml]
 git = "stephpy/vim-yaml"
@@ -311,7 +273,7 @@ branch = "master"
 
 [plugins."codecompanion.nvim"]
 git = "olimorris/codecompanion.nvim"
-rev = "v14.6.1"
+rev = "v16.1.0"
 
 # ╭─────────────────────────────────────────────────────────╮
 # │ lsp_lines is a simple neovim plugin that renders        │
@@ -329,9 +291,76 @@ rev = "v3.0.0"
 git = "jremmen/vim-ripgrep"
 rev = "v1.0.3"
 
+[plugins."blink.cmp"]
+git = "saghen/blink.cmp"
+rev = "v1.3.1"
+
+[plugins.friendly-snippets]
+git = "rafamadriz/friendly-snippets"
+rev = "efff286dd74c22f731cdec26a70b46e5b203c619"
+
+[plugins."colorful-menu.nvim"]
+git = "xzbdmw/colorful-menu.nvim"
+rev = "f80feb8a6706f965321aff24d0ed3849f02a7f77"
+
+[plugins."peek.nvim"]
+git = "toppair/peek.nvim"
+rev = "5820d937d5414baea5f586dc2a3d912a74636e5b"
+build = "deno task --quiet build:fast"
+
+[plugins."copilot.lua"]
+git = "zbirenbaum/copilot.lua"
+rev = "cf6cb4f3d7f2729263fc2130de609ff5af22702a"
+
+[plugins."copilotchat.nvim"]
+git = "copilotc-nvim/copilotchat.nvim"
+rev = "v3.12.0"
+build = "make tiktoken"
+
 #          ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 #          ┃                         BUNDLES                          ┃
 #          ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+# ╭──────────────╮
+# │ Bundle: `ai` │
+# ╰──────────────╯
+[bundles.ai]
+items = ["codecompanion.nvim", "copilotchat.nvim", "copilot.lua"]
+
+# ╭──────────────────╮
+# │ Bundle: `coding` │
+# ╰──────────────────╯
+[bundles.coding]
+items = [
+  "blink.cmp",
+  "friendly-snippets",
+  "colorful-menu.nvim",
+  "neogen",
+  "ts-comments.nvim",
+]
+
+# ╭──────────────────╮
+# │ Bundle: `editor` │
+# ╰──────────────────╯
+[bundles.editor]
+items = [
+  "aerial.nvim",
+  "delimitmate",
+  "dirbuf.nvim",
+  "gitsigns.nvim",
+  "nvim-hlslens",
+  "tabular",
+  "todo-comments.nvim",
+  "treesj",
+  "trouble.nvim",
+  "vim-casetrate",
+  "vim-endwise",
+  "vim-exchange",
+  "vim-ripgrep",
+  "vim-surround",
+  "vim-troll-stopper",
+  "which-key.nvim",
+]
+
 # ╭───────────────────╮
 # │ Bundle: telescope │
 # ╰───────────────────╯
@@ -369,45 +398,20 @@ items = [
 ]
 
 # ╭──────────────────╮
-# │ Bundle: `editor` │
-# ╰──────────────────╯
-[bundles.editor]
-items = [
-  "vim-exchange",
-  "vim-surround",
-  "delimitmate",
-  "vim-endwise",
-  "vim-casetrate",
-  "tabular",
-  "vim-troll-stopper",
-  "dirbuf.nvim",
-  "todo-comments.nvim",
-  "ts-comments.nvim",
-  "nvim-hlslens",
-  "vim-ripgrep",
-  "goyo.vim",
-  "treesj",
-  "vim-matchup",
-]
-
-# [bundles.formatting]
-# items = ["conform.nvim"]
-
-# ╭──────────────────╮
 # │ Bundle: nvim_cmp │
 # ╰──────────────────╯
-[bundles.nvim_cmp]
-items = [
-  "nvim-cmp",
-  "nvim-snippy",
-  "cmp-buffer",
-  "cmp-cmdline",
-  "cmp-nvim-lsp",
-  "cmp-nvim-lsp-signature-help",
-  "cmp-nvim-lua",
-  "cmp-path",
-  "cmp-rg",
-]
+# [bundles.nvim_cmp]
+# items = [
+#   "nvim-cmp",
+#   "nvim-snippy",
+#   "cmp-buffer",
+#   "cmp-cmdline",
+#   "cmp-nvim-lsp",
+#   "cmp-nvim-lsp-signature-help",
+#   "cmp-nvim-lua",
+#   "cmp-path",
+#   "cmp-rg",
+# ]
 
 # ╭─────────────────╮
 # │ Bundle: `utils` │
@@ -415,144 +419,53 @@ items = [
 [bundles.utils]
 items = ["open.nvim", "open-jira.nvim", "vim-dispatch"]
 
-# ╭─────────────────╮
-# │ Bundle: `mason` │
-# ╰─────────────────╯
-[bundles.mason]
-items = ["mason.nvim", "mason-lspconfig.nvim"]
-
 # ╭──────────────────────╮
 # │ Bundle: `treesitter` │
 # ╰──────────────────────╯
-[bundles.treesitter]
-items = ["nvim-treesitter", "nvim-treesitter-textsubjects"]
+# [bundles.treesitter]
+# items = ["nvim-treesitter", "nvim-treesitter-textsubjects", "vim-matchup"]
 
 # ╭───────────────╮
 # │ Bundle: `lsp` │
 # ╰───────────────╯
 [bundles.lsp]
 items = [
-  "lspkind.nvim",
-  "nvim-lspconfig",
   "clangd_extensions.nvim",
   "emmet-vim",
   "lsp_lines.nvim",
-]
-
-# ╭─────────────────────╮
-# │ Bundle: `filetypes` │
-# ╰─────────────────────╯
-[bundles.filetypes]
-items = [
-  "filetype.nvim",
-  "vim-polyglot",
-  "dockerfile.vim",
-  "committia.vim",
-  "vim-rails",
-  "vim-rake",
-  "vim-rbs",
-  "vim-tmux-focus-events",
+  "lspkind.nvim",
+  "mason.nvim",
+  "mason-lspconfig.nvim",
+  "nvim-lspconfig",
 ]
 
 # ╭────────────────╮
-# │ Bundle: `rust` │
+# │ Bundle: `lang` │
 # ╰────────────────╯
-[bundles.rust]
-items = ["rustaceanvim", "crates.nvim"]
+[bundles.lang]
+items = [
+  "committia.vim",
+  "crates.nvim",
+  "dockerfile.vim",
+  "filetype.nvim",
+  "peek.nvim",
+  "rustaceanvim",
+  "vim-polyglot",
+  "vim-rails",
+  "vim-rake",
+  "vim-rbs",
+]
+
 
 # ╭──────────────╮
 # │ Bundle: `ui` │
 # ╰──────────────╯
 [bundles.ui]
-items = ["fidget.nvim", "gitsigns.nvim", "nvim-nonicons"]
+items = ["fidget.nvim", "nvim-nonicons", "lualine.nvim", "nui.nvim"]
 
 #          ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 #          ┃                    TREESITTER CONFIG                     ┃
 #          ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 [treesitter]
-auto_highlight = [
-  "angular",
-  "asm",
-  "bash",
-  "c",
-  "c_sharp",
-  "cmake",
-  "comment",
-  "cpp",
-  "css",
-  "csv",
-  "cuda",
-  "diff",
-  "dockerfile",
-  "dot",
-  "editorconfig",
-  "eex",
-  "elixir",
-  "embedded_template",
-  "fish",
-  "git_config",
-  "git_rebase",
-  "gitattributes",
-  "gitcommit",
-  "gitignore",
-  "gleam",
-  "graphql",
-  "hcl",
-  "helm",
-  "html",
-  "http",
-  "ini",
-  "java",
-  "javascript",
-  "jq",
-  "jsdoc",
-  "json",
-  "json5",
-  "jsonc",
-  "jsonnet",
-  "just",
-  "kotlin",
-  "lalrpop",
-  "latex",
-  "llvm",
-  "lua",
-  "luadoc",
-  "luap",
-  "make",
-  "markdown",
-  "markdown_inline",
-  "ninja",
-  "nix",
-  "objc",
-  "ocaml",
-  "passwd",
-  "php",
-  "phpdoc",
-  "requirements",      # pip_requirements
-  "proto",
-  "python",
-  "regex",
-  "ron",
-  "ruby",
-  "rust",
-  "scala",
-  "scss",
-  "sql",
-  "ssh_config",
-  "starlark",
-  "swift",
-  "terraform",
-  "tmux",
-  "todotxt",
-  "toml",
-  "tsx",
-  "typescript",
-  "ungrammar",
-  "vim",
-  "vimdoc",
-  "xml",
-  "yaml",
-  "zig",
-]
-
+auto_highlight = "all"
 auto_install = "prompt"

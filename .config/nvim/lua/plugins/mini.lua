@@ -1,11 +1,11 @@
 require("mini.basics").setup()
 require("mini.bracketed").setup()
 require("mini.comment").setup()
-require("mini.cursorword").setup()
-require("mini.indentscope").setup({
-  symbol = "│",
-  options = { try_as_border = true },
-})
+-- require("mini.cursorword").setup()
+-- require("mini.indentscope").setup({
+--   symbol = "│",
+--   options = { try_as_border = true },
+-- })
 
 -- NOTE: This works well--except with Rust lifetimes. It *always* adds
 -- a closing ', which is super annoying.

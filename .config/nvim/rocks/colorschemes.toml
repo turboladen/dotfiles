@@ -46,14 +46,9 @@ git = "mkarmona/materialbox"
 rev = "2061e4fcd98555147e849061c1dccac09c972349"
 branch = "master"
 
-# Dark: Ok. Very blue
-# Light: Fantastic. Great contrast.
-# Comments: In light mode, when cursor is on a word, the background is so
-# dark that it's almost impossible to read the text underneath. This would be
-# a top theme if not for that. Maybe it's fixable?
 [plugins."modus-themes.nvim"]
 git = "miikanissi/modus-themes.nvim"
-rev = "v1.4.0"
+rev = "v1.4.1"
 
 [plugins."newpaper.nvim"]
 git = "yorik1984/newpaper.nvim"

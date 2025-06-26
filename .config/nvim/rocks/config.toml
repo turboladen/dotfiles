@@ -19,7 +19,7 @@ sidescroll = 4
 sidescrolloff = 5
 cmdheight = 2
 list = true
-listchars = "tab:▸ ,trail:.,nbsp:_,extends:❯,precedes:❮" 
+listchars = "tab:▸ ,trail:.,nbsp:_,extends:❯,precedes:❮"
 number = true
 
 guifont = 'MonoLisaCustom Nerd Font:h13:i'
@@ -67,7 +67,7 @@ showtabline = 2
 #  │ 12. Editing text │
 #  ╰──────────────────╯
 # undofile = true
-completeopt = "menu,menuone,noselect"
+completeopt = "menu,menuone,noinsert,noselect"
 
 #  ╭────────────────────────╮
 #  │ 13. Tabs and indenting │
