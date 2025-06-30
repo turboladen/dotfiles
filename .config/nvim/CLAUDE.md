@@ -30,6 +30,8 @@ In no particular order:
   in the past when doing so. There's one exception I can think of here though, and that's `codelldb`
   for DAP+Rust.
 - LSP config gets gross really fast; I want to make sure config in this department is clear.
+- Lots of plugins have integrations with other plugins; when setting up a new plugin that integrates
+  with others, check this project to see if any of those exist.
 
 ## Organization
 
