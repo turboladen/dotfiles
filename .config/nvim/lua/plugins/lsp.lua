@@ -21,12 +21,11 @@ return {
       { "Bilal2453/luvit-meta", lazy = true }, -- optional `vim.uv` typings
     },
     config = function()
-      -- Enhanced capabilities with nvim-cmp if available
+      -- Enhanced capabilities with blink.cmp
       local capabilities = vim.lsp.protocol.make_client_capabilities()
-      local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-      if has_cmp then
-        capabilities =
-          vim.tbl_deep_extend("force", capabilities, cmp_nvim_lsp.default_capabilities())
+      local has_blink, blink = pcall(require, "blink.cmp")
+      if has_blink then
+        capabilities = vim.tbl_deep_extend("force", capabilities, blink.get_lsp_capabilities())
       end
 
       -- Configure global LSP defaults for ALL servers
