@@ -58,4 +58,14 @@ return {
     event = "VeryLazy",
     opts = {},
   },
+
+  -- Rust-aware bracket/brace handling
+  {
+    "saghen/blink.pairs",
+    lazy = false,
+    version = "*",
+    -- download prebuilt binaries from github releases
+    dependencies = "saghen/blink.download",
+    opts = {},
+  },
 }
