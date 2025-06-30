@@ -104,4 +104,5 @@ return {
 
   -- Import language-specific configurations
   { import = "plugins.lang" },
+  { import = "plugins.extras.lang.python" },
 }
