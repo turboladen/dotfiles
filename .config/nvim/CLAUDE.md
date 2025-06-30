@@ -145,9 +145,6 @@ git = "nathom/filetype.nvim"
 [plugins.vim-polyglot]
 git = "sheerun/vim-polyglot"
 
-[plugins."dockerfile.vim"]
-git = "ekalinin/dockerfile.vim"
-
 [plugins."codecompanion.nvim"]
 git = "olimorris/codecompanion.nvim"
 
