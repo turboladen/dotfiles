@@ -1,4 +1,10 @@
 return {
+  -- Enhanced repeat functionality for plugin mappings
+  {
+    "tpope/vim-repeat",
+    event = "VeryLazy",
+  },
+
   -- Git integration with lazygit
   {
     "kdheepak/lazygit.nvim",
@@ -23,7 +29,4 @@ return {
       vim.g.lazygit_use_neovim_remote = 1 -- Enable neovim-remote integration if available
     end,
   },
-
-  { "nvim-lua/plenary.nvim" },
-  { "nvim-tree/nvim-web-devicons" },
 }

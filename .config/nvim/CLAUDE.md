@@ -142,9 +142,6 @@ git = "antoinemadec/fixcursorhold.nvim"
 [plugins.nvim-nonicons]
 git = "ya2s/nvim-nonicons"
 
-[plugins.vim-repeat]
-git = "tpope/vim-repeat"
-
 [plugins.vim-matchup]
 git = "andymass/vim-matchup"
 
