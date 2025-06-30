@@ -74,4 +74,14 @@ return {
       vim.g.ruby_fold = 1 -- Enable vim-ruby's Ruby-aware folding
     end,
   },
+
+  -- Ruby linting configuration
+  {
+    "mfussenegger/nvim-lint",
+    opts = function(_, opts)
+      opts.linters_by_ft = opts.linters_by_ft or {}
+      opts.linters_by_ft.ruby = { "ruby" }
+      return opts
+    end,
+  },
 }

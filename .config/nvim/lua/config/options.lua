@@ -40,5 +40,11 @@ opt.swapfile = false
 -- Completion
 opt.completeopt = { "menu", "menuone", "noselect" }
 
+-- Folding
+opt.foldmethod = "expr" -- Use expression for folding (works with treesitter)
+opt.foldexpr = "nvim_treesitter#foldexpr()" -- Use treesitter for folding
+opt.foldlevelstart = 99 -- Start with all folds open
+opt.foldenable = true -- Enable folding
+
 -- Mouse
 opt.mouse = "a" -- Enable mouse support
