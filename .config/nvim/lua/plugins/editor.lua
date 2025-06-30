@@ -287,4 +287,61 @@ return {
     },
     opts = {},
   },
+
+  -- Better diagnostics list and others
+  {
+    "folke/trouble.nvim",
+    cmd = { "Trouble" },
+    keys = {
+      { "<leader>xx", "<CMD>Trouble diagnostics toggle<CR>", desc = "Diagnostics (Trouble)" },
+      {
+        "<leader>xX",
+        "<CMD>Trouble diagnostics toggle filter.buf=0<CR>",
+        desc = "Buffer Diagnostics (Trouble)",
+      },
+      { "<leader>xs", "<CMD>Trouble symbols toggle focus=false<CR>", desc = "Symbols (Trouble)" },
+      {
+        "<leader>xl",
+        "<CMD>Trouble lsp_definitions toggle<CR>",
+        desc = "Trouble: LSP Definitions",
+      },
+      { "<leader>xL", "<CMD>Trouble loclist toggle<CR>", desc = "Trouble: loclist" },
+      { "<leader>xQ", "<CMD>Trouble quickfix toggle<CR>", desc = "Trouble: quickfix" },
+      {
+        "[q",
+        function()
+          if require("trouble").is_open() then
+            require("trouble").prev({ skip_groups = true, jump = true })
+          else
+            local ok, err = pcall(vim.cmd.cprev)
+            if not ok then
+              vim.notify(err, vim.log.levels.ERROR)
+            end
+          end
+        end,
+        desc = "Previous Trouble/Quickfix Item",
+      },
+      {
+        "]q",
+        function()
+          if require("trouble").is_open() then
+            require("trouble").next({ skip_groups = true, jump = true })
+          else
+            local ok, err = pcall(vim.cmd.cnext)
+            if not ok then
+              vim.notify(err, vim.log.levels.ERROR)
+            end
+          end
+        end,
+        desc = "Next Trouble/Quickfix Item",
+      },
+    },
+    opts = {
+      modes = {
+        lsp = {
+          win = { position = "right" },
+        },
+      },
+    },
+  },
 }

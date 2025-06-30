@@ -97,16 +97,13 @@ can check things off as we implement use cases that aren't covered yet.
 # ╭───────────╮
 # │ Core deps │
 # ╰───────────╯
-"comment-box.nvim" = "1.0.2"
 "which-key.nvim" = { version = "3.17.0", config = "plugins.which_key" }
 
 # The rest
 "aerial.nvim" = "2.5.0"
 "mini.nvim" = "0.16.0"
 "snacks.nvim" = "2.22.0"
-"todo-comments.nvim" = "1.4.0"
 "tokyonight.nvim" = "4.11.0"
-"trouble.nvim" = "3.7.1"
 "yazi.nvim" = "11.5.1"
 neogen = "2.20.0"
 
