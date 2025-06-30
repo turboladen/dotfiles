@@ -121,9 +121,6 @@ git = "ofirgall/open-jira.nvim"
 [plugins.vim-exchange]
 git = "tommcdo/vim-exchange"
 
-[plugins.vim-surround]
-git = "tpope/vim-surround"
-
 [plugins.vim-endwise]
 git = "tpope/vim-endwise"
 

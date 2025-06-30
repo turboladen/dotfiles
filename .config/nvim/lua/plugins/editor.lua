@@ -199,4 +199,10 @@ return {
       end,
     },
   },
+
+  -- Manipulate surroundings (quotes, brackets, tags, etc.)
+  {
+    "tpope/vim-surround",
+    event = { "BufReadPre", "BufNewFile" },
+  },
 }
