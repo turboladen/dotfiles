@@ -245,4 +245,46 @@ return {
     },
     opts = {},
   },
+
+  -- Create comment boxes and decorations
+  {
+    "LudoPinelli/comment-box.nvim",
+    keys = {
+      {
+        "<leader>cb",
+        function()
+          require("comment-box").albox()
+          vim.lsp.buf.format({ async = false })
+        end,
+        desc = "Left-aligned box",
+        mode = { "n", "v" },
+      },
+      {
+        "<leader>cB",
+        function()
+          require("comment-box").ccbox(3)
+          vim.lsp.buf.format({ async = false })
+        end,
+        desc = "Title box (centered)",
+        mode = { "n", "v" },
+      },
+      {
+        "<leader>cl",
+        function()
+          require("comment-box").line()
+          vim.lsp.buf.format({ async = false })
+        end,
+        desc = "Comment line",
+        mode = { "n", "v" },
+      },
+      {
+        "<leader>cc",
+        function()
+          require("comment-box").catalog()
+        end,
+        desc = "Comment box catalog",
+      },
+    },
+    opts = {},
+  },
 }

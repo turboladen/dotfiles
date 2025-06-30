@@ -109,10 +109,6 @@ can check things off as we implement use cases that aren't covered yet.
 "trouble.nvim" = "3.7.1"
 "yazi.nvim" = "11.5.1"
 neogen = "2.20.0"
-nvim-nio = "1.10.1"
-
-[plugins.vim-casetrate]
-git = "idanarye/vim-casetrate"
 
 [plugins."codecompanion.nvim"]
 git = "olimorris/codecompanion.nvim"

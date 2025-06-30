@@ -69,10 +69,10 @@ return {
 
           -- Codelens mappings
           if client:supports_method("textDocument/codeLens") then
-            map("<leader>cl", vim.lsp.codelens.run, "[C]ode[l]ens Run")
-            map("<leader>cr", function()
+            map("<leader>ll", vim.lsp.codelens.run, "[L]SP Code[l]ens Run")
+            map("<leader>lr", function()
               vim.lsp.codelens.refresh({ bufnr = bufnr })
-            end, "[C]odelens [R]efresh")
+            end, "[L]SP Code[l]ens [R]efresh")
           end
 
           -- Document highlighting
