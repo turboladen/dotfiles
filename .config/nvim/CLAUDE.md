@@ -142,9 +142,6 @@ git = "ya2s/nvim-nonicons"
 [plugins.vim-matchup]
 git = "andymass/vim-matchup"
 
-[plugins.vim-dispatch]
-git = "tpope/vim-dispatch"
-
 [plugins."clangd_extensions.nvim"]
 git = "p00f/clangd_extensions.nvim"
 
@@ -156,15 +153,6 @@ git = "sheerun/vim-polyglot"
 
 [plugins."dockerfile.vim"]
 git = "ekalinin/dockerfile.vim"
-
-[plugins."committia.vim"]
-git = "rhysd/committia.vim"
-
-[plugins.emmet-vim]
-git = "mattn/emmet-vim"
-
-[plugins.vim-yaml]
-git = "stephpy/vim-yaml"
 
 [plugins."codecompanion.nvim"]
 git = "olimorris/codecompanion.nvim"
