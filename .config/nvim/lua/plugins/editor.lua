@@ -9,6 +9,20 @@ return {
   {
     "tpope/vim-eunuch",
     event = { "BufReadPre", "BufNewFile" },
+    cmd = {
+      "Delete",
+      "Unlink",
+      "Move",
+      "Rename",
+      "Chmod",
+      "Mkdir",
+      "Cfind",
+      "Clocate",
+      "Lfind",
+      "Wall",
+      "SudoWrite",
+      "SudoEdit",
+    },
   },
 
   -- Fast fuzzy finder
@@ -25,6 +39,10 @@ return {
         end,
         desc = "Find neovim config files",
       },
+      { "<leader>fg", "<cmd>FzfLua git_status<cr>", desc = "Git status" },
+      { "<leader>fk", "<cmd>FzfLua grep_cword<cr>", desc = "Grep string under cursor" },
+      { "<leader>fm", "<cmd>FzfLua marks<cr>", desc = "Marks" },
+      { "<leader>fo", "<cmd>FzfLua oldfiles<cr>", desc = "Old files" },
       { "<leader>/", "<cmd>FzfLua live_grep<cr>", desc = "Live grep" },
       { "<leader>ss", "<cmd>FzfLua lsp_workspace_symbols<cr>", desc = "LSP workspace symbols" },
     },
@@ -233,7 +251,20 @@ return {
     cmd = { "TodoQuickFix", "TodoTrouble" },
     event = { "BufReadPre", "BufNewFile" },
     keys = {
-      { "<leader>xt", "<CMD>TodoQuickFix<CR>", desc = "todo-comments: quickfix" },
+      {
+        "]t",
+        function()
+          require("todo-comments").jump_next()
+        end,
+        desc = "Next todo comment",
+      },
+      {
+        "[t",
+        function()
+          require("todo-comments").jump_prev()
+        end,
+        desc = "Previous todo comment",
+      },
       {
         "<leader>xT",
         "<CMD>Trouble todo filter = {tag = {TODO,FIX,FIXME}}<CR>",
@@ -338,6 +369,50 @@ return {
         lsp = {
           win = { position = "right" },
         },
+      },
+    },
+  },
+
+  -- Which-key for keymap management and discovery
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    opts = {
+      preset = "modern",
+      spec = {
+        {
+          mode = { "n", "v" },
+          -- Single char groups (vim conventions)
+          { "g", group = "goto" },
+          { "]", group = "next" },
+          { "[", group = "prev" },
+
+          -- Leader groups based on actual usage patterns
+          { "<leader>b", group = "buffer" },
+          { "<leader>c", group = "code/comments" },
+          { "<leader>d", group = "dap/debug" },
+          { "<leader>f", group = "file/find" },
+          { "<leader>g", group = "git" },
+          { "<leader>gh", group = "hunks" },
+          { "<leader>l", group = "lsp/lint/lua" },
+          { "<leader>m", group = "markdown" },
+          { "<leader>p", group = "packages" },
+          { "<leader>r", group = "rust/rails/ruby" },
+          { "<leader>s", group = "search" },
+          { "<leader>t", group = "test/toggle" },
+          { "<leader>u", group = "ui" },
+          { "<leader>w", group = "windows" },
+          { "<leader>x", group = "diagnostics/quickfix" },
+        },
+      },
+    },
+    keys = {
+      {
+        "<leader>?",
+        function()
+          require("which-key").show({ global = false })
+        end,
+        desc = "Buffer Keymaps (which-key)",
       },
     },
   },
