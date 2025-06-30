@@ -62,69 +62,67 @@ return {
           end
 
           -- Navigation keymaps
-          map("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
-          map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-          -- Commenting out for now; neovim now defaults to use `gri` for this.
-          -- map("gi", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
-          map("gC", vim.lsp.buf.incoming_calls, "[G]oto incoming [C]alls")
+          map("gd", vim.lsp.buf.definition, "LSP: Goto definition")
+          map("gD", vim.lsp.buf.declaration, "LSP: Goto declaration")
+          map("gi", vim.lsp.buf.implementation, "LSP: Goto implementation")
+          map("gC", vim.lsp.buf.incoming_calls, "LSP: Incoming calls")
           map(
             "gR",
             "<cmd>Trouble lsp_references toggle focus=false<cr>",
-            "[G]oto [R]eferences (Trouble)"
+            "LSP: References (Trouble)"
           )
-          map("gy", vim.lsp.buf.type_definition, "[G]oto t[y]pe definition")
+          map("gy", vim.lsp.buf.type_definition, "LSP: Type definition")
 
           -- Hover and signature help
-          map("K", vim.lsp.buf.hover, "Show docs")
+          map("K", vim.lsp.buf.hover, "LSP: Show docs")
 
           -- Document/workspace symbols
-          -- Commenting below; neovim now defaults to use `gO` for this.
-          -- map("<leader>ds", vim.lsp.buf.document_symbol, "[D]ocument [S]ymbols")
-          map("<leader>ws", vim.lsp.buf.workspace_symbol, "[W]orkspace [S]ymbols")
+          map("<leader>ds", vim.lsp.buf.document_symbol, "LSP: Doc symbols")
+          map("<leader>ws", vim.lsp.buf.workspace_symbol, "LSP: Workspace symbols")
 
           -- Code actions and refactoring
-          map("<leader>la", vim.lsp.buf.code_action, "Code [A]ction")
+          map("<leader>la", vim.lsp.buf.code_action, "LSP: Code action")
           vim.keymap.set(
             "v",
             "<leader>la",
             vim.lsp.buf.code_action,
-            { buffer = bufnr, desc = "LSP: Code [A]ction" }
+            { buffer = bufnr, desc = "LSP: Code action" }
           )
-          map("<leader>lr", vim.lsp.buf.rename, "[R]ename")
-          map("<leader>ls", vim.lsp.buf.signature_help, "[S]ignature help")
+          map("<leader>lr", vim.lsp.buf.rename, "LSP: Rename")
+          map("<leader>ls", vim.lsp.buf.signature_help, "LSP: Signature help")
 
           -- Formatting
-          map("<leader>=", vim.lsp.buf.format, "Format buffer")
+          map("<leader>=", vim.lsp.buf.format, "LSP: Format buffer")
 
           -- Diagnostics navigation
-          map("]g", vim.diagnostic.goto_next, "Next diagnostic")
-          map("[g", vim.diagnostic.goto_prev, "Previous diagnostic")
+          map("]g", vim.diagnostic.goto_next, "LSP: Next diagnostic")
+          map("[g", vim.diagnostic.goto_prev, "LSP: Prev diagnostic")
 
           -- Workspace management
           map("<leader>lf", function()
             print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-          end, "List workspace [F]olders")
+          end, "LSP: List folders")
 
           -- Diagnostic viewing
           map("<leader>lx", function()
             require("fzf-lua").diagnostics({ bufnr = 0, severity = "Error" })
-          end, "Buffer errors")
+          end, "LSP: Buffer errors")
           map("<leader>lX", function()
             require("fzf-lua").diagnostics({ severity = "Error" })
-          end, "All errors")
+          end, "LSP: All errors")
           map("<leader>ld", function()
             require("fzf-lua").diagnostics({ bufnr = 0 })
-          end, "Buffer diagnostics")
+          end, "LSP: Buffer diagnostics")
           map("<leader>lD", function()
             require("fzf-lua").diagnostics()
-          end, "All diagnostics")
+          end, "LSP: All diagnostics")
 
           -- Codelens mappings
           if client:supports_method("textDocument/codeLens") then
-            map("<leader>ll", vim.lsp.codelens.run, "[L]SP Code[l]ens Run")
-            map("<leader>lr", function()
+            map("<leader>ll", vim.lsp.codelens.run, "LSP: Codelens run")
+            map("<leader>lc", function()
               vim.lsp.codelens.refresh({ bufnr = bufnr })
-            end, "[L]SP Code[l]ens [R]efresh")
+            end, "LSP: Codelens refresh")
           end
 
           -- Document highlighting

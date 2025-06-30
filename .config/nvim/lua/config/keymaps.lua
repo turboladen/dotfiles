@@ -4,28 +4,23 @@
 local map = vim.keymap.set
 
 -- Better paste behavior - move cursor to end of pasted text
-map("n", "p", "p`]", { desc = "Paste, then move to end of text" })
-map("v", "y", "y`]", { desc = "Yank, then move to end of text" })
+map("n", "p", "p`]", { desc = "Edit: Paste, move to end" })
+map("v", "y", "y`]", { desc = "Edit: Yank, move to end" })
 
 -- Split line and remove trailing whitespace
-map(
-  "n",
-  "S",
-  "i<cr><esc>mwgk:silent! s/\\v +$//<cr>:noh<cr>",
-  { desc = "Split line, remove whitespace" }
-)
+map("n", "S", "i<cr><esc>mwgk:silent! s/\\v +$//<cr>:noh<cr>", { desc = "Edit: Split line, clean" })
 
 -- Terminal escape
-map("t", "<esc><esc>", "<c-\\><c-n>", { desc = "Exit terminal mode" })
+map("t", "<esc><esc>", "<c-\\><c-n>", { desc = "Term: Exit mode" })
 
 -- Window navigation
-map("n", "<c-h>", "<c-w>h", { desc = "Move to left pane" })
-map("n", "<c-j>", "<c-w>j", { desc = "Move to down pane" })
-map("n", "<c-k>", "<c-w>k", { desc = "Move to up pane" })
-map("n", "<c-l>", "<c-w>l", { desc = "Move to right pane" })
+map("n", "<c-h>", "<c-w>h", { desc = "Win: Left" })
+map("n", "<c-j>", "<c-w>j", { desc = "Win: Down" })
+map("n", "<c-k>", "<c-w>k", { desc = "Win: Up" })
+map("n", "<c-l>", "<c-w>l", { desc = "Win: Right" })
 
 -- Search highlighting control
-map("n", "<leader>sl", "<cmd>noh<cr>", { desc = "Stop highlighting hlsearch" })
+map("n", "<leader>sl", "<cmd>noh<cr>", { desc = "Search: Clear highlight" })
 
 -- Open URL/file under cursor
 map("n", "gx", function()
@@ -35,8 +30,8 @@ map("n", "gx", function()
   else
     vim.cmd("normal! gF")
   end
-end, { desc = "Open item under cursor" })
+end, { desc = "Open: Item under cursor" })
 
 -- Package management
-map("n", "<leader>pu", "<cmd>Lazy update<cr>", { desc = "Lazy update" })
-map("n", "<leader>pm", "<cmd>Mason<cr>", { desc = "Mason" })
+map("n", "<leader>pu", "<cmd>Lazy update<cr>", { desc = "Pkg: Lazy update" })
+map("n", "<leader>pm", "<cmd>Mason<cr>", { desc = "Pkg: Mason" })

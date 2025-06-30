@@ -19,37 +19,32 @@ return {
       {
         "n",
         [[<cmd>execute('normal! ' . v:count1 . 'n')<CR><cmd>lua require('hlslens').start()<CR>]],
-        desc = "Next search match"
+        desc = "Search: Next match",
       },
       {
         "N",
         [[<cmd>execute('normal! ' . v:count1 . 'N')<CR><cmd>lua require('hlslens').start()<CR>]],
-        desc = "Previous search match"
+        desc = "Search: Prev match",
       },
       {
         "*",
         [[*<cmd>lua require('hlslens').start()<CR>]],
-        desc = "Search word under cursor forward"
+        desc = "Search: Word forward",
       },
       {
         "#",
         [[#<cmd>lua require('hlslens').start()<CR>]],
-        desc = "Search word under cursor backward"
+        desc = "Search: Word backward",
       },
       {
         "g*",
         [[g*<cmd>lua require('hlslens').start()<CR>]],
-        desc = "Search partial word under cursor forward"
+        desc = "Search: Partial forward",
       },
       {
         "g#",
         [[g#<cmd>lua require('hlslens').start()<CR>]],
-        desc = "Search partial word under cursor backward"
-      },
-      {
-        "<leader>l",
-        "<cmd>noh<CR>",
-        desc = "Clear search highlight"
+        desc = "Search: Partial backward",
       },
     },
   },

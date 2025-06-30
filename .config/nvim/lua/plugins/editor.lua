@@ -30,21 +30,21 @@ return {
     "ibhagwan/fzf-lua",
     cmd = "FzfLua",
     keys = {
-      { "<leader><leader>", "<cmd>FzfLua files<cr>", desc = "Find files" },
-      { "<leader><cr>", "<cmd>FzfLua buffers<cr>", desc = "Find buffers" },
+      { "<leader><leader>", "<cmd>FzfLua files<cr>", desc = "Find: Files" },
+      { "<leader><cr>", "<cmd>FzfLua buffers<cr>", desc = "Find: Buffers" },
       {
         "<leader>fn",
         function()
           require("fzf-lua").files({ cwd = vim.fn.stdpath("config") })
         end,
-        desc = "Find neovim config files",
+        desc = "Find: Neovim config",
       },
-      { "<leader>fg", "<cmd>FzfLua git_status<cr>", desc = "Git status" },
-      { "<leader>fk", "<cmd>FzfLua grep_cword<cr>", desc = "Grep string under cursor" },
-      { "<leader>fm", "<cmd>FzfLua marks<cr>", desc = "Marks" },
-      { "<leader>fo", "<cmd>FzfLua oldfiles<cr>", desc = "Old files" },
-      { "<leader>/", "<cmd>FzfLua live_grep<cr>", desc = "Live grep" },
-      { "<leader>ss", "<cmd>FzfLua lsp_workspace_symbols<cr>", desc = "LSP workspace symbols" },
+      { "<leader>fg", "<cmd>FzfLua git_status<cr>", desc = "Find: Git status" },
+      { "<leader>fk", "<cmd>FzfLua grep_cword<cr>", desc = "Find: Grep word" },
+      { "<leader>fm", "<cmd>FzfLua marks<cr>", desc = "Find: Marks" },
+      { "<leader>fo", "<cmd>FzfLua oldfiles<cr>", desc = "Find: Recent files" },
+      { "<leader>/", "<cmd>FzfLua live_grep<cr>", desc = "Find: Live grep" },
+      { "<leader>ss", "<cmd>FzfLua lsp_workspace_symbols<cr>", desc = "Find: LSP symbols" },
     },
     opts = {
       winopts = {
@@ -180,7 +180,7 @@ return {
             gs.next_hunk()
           end)
           return "<Ignore>"
-        end, { expr = true, desc = "Next hunk" })
+        end, { expr = true, desc = "Git: Next hunk" })
 
         map("n", "[c", function()
           if vim.wo.diff then
@@ -190,36 +190,36 @@ return {
             gs.prev_hunk()
           end)
           return "<Ignore>"
-        end, { expr = true, desc = "Previous hunk" })
+        end, { expr = true, desc = "Git: Previous hunk" })
 
         -- Actions
-        map("n", "<leader>ghs", gs.stage_hunk, { desc = "Stage hunk" })
-        map("n", "<leader>ghr", gs.reset_hunk, { desc = "Reset hunk" })
+        map("n", "<leader>ghs", gs.stage_hunk, { desc = "Git: Stage hunk" })
+        map("n", "<leader>ghr", gs.reset_hunk, { desc = "Git: Reset hunk" })
         map("v", "<leader>ghs", function()
           gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-        end, { desc = "Stage hunk" })
+        end, { desc = "Git: Stage hunk" })
         map("v", "<leader>ghr", function()
           gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-        end, { desc = "Reset hunk" })
-        map("n", "<leader>ghS", gs.stage_buffer, { desc = "Stage buffer" })
-        map("n", "<leader>ghu", gs.undo_stage_hunk, { desc = "Undo stage hunk" })
-        map("n", "<leader>ghR", gs.reset_buffer, { desc = "Reset buffer" })
-        map("n", "<leader>ghp", gs.preview_hunk_inline, { desc = "Preview hunk inline" })
+        end, { desc = "Git: Reset hunk" })
+        map("n", "<leader>ghS", gs.stage_buffer, { desc = "Git: Stage buffer" })
+        map("n", "<leader>ghu", gs.undo_stage_hunk, { desc = "Git: Undo stage" })
+        map("n", "<leader>ghR", gs.reset_buffer, { desc = "Git: Reset buffer" })
+        map("n", "<leader>ghp", gs.preview_hunk_inline, { desc = "Git: Preview hunk" })
         map("n", "<leader>ghb", function()
           gs.blame_line({ full = true })
-        end, { desc = "Blame line" })
+        end, { desc = "Git: Blame line" })
         map("n", "<leader>ghB", function()
           gs.blame()
-        end, { desc = "Blame buffer" })
-        map("n", "<leader>tb", gs.toggle_current_line_blame, { desc = "Toggle line blame" })
-        map("n", "<leader>ghd", gs.diffthis, { desc = "Diff this" })
+        end, { desc = "Git: Blame buffer" })
+        map("n", "<leader>tb", gs.toggle_current_line_blame, { desc = "Git: Toggle blame" })
+        map("n", "<leader>ghd", gs.diffthis, { desc = "Git: Diff this" })
         map("n", "<leader>ghD", function()
           gs.diffthis("~")
-        end, { desc = "Diff this ~" })
-        map("n", "<leader>td", gs.toggle_deleted, { desc = "Toggle deleted" })
+        end, { desc = "Git: Diff this ~" })
+        map("n", "<leader>td", gs.toggle_deleted, { desc = "Git: Toggle deleted" })
 
         -- Text object
-        map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select hunk" })
+        map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git: Select hunk" })
       end,
     },
   },
@@ -241,7 +241,7 @@ return {
     "jremmen/vim-ripgrep",
     cmd = "Rg",
     keys = {
-      { "<leader>.", ":Rg<space>", desc = "rg" },
+      { "<leader>.", ":Rg<space>", desc = "Rg: Search" },
     },
   },
 
@@ -256,19 +256,20 @@ return {
         function()
           require("todo-comments").jump_next()
         end,
-        desc = "Next todo comment",
+        desc = "TODO: Next",
       },
       {
         "[t",
         function()
           require("todo-comments").jump_prev()
         end,
-        desc = "Previous todo comment",
+        desc = "TODO: Previous",
       },
+      { "<leader>xt", "<CMD>TodoQuickFix<CR>", desc = "TODO: Quickfix" },
       {
         "<leader>xT",
         "<CMD>Trouble todo filter = {tag = {TODO,FIX,FIXME}}<CR>",
-        desc = "todo-comments: via trouble",
+        desc = "TODO: Trouble",
       },
     },
     opts = {},
@@ -284,7 +285,7 @@ return {
           require("comment-box").albox()
           vim.lsp.buf.format({ async = false })
         end,
-        desc = "Left-aligned box",
+        desc = "Code: Comment box",
         mode = { "n", "v" },
       },
       {
@@ -293,7 +294,7 @@ return {
           require("comment-box").ccbox(3)
           vim.lsp.buf.format({ async = false })
         end,
-        desc = "Title box (centered)",
+        desc = "Code: Title box",
         mode = { "n", "v" },
       },
       {
@@ -302,7 +303,7 @@ return {
           require("comment-box").line()
           vim.lsp.buf.format({ async = false })
         end,
-        desc = "Comment line",
+        desc = "Code: Comment line",
         mode = { "n", "v" },
       },
       {
@@ -310,7 +311,7 @@ return {
         function()
           require("comment-box").catalog()
         end,
-        desc = "Comment box catalog",
+        desc = "Code: Box catalog",
       },
     },
     opts = {},
@@ -321,20 +322,20 @@ return {
     "folke/trouble.nvim",
     cmd = { "Trouble" },
     keys = {
-      { "<leader>xx", "<CMD>Trouble diagnostics toggle<CR>", desc = "Diagnostics (Trouble)" },
+      { "<leader>xx", "<CMD>Trouble diagnostics toggle<CR>", desc = "Trouble: Diagnostics" },
       {
         "<leader>xX",
         "<CMD>Trouble diagnostics toggle filter.buf=0<CR>",
-        desc = "Buffer Diagnostics (Trouble)",
+        desc = "Trouble: Buffer diag",
       },
-      { "<leader>xs", "<CMD>Trouble symbols toggle focus=false<CR>", desc = "Symbols (Trouble)" },
+      { "<leader>xs", "<CMD>Trouble symbols toggle focus=false<CR>", desc = "Trouble: Symbols" },
       {
         "<leader>xl",
         "<CMD>Trouble lsp_definitions toggle<CR>",
-        desc = "Trouble: LSP Definitions",
+        desc = "Trouble: Definitions",
       },
-      { "<leader>xL", "<CMD>Trouble loclist toggle<CR>", desc = "Trouble: loclist" },
-      { "<leader>xQ", "<CMD>Trouble quickfix toggle<CR>", desc = "Trouble: quickfix" },
+      { "<leader>xL", "<CMD>Trouble loclist toggle<CR>", desc = "Trouble: Loclist" },
+      { "<leader>xQ", "<CMD>Trouble quickfix toggle<CR>", desc = "Trouble: Quickfix" },
       {
         "[q",
         function()
@@ -347,7 +348,7 @@ return {
             end
           end
         end,
-        desc = "Previous Trouble/Quickfix Item",
+        desc = "Trouble: Previous",
       },
       {
         "]q",
@@ -361,7 +362,7 @@ return {
             end
           end
         end,
-        desc = "Next Trouble/Quickfix Item",
+        desc = "Trouble: Next",
       },
     },
     opts = {
@@ -412,7 +413,7 @@ return {
         function()
           require("which-key").show({ global = false })
         end,
-        desc = "Buffer Keymaps (which-key)",
+        desc = "Which: Buffer maps",
       },
     },
   },
