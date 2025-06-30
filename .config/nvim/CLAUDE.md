@@ -52,7 +52,9 @@ much churn in these files, as I expect these to be my very solid core, where whe
 these plugins, I know I'll have a reliable experience. The areas are:
 
 - `lua/plugins/coding`: plugins that enhance the act of writing code beyond basic editing.
-- `lua/plugins/colorscheme`
+- `lua/plugins/colorscheme`: Capture main schemes that I rotate. Also capture notes about different
+  schemes & themes I've used over time.
+  - When adding a new colorscheme, if the plugin has the capability to "dim inactive", turn that on.
 - `lua/plugins/editor`: plugins that enhance the core text editing experience itself, regardless of
   when working with code or text.
 - `lua/plugins/formatting`: code formatting plugins

@@ -1,86 +1,182 @@
 # Colorscheme Research & Notes
 
-## Current Setup
+## Desired Capabilities
 
-- **Active**: nightfox (from EdenEast/nightfox.nvim)
-- **Settings**: dim_inactive, colorblind-friendly, italic comments/keywords, bold+italic types
+### "dim inactive"
+
+I like to dim inactive buffers so it's clear where I'm working.
+
+### Colorblind Friendly
+
+I've noticed that these types of themes are usually easier on my eyes. This isn't a must-have, just
+nice to have.
+
+### Font Capabilities
+
+It's nice when themes take advantage of italics and bold fonts.
+
+### NO `lush.nvim`
+
+Every colorscheme I've used that uses `lush.nvim` gets weird. Don't want.
 
 ## Tested & Configured Colorschemes
 
-### nightfox.nvim (EdenEast/nightfox.nvim) ✅ CURRENT
+### nightfox.nvim
 
-- **Variants**: nightfox, dayfox, dawnfox, duskfox, nordfox, terafox, carbonfox
-- **Configuration**:
-  ```lua
-  dim_inactive = true,
-  colorblind = { enable = true },
-  styles = { comments = "italic", keywords = "italic", types = "italic,bold" }
-  ```
-- **Testing Notes**: Great out-of-the-box experience, colorblind settings work well, good contrast
-  ratios, terminal integration seamless
-- **Status**: ✅ Currently active and well-configured
+- **Repo**: EdenEast/nightfox.nvim
+- **Testing Notes**:
+  - Great out-of-the-box experience, colorblind settings work well, good contrast ratios, terminal
+    integration seamless.
+  - **Dark**: Great options
+  - **Light**: Great options
 
-### gruvbox.nvim (ellisonleao/gruvbox.nvim)
+### gruvbox.nvim
 
-- **Configuration**: `dim_inactive = true`
-- **Testing Notes**: Time-tested, excellent readability, retro groove colors
-- **Status**: 🔧 Previously configured, good fallback option
+- **Repo**: ellisonleao/gruvbox.nvim
+- **Testing Notes**:
+  - Time-tested, excellent readability, retro groove colors
+  - Has `dim_inactive`
+  - **Dark**:
+  - **Light**:
 
-### everforest (sainnhe/everforest)
+### everforest.nvim
 
-- **Configuration**:
-  ```lua
-  -- background = "hard" (commented out)
-  italics = true,
-  ui_contrast = "high",
-  dim_inactive_windows = true,
-  diagnostic_line_highlight = true,
-  spell_foreground = true,
-  -- inlay_hints_background = "dimmed" (commented out)
-  ```
-- **Testing Notes**: Green-based, easy on eyes, good for long coding sessions
-- **Status**: 🔧 Previously configured
+- **Repo**: `neanias/everforest-nvim`
+- **Testing Notes**:
+  - Green-based, easy on eyes, good for long coding sessions
+  - **Dark**:
+  - **Light**:
 
-### kanagawa.nvim (rebelot/kanagawa.nvim)
+### kanagawa.nvim
 
-- **Configuration**: `compile = true, dimInactive = true`
-- **Testing Notes**: Japanese art inspired, warm color palette, unique aesthetic
-- **Status**: 🔧 Previously configured
+- **Repo**: `rebelot/kanagawa.nvim`
+- **Testing Notes**:
+  - Japanese art inspired, warm color palette, unique aesthetic
+  - Has `dimInactive`
+  - **Dark**:
+  - **Light**:
 
 ### modus-themes.nvim
 
-- **Configuration**: `dim_inactive = true`
-- **Testing Notes**: Accessibility-focused themes
-- **Status**: 🔧 Previously configured
+- **Repo**: `miikanissi/modus-themes.nvim`
+- **Testing Notes**:
+  - Accessibility-focused themes
+  - Has `dim_inactive`
+  - **Dark**:
+  - **Light**:
 
-### tokyonight.nvim (folke/tokyonight.nvim)
+### tokyonight.nvim
 
-- **Configuration**: `dim_inactive = true, lualine_bold = true`
-- **Testing Notes**: Popular, excellent plugin integrations, great defaults
-- **Status**: 🔧 Previously configured
+- **Repo**: `folke/tokyonight.nvim`
+- **Testing Notes**:
+  - Popular, excellent plugin integrations, great defaults
+  - Has `dim_inactive`
+  - **Dark**:
+  - **Light**:
 
 ### bamboo.nvim
 
-- **Configuration**:
-  ```lua
-  dim_inactive = true,
-  ending_tildes = true,
-  lualine = { transparent = true },
-  diagnostics = { darker = true }
-  ```
-- **Testing Notes**: Nature-inspired theme
-- **Status**: 🔧 Previously configured
+- **Repo**: `ribru17/bamboo.nvim`
+- **Testing Notes**:
+  - Nature-inspired theme
+  - Has `dim_inactive`
+  - **Dark**:
+  - **Light**:
 
-### sonokai (sainnhe/sonokai)
+### sonokai
 
-- **Configuration**:
-  ```lua
-  vim.g.sonokai_style = "shusia"  -- also tried "espresso"
-  vim.g.sonokai_better_performance = 1
-  vim.g.sonokai_dim_inactive_windows = 1
-  ```
-- **Testing Notes**: Good performance optimizations, multiple style variants
-- **Status**: 🔧 Previously configured
+- **Repo**: `sainnhe/sonokai`
+- **Testing Notes**:
+  - Good performance optimizations, multiple style variants
+  - Had weird behavior at times
+  - Has `sonokai_dim_inactive_windows`
+  - **Dark**: "shusia" was my fave; next was "espresso"
+  - **Light**:
+
+## Extra Colorschemes (Testing)
+
+### balance-theme.nvim
+
+- **Repo**: `dericktseng/balance-theme.nvim`
+- **Testing Notes**:
+  - _To be filled_
+  - **Dark**:
+  - **Light**:
+
+### caret.nvim
+
+- **Repo**: `projekt0n/caret.nvim`
+- **Testing Notes**:
+  - _To be filled_
+  - **Dark**:
+  - **Light**:
+
+### deepwhite.nvim
+
+- **Repo**: `verf/deepwhite.nvim`
+- **Testing Notes**:
+  - _To be filled_
+  - **Dark**:
+  - **Light**:
+
+### fizz.nvim
+
+- **Repo**: `sebasruiz09/fizz.nvim`
+- **Testing Notes**:
+  - _To be filled_
+  - **Dark**:
+  - **Light**:
+
+### materialbox
+
+- **Repo**: `mkarmona/materialbox`
+- **Testing Notes**:
+  - _To be filled_
+  - **Dark**:
+  - **Light**:
+
+### newpaper.nvim
+
+- **Repo**: `yorik1984/newpaper.nvim`
+- **Testing Notes**:
+  - _To be filled_
+  - **Dark**:
+  - **Light**:
+
+### noctis.nvim
+
+- **Repo**: `talha-akram/noctis.nvim`
+- **Testing Notes**:
+  - _To be filled_
+  - **Dark**:
+  - **Light**:
+
+### okcolors.nvim
+
+- **Repo**: `e-q/okcolors.nvim`
+- **Testing Notes**:
+  - _To be filled_
+  - **Dark**:
+  - **Light**:
+
+### vim-paper
+
+- **Repo**: `yorickpeterse/vim-paper`
+- **Testing Notes**:
+  - _To be filled_
+  - **Dark**:
+  - **Light**:
+
+### vim-colors-paramount
+
+- **Repo**: `owickstrom/vim-colors-paramount`
+- **Testing Notes**:
+  - _To be filled_
+  - Note: This is a vim colorscheme, may need manual dim_inactive setup
+  - **Dark**:
+  - **Light**:
+
+---
 
 ## Tested But Discarded
 

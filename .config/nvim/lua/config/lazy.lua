@@ -25,10 +25,10 @@ vim.g.maplocalleader = "\\"
 
 -- Setup lazy.nvim
 require("lazy").setup({
-  spec = {
+  spec = vim.list_extend({
     -- import your plugins
     { import = "plugins" },
-  },
+  }, require("config.extras").get_enabled_extras()),
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
   install = { colorscheme = { "nightfox" } },

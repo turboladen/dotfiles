@@ -1,7 +1,4 @@
 return {
-  -- Import minimal hlslens for search enhancement
-  { import = "plugins.extras.editor.search" },
-
   -- Edit directories like buffers
   {
     "elihunter173/dirbuf.nvim",
