@@ -211,4 +211,13 @@ return {
     "tommcdo/vim-exchange",
     event = { "BufReadPre", "BufNewFile" },
   },
+
+  -- Ripgrep integration
+  {
+    "jremmen/vim-ripgrep",
+    cmd = "Rg",
+    keys = {
+      { "<leader>.", ":Rg<space>", desc = "rg" },
+    },
+  },
 }

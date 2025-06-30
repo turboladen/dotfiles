@@ -118,9 +118,6 @@ git = "ofirgall/open.nvim"
 [plugins."open-jira.nvim"]
 git = "ofirgall/open-jira.nvim"
 
-[plugins.vim-endwise]
-git = "tpope/vim-endwise"
-
 [plugins.vim-casetrate]
 git = "idanarye/vim-casetrate"
 
@@ -171,13 +168,6 @@ git = "stephpy/vim-yaml"
 
 [plugins."codecompanion.nvim"]
 git = "olimorris/codecompanion.nvim"
-
-[plugins.vim-ripgrep]
-git = "jremmen/vim-ripgrep"
-
-[plugins."peek.nvim"]
-git = "toppair/peek.nvim"
-build = "deno task --quiet build:fast"
 
 [plugins."copilot.lua"]
 git = "zbirenbaum/copilot.lua"
