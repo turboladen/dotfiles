@@ -5,6 +5,12 @@ return {
     opts = {},
   },
 
+  -- Unix shell commands for file operations
+  {
+    "tpope/vim-eunuch",
+    event = { "BufReadPre", "BufNewFile" },
+  },
+
   -- Fast fuzzy finder
   {
     "ibhagwan/fzf-lua",

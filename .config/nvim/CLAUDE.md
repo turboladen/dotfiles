@@ -118,9 +118,6 @@ git = "idanarye/vim-casetrate"
 [plugins.nvim-hlslens]
 git = "kevinhwang91/nvim-hlslens"
 
-[plugins.vim-eunuch]
-git = "tpope/vim-eunuch"
-
 [plugins."quickfix-reflector.vim"]
 git = "stefandtw/quickfix-reflector.vim"
 
