@@ -112,12 +112,6 @@ can check things off as we implement use cases that aren't covered yet.
 neogen = "2.20.0"
 nvim-nio = "1.10.1"
 
-[plugins."open.nvim"]
-git = "ofirgall/open.nvim"
-
-[plugins."open-jira.nvim"]
-git = "ofirgall/open-jira.nvim"
-
 [plugins.vim-casetrate]
 git = "idanarye/vim-casetrate"
 

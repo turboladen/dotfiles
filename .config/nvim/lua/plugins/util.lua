@@ -29,4 +29,40 @@ return {
       vim.g.lazygit_use_neovim_remote = 1 -- Enable neovim-remote integration if available
     end,
   },
+
+  -- Smart opener for URLs, GitHub shorthands, etc.
+  {
+    "ofirgall/open.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    keys = {
+      {
+        "gx",
+        function()
+          require("open").open_cword()
+        end,
+        desc = "Open item under cursor",
+      },
+    },
+    config = function()
+      require("open").setup({
+        -- Use default configuration
+      })
+    end,
+  },
+
+  -- Jira ticket opener extension for open.nvim
+  {
+    "ofirgall/open-jira.nvim",
+    dependencies = {
+      "ofirgall/open.nvim",
+    },
+    config = function()
+      require("open-jira").setup({
+        -- string|function(shorthand: string): string
+        url = "https://telusagriculture.atlassian.net/browse/",
+      })
+    end,
+  },
 }
