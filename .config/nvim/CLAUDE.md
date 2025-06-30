@@ -133,17 +133,8 @@ git = "antoinemadec/fixcursorhold.nvim"
 [plugins.nvim-nonicons]
 git = "ya2s/nvim-nonicons"
 
-[plugins.vim-matchup]
-git = "andymass/vim-matchup"
-
 [plugins."clangd_extensions.nvim"]
 git = "p00f/clangd_extensions.nvim"
-
-[plugins."filetype.nvim"]
-git = "nathom/filetype.nvim"
-
-[plugins.vim-polyglot]
-git = "sheerun/vim-polyglot"
 
 [plugins."codecompanion.nvim"]
 git = "olimorris/codecompanion.nvim"
