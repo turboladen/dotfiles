@@ -121,17 +121,8 @@ git = "kevinhwang91/nvim-hlslens"
 [plugins.vim-eunuch]
 git = "tpope/vim-eunuch"
 
-[plugins.terminus]
-git = "wincent/terminus"
-
 [plugins."quickfix-reflector.vim"]
 git = "stefandtw/quickfix-reflector.vim"
-
-[plugins."fixcursorhold.nvim"]
-git = "antoinemadec/fixcursorhold.nvim"
-
-[plugins.nvim-nonicons]
-git = "ya2s/nvim-nonicons"
 
 [plugins."clangd_extensions.nvim"]
 git = "p00f/clangd_extensions.nvim"
