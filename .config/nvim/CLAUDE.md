@@ -100,19 +100,5 @@ can check things off as we implement use cases that aren't covered yet.
 "which-key.nvim" = { version = "3.17.0", config = "plugins.which_key" }
 
 # The rest
-"aerial.nvim" = "2.5.0"
-"mini.nvim" = "0.16.0"
-"snacks.nvim" = "2.22.0"
 "tokyonight.nvim" = "4.11.0"
-"yazi.nvim" = "11.5.1"
-neogen = "2.20.0"
-
-[plugins."codecompanion.nvim"]
-git = "olimorris/codecompanion.nvim"
-
-[plugins."copilot.lua"]
-git = "zbirenbaum/copilot.lua"
-
-[plugins."copilotchat.nvim"]
-git = "copilotc-nvim/copilotchat.nvim"
 ```
