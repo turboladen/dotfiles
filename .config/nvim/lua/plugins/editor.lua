@@ -205,4 +205,10 @@ return {
     "tpope/vim-surround",
     event = { "BufReadPre", "BufNewFile" },
   },
+
+  -- Exchange two text regions
+  {
+    "tommcdo/vim-exchange",
+    event = { "BufReadPre", "BufNewFile" },
+  },
 }
