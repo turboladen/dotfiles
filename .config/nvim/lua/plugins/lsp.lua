@@ -6,19 +6,6 @@ return {
     dependencies = {
       -- Useful status updates for LSP
       { "j-hui/fidget.nvim", opts = {} },
-
-      -- Additional lua configuration, makes nvim stuff amazing!
-      {
-        "folke/lazydev.nvim",
-        ft = "lua",
-        opts = {
-          library = {
-            -- Load luvit types when the `vim.uv` word is found
-            { path = "luvit-meta/library", words = { "vim%.uv" } },
-          },
-        },
-      },
-      { "Bilal2453/luvit-meta", lazy = true }, -- optional `vim.uv` typings
     },
     config = function()
       -- Enhanced capabilities with blink.cmp
@@ -108,32 +95,11 @@ return {
         end,
       })
 
-      -- Configure Lua language server
-      vim.lsp.config("lua_ls", {
-        cmd = { "lua-language-server" },
-        filetypes = { "lua" },
-        root_markers = { { ".luarc.json", ".luarc.jsonc" }, ".git" },
-        settings = {
-          Lua = {
-            runtime = {
-              version = "LuaJIT",
-            },
-            workspace = {
-              checkThirdParty = false,
-              library = {
-                vim.env.VIMRUNTIME,
-              },
-            },
-            completion = {
-              callSnippet = "Replace",
-            },
-          },
-        },
-      })
-
-      -- Enable the configured LSP servers
-      vim.lsp.enable("lua_ls")
-      -- Note: rust-analyzer will be handled by rustaceanvim in lang/rust.lua
+      -- Note: Language servers are configured in their respective lang/*.lua files
+      -- rust-analyzer: handled by rustaceanvim in lang/rust.lua
+      -- lua_ls: configured in lang/lua.lua
+      -- ruby_lsp: configured in lang/ruby.lua
+      -- marksman: configured in lang/markdown.lua
     end,
   },
 
