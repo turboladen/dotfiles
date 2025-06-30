@@ -39,6 +39,8 @@ more than 20 lines).
 
 - `init.lua`: Main entrypoint. Keep as minimal as possible.
 - `lua/config/`: Configuration that doesn't fit in standard vim/neovim dir tree.
+- `lua/config/icons.lua`: Diagnostics icons, etc. to be used across plugins.
+- `lua/config/options.lua`: (neo)vim options.
 - `lua/plugins/`: Standard location for lua plugins/plugin groups.
 
 `LazyVim` applies the following structure, which I want to more or less follow (don't need to be
