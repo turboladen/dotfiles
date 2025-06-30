@@ -57,7 +57,8 @@ these plugins, I know I'll have a reliable experience. The areas are:
   settings, `nvim-lint` settings, etc.
 - `lua/plugins/linting`: linters and diagnostic tools
 - `lua/plugins/lsp`: LSP plugins and config
-- `lua/plugins/tree-sitter`: tree-sitter, related plugins, and config
+- `lua/plugins/treesitter`: tree-sitter, related plugins, and config. Language-specific settings
+  should go in `lang` files.
 - `lua/plugins/ui`: UI enhancements like statuslines, file explorers, notification systems, and
   visual improvements.
 - `lua/plugins/util` Utility libs and helpers that other plugins depend on.
