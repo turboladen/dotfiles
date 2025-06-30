@@ -59,6 +59,10 @@ these plugins, I know I'll have a reliable experience. The areas are:
 - `lua/plugins/lang`: plugins for programming languages that I always use. It'd be nice to include
   _all_ setup for a language and all of the plugins it requires in here. For example, `vim.lsp`
   settings, `nvim-lint` settings, etc.
+  - When adding/updating be sure to:
+    1. Ensure LSP settings are captured
+    2. Ensure treesitter settings (ensure_installed) are captured
+    3. Use `after/ftplugin` or other conventional (neo)vim directories as they should be used.
 - `lua/plugins/linting`: linters and diagnostic tools
 - `lua/plugins/lsp`: LSP plugins and config
 - `lua/plugins/treesitter`: tree-sitter, related plugins, and config. Language-specific settings
@@ -82,3 +86,123 @@ issues. I do anticipate to follow some of these:
 - `lua/plugins/extras/test`
 - `lua/plugins/extras/ui`
 - `lua/plugins/extras/util`
+
+## Old Plugins
+
+For reference, I used to use these plugins; most of them worked fine, although with quite a few
+rough edges. I'm open to still using them unless there's a better option. Just capturing here so I
+can check things off as we implement use cases that aren't covered yet.
+
+```toml
+# ╭───────────╮
+# │ Core deps │
+# ╰───────────╯
+"comment-box.nvim" = "1.0.2"
+"which-key.nvim" = { version = "3.17.0", config = "plugins.which_key" }
+
+# The rest
+"aerial.nvim" = "2.5.0"
+"mini.nvim" = "0.16.0"
+"schemastore.nvim" = "0.2.0"
+"snacks.nvim" = "2.22.0"
+"todo-comments.nvim" = "1.4.0"
+"tokyonight.nvim" = "4.11.0"
+"trouble.nvim" = "3.7.1"
+"yazi.nvim" = "11.5.1"
+neogen = "2.20.0"
+nvim-nio = "1.10.1"
+
+[plugins."crates.nvim"]
+git = "Saecki/crates.nvim"
+
+[plugins."open.nvim"]
+git = "ofirgall/open.nvim"
+
+[plugins."open-jira.nvim"]
+git = "ofirgall/open-jira.nvim"
+
+[plugins.vim-exchange]
+git = "tommcdo/vim-exchange"
+
+[plugins.vim-surround]
+git = "tpope/vim-surround"
+
+[plugins.vim-endwise]
+git = "tpope/vim-endwise"
+
+[plugins.vim-casetrate]
+git = "idanarye/vim-casetrate"
+
+[plugins.nvim-hlslens]
+git = "kevinhwang91/nvim-hlslens"
+
+[plugins.vim-eunuch]
+git = "tpope/vim-eunuch"
+
+[plugins.terminus]
+git = "wincent/terminus"
+
+[plugins."quickfix-reflector.vim"]
+git = "stefandtw/quickfix-reflector.vim"
+
+[plugins.nvim-lint]
+git = "mfussenegger/nvim-lint"
+
+[plugins."fixcursorhold.nvim"]
+git = "antoinemadec/fixcursorhold.nvim"
+
+[plugins.nvim-nonicons]
+git = "ya2s/nvim-nonicons"
+
+[plugins.treesj]
+git = "wansmer/treesj"
+
+[plugins."splitjoin.vim"]
+git = "andrewradev/splitjoin.vim"
+
+[plugins.vim-repeat]
+git = "tpope/vim-repeat"
+
+[plugins.vim-matchup]
+git = "andymass/vim-matchup"
+
+[plugins.vim-dispatch]
+git = "tpope/vim-dispatch"
+
+[plugins."clangd_extensions.nvim"]
+git = "p00f/clangd_extensions.nvim"
+
+[plugins."filetype.nvim"]
+git = "nathom/filetype.nvim"
+
+[plugins.vim-polyglot]
+git = "sheerun/vim-polyglot"
+
+[plugins."dockerfile.vim"]
+git = "ekalinin/dockerfile.vim"
+
+[plugins."committia.vim"]
+git = "rhysd/committia.vim"
+
+[plugins.emmet-vim]
+git = "mattn/emmet-vim"
+
+[plugins.vim-yaml]
+git = "stephpy/vim-yaml"
+
+[plugins."codecompanion.nvim"]
+git = "olimorris/codecompanion.nvim"
+
+[plugins.vim-ripgrep]
+git = "jremmen/vim-ripgrep"
+
+[plugins."peek.nvim"]
+git = "toppair/peek.nvim"
+build = "deno task --quiet build:fast"
+
+[plugins."copilot.lua"]
+git = "zbirenbaum/copilot.lua"
+
+[plugins."copilotchat.nvim"]
+git = "copilotc-nvim/copilotchat.nvim"
+```
