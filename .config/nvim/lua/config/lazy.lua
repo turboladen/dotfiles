@@ -35,3 +35,8 @@ require("lazy").setup({
   -- automatically check for plugin updates
   checker = { enabled = false },
 })
+
+-- Set colorscheme after lazy has loaded plugins
+vim.schedule(function()
+  pcall(vim.cmd.colorscheme, "nightfox")
+end)
