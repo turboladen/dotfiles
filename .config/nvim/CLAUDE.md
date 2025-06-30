@@ -142,12 +142,6 @@ git = "antoinemadec/fixcursorhold.nvim"
 [plugins.nvim-nonicons]
 git = "ya2s/nvim-nonicons"
 
-[plugins.treesj]
-git = "wansmer/treesj"
-
-[plugins."splitjoin.vim"]
-git = "andrewradev/splitjoin.vim"
-
 [plugins.vim-repeat]
 git = "tpope/vim-repeat"
 

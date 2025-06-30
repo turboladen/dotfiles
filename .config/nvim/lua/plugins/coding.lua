@@ -59,6 +59,33 @@ return {
     opts = {},
   },
 
+  -- Smart splitting/joining with treesitter
+  {
+    "wansmer/treesj",
+    keys = {
+      {
+        "gJ",
+        function()
+          require("treesj").join()
+        end,
+        desc = "treesj: join lines",
+      },
+      {
+        "gS",
+        function()
+          require("treesj").split()
+        end,
+        desc = "treesj: split lines",
+      },
+    },
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    opts = {
+      use_default_keymaps = false, -- We define our own
+      check_syntax_error = true,
+      max_join_length = 120,
+    },
+  },
+
   -- Rust-aware bracket/brace handling
   {
     "saghen/blink.pairs",
