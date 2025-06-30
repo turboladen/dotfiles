@@ -51,4 +51,11 @@ return {
       },
     },
   },
+
+  -- Smart commenting with treesitter integration
+  {
+    "folke/ts-comments.nvim",
+    event = "VeryLazy",
+    opts = {},
+  },
 }
