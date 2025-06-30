@@ -95,4 +95,6 @@ return {
     dependencies = "saghen/blink.download",
     opts = {},
   },
+
+  { "RRethy/nvim-treesitter-endwise" },
 }
