@@ -114,15 +114,6 @@ nvim-nio = "1.10.1"
 [plugins.vim-casetrate]
 git = "idanarye/vim-casetrate"
 
-[plugins.nvim-hlslens]
-git = "kevinhwang91/nvim-hlslens"
-
-[plugins."quickfix-reflector.vim"]
-git = "stefandtw/quickfix-reflector.vim"
-
-[plugins."clangd_extensions.nvim"]
-git = "p00f/clangd_extensions.nvim"
-
 [plugins."codecompanion.nvim"]
 git = "olimorris/codecompanion.nvim"
 

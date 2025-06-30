@@ -18,8 +18,13 @@ opt.smartindent = true
 -- Search
 opt.ignorecase = true -- Ignore case in search
 opt.smartcase = true -- Override ignorecase if search contains uppercase
-opt.hlsearch = false -- Don't highlight search results
 opt.incsearch = true -- Show search matches as you type
+
+-- Enhanced search settings for 0.11+
+opt.hlsearch = true
+
+-- Show search count in status line instead of virtual text
+vim.opt.shortmess:remove("S") -- Show search count in command line
 
 -- UI
 opt.termguicolors = true -- Enable 24-bit color
