@@ -226,4 +226,20 @@ return {
       { "<leader>.", ":Rg<space>", desc = "rg" },
     },
   },
+
+  -- Find and list TODO, HACK, BUG, etc comments
+  {
+    "folke/todo-comments.nvim",
+    cmd = { "TodoQuickFix", "TodoTrouble" },
+    event = { "BufReadPre", "BufNewFile" },
+    keys = {
+      { "<leader>xt", "<CMD>TodoQuickFix<CR>", desc = "todo-comments: quickfix" },
+      {
+        "<leader>xT",
+        "<CMD>Trouble todo filter = {tag = {TODO,FIX,FIXME}}<CR>",
+        desc = "todo-comments: via trouble",
+      },
+    },
+    opts = {},
+  },
 }

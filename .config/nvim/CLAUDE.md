@@ -103,7 +103,6 @@ can check things off as we implement use cases that aren't covered yet.
 # The rest
 "aerial.nvim" = "2.5.0"
 "mini.nvim" = "0.16.0"
-"schemastore.nvim" = "0.2.0"
 "snacks.nvim" = "2.22.0"
 "todo-comments.nvim" = "1.4.0"
 "tokyonight.nvim" = "4.11.0"

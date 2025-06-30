@@ -18,7 +18,6 @@ return {
       -- Configure global LSP defaults for ALL servers
       vim.lsp.config("*", {
         capabilities = capabilities,
-        root_markers = { ".git" },
       })
 
       -- Configure diagnostics

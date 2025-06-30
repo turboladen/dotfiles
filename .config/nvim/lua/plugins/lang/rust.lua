@@ -41,6 +41,8 @@ return {
                 buildScripts = {
                   enable = true,
                 },
+                -- Better workspace discovery
+                autoreload = true,
               },
               -- Add clippy lints for extra help
               checkOnSave = {
@@ -54,6 +56,22 @@ return {
                   ["async-trait"] = { "async_trait" },
                   ["napi-derive"] = { "napi" },
                   ["async-recursion"] = { "async_recursion" },
+                },
+              },
+              -- Workspace and project discovery
+              linkedProjects = {},
+              files = {
+                watcherExclude = {
+                  "**/.git/**",
+                  "**/target/**",
+                  "**/node_modules/**",
+                },
+              },
+              -- Diagnostics
+              diagnostics = {
+                enable = true,
+                experimental = {
+                  enable = true,
                 },
               },
             },
