@@ -112,9 +112,6 @@ can check things off as we implement use cases that aren't covered yet.
 neogen = "2.20.0"
 nvim-nio = "1.10.1"
 
-[plugins."crates.nvim"]
-git = "Saecki/crates.nvim"
-
 [plugins."open.nvim"]
 git = "ofirgall/open.nvim"
 
@@ -144,9 +141,6 @@ git = "wincent/terminus"
 
 [plugins."quickfix-reflector.vim"]
 git = "stefandtw/quickfix-reflector.vim"
-
-[plugins.nvim-lint]
-git = "mfussenegger/nvim-lint"
 
 [plugins."fixcursorhold.nvim"]
 git = "antoinemadec/fixcursorhold.nvim"

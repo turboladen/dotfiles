@@ -67,4 +67,10 @@ return {
       }
     end,
   },
+
+  -- Cargo.toml dependency management
+  {
+    "saecki/crates.nvim",
+    opts = {},
+  },
 }
