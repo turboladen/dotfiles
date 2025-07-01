@@ -78,10 +78,11 @@ these plugins, I know I'll have a reliable experience. The areas are:
   when working with code or text.
 - `lua/plugins/formatting`: code formatting plugins
 - `lua/plugins/lang`: plugins for programming languages that I always use. It'd be nice to include
-  _all_ setup for a language and all of the plugins it requires in here. For example, `vim.lsp`
+  _all_ setup for a language and all the plugins it requires in here. For example, `vim.lsp`
   settings, `nvim-lint` settings, etc.
   - When adding/updating be sure to:
-    1. Ensure LSP settings are captured
+    1. Ensure LSP settings are captured; don't duplicate settings that are provided by
+       `nvim-lspconfig`.
     2. Ensure treesitter settings (ensure_installed) are captured
     3. Use `after/ftplugin` or other conventional (neo)vim directories as they should be used.
 - `lua/plugins/linting`: linters and diagnostic tools

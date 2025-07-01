@@ -11,4 +11,18 @@ vim.bo.commentstring = "// %s"
 -- TypeScript-specific window settings
 vim.wo.wrap = false
 
--- TypeScript editing is handled by ts_ls and eslint LSPs
+-- Check if this is a Deno project
+local function is_deno_project()
+  local deno_config = vim.fn.findfile("deno.json", ".;")
+  local deno_config_jsonc = vim.fn.findfile("deno.jsonc", ".;")
+  return deno_config ~= "" or deno_config_jsonc ~= ""
+end
+
+if is_deno_project() then
+  -- In Deno projects, use denols LSP
+  -- TypeScript editing is handled by denols LSP with deno fmt/lint
+  vim.b.is_deno_project = true
+else
+  -- In regular projects, use ts_ls and eslint LSPs
+  -- TypeScript editing is handled by ts_ls and eslint LSPs
+end

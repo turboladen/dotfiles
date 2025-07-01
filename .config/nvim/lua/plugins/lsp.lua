@@ -158,6 +158,7 @@ return {
   { import = "plugins.extras.lang.asm" },
   { import = "plugins.extras.lang.bash" },
   { import = "plugins.extras.lang.clangd" },
+  { import = "plugins.extras.lang.deno" },
   { import = "plugins.extras.lang.docker" },
   { import = "plugins.extras.lang.html" },
   { import = "plugins.extras.lang.just" },
