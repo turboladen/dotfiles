@@ -40,8 +40,6 @@ return {
         "html",
         "javascript",
         "jsdoc",
-        "json",
-        "jsonc",
         "printf",
         "query",
         "regex",
