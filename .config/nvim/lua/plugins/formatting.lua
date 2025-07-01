@@ -3,13 +3,15 @@
 -- Strategy: Only use external formatters when LSP formatting is inadequate
 -- - Rust: LSP only (rust-analyzer calls rustfmt internally)
 -- - Lua: Formatter only (stylua > lua_ls formatting)
--- - Markdown: Formatter only (dprint > marksman formatting)
--- - JSON: Formatter only (dprint > jsonls formatting)
+-- - Markdown: LSP only (dprint LSP > marksman formatting)
+-- - JSON: LSP only (dprint LSP > jsonls formatting)
+-- - JavaScript/TypeScript: LSP only (dprint LSP when available)
 -- - YAML: Formatter only (yamlfmt, yamlls doesn't format)
 -- - TOML: LSP only (taplo LSP includes excellent formatting)
 --
 -- Global config locations:
 -- - yamlfmt: ~/.config/yamlfmt/.yamlfmt.yml
+-- - dprint: dprint.json/dprint.jsonc in project root
 -- - marksman: ~/.config/marksman/config.toml
 
 return {
@@ -40,28 +42,21 @@ return {
       formatters_by_ft = {
         -- Languages where external formatters are superior
         lua = { "stylua" }, -- stylua > lua_ls formatting
-        markdown = { "dprint" }, -- dprint > marksman formatting
-        json = { "dprint" }, -- dprint > jsonls formatting
-        jsonc = { "dprint" },
         yaml = { "yamlfmt" }, -- yamlls doesn't provide formatting
         yml = { "yamlfmt" },
 
         -- Languages for extras (when LSP isn't available)
-        javascript = { "dprint" },
-        typescript = { "dprint" },
-        javascriptreact = { "dprint" },
-        typescriptreact = { "dprint" },
-        css = { "dprint" },
-        html = { "dprint" },
         sh = { "shfmt" },
         bash = { "shfmt" },
         zsh = { "shfmt" },
-
         sql = { "sqlfluff" },
 
-        -- Note: Rust and TOML intentionally excluded - LSP handles these well
-        -- rust: rust-analyzer calls rustfmt internally
-        -- toml: taplo LSP includes formatting
+        -- Note: These languages now use LSP formatting:
+        -- - Rust: rust-analyzer calls rustfmt internally
+        -- - TOML: taplo LSP includes formatting
+        -- - Markdown: dprint LSP > marksman formatting
+        -- - JSON: dprint LSP > jsonls formatting
+        -- - JavaScript/TypeScript: dprint LSP when available
       },
 
       -- Formatter customizations are defined in their respective lang/*.lua files
@@ -77,7 +72,19 @@ return {
         local ft = vim.bo[bufnr].filetype
 
         -- For these languages, use LSP formatting (they have excellent LSP formatters)
-        local lsp_format_languages = { "rust", "toml", "python", "ruby" }
+        local lsp_format_languages = {
+          "rust",
+          "toml",
+          "python",
+          "ruby",
+          "markdown",
+          "json",
+          "jsonc",
+          "javascript",
+          "typescript",
+          "javascriptreact",
+          "typescriptreact",
+        }
 
         if vim.tbl_contains(lsp_format_languages, ft) then
           return {
