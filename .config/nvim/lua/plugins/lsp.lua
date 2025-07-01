@@ -159,6 +159,7 @@ return {
   { import = "plugins.extras.lang.bash" },
   { import = "plugins.extras.lang.clangd" },
   { import = "plugins.extras.lang.docker" },
+  { import = "plugins.extras.lang.html" },
   { import = "plugins.extras.lang.just" },
   { import = "plugins.extras.lang.python" },
   { import = "plugins.extras.lang.ruby" },
