@@ -1,23 +1,5 @@
--- Dependencies to install:
--- docker-langserver: npm install -g dockerfile-language-server-nodejs
+-- Docker configuration has been moved to plugins/extras/lang/docker.lua
+-- To enable Docker support, add the following import to your LSP configuration:
+-- { import = "plugins.extras.lang.docker" },
 
-return {
-  -- Treesitter Dockerfile parser
-  {
-    "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = { "dockerfile" },
-    },
-  },
-
-  -- Docker LSP configuration
-  {
-    "neovim/nvim-lspconfig",
-    opts = function()
-      -- Configure dockerls (uses lspconfig defaults)
-      vim.lsp.config("dockerls", {})
-
-      vim.lsp.enable("dockerls")
-    end,
-  },
-}
+return {}
