@@ -1,3 +1,7 @@
+-- Dependencies to install:
+-- ruby-lsp: gem install ruby-lsp
+-- Note: vim-rails, vim-rake, vim-rbs, vim-projectionist, and vim-ruby are installed via plugin manager
+
 return {
   -- Treesitter Ruby parser
   {

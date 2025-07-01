@@ -1,3 +1,7 @@
+-- Dependencies to install:
+-- lua-language-server: brew install lua-language-server
+-- Note: lazydev.nvim and luvit-meta are installed via plugin manager
+
 return {
   -- Treesitter Lua parser
   {

@@ -1,3 +1,6 @@
+-- Dependencies to install:
+-- taplo: cargo install taplo-cli --locked --features lsp
+
 return {
   -- Treesitter TOML parser
   {

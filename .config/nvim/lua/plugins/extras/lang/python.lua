@@ -1,3 +1,7 @@
+-- Dependencies to install:
+-- ruff: pip install ruff or brew install ruff
+-- pyright: npm install -g pyright
+
 return {
   -- Treesitter Python parser
   {

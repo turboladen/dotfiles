@@ -1,3 +1,7 @@
+-- Dependencies to install:
+-- rustaceanvim handles rust-analyzer automatically
+-- crates.nvim is installed via plugin manager
+
 return {
   -- Treesitter Rust parser
   {

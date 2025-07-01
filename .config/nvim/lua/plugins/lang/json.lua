@@ -1,3 +1,6 @@
+-- Dependencies to install:
+-- vscode-json-language-server: npm install -g vscode-langservers-extracted
+
 return {
   -- Treesitter JSON parsers
   {

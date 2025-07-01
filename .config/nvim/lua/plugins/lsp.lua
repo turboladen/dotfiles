@@ -154,5 +154,6 @@ return {
 
   -- Import language-specific configurations
   { import = "plugins.lang" },
-  -- Language extras are now loaded via config.extras
+  { import = "plugins.extras.lang.python" },
+  { import = "plugins.extras.lang.typescript" },
 }

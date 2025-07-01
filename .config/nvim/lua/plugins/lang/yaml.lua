@@ -1,3 +1,7 @@
+-- Dependencies to install:
+-- yaml-language-server: npm install -g yaml-language-server
+-- yamllint: pip install yamllint or brew install yamllint
+
 return {
   -- Treesitter YAML parser
   {

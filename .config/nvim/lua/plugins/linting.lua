@@ -18,6 +18,7 @@ return {
       -- Configure linters by filetype
       lint.linters_by_ft = {
         ["*"] = { "typos" }, -- Use typos for all file types
+        -- Language-specific linters are configured in their respective lang/*.lua files
       }
 
       -- Auto-run linting on these events

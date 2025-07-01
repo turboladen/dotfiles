@@ -1,3 +1,8 @@
+-- Dependencies to install:
+-- marksman: brew install marksman
+-- vale: brew install vale
+-- alex: npm install -g alex
+
 return {
   -- Treesitter Markdown parser
   {
