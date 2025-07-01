@@ -1,6 +1,9 @@
 -- Dependencies to install:
 -- rustaceanvim handles rust-analyzer automatically
+-- rustfmt: comes with rust toolchain (rust-analyzer calls this internally)
 -- crates.nvim is installed via plugin manager
+--
+-- Note: No external formatter needed - rust-analyzer handles formatting via rustfmt
 
 return {
   -- Treesitter Rust parser

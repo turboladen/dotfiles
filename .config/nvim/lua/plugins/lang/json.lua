@@ -36,4 +36,26 @@ return {
       vim.lsp.enable("jsonls")
     end,
   },
+
+  -- JSON formatting via conform.nvim
+  {
+    "stevearc/conform.nvim",
+    optional = true,
+    opts = {
+      formatters_by_ft = {
+        json = { "dprint" },
+        jsonc = { "dprint" },
+      },
+      formatters = {
+        dprint = {
+          condition = function(self, ctx)
+            return vim.fs.find(
+              { "dprint.json", ".dprint.json", "dprint.jsonc" },
+              { path = ctx.filename, upward = true }
+            )[1]
+          end,
+        },
+      },
+    },
+  },
 }

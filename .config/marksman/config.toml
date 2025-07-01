@@ -1,0 +1,27 @@
+# Marksman LSP global configuration
+# See: https://github.com/artempyanykh/marksman
+
+[core]
+markdown.file_extensions = ["md", "markdown", "mdown", "mkdn", "mkd", "mdwn", "mdtxt", "mdtext", "text", "Rmd"]
+text_sync = "incremental"
+
+[completion]
+wiki.style = "title-slug"
+
+[hover]
+# Show hover information
+enabled = true
+
+[references]
+# Enable finding references
+enabled = true
+
+[workspace]
+# Exclude patterns for workspace scanning
+exclude_globs = [
+    "node_modules/**",
+    ".git/**",
+    "target/**",
+    "build/**",
+    "dist/**"
+]

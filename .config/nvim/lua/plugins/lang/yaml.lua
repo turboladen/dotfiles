@@ -45,6 +45,24 @@ return {
     end,
   },
 
+  -- YAML formatting via conform.nvim
+  {
+    "stevearc/conform.nvim",
+    optional = true,
+    opts = {
+      formatters_by_ft = {
+        yaml = { "yamlfmt" },
+        yml = { "yamlfmt" },
+      },
+      formatters = {
+        yamlfmt = {
+          -- Uses global config at ~/.config/yamlfmt/.yamlfmt.yml
+          prepend_args = { "-formatter", "retain_line_breaks=true" },
+        },
+      },
+    },
+  },
+
   -- YAML linting
   {
     "mfussenegger/nvim-lint",

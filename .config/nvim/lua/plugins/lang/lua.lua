@@ -1,5 +1,6 @@
 -- Dependencies to install:
 -- lua-language-server: brew install lua-language-server
+-- stylua: cargo install stylua (or brew install stylua)
 -- Note: lazydev.nvim and luvit-meta are installed via plugin manager
 
 return {
@@ -52,5 +53,26 @@ return {
       -- Enable lua_ls
       vim.lsp.enable("lua_ls")
     end,
+  },
+
+  -- Lua formatting via conform.nvim
+  {
+    "stevearc/conform.nvim",
+    optional = true,
+    opts = {
+      formatters_by_ft = {
+        lua = { "stylua" },
+      },
+      formatters = {
+        stylua = {
+          condition = function(self, ctx)
+            return vim.fs.find(
+              { "stylua.toml", ".stylua.toml" },
+              { path = ctx.filename, upward = true }
+            )[1]
+          end,
+        },
+      },
+    },
   },
 }

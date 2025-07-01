@@ -1,5 +1,7 @@
 -- Dependencies to install:
 -- taplo: cargo install taplo-cli --locked --features lsp
+--
+-- Note: No external formatter needed - taplo LSP includes excellent formatting
 
 return {
   -- Treesitter TOML parser

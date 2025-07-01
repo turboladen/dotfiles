@@ -2,6 +2,7 @@
 -- marksman: brew install marksman
 -- vale: brew install vale
 -- alex: npm install -g alex
+-- dprint: curl -fsSL https://dprint.dev/install.sh | sh
 
 return {
   -- Treesitter Markdown parser
@@ -16,11 +17,38 @@ return {
   {
     "neovim/nvim-lspconfig",
     opts = function()
-      -- Configure marksman LSP (uses lspconfig defaults)
-      vim.lsp.config("marksman", {})
+      -- Configure marksman LSP with formatting disabled (dprint handles formatting)
+      vim.lsp.config("marksman", {
+        init_options = {
+          formatting = {
+            enabled = false,
+          },
+        },
+      })
 
       vim.lsp.enable("marksman")
     end,
+  },
+
+  -- Markdown formatting via conform.nvim
+  {
+    "stevearc/conform.nvim",
+    optional = true,
+    opts = {
+      formatters_by_ft = {
+        markdown = { "dprint" },
+      },
+      formatters = {
+        dprint = {
+          condition = function(self, ctx)
+            return vim.fs.find(
+              { "dprint.json", ".dprint.json", "dprint.jsonc" },
+              { path = ctx.filename, upward = true }
+            )[1]
+          end,
+        },
+      },
+    },
   },
 
   -- Markdown linting

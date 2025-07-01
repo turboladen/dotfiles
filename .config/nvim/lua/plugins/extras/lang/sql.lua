@@ -1,5 +1,6 @@
 -- Dependencies to install:
 -- sql-language-server: npm install -g sql-language-server
+-- sqlfluff: pip install sqlfluff
 
 return {
   -- Treesitter SQL parser
@@ -19,5 +20,21 @@ return {
 
       vim.lsp.enable("sqlls")
     end,
+  },
+
+  -- SQL formatting via conform.nvim
+  {
+    "stevearc/conform.nvim",
+    optional = true,
+    opts = {
+      formatters_by_ft = {
+        sql = { "sqlfluff" },
+      },
+      formatters = {
+        sqlfluff = {
+          args = { "format", "--dialect=ansi", "-" },
+        },
+      },
+    },
   },
 }

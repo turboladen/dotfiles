@@ -2,6 +2,7 @@
 -- typescript-language-server: npm install -g typescript-language-server typescript
 -- vscode-eslint-language-server: npm install -g vscode-langservers-extracted
 -- eslint: npm install -g eslint
+-- dprint: curl -fsSL https://dprint.dev/install.sh | sh
 
 return {
   -- Treesitter TypeScript parsers
@@ -50,6 +51,32 @@ return {
       vim.lsp.enable("ts_ls")
       vim.lsp.enable("eslint")
     end,
+  },
+
+  -- TypeScript formatting via conform.nvim
+  {
+    "stevearc/conform.nvim",
+    optional = true,
+    opts = {
+      formatters_by_ft = {
+        javascript = { "dprint" },
+        typescript = { "dprint" },
+        javascriptreact = { "dprint" },
+        typescriptreact = { "dprint" },
+        css = { "dprint" },
+        html = { "dprint" },
+      },
+      formatters = {
+        dprint = {
+          condition = function(self, ctx)
+            return vim.fs.find(
+              { "dprint.json", ".dprint.json", "dprint.jsonc" },
+              { path = ctx.filename, upward = true }
+            )[1]
+          end,
+        },
+      },
+    },
   },
 
   -- TypeScript linting with eslint

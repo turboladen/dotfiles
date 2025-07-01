@@ -91,15 +91,16 @@ return {
           map("<leader>lr", vim.lsp.buf.rename, "LSP: Rename")
           map("<leader>ls", vim.lsp.buf.signature_help, "LSP: Signature help")
 
-          -- Formatting
-          map("<leader>=", vim.lsp.buf.format, "LSP: Format buffer")
+          -- Formatting (for languages where LSP formatting is preferred)
+          -- External formatters are configured in plugins/formatting.lua
+          map("<leader>lf", vim.lsp.buf.format, "LSP: Format buffer")
 
           -- Diagnostics navigation
           map("]g", vim.diagnostic.goto_next, "LSP: Next diagnostic")
           map("[g", vim.diagnostic.goto_prev, "LSP: Prev diagnostic")
 
           -- Workspace management
-          map("<leader>lf", function()
+          map("<leader>lw", function()
             print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
           end, "LSP: List folders")
 

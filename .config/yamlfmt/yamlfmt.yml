@@ -1,0 +1,21 @@
+---
+# yamlfmt global configuration
+# See: https://github.com/google/yamlfmt
+
+# Formatting options
+indent: 2
+include_document_start: true
+line_length: 100
+retain_line_breaks: true
+scan_folded_as_literal: false
+
+# Comments
+comments:
+  head: true
+  foot: true
+  line: true
+
+# Files/directories to exclude globally
+exclude:
+  - node_modules
+  - .git
