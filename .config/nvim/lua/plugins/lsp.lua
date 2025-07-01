@@ -161,6 +161,9 @@ return {
   { import = "plugins.extras.lang.just" },
   { import = "plugins.extras.lang.python" },
   { import = "plugins.extras.lang.ruby" },
+  { import = "plugins.extras.lang.sql" },
   { import = "plugins.extras.lang.terraform" },
   { import = "plugins.extras.lang.typescript" },
+  { import = "plugins.extras.lang.xml" },
+  { import = "plugins.extras.lang.zsh" },
 }
