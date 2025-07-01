@@ -112,4 +112,52 @@ return {
       })
     end,
   },
+
+  -- Dependency analyzer (dev plugin)
+  {
+    "turboladen/dependency-analyzer.nvim",
+    dev = true,
+    dir = vim.fn.stdpath("config") .. "/lua/dev/dependency-analyzer.nvim",
+    keys = {
+      {
+        "<leader>pd",
+        "<cmd>DepsCheck<cr>",
+        desc = "Pkg: Check dependencies",
+      },
+      {
+        "<leader>pD",
+        "<cmd>DepsMissing<cr>",
+        desc = "Pkg: Missing dependencies",
+      },
+      {
+        "<leader>pi",
+        "<cmd>DepsInstall<cr>",
+        desc = "Pkg: Install script",
+      },
+    },
+    config = function()
+      -- Create user commands for dependency utilities
+      vim.api.nvim_create_user_command("DepsCheck", function()
+        require("dependency-analyzer.builtin").show_summary()
+      end, { desc = "Quick dependency status check" })
+
+      vim.api.nvim_create_user_command("DepsMissing", function()
+        require("dependency-analyzer.builtin").show_missing()
+      end, { desc = "Show missing dependencies in detail" })
+
+      vim.api.nvim_create_user_command("DepsInstall", function()
+        require("dependency-analyzer.builtin").show_install_commands()
+      end, { desc = "Generate install script for missing dependencies" })
+
+      vim.api.nvim_create_user_command("DepsReport", function()
+        require("dependency-analyzer.builtin").show_full_report()
+      end, { desc = "Show full dependency analysis report" })
+
+      vim.api.nvim_create_user_command("DepsData", function()
+        local analyzer = require("dependency-analyzer")
+        local data = analyzer.get_data()
+        print(vim.inspect(data))
+      end, { desc = "Show raw dependency data" })
+    end,
+  },
 }

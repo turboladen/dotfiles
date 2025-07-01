@@ -35,6 +35,8 @@ In no particular order:
 
 ## Organization
 
+### High Level
+
 All standard vim/neovim directories are candidates. Be as conventional as possible when it makes
 sense. Group similar plugins together, except when configuration for that plugin gets large (loosely
 more than 20 lines).
@@ -43,7 +45,24 @@ more than 20 lines).
 - `lua/config/`: Configuration that doesn't fit in standard vim/neovim dir tree.
 - `lua/config/icons.lua`: Diagnostics icons, etc. to be used across plugins.
 - `lua/config/options.lua`: (neo)vim options.
+- `lua/dev`: Custom, local, dev plugins that I make; could be released to public if I feel like it.
 - `lua/plugins/`: Standard location for lua plugins/plugin groups.
+- `snippets/`: `friendly-snippets` formatted custom snippets.
+
+### Config
+
+`lua/config/` should only contain code that plays into setting up my config; mostly just `lazy.nvim`
+and (neo)vim related configuration that's not necessarily tied to any plugins.
+
+### Local/Dev Plugins
+
+On occasion, it might make sense to add some functionality which could be bundled up as my own
+plugin. This code goes in `lua/dev/`. Code there should be clean, simple, and documented. This
+directory should be laid out to handle multiple plugins.
+
+### Plugins
+
+#### Standard Plugins
 
 `LazyVim` applies the following structure, which I want to more or less follow (don't need to be
 strict about it; if there's a good reason to deviate, that's ok). If the amount of code in any of
@@ -72,6 +91,8 @@ these plugins, I know I'll have a reliable experience. The areas are:
 - `lua/plugins/ui`: UI enhancements like statuslines, file explorers, notification systems, and
   visual improvements.
 - `lua/plugins/util` Utility libs and helpers that other plugins depend on.
+
+#### Extras
 
 LazyVim uses `lua/plugins/extras` too; I want to use this for plugins that aren't 100% core needs
 and/or plugins that I'm trying out. These should be easy to disable if I run into configuration
