@@ -97,4 +97,10 @@ return {
   },
 
   { "RRethy/nvim-treesitter-endwise" },
+
+  -- C/C++ enhancements (loaded by extras/lang/clangd.lua)
+  {
+    "p00f/clangd_extensions.nvim",
+    lazy = true,
+  },
 }
