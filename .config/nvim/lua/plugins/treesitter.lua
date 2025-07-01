@@ -34,18 +34,11 @@ return {
         disable = {}, -- optional, list of language that will be disabled
       },
       ensure_installed = {
-        "bash",
-        "c",
         "diff",
         "html",
-        "javascript",
-        "jsdoc",
         "printf",
         "query",
         "regex",
-        "toml",
-        "tsx",
-        "typescript",
         "vim",
         "vimdoc",
         "xml",

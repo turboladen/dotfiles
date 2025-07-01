@@ -154,6 +154,7 @@ return {
 
   -- Import language-specific configurations
   { import = "plugins.lang" },
+  { import = "plugins.extras.lang.asm" },
   { import = "plugins.extras.lang.bash" },
   { import = "plugins.extras.lang.clangd" },
   { import = "plugins.extras.lang.docker" },
