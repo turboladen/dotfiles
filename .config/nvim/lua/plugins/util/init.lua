@@ -19,7 +19,7 @@ return {
       "nvim-lua/plenary.nvim", -- Optional for floating window border decoration
     },
     keys = {
-      { "<leader>gg", "<cmd>LazyGit<cr>", desc = "Open lazygit" },
+      { "<leader>gg", "<cmd>LazyGit<cr>", desc = "Git: Open lazygit" },
     },
     config = function()
       -- Configure lazygit floating window appearance
@@ -27,6 +27,53 @@ return {
       vim.g.lazygit_floating_window_scaling_factor = 0.9 -- 90% of screen size
       vim.g.lazygit_floating_window_use_plenary = 1 -- Use plenary for better borders
       vim.g.lazygit_use_neovim_remote = 1 -- Enable neovim-remote integration if available
+    end,
+  },
+
+  -- Keymap conflict analyzer (dev plugin)
+  {
+    "turboladen/keymap-analyzer.nvim",
+    dev = true,
+    dir = vim.fn.stdpath("config") .. "/lua/dev/keymap-analyzer.nvim",
+    dependencies = {
+      "ibhagwan/fzf-lua", -- For display functionality
+    },
+    keys = {
+      {
+        "<leader>pk",
+        function()
+          require("keymap-analyzer.fzf").show_duplicates()
+        end,
+        desc = "Pkg: Check keymaps",
+      },
+      {
+        "<leader>pK",
+        function()
+          require("keymap-analyzer.fzf").show_all()
+        end,
+        desc = "Pkg: All keymaps",
+      },
+      {
+        "<leader>ps",
+        function()
+          require("keymap-analyzer.fzf").show_stats()
+        end,
+        desc = "Pkg: Keymap stats",
+      },
+    },
+    config = function()
+      -- Create user commands for keymap utilities
+      vim.api.nvim_create_user_command("KeymapDuplicates", function()
+        require("keymap-analyzer.fzf").show_duplicates()
+      end, { desc = "Find duplicate keymaps across config" })
+
+      vim.api.nvim_create_user_command("KeymapAll", function()
+        require("keymap-analyzer.fzf").show_all()
+      end, { desc = "Show all keymaps in config" })
+
+      vim.api.nvim_create_user_command("KeymapStats", function()
+        require("keymap-analyzer.fzf").show_stats()
+      end, { desc = "Show keymap statistics" })
     end,
   },
 
@@ -42,7 +89,7 @@ return {
         function()
           require("open").open_cword()
         end,
-        desc = "Open item under cursor",
+        desc = "Open: Item under cursor",
       },
     },
     config = function()
