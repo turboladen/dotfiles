@@ -16,16 +16,8 @@ return {
   {
     "neovim/nvim-lspconfig",
     opts = function()
-      -- Configure TypeScript language server
+      -- Configure TypeScript language server with inlay hints
       vim.lsp.config("ts_ls", {
-        cmd = { "typescript-language-server", "--stdio" },
-        filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
-        root_markers = {
-          "package.json",
-          "tsconfig.json",
-          "jsconfig.json",
-          ".git",
-        },
         settings = {
           typescript = {
             inlayHints = {
@@ -52,52 +44,8 @@ return {
         },
       })
 
-      -- Configure ESLint language server for linting and code actions
-      vim.lsp.config("eslint", {
-        cmd = { "vscode-eslint-language-server", "--stdio" },
-        filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
-        root_markers = {
-          ".eslintrc",
-          ".eslintrc.js",
-          ".eslintrc.json",
-          "eslint.config.js",
-          "package.json",
-          ".git",
-        },
-        settings = {
-          codeAction = {
-            disableRuleComment = {
-              enable = true,
-              location = "separateLine",
-            },
-            showDocumentation = {
-              enable = true,
-            },
-          },
-          codeActionOnSave = {
-            enable = false,
-            mode = "all",
-          },
-          experimental = {
-            useFlatConfig = false,
-          },
-          format = true,
-          nodePath = "",
-          onIgnoredFiles = "off",
-          packageManager = "npm",
-          problems = {
-            shortenToSingleLine = false,
-          },
-          quiet = false,
-          rulesCustomizations = {},
-          run = "onType",
-          useESLintClass = false,
-          validate = "on",
-          workingDirectory = {
-            mode = "location",
-          },
-        },
-      })
+      -- Configure ESLint language server (uses lspconfig defaults)
+      vim.lsp.config("eslint", {})
 
       vim.lsp.enable("ts_ls")
       vim.lsp.enable("eslint")

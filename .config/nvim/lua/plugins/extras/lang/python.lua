@@ -15,38 +15,11 @@ return {
   {
     "neovim/nvim-lspconfig",
     opts = function()
-      -- Configure ruff LSP server for linting and formatting
-      vim.lsp.config("ruff", {
-        cmd = { "ruff", "server", "--preview" },
-        filetypes = { "python" },
-        root_markers = {
-          "pyproject.toml",
-          "setup.py",
-          "setup.cfg",
-          "requirements.txt",
-          "Pipfile",
-          "pyrightconfig.json",
-          ".git",
-        },
-        settings = {
-          -- Ruff language server settings
-          args = {},
-        },
-      })
+      -- Configure ruff LSP (uses lspconfig defaults)
+      vim.lsp.config("ruff", {})
 
-      -- Configure pyright for semantic analysis, go-to-definition, etc.
+      -- Configure pyright with custom settings to work with ruff
       vim.lsp.config("pyright", {
-        cmd = { "pyright-langserver", "--stdio" },
-        filetypes = { "python" },
-        root_markers = {
-          "pyproject.toml",
-          "setup.py",
-          "setup.cfg",
-          "requirements.txt",
-          "Pipfile",
-          "pyrightconfig.json",
-          ".git",
-        },
         settings = {
           pyright = {
             disableOrganizeImports = true, -- Let ruff handle imports

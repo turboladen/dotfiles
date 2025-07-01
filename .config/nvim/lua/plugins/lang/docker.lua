@@ -14,19 +14,8 @@ return {
   {
     "neovim/nvim-lspconfig",
     opts = function()
-      -- Configure dockerls server
-      vim.lsp.config("dockerls", {
-        cmd = { "docker-langserver", "--stdio" },
-        filetypes = { "dockerfile" },
-        root_markers = {
-          "Dockerfile",
-          "docker-compose.yml",
-          "docker-compose.yaml",
-          ".dockerignore",
-          ".git",
-        },
-        settings = {},
-      })
+      -- Configure dockerls (uses lspconfig defaults)
+      vim.lsp.config("dockerls", {})
 
       vim.lsp.enable("dockerls")
     end,

@@ -17,19 +17,14 @@ return {
     opts = function()
       -- Most configuration is provided by nvim-lspconfig defaults
       -- We just need to enable the server and optionally override settings
+      -- Configure ruby_lsp server with additional root markers
       vim.lsp.config("ruby_lsp", {
-        -- Override root_dir to include more Ruby project markers
         root_markers = {
           "Gemfile",
           ".git",
           ".ruby-version",
           "config.ru",
           "Rakefile",
-        },
-        -- Optionally enhance init_options if needed
-        init_options = {
-          formatter = "auto", -- Default from lspconfig
-          -- Add any additional ruby-lsp specific options here
         },
       })
 

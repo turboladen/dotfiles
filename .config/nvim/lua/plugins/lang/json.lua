@@ -24,23 +24,11 @@ return {
       "b0o/SchemaStore.nvim",
     },
     opts = function()
-      -- Configure jsonls server
+      -- Configure jsonls with SchemaStore integration
       vim.lsp.config("jsonls", {
-        cmd = { "vscode-json-language-server", "--stdio" },
-        filetypes = { "json", "jsonc" },
-        root_markers = {
-          "package.json",
-          "tsconfig.json",
-          ".git",
-        },
-        init_options = {
-          provideFormatter = true,
-        },
         settings = {
           json = {
             schemas = require("schemastore").json.schemas(),
-            validate = { enable = true },
-            format = { enable = true },
           },
         },
       })

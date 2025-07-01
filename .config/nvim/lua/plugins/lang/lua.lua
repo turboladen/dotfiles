@@ -29,11 +29,8 @@ return {
       { "Bilal2453/luvit-meta", lazy = true }, -- optional `vim.uv` typings
     },
     opts = function()
-      -- Configure Lua language server
+      -- Configure Lua language server with Neovim-specific settings
       vim.lsp.config("lua_ls", {
-        cmd = { "lua-language-server" },
-        filetypes = { "lua" },
-        root_markers = { { ".luarc.json", ".luarc.jsonc" }, ".git" },
         settings = {
           Lua = {
             runtime = {

@@ -16,18 +16,8 @@ return {
   {
     "neovim/nvim-lspconfig",
     opts = function()
-      -- Configure marksman LSP for markdown
-      vim.lsp.config("marksman", {
-        cmd = { "marksman", "server" },
-        filetypes = { "markdown", "md" },
-        root_markers = {
-          ".git",
-          ".marksman.toml",
-          "README.md",
-          "readme.md",
-        },
-        settings = {},
-      })
+      -- Configure marksman LSP (uses lspconfig defaults)
+      vim.lsp.config("marksman", {})
 
       vim.lsp.enable("marksman")
     end,

@@ -14,16 +14,8 @@ return {
   {
     "neovim/nvim-lspconfig",
     opts = function()
-      -- Configure taplo server
+      -- Configure taplo with schema support
       vim.lsp.config("taplo", {
-        cmd = { "taplo", "lsp", "stdio" },
-        filetypes = { "toml" },
-        root_markers = {
-          "*.toml",
-          "pyproject.toml",
-          "Cargo.toml",
-          ".git",
-        },
         settings = {
           taplo = {
             schema = {
