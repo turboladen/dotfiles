@@ -10,6 +10,9 @@ if status is-login
   # set -gx MANPAGER="sh -c 'col -bx | bat -l man -p'"
   set -gx MANPAGER sh\ -c\ \'col\ -bx\ \|\ bat\ -l\ man\ -p\'
 
+  # FZF integration with bat for file previews
+  set -gx FZF_DEFAULT_OPTS "--preview 'bat --style=numbers --color=always {}'"
+
 end
 
 if status is-interactive
