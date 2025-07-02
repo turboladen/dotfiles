@@ -30,7 +30,6 @@ source "$HOME/.cargo/env"
 eval "$(starship init zsh)"
 
 alias tilt=/opt/homebrew/bin/tilt
-source /Users/steve.loveless/.config/broot/launcher/bash/br
 
 . <(zr zsh-users/zsh-syntax-highlighting.git/zsh-syntax-highlighting.plugin.zsh)
 
