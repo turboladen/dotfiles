@@ -7,6 +7,10 @@ text_sync = "incremental"
 
 [completion]
 wiki.style = "title-slug"
+# Enable completion for file paths
+file.enabled = true
+# Enable completion for headings
+heading.enabled = true
 
 [hover]
 # Show hover information
@@ -15,6 +19,8 @@ enabled = true
 [references]
 # Enable finding references
 enabled = true
+# Include references from code blocks
+include_code_blocks = true
 
 [workspace]
 # Exclude patterns for workspace scanning
@@ -23,5 +29,22 @@ exclude_globs = [
     ".git/**",
     "target/**",
     "build/**",
-    "dist/**"
+    "dist/**",
+    ".next/**",        # Next.js
+    ".nuxt/**",        # Nuxt.js
+    "vendor/**",       # Composer/Go modules
+    ".venv/**",        # Python virtual environments
+    "__pycache__/**"   # Python cache
 ]
+
+[diagnostics]
+# Enable/disable specific diagnostics
+enabled = true
+# You can disable specific checks if needed
+# unresolved_link = false
+
+[document_symbols]
+# Configure how document symbols are extracted
+enabled = true
+# Include code blocks as symbols
+include_code_blocks = true
