@@ -44,6 +44,7 @@ return {
         lua = { "stylua" }, -- stylua > lua_ls formatting
         yaml = { "yamlfmt" }, -- yamlls doesn't provide formatting
         yml = { "yamlfmt" },
+        fish = { "fish_indent" }, -- fish_indent > fish_lsp formatting
 
         -- Languages for extras (when LSP isn't available)
         sh = { "shfmt" },
