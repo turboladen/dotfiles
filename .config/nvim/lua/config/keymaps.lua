@@ -34,4 +34,3 @@ end, { desc = "Open: Item under cursor" })
 
 -- Package management
 map("n", "<leader>pu", "<cmd>Lazy update<cr>", { desc = "Pkg: Lazy update" })
-map("n", "<leader>pm", "<cmd>Mason<cr>", { desc = "Pkg: Mason" })

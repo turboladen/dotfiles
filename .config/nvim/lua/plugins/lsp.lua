@@ -152,24 +152,4 @@ return {
       -- marksman: configured in lang/markdown.lua
     end,
   },
-
-  -- Import language-specific configurations
-  { import = "plugins.lang" },
-  { import = "plugins.extras.lang.asm" },
-  { import = "plugins.extras.lang.bash" },
-  { import = "plugins.extras.lang.clangd" },
-  { import = "plugins.extras.lang.deno" },
-  { import = "plugins.extras.lang.docker" },
-  { import = "plugins.extras.lang.dotenv" },
-  { import = "plugins.extras.lang.dprint" },
-  { import = "plugins.extras.lang.html" },
-  { import = "plugins.extras.lang.just" },
-  { import = "plugins.extras.lang.python" },
-  { import = "plugins.extras.lang.ruby" },
-  { import = "plugins.extras.lang.sql" },
-  { import = "plugins.extras.lang.terraform" },
-  { import = "plugins.extras.lang.tiltfile" },
-  { import = "plugins.extras.lang.typescript" },
-  { import = "plugins.extras.lang.xml" },
-  { import = "plugins.extras.lang.zsh" },
 }
