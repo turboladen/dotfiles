@@ -284,16 +284,7 @@
   // │ Agent Configuration                         │
   // ╰─────────────────────────────────────────────╯
   "agent": {
-    "default_profile": "ask",
-    "profiles": {
-      "test": {
-        "name": "test",
-        "tools": {},
-        "enable_all_context_servers": false,
-        "context_servers": {}
-      }
-    },
-    "always_allow_tool_actions": true,
+    "default_profile": "write",
     "model_parameters": [],
     "default_model": {
       "provider": "openai",
@@ -307,7 +298,7 @@
   // ╰─────────────────────────────────────────────╯
   "language_models": {
     "openai": {
-      "api_url": "https://proxy.fuelix.ai/v1",
+      "api_url": "https://proxy.fuelix.ai",
       "available_models": [
         {
           "name": "claude-3-7-sonnet",
