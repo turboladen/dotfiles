@@ -54,6 +54,12 @@ more than 20 lines).
 `lua/config/` should only contain code that plays into setting up my config; mostly just `lazy.nvim`
 and (neo)vim related configuration that's not necessarily tied to any plugins.
 
+- `lua/config/extras.lua`: config for loading/skipping `plugins/extras/`.
+- `lua/config/icons.lua`: icons that can/should be used across similar behavior across plugins.
+- `lua/config/keymaps.lua`: general keymaps that don't belong to a plugin.
+- `lua/config/lazy.lua`: `lazy.nvim` loading.
+- `lua/config/options.lua`: Set neovim options.
+
 ### Local/Dev Plugins
 
 On occasion, it might make sense to add some functionality which could be bundled up as my own
