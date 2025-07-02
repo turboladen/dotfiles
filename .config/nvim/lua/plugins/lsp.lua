@@ -106,16 +106,16 @@ return {
 
           -- Diagnostic viewing
           map("<leader>lx", function()
-            require("fzf-lua").diagnostics({ bufnr = 0, severity = "Error" })
+            vim.cmd("FzfLua diagnostics_document")
           end, "LSP: Buffer errors")
           map("<leader>lX", function()
-            require("fzf-lua").diagnostics({ severity = "Error" })
+            vim.cmd("FzfLua diagnostics_workspace")
           end, "LSP: All errors")
           map("<leader>ld", function()
-            require("fzf-lua").diagnostics({ bufnr = 0 })
+            vim.cmd("FzfLua diagnostics_document")
           end, "LSP: Buffer diagnostics")
           map("<leader>lD", function()
-            require("fzf-lua").diagnostics()
+            vim.cmd("FzfLua diagnostics_workspace")
           end, "LSP: All diagnostics")
 
           -- Codelens mappings
