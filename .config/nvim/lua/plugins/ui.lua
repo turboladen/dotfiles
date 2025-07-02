@@ -51,7 +51,7 @@ return {
       return {
         options = {
           theme = "auto", -- Automatically adapts to colorscheme
-          globalstatus = true, -- Single statusline for all windows
+          globalstatus = false, -- Per-buffer statuslines (old style)
           disabled_filetypes = {
             statusline = { "dashboard", "alpha", "starter" },
           },
