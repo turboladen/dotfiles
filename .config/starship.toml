@@ -14,9 +14,7 @@ error_symbol = '[➜](bold red)'
 # disabled = true
 
 [git_branch]
-symbol = '🌱 '
-truncation_length = 4
-truncation_symbol = ''
+truncation_length = 16
 
 [git_commit]
 commit_hash_length = 4
@@ -32,20 +30,16 @@ format = '[+$added]($added_style)/[-$deleted]($deleted_style) '
 
 [git_status]
 conflicted = '🏳'
-ahead = '🏎💨'
-behind = '😰'
-diverged = '😵'
+# ahead = '🏎💨'
+# behind = '😰'
+# diverged = '😵'
 up_to_date = '✓'
-untracked = '🤷'
+# untracked = '🤷'
 stashed = '📦'
-modified = '📝'
+# modified = '📝'
 staged = '[++\($count\)](green)'
-renamed = '👅'
+# renamed = '👅'
 deleted = '🗑'
-
-[cmd_duration]
-min_time = 2_000
-format = 'underwent [$duration](bold yellow)'
 
 [shell]
 fish_indicator = '󰈺'
