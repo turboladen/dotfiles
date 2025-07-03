@@ -57,7 +57,7 @@ disable = ["ruby_gems", "helm"]
 # tmux_session_mode = "attach_if_not_in_session"
 
 # Cleanup temporary or old files (default: false)
-# cleanup = true
+cleanup = true
 
 # Send a notification for every step (default: false)
 # notify_each_step = false
@@ -92,7 +92,7 @@ disable = ["ruby_gems", "helm"]
 #"Python Environment" = "~/dev/.env/bin/pip install -i https://pypi.python.org/simple -U --upgrade-strategy eager jupyter"
 "[steve] Update rubies" = "ruby-install --latest && ruby-install ruby 3 --no-reinstall --cleanup"
 "[steve] Install gems for latest Ruby" = "chruby 3 && gem update --system && gem update"
-# "[steve] Update neovim" = "nvim --headless '+Rocks update'"
+"[steve] Update neovim" = "nvim --headless '+Lazy update'"
 
 [python]
 # enable_pip_review = true                         ###disabled by default
@@ -100,8 +100,8 @@ disable = ["ruby_gems", "helm"]
 # enable_pipupgrade = true                         ###disabled by default
 # pipupgrade_arguments = "-y -u --pip-path pip"    ###disabled by default
 
-# For the poetry step, by default, Topgrade skips its update if poetry is not 
-# installed with the official script. This configuration entry forces Topgrade 
+# For the poetry step, by default, Topgrade skips its update if poetry is not
+# installed with the official script. This configuration entry forces Topgrade
 # to run the update in this case.
 #
 # (default: false)
@@ -130,7 +130,7 @@ disable = ["ruby_gems", "helm"]
 
 # For the BrewFormula step
 # Execute `brew autoremove` after the step.
-# autoremove = true
+autoremove = true
 
 # For the BrewFormula step
 # Upgrade formulae built from the HEAD branch; `brew upgrade --fetch-HEAD`
@@ -187,7 +187,7 @@ disable = ["ruby_gems", "helm"]
 
 [git]
 # How many repos to pull at max in parallel
-# max_concurrency = 5
+max_concurrency = 10
 
 # Additional git repositories to pull
 repos = [
@@ -247,7 +247,7 @@ repos = [
 # runtime = "podman"
 
 [lensfun]
-# If disabled, Topgrade invokes `lensfun‑update‑data` without root priviledge,
+# If disabled, Topgrade invokes `lensfun‑update‑data` without root privilege,
 # then the update will be only available to you. Otherwise, `sudo` is required,
 # and the update will be installed system-wide, i.e., available to all users.
 # (default: false)

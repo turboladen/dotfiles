@@ -5,36 +5,36 @@
 background = "#000000"
 foreground = "#eaeaea"
 
-# [colors.cursor]
-# cursor = "#ffffff"
-# text = "#000000"
+[colors.cursor]
+cursor = "#ffffff"
+text = "#000000"
 
-# [colors.normal]
-# black = "#000000"
-# blue = "#7aa6da"
-# cyan = "#70c0ba"
-# green = "#b9ca4a"
-# magenta = "#c397d8"
-# red = "#d54e53"
-# white = "#ffffff"
-# yellow = "#e6c547"
+[colors.normal]
+black = "#000000"
+blue = "#7aa6da"
+cyan = "#70c0ba"
+green = "#b9ca4a"
+magenta = "#c397d8"
+red = "#d54e53"
+white = "#ffffff"
+yellow = "#e6c547"
 
-# [colors.bright]
-# black = "#666666"
-# blue = "#7aa6da"
-# cyan = "#54ced6"
-# green = "#9ec400"
-# magenta = "#b77ee0"
-# red = "#ff3334"
-# white = "#ffffff"
-# yellow = "#e7c547"
+[colors.bright]
+black = "#666666"
+blue = "#7aa6da"
+cyan = "#54ced6"
+green = "#9ec400"
+magenta = "#b77ee0"
+red = "#ff3334"
+white = "#ffffff"
+yellow = "#e7c547"
 
-# [colors.dim]
-# black = "#333333"
-# blue = "#6699cc"
-# cyan = "#66cccc"
-# green = "#99cc99"
-# magenta = "#cc99cc"
-# red = "#f2777a"
-# white = "#dddddd"
-# yellow = "#ffcc66"
+[colors.dim]
+black = "#333333"
+blue = "#6699cc"
+cyan = "#66cccc"
+green = "#99cc99"
+magenta = "#cc99cc"
+red = "#f2777a"
+white = "#dddddd"
+yellow = "#ffcc66"

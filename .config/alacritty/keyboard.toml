@@ -1,23 +1,23 @@
-# [[keyboard.bindings]]
-# key = "V"
-# mods = "Command"
-# action = "Paste"
-#
-# [[keyboard.bindings]]
-# key = "C"
-# mods = "Command"
-# action = "Copy"
-#
-# [[keyboard.bindings]]
-# key = "H"
-# mods = "Command"
-# action = "Hide"
-#
-# [[keyboard.bindings]]
-# key = "Q"
-# mods = "Command"
-# action = "Quit"
-#
+[[keyboard.bindings]]
+key = "V"
+mods = "Command"
+action = "Paste"
+
+[[keyboard.bindings]]
+key = "C"
+mods = "Command"
+action = "Copy"
+
+[[keyboard.bindings]]
+key = "H"
+mods = "Command"
+action = "Hide"
+
+[[keyboard.bindings]]
+key = "Q"
+mods = "Command"
+action = "Quit"
+
 # [[keyboard.bindings]]
 # key = "W"
 # mods = "Command"
@@ -58,11 +58,12 @@ key = "Minus"
 mods = "Command"
 action = "DecreaseFontSize"
 
-# [[keyboard.bindings]]
-# key = "K"
-# mods = "Command"
-# action = "ClearHistory"
+[[keyboard.bindings]]
+key = "K"
+mods = "Command"
+action = "ClearHistory"
 
+# Alternative clear screen binding
 # [[keyboard.bindings]]
 # key = "K"
 # mods = "Command"

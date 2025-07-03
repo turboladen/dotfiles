@@ -1,0 +1,50 @@
+# Marksman LSP global configuration
+# See: https://github.com/artempyanykh/marksman
+
+[core]
+markdown.file_extensions = ["md", "markdown", "mdown", "mkdn", "mkd", "mdwn", "mdtxt", "mdtext", "text", "Rmd"]
+text_sync = "incremental"
+
+[completion]
+wiki.style = "title-slug"
+# Enable completion for file paths
+file.enabled = true
+# Enable completion for headings
+heading.enabled = true
+
+[hover]
+# Show hover information
+enabled = true
+
+[references]
+# Enable finding references
+enabled = true
+# Include references from code blocks
+include_code_blocks = true
+
+[workspace]
+# Exclude patterns for workspace scanning
+exclude_globs = [
+    "node_modules/**",
+    ".git/**",
+    "target/**",
+    "build/**",
+    "dist/**",
+    ".next/**",        # Next.js
+    ".nuxt/**",        # Nuxt.js
+    "vendor/**",       # Composer/Go modules
+    ".venv/**",        # Python virtual environments
+    "__pycache__/**"   # Python cache
+]
+
+[diagnostics]
+# Enable/disable specific diagnostics
+enabled = true
+# You can disable specific checks if needed
+# unresolved_link = false
+
+[document_symbols]
+# Configure how document symbols are extracted
+enabled = true
+# Include code blocks as symbols
+include_code_blocks = true

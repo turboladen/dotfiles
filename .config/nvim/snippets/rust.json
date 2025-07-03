@@ -1,0 +1,172 @@
+{
+  "println with variable": {
+    "prefix": "plnv",
+    "body": ["println!(\"$1: {:?}\", $2);"],
+    "description": "Print line with variable debug"
+  },
+  "eprintln": {
+    "prefix": "epln",
+    "body": ["eprintln!(\"$1\");"],
+    "description": "Error print line macro"
+  },
+  "eprintln with variable": {
+    "prefix": "eplnv",
+    "body": ["eprintln!(\"$1: {:?}\", $2);"],
+    "description": "Error print line with variable debug"
+  },
+  "Result match": {
+    "prefix": "resm",
+    "body": ["match $1 {", "    Ok($2) => $3,", "    Err($4) => $5,", "}"],
+    "description": "Match Result"
+  },
+  "Option match": {
+    "prefix": "optm",
+    "body": ["match $1 {", "    Some($2) => $3,", "    None => $4,", "}"],
+    "description": "Match Option"
+  },
+  "derive Clone Debug": {
+    "prefix": "derc",
+    "body": ["#[derive(Debug, Clone)]"],
+    "description": "Derive Debug and Clone"
+  },
+  "derive Default": {
+    "prefix": "derdef",
+    "body": ["#[derive(Debug, Clone, Default)]"],
+    "description": "Derive Debug, Clone, and Default"
+  },
+  "derive serde": {
+    "prefix": "ders",
+    "body": ["#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]"],
+    "description": "Derive with serde traits"
+  },
+  "test result": {
+    "prefix": "testr",
+    "body": [
+      "#[test]",
+      "fn $1() -> Result<(), Box<dyn std::error::Error>> {",
+      "    $2",
+      "    Ok(())",
+      "}"
+    ],
+    "description": "Test function returning Result"
+  },
+  "async test": {
+    "prefix": "atest",
+    "body": ["#[tokio::test]", "async fn $1() {", "    $2", "}"],
+    "description": "Async test function"
+  },
+  "impl Default": {
+    "prefix": "impldef",
+    "body": [
+      "impl Default for $1 {",
+      "    fn default() -> Self {",
+      "        Self {",
+      "            $2",
+      "        }",
+      "    }",
+      "}"
+    ],
+    "description": "Implement Default trait"
+  },
+  "main with Result": {
+    "prefix": "mainr",
+    "body": [
+      "fn main() -> Result<(), Box<dyn std::error::Error>> {",
+      "    $1",
+      "    Ok(())",
+      "}"
+    ],
+    "description": "Main function returning Result"
+  },
+  "new function": {
+    "prefix": "new",
+    "body": [
+      "pub fn new($1) -> Self {",
+      "    Self {",
+      "        $2",
+      "    }",
+      "}"
+    ],
+    "description": "Constructor function"
+  },
+  "expect": {
+    "prefix": "exp",
+    "body": [".expect(\"$1\")"],
+    "description": "Expect method call"
+  },
+  "unwrap_or": {
+    "prefix": "uor",
+    "body": [".unwrap_or($1)"],
+    "description": "Unwrap or default"
+  },
+  "unwrap_or_else": {
+    "prefix": "uore",
+    "body": [".unwrap_or_else(|| $1)"],
+    "description": "Unwrap or else closure"
+  },
+  "map": {
+    "prefix": "map",
+    "body": [".map(|$1| $2)"],
+    "description": "Map method"
+  },
+  "and_then": {
+    "prefix": "andt",
+    "body": [".and_then(|$1| $2)"],
+    "description": "And then method"
+  },
+  "or_else": {
+    "prefix": "ore",
+    "body": [".or_else(|$1| $2)"],
+    "description": "Or else method"
+  },
+  "collect": {
+    "prefix": "col",
+    "body": [".collect::<$1>()"],
+    "description": "Collect into collection"
+  },
+  "collect Vec": {
+    "prefix": "colv",
+    "body": [".collect::<Vec<_>>()"],
+    "description": "Collect into Vec"
+  },
+  "todo": {
+    "prefix": "todo",
+    "body": ["todo!(\"$1\")"],
+    "description": "Todo macro with message"
+  },
+  "Box::new": {
+    "prefix": "boxn",
+    "body": ["Box::new($1)"],
+    "description": "Box new"
+  },
+  "Rc::new": {
+    "prefix": "rcn",
+    "body": ["Rc::new($1)"],
+    "description": "Rc new"
+  },
+  "Arc::new": {
+    "prefix": "arcn",
+    "body": ["Arc::new($1)"],
+    "description": "Arc new"
+  },
+  "HashMap::new": {
+    "prefix": "hmn",
+    "body": ["HashMap::new()"],
+    "description": "HashMap new"
+  },
+  "BTreeMap::new": {
+    "prefix": "btmn",
+    "body": ["BTreeMap::new()"],
+    "description": "BTreeMap new"
+  },
+  "HashSet::new": {
+    "prefix": "hsn",
+    "body": ["HashSet::new()"],
+    "description": "HashSet new"
+  },
+  "thread spawn": {
+    "prefix": "spawn",
+    "body": ["std::thread::spawn(move || {", "    $1", "})"],
+    "description": "Spawn thread"
+  }
+}
