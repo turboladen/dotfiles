@@ -117,3 +117,5 @@ issues. I do anticipate to follow some of these:
 - `lua/plugins/extras/test`
 - `lua/plugins/extras/ui`
 - `lua/plugins/extras/util`
+
+- `FORMATTING_SETUP.md` gives an overview of tools used for formatting code.

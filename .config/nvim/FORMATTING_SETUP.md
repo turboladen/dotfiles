@@ -23,15 +23,15 @@ The formatting system uses a hybrid approach:
 
 ### External Formatting (Auto-format on save)
 
-| Language            | Tool     | Config Location      | Notes                               |
-| ------------------- | -------- | -------------------- | ----------------------------------- |
-| Lua                 | stylua   | `./stylua.toml`      | Project-only (superior to lua_ls)   |
-| Markdown            | dprint   | `./dprint.json`      | Project-only (superior to marksman) |
-| JSON                | dprint   | `./dprint.json`      | Project-only (superior to jsonls)   |
-| YAML                | yamlfmt  | `~/.config/yamlfmt/` | Global config                       |
-| Shell (sh/bash/zsh) | shfmt    | Built-in config      | Always available                    |
-| TypeScript/JS       | dprint   | `./dprint.json`      | Project-only                        |
-| SQL                 | sqlfluff | Built-in config      | Always available                    |
+| Language            | Tool     | Config Location    | Notes                               |
+| ------------------- | -------- | ------------------ | ----------------------------------- |
+| Lua                 | stylua   | `./stylua.toml`    | Project-only (superior to lua_ls)   |
+| Markdown            | dprint   | `~/.dprint.jsonc`  | Project-only (superior to marksman) |
+| JSON                | dprint   | `~/.dprint.jsonc`  | Project-only (superior to jsonls)   |
+| YAML                | dprint   | `~/.dprint.jsonc`  | Global config                       |
+| Shell (sh/bash/zsh) | shfmt    | Built-in config    | Always available                    |
+| TypeScript/JS       | dprint   | `.~/.dprint.jsonc` | Project-only                        |
+| SQL                 | sqlfluff | Built-in config    | Always available                    |
 
 ## Usage
 
