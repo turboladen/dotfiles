@@ -1,150 +1,151 @@
 return {
-	-- LSP Configuration & Plugins
-	{
-		"neovim/nvim-lspconfig",
-		event = { "BufReadPre", "BufNewFile" },
-		dependencies = {
-			-- Useful status updates for LSP
-			{ "j-hui/fidget.nvim", opts = {} },
-		},
-		config = function()
-			-- Enhanced capabilities with blink.cmp
-			local capabilities = vim.lsp.protocol.make_client_capabilities()
-			local has_blink, blink = pcall(require, "blink.cmp")
-			if has_blink then
-				capabilities = vim.tbl_deep_extend("force", capabilities, blink.get_lsp_capabilities())
-			end
+  -- LSP Configuration & Plugins
+  {
+    "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = {
+      -- Useful status updates for LSP
+      { "j-hui/fidget.nvim", opts = {} },
+    },
+    config = function()
+      -- Enhanced capabilities with blink.cmp
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      local has_blink, blink = pcall(require, "blink.cmp")
+      if has_blink then
+        capabilities = vim.tbl_deep_extend("force", capabilities, blink.get_lsp_capabilities())
+      end
 
-			-- Configure global LSP defaults for ALL servers
-			vim.lsp.config("*", {
-				capabilities = capabilities,
-			})
+      -- Configure global LSP defaults for ALL servers
+      vim.lsp.config("*", {
+        capabilities = capabilities,
+      })
 
-			-- Configure diagnostics
-			vim.diagnostic.config({
-				virtual_text = {
-					spacing = 4,
-					source = "if_many",
-					prefix = "●",
-				},
-				float = {
-					source = "always",
-					border = "rounded",
-				},
-				signs = true,
-				underline = true,
-				update_in_insert = false,
-				severity_sort = true,
-			})
+      -- Configure diagnostics
+      vim.diagnostic.config({
+        virtual_text = {
+          spacing = 4,
+          source = "if_many",
+          prefix = "●",
+        },
+        float = {
+          source = "always",
+          border = "rounded",
+        },
+        signs = true,
+        underline = true,
+        update_in_insert = false,
+        severity_sort = true,
+      })
 
-			-- Use the 0.11 LspAttach event for all LSP setup
-			vim.api.nvim_create_autocmd("LspAttach", {
-				group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true }),
-				callback = function(args)
-					local client = vim.lsp.get_client_by_id(args.data.client_id)
-					local bufnr = args.buf
+      -- Use the 0.11 LspAttach event for all LSP setup
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true }),
+        callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          local bufnr = args.buf
 
-					-- Enable codelens if supported
-					if client:supports_method("textDocument/codeLens") then
-						vim.lsp.codelens.refresh({ bufnr = bufnr })
-						vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
-							buffer = bufnr,
-							group = vim.api.nvim_create_augroup("lsp-codelens", { clear = false }),
-							callback = function()
-								vim.lsp.codelens.refresh({ bufnr = bufnr })
-							end,
-						})
-					end
+          -- Enable codelens if supported
+          if client:supports_method("textDocument/codeLens") then
+            vim.lsp.codelens.refresh({ bufnr = bufnr })
+            vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+              buffer = bufnr,
+              group = vim.api.nvim_create_augroup("lsp-codelens", { clear = false }),
+              callback = function()
+                vim.lsp.codelens.refresh({ bufnr = bufnr })
+              end,
+            })
+          end
 
-					-- Buffer local mappings
-					local map = function(keys, func, desc)
-						vim.keymap.set("n", keys, func, { buffer = bufnr, desc = "LSP: " .. desc })
-					end
+          -- Buffer local mappings
+          local map = function(keys, func, desc)
+            vim.keymap.set("n", keys, func, { buffer = bufnr, desc = "LSP: " .. desc })
+          end
 
-					-- Navigation keymaps
-					map("gd", vim.lsp.buf.definition, "LSP: Goto definition")
-					map("gD", vim.lsp.buf.declaration, "LSP: Goto declaration")
-					map("gi", vim.lsp.buf.implementation, "LSP: Goto implementation")
-					map("gC", vim.lsp.buf.incoming_calls, "LSP: Incoming calls")
-					map("gR", "<cmd>Trouble lsp_references toggle focus=false<cr>", "LSP: References (Trouble)")
-					map("gy", vim.lsp.buf.type_definition, "LSP: Type definition")
+          -- Navigation keymaps
+          map("gd", vim.lsp.buf.definition, "Goto definition")
+          map("gD", vim.lsp.buf.declaration, "Goto declaration")
+          map("gi", vim.lsp.buf.implementation, "Goto implementation")
+          map("gC", vim.lsp.buf.incoming_calls, "Incoming calls")
+          map("gR", "<cmd>Trouble lsp_references toggle focus=false<cr>", "References (Trouble)")
+          map("gy", vim.lsp.buf.type_definition, "Type definition")
 
-					-- Hover and signature help
-					map("K", vim.lsp.buf.hover, "LSP: Show docs")
+          -- Hover and signature help
+          map("K", vim.lsp.buf.hover, "Show docs")
 
-					-- Document/workspace symbols
-					map("<leader>ds", vim.lsp.buf.document_symbol, "LSP: Doc symbols")
-					map("<leader>ws", vim.lsp.buf.workspace_symbol, "LSP: Workspace symbols")
+          -- Document/workspace symbols
+          map("<leader>ds", vim.lsp.buf.document_symbol, "Doc symbols")
+          map("<leader>ws", vim.lsp.buf.workspace_symbol, "Workspace symbols")
 
-					-- Code actions and refactoring
-					map("<leader>la", vim.lsp.buf.code_action, "LSP: Code action")
-					vim.keymap.set(
-						"v",
-						"<leader>la",
-						vim.lsp.buf.code_action,
-						{ buffer = bufnr, desc = "LSP: Code action" }
-					)
-					map("<leader>lr", vim.lsp.buf.rename, "LSP: Rename")
-					map("<leader>ls", vim.lsp.buf.signature_help, "LSP: Signature help")
+          -- Code actions and refactoring
+          map("<leader>la", vim.lsp.buf.code_action, "Code action")
+          vim.keymap.set(
+            "v",
+            "<leader>la",
+            vim.lsp.buf.code_action,
+            { buffer = bufnr, desc = "Code action" }
+          )
+          map("<leader>lr", vim.lsp.buf.rename, "Rename")
+          map("<leader>ls", vim.lsp.buf.signature_help, "Signature help")
 
-					-- Formatting (for languages where LSP formatting is preferred)
-					-- External formatters are configured in plugins/formatting.lua
-					map("<leader>lf", vim.lsp.buf.format, "LSP: Format buffer")
+          -- Formatting (for languages where LSP formatting is preferred)
+          -- External formatters are configured in plugins/formatting.lua
+          map("<leader>lf", vim.lsp.buf.format, "Format buffer")
 
-					-- Diagnostics navigation
-					map("]g", vim.diagnostic.goto_next, "LSP: Next diagnostic")
-					map("[g", vim.diagnostic.goto_prev, "LSP: Prev diagnostic")
+          -- Diagnostics navigation
+          map("]g", vim.diagnostic.goto_next, "Next diagnostic")
+          map("[g", vim.diagnostic.goto_prev, "Prev diagnostic")
 
-					-- Workspace management
-					map("<leader>lw", function()
-						vim.notify(vim.inspect(vim.lsp.buf.list_workspace_folders()), vim.log.levels.INFO)
-					end, "LSP: List folders")
+          -- Workspace management
+          map("<leader>lw", function()
+            vim.notify(vim.inspect(vim.lsp.buf.list_workspace_folders()), vim.log.levels.INFO)
+          end, "List folders")
 
-					-- Diagnostic viewing
-					map("<leader>lx", function()
-						vim.cmd("FzfLua diagnostics_document")
-					end, "LSP: Buffer errors")
-					map("<leader>lX", function()
-						vim.cmd("FzfLua diagnostics_workspace")
-					end, "LSP: All errors")
-					map("<leader>ld", function()
-						vim.cmd("FzfLua diagnostics_document")
-					end, "LSP: Buffer diagnostics")
-					map("<leader>lD", function()
-						vim.cmd("FzfLua diagnostics_workspace")
-					end, "LSP: All diagnostics")
+          -- Diagnostic viewing
+          map("<leader>lx", function()
+            vim.cmd("FzfLua diagnostics_document")
+          end, "Buffer errors")
+          map("<leader>lX", function()
+            vim.cmd("FzfLua diagnostics_workspace")
+          end, "All errors")
+          map("<leader>ld", function()
+            vim.cmd("FzfLua diagnostics_document")
+          end, "Buffer diagnostics")
+          map("<leader>lD", function()
+            vim.cmd("FzfLua diagnostics_workspace")
+          end, "All diagnostics")
 
-					-- Codelens mappings
-					if client:supports_method("textDocument/codeLens") then
-						map("<leader>ll", vim.lsp.codelens.run, "LSP: Codelens run")
-						map("<leader>lc", function()
-							vim.lsp.codelens.refresh({ bufnr = bufnr })
-						end, "LSP: Codelens refresh")
-					end
+          -- Codelens mappings
+          if client:supports_method("textDocument/codeLens") then
+            map("<leader>ll", vim.lsp.codelens.run, "Codelens run")
+            map("<leader>lc", function()
+              vim.lsp.codelens.refresh({ bufnr = bufnr })
+            end, "Codelens refresh")
+          end
 
-					-- Document highlighting
-					if client:supports_method("textDocument/documentHighlight") then
-						local highlight_augroup = vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
-						vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-							buffer = bufnr,
-							group = highlight_augroup,
-							callback = vim.lsp.buf.document_highlight,
-						})
+          -- Document highlighting
+          if client:supports_method("textDocument/documentHighlight") then
+            local highlight_augroup =
+              vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
+            vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+              buffer = bufnr,
+              group = highlight_augroup,
+              callback = vim.lsp.buf.document_highlight,
+            })
 
-						vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-							buffer = bufnr,
-							group = highlight_augroup,
-							callback = vim.lsp.buf.clear_references,
-						})
-					end
-				end,
-			})
+            vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+              buffer = bufnr,
+              group = highlight_augroup,
+              callback = vim.lsp.buf.clear_references,
+            })
+          end
+        end,
+      })
 
-			-- Note: Language servers are configured in their respective lang/*.lua files
-			-- rust-analyzer: handled by rustaceanvim in lang/rust.lua
-			-- lua_ls: configured in lang/lua.lua
-			-- ruby_lsp: configured in lang/ruby.lua
-			-- marksman: configured in lang/markdown.lua
-		end,
-	},
+      -- Note: Language servers are configured in their respective lang/*.lua files
+      -- rust-analyzer: handled by rustaceanvim in lang/rust.lua
+      -- lua_ls: configured in lang/lua.lua
+      -- ruby_lsp: configured in lang/ruby.lua
+      -- marksman: configured in lang/markdown.lua
+    end,
+  },
 }
