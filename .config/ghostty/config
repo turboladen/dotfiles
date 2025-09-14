@@ -1,2 +1,9 @@
 font-family = MonoLisa
+#
+# font-family = Hack Nerd Font Mono
+# font-size = 15
+# font-family = JetBrainsMonoNL Nerd Font Mono
+# font-family = Source Code Pro for Powerline
 font-thicken = true
+
+alpha-blending = linear

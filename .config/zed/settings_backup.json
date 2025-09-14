@@ -4,18 +4,13 @@
   // ╰─────────────────────────────────────────────╯
   "preferred_line_length": 80,
   "show_wrap_guides": true,
-  "wrap_guides": [
-    80
-  ],
+  "wrap_guides": [80],
   "buffer_font_size": 15,
   "vim_mode": true,
+
   // ╭─────────────────────────────────────────────╮
   // │ UI Settings                                 │
   // ╰─────────────────────────────────────────────╯
-  "gutter": {
-    "line_numbers": true,
-    "min_line_number_digits": 2
-  },
   "icon_theme": "VSCode Icons (Light)",
   "theme": "Dracula Solid",
   "toolbar": {
@@ -26,6 +21,7 @@
   "tabs": {
     "git_status": true
   },
+
   // ╭─────────────────────────────────────────────╮
   // │ Language-Specific Settings                  │
   // ╰─────────────────────────────────────────────╯
@@ -35,12 +31,7 @@
       "formatter": {
         "external": {
           "command": "shfmt",
-          "arguments": [
-            "-i",
-            "2",
-            "-ci",
-            "-"
-          ]
+          "arguments": ["-i", "2", "-ci", "-"]
         }
       },
       "format_on_save": "on"
@@ -53,16 +44,13 @@
       },
       "format_on_save": "on"
     },
+
     // Web Languages
     "JavaScript": {
       "formatter": {
         "external": {
           "command": "dprint",
-          "arguments": [
-            "fmt",
-            "--stdin",
-            "{buffer_path}"
-          ]
+          "arguments": ["fmt", "--stdin", "{buffer_path}"]
         }
       },
       "format_on_save": "on"
@@ -71,11 +59,7 @@
       "formatter": {
         "external": {
           "command": "dprint",
-          "arguments": [
-            "fmt",
-            "--stdin",
-            "{buffer_path}"
-          ]
+          "arguments": ["fmt", "--stdin", "{buffer_path}"]
         }
       },
       "format_on_save": "on"
@@ -84,25 +68,18 @@
       "formatter": {
         "external": {
           "command": "dprint",
-          "arguments": [
-            "fmt",
-            "--stdin",
-            "{buffer_path}"
-          ]
+          "arguments": ["fmt", "--stdin", "{buffer_path}"]
         }
       },
       "format_on_save": "on"
     },
+
     // Data Languages
     "JSON": {
       "formatter": {
         "external": {
           "command": "dprint",
-          "arguments": [
-            "fmt",
-            "--stdin",
-            "{buffer_path}"
-          ]
+          "arguments": ["fmt", "--stdin", "{buffer_path}"]
         }
       },
       "format_on_save": "on"
@@ -111,11 +88,7 @@
       "formatter": {
         "external": {
           "command": "yamlfmt",
-          "arguments": [
-            "-formatter",
-            "retain_line_breaks=true",
-            "-"
-          ]
+          "arguments": ["-formatter", "retain_line_breaks=true", "-"]
         }
       },
       "format_on_save": "on"
@@ -124,39 +97,30 @@
       "formatter": {
         "external": {
           "command": "dprint",
-          "arguments": [
-            "fmt",
-            "--stdin",
-            "{buffer_path}"
-          ]
+          "arguments": ["fmt", "--stdin", "{buffer_path}"]
         }
       },
       "format_on_save": "on"
     },
+
     // Documentation
     "Markdown": {
       "formatter": {
         "external": {
           "command": "dprint",
-          "arguments": [
-            "fmt",
-            "--stdin",
-            "{buffer_path}"
-          ]
+          "arguments": ["fmt", "--stdin", "{buffer_path}"]
         }
       },
       "format_on_save": "on"
     },
+
     // Programming Languages
     "Lua": {
       "format_on_save": "on",
       "formatter": {
         "external": {
           "command": "stylua",
-          "arguments": [
-            "{buffer_path}",
-            "-"
-          ]
+          "arguments": ["{buffer_path}", "-"]
         }
       }
     },
@@ -164,30 +128,24 @@
       "formatter": {
         "external": {
           "command": "dprint",
-          "arguments": [
-            "fmt",
-            "--stdin",
-            "{buffer_path}"
-          ]
+          "arguments": ["fmt", "--stdin"]
         }
       },
       "format_on_save": "on"
     },
+
     // Database
     "SQL": {
       "formatter": {
         "external": {
           "command": "sqlfluff",
-          "arguments": [
-            "format",
-            "--dialect=ansi",
-            "-"
-          ]
+          "arguments": ["format", "--dialect=ansi", "-"]
         }
       },
       "format_on_save": "on"
     }
   },
+
   // ╭─────────────────────────────────────────────╮
   // │ LSP Configuration                           │
   // ╰─────────────────────────────────────────────╯
@@ -227,6 +185,7 @@
         }
       }
     },
+
     // Web Development
     "typescript-language-server": {
       "settings": {
@@ -254,6 +213,7 @@
         }
       }
     },
+
     // Data and Configuration Languages
     "json-language-server": {
       "settings": {
@@ -278,13 +238,12 @@
         "taplo": {
           "schema": {
             "enabled": true,
-            "catalogs": [
-              "https://www.schemastore.org/api/json/catalog.json"
-            ]
+            "catalogs": ["https://www.schemastore.org/api/json/catalog.json"]
           }
         }
       }
     },
+
     // Shell Languages
     "bash-language-server": {
       "settings": {
@@ -294,34 +253,47 @@
       }
     }
   },
+
   // ╭─────────────────────────────────────────────╮
   // │ AI and Context Servers                      │
   // ╰─────────────────────────────────────────────╯
   "context_servers": {
     "google-cloud-mcp": {
-      "enabled": true,
       "source": "custom",
-      "command": "node",
-      "args": [
-        "/Users/steve.loveless/Development/not_my_projects/google-cloud-mcp/dist/index.js"
-      ],
-      "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS": "/Users/steve.loveless/.config/gcloud/application_default_credentials.json"
+      "command": {
+        "path": "node",
+        "args": [
+          "/Users/steve.loveless/Development/not_my_projects/google-cloud-mcp/dist/index.js"
+        ],
+        "env": {
+          "GOOGLE_APPLICATION_CREDENTIALS": "/Users/steve.loveless/.config/gcloud/application_default_credentials.json"
+        }
+      },
+      "settings": {}
+    },
+    "Sentry": {
+      "source": "custom",
+      "command": {
+        "path": "npx",
+        "args": ["mcp-remote", "https://mcp.sentry.dev/sse"]
       }
     }
   },
+
   // ╭─────────────────────────────────────────────╮
   // │ Agent Configuration                         │
   // ╰─────────────────────────────────────────────╯
   "agent": {
     "always_allow_tool_actions": true,
-    "default_profile": "write",
+    "default_profile": "ask",
     "model_parameters": [],
     "default_model": {
-      "provider": "copilot_chat",
-      "model": "claude-sonnet-4"
-    }
+      "provider": "openai",
+      "model": "claude-4-sonnet"
+    },
+    "version": "2"
   },
+
   // ╭─────────────────────────────────────────────╮
   // │ Language Models                             │
   // ╰─────────────────────────────────────────────╯
@@ -330,11 +302,42 @@
       "api_url": "https://proxy.fuelix.ai",
       "available_models": [
         {
+          "name": "claude-3-7-sonnet",
+          "display_name": "Claude 3.7 Sonnet (FI)",
+          "max_tokens": 64000
+        },
+        {
           "name": "claude-4-sonnet",
           "display_name": "Claude 4 Sonnet (FI)",
+          "max_tokens": 200000
+        },
+        {
+          "name": "gemini-2.5-flash",
+          "display_name": "Gemini 2.5 Flash (FI)",
+          "max_tokens": 128000
+        },
+        {
+          "name": "gemini-2.5-pro",
+          "display_name": "Gemini 2.5 Pro (FI)",
+          "max_tokens": 128000
+        },
+        {
+          "name": "gpt-4o",
+          "display_name": "GPT-4o (FI)",
+          "max_tokens": 128000
+        },
+        {
+          "name": "o1-mini",
+          "display_name": "GPT O1 Mini (FI)",
+          "max_tokens": 128000
+        },
+        {
+          "name": "o3-mini",
+          "display_name": "GPT O3 Mini (FI)",
           "max_tokens": 128000
         }
-      ]
+      ],
+      "version": "1"
     }
   }
 }

@@ -4,7 +4,7 @@
 local bufnr = vim.api.nvim_get_current_buf()
 
 -- Markdown-specific buffer settings
-vim.bo.textwidth = 80
+vim.bo.textwidth = 100
 vim.wo.wrap = true
 vim.wo.linebreak = true
 vim.wo.breakindent = true

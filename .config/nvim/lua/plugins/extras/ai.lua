@@ -8,7 +8,7 @@ return {
         enabled = true,
         auto_trigger = true,
         keymap = {
-          accept = "<M-l>",
+          accept = "<S-Tab>",
           next = "<M-]>",
           prev = "<M-[>",
           dismiss = "<C-]>",
@@ -22,6 +22,7 @@ return {
         gitrebase = false,
         ["."] = false,
       },
+      copilot_model = "gpt-5",
     },
   },
 
@@ -51,13 +52,25 @@ return {
     },
     opts = {
       adapters = {
-        copilot = function()
-          return require("codecompanion.adapters").extend("copilot", {})
-        end,
+        http = {
+          copilot = function()
+            return require("codecompanion.adapters").extend("copilot", {
+              schema = {
+                model = {
+                  default = "claude-sonnet-4",
+                },
+              },
+            })
+          end,
+        },
       },
       strategies = {
-        chat = { adapter = "copilot" },
-        inline = { adapter = "copilot" },
+        chat = {
+          adapter = "copilot",
+        },
+        inline = {
+          adapter = "copilot",
+        },
       },
     },
   },

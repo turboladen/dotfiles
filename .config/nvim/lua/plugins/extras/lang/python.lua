@@ -28,9 +28,18 @@ return {
             analysis = {
               ignore = { "*" }, -- Disable pyright diagnostics, let ruff handle them
               typeCheckingMode = "basic",
+              indexing = true, -- Ensure indexing is enabled for workspace symbols
+              autoImportCompletions = true,
             },
           },
         },
+        -- Ensure pyright supports workspace symbols
+        on_attach = function(client, bufnr)
+          -- Force enable workspace symbol support
+          if client.name == "pyright" then
+            client.server_capabilities.workspaceSymbolProvider = true
+          end
+        end,
       })
 
       vim.lsp.enable("ruff")

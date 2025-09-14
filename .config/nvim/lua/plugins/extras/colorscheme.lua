@@ -61,9 +61,7 @@ return {
   {
     "mkarmona/materialbox",
     lazy = true,
-    opts = {
-      dim_inactive = true,
-    },
+    opts = {},
     config = function(_, opts)
       require("materialbox").setup(opts)
     end,
@@ -81,9 +79,7 @@ return {
   {
     "yorik1984/newpaper.nvim",
     lazy = true,
-    opts = {
-      dim_inactive = true,
-    },
+    opts = {},
     config = function(_, opts)
       require("newpaper").setup(opts)
     end,
@@ -91,9 +87,7 @@ return {
   {
     "talha-akram/noctis.nvim",
     lazy = true,
-    opts = {
-      dim_inactive = true,
-    },
+    opts = {},
     config = function(_, opts)
       require("noctis").setup(opts)
     end,
@@ -101,9 +95,7 @@ return {
   {
     "e-q/okcolors.nvim",
     lazy = true,
-    opts = {
-      dim_inactive = true,
-    },
+    opts = {},
     config = function(_, opts)
       require("okcolors").setup(opts)
     end,

@@ -97,8 +97,8 @@ return {
 
           -- Workspace management
           map("<leader>lw", function()
-            vim.notify(vim.inspect(vim.lsp.buf.list_workspace_folders()), vim.log.levels.INFO)
-          end, "List folders")
+            vim.cmd("FzfLua lsp_live_workspace_symbols")
+          end, "Workspace symbols")
 
           -- Diagnostic viewing
           map("<leader>lx", function()

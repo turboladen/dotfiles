@@ -25,6 +25,7 @@ return {
     },
     opts = function()
       -- Configure jsonls with SchemaStore integration
+      -- Also, jsonls comes from vscode-json-language-server, provided by the vscode-langservers-extracted npm package
       vim.lsp.config("jsonls", {
         settings = {
           json = {

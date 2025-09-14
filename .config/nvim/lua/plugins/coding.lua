@@ -30,7 +30,7 @@ return {
           auto_show = true,
           auto_show_delay_ms = 200,
         },
-        ghost_text = { enabled = true },
+        ghost_text = { enabled = false }, -- Disabled to troubleshoot phantom characters
         menu = {
           draw = {
             columns = { { "label", "label_description", gap = 1 }, { "kind_icon", "kind" } },
@@ -41,7 +41,17 @@ return {
       sources = {
         default = { "lsp", "path", "snippets", "buffer" },
         providers = {
+          lsp = {
+            min_keyword_length = 2,
+          },
+          path = {
+            min_keyword_length = 2,
+          },
+          buffer = {
+            min_keyword_length = 2,
+          },
           snippets = {
+            min_keyword_length = 2,
             opts = {
               friendly_snippets = true,
               search_paths = { vim.fn.stdpath("config") .. "/snippets" },
