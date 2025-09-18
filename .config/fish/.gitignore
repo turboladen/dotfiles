@@ -1,0 +1,18 @@
+# gitnow
+completions/{branch,merge,move,tag}.fish
+
+# orbstack
+completions/{docker,kubectl,orbctl}.fish
+
+# others
+completions/chruby.fish
+completions/delta.fish
+completions/tilt.fish
+
+conf.d/fnm.fish
+conf.d/fzf.fish
+conf.d/gitnow.fish
+conf.d/mcfly.fish
+conf.d/starship.fish
+conf.d/uv.env.fish
+conf.d/zoxide.fish
