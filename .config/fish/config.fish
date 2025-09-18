@@ -7,7 +7,7 @@ set --export --prepend PATH "/Users/steve.loveless/.rd/bin"
 # ╰─────────────────────╯
 if status is-login
     set -gx EDITOR /opt/homebrew/bin/nvim
-    set -gx HOMEBREW_CASK_OPTS "--appdir=~/Applications"
+    # set -gx HOMEBREW_CASK_OPTS "--appdir=~/Applications"
 
     # Use bat as manpager for syntax highlighting
     set -gx MANPAGER sh\ -c\ \'col\ -bx\ \|\ bat\ -l\ man\ -p\'
@@ -36,3 +36,7 @@ if status is-interactive
     # Show system info on startup
     fastfetch
 end
+
+# Added by OrbStack: command-line tools and integration
+# This won't be added again if you remove it.
+source ~/.orbstack/shell/init2.fish 2>/dev/null || :
