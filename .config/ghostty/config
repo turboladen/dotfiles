@@ -7,3 +7,5 @@ font-family = MonoLisa
 font-thicken = true
 
 alpha-blending = linear
+
+copy-on-select = clipboard
