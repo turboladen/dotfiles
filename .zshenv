@@ -3,11 +3,6 @@
 # │ sessions. Keep dev tools here so nvim spawned processes can access them │
 # ╰─────────────────────────────────────────────────────────────────────────╯
 
-# ╭─────────────────────────────────────────╮
-# │ Environment variables for all processes │
-# ╰─────────────────────────────────────────╯
-export HOMEBREW_CASK_OPTS="--appdir=~/Applications"
-
 # ╭─────────────────────────────────────────────────────────────────────╮
 # │ PATH modifications (essential for nvim and spawned processes)      │
 # ╰─────────────────────────────────────────────────────────────────────╯
@@ -32,4 +27,24 @@ export NDK_HOME=$HOME/Library/Android/sdk/ndk
 source "$HOME/.cargo/env"
 source "$HOME/.config/zsh/chruby.zsh"
 chruby 3
+
+# ╭───────────────────────────╮
+# │ Fast Node Manager         │
+# ╰───────────────────────────╯
 eval "$(fnm env --use-on-cd)"
+# export PATH="$HOME/Library/Application Support/fnm:$PATH"
+
+# ╭────────────────────────────╮
+# │ Make mason tools available │
+# ╰────────────────────────────╯
+export PATH=$PATH:~/.local/share/nvim/mason/bin
+
+# ╭────────────────────╮
+# │ opam configuration │
+# ╰────────────────────╯
+# [[ ! -r /Users/steve.loveless/.opam/opam-init/init.zsh ]] || source /Users/steve.loveless/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
+
+# ╭───────────────────────────╮
+# │ Use LLVM's `lld` for bevy │
+# ╰───────────────────────────╯
+export PATH=$PATH:/opt/homebrew/opt/llvm/bin

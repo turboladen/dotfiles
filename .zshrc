@@ -1,11 +1,10 @@
+homebrew_prefix=$(brew --prefix)
+
 # ╭──────────────────────────╮
 # │ Install plugins using zr │
 # ╰──────────────────────────╯
 . <(zr \
-  ohmyzsh/ohmyzsh.git/plugins/brew/brew.plugin.zsh \
   ohmyzsh/ohmyzsh.git/plugins/colored-man-pages/colored-man-pages.plugin.zsh \
-  ohmyzsh/ohmyzsh.git/plugins/dirhistory/dirhistory.plugin.zsh \
-  ohmyzsh/ohmyzsh.git/plugins/git-hubflow/git-hubflow.plugin.zsh \
   ohmyzsh/ohmyzsh.git/plugins/vi-mode/vi-mode.plugin.zsh \
   djui/alias-tips.git/alias-tips.plugin.zsh
 )
@@ -14,9 +13,10 @@
 # │ Local config │
 # ╰──────────────╯
 eval "$(zoxide init --hook pwd zsh)"
-source "$HOME"/.config/zsh/*.zsh
+source "$HOME/.config/zsh/aliases.zsh"
+source "$HOME/.config/zsh/chruby.zsh"
+source "$HOME/.config/zsh/hgrep.plugin.zsh"
 source "$HOME/.config/zsh/myrails.plugin.zsh"
-source "$HOME/.config/zsh/overmind.zsh"
 source "$HOME/.config/zsh/ruby.zsh"
 source "$HOME/.config/zsh/rust.zsh"
 source "$HOME/.config/zsh/server.plugin.zsh"
@@ -31,7 +31,6 @@ eval "$(starship init zsh)"
 # │ Aliases and completions │
 # ╰─────────────────────────╯
 alias tilt=/opt/homebrew/bin/tilt
-alias bower='noglob bower'
 
 . <(zr zsh-users/zsh-syntax-highlighting.git/zsh-syntax-highlighting.plugin.zsh)
 
@@ -60,7 +59,7 @@ setopt HIST_IGNORE_ALL_DUPS
 # │ completions to zsh/functions/.                                       │
 # ╰──────────────────────────────────────────────────────────────────────╯
 if type brew &>/dev/null; then
-  FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH"
+  FPATH="${homebrew_prefix}/share/zsh/site-functions:$FPATH"
   autoload -Uz compinit
   compinit
 fi
@@ -71,17 +70,13 @@ fi
   ohmyzsh/ohmyzsh.git/plugins/gem/_gem \
   ohmyzsh/ohmyzsh.git/plugins/rust/_rust \
   ohmyzsh/ohmyzsh.git/plugins/rustup/_rustup \
-  ohmyzsh/ohmyzsh.git/plugins/chruby/chruby.plugin.zsh \
   ohmyzsh/ohmyzsh.git/plugins/git/git.plugin.zsh \
-  ohmyzsh/ohmyzsh.git/plugins/rake-fast/rake-fast.plugin.zsh \
-  ohmyzsh/ohmyzsh.git/plugins/tmux/tmux.plugin.zsh \
   ohmyzsh/ohmyzsh.git/plugins/docker-compose/docker-compose.plugin.zsh \
   zsh-users/zsh-autosuggestions.git/zsh-autosuggestions.plugin.zsh \
   zsh-users/zsh-completions.git/zsh-completions.plugin.zsh
 )
 
 eval "$(fnm completions --shell zsh)"
-eval "$(wezterm shell-completion --shell zsh)"
 
 # Completion styling
 zstyle ':completion:*' rehash true                              # automatically find new executables in path
@@ -134,7 +129,7 @@ export PATH="$PNPM_HOME:$PATH"
 # ╭─────────────────────────────────╮
 # │ Additional PATH modifications   │
 # ╰─────────────────────────────────╯
-export PATH="$HOMEBREW_PREFIX/opt/binutils/bin:/usr/local/bin:$PATH"
+export PATH="${homebrew_prefix}/opt/binutils/bin:/usr/local/bin:$PATH"
 
 ### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
 export PATH="/Users/steve.loveless/.rd/bin:$PATH"
@@ -145,7 +140,7 @@ export PATH="/Users/steve.loveless/.rd/bin:$PATH"
 # ╰───────────────╯
 unalias run-help
 autoload run-help
-export HELPDIR=$HOMEBREW_PREFIX/share/zsh/help
+export HELPDIR=$homebrew_prefix/share/zsh/help
 
 # ╭────────────╮
 # │ Load Mcfly │
@@ -157,5 +152,4 @@ export MCFLY_RESULTS_SORT=LAST_RUN
 export MCFLY_KEY_SCHEME=vim
 eval "$(mcfly init zsh)"
 
-# For SkyPilot shell completion
-. ~/.sky/.sky-complete.zsh
+. "$HOME/.local/bin/env"
