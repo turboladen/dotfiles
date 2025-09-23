@@ -19,25 +19,27 @@ local function extract_keymaps_from_file(filepath)
     -- Pattern to match various keymap definitions
     local patterns = {
       -- vim.keymap.set patterns: vim.keymap.set("n", "<leader>x", ...)
-      'vim%.keymap%.set%(["\']([nvxsoilct]*)["\'],%s*["\']([^"\']+)["\']',
+      "vim%.keymap%.set%([\"']([nvxsoilct]*)[\"'],%s*[\"']([^\"']+)[\"']",
       -- keys table patterns in lazy.nvim specs: { "<leader>x", ..., desc = "..." }
-      '{%s*["\']([^"\']+)["\'],%s*[^,]*,%s*desc%s*=%s*["\']([^"\']*)["\']',
+      "{%s*[\"']([^\"']+)[\"'],%s*[^,]*,%s*desc%s*=%s*[\"']([^\"']*)[\"']",
       -- Local map function patterns: map("<leader>x", ...)
-      'map%(["\']([^"\']+)["\']',
+      "map%([\"']([^\"']+)[\"']",
       -- which-key patterns: { "<leader>x", group = "..." }
-      '{%s*["\']([^"\']+)["\'],%s*group%s*=%s*["\']([^"\']*)["\']',
+      "{%s*[\"']([^\"']+)[\"'],%s*group%s*=%s*[\"']([^\"']*)[\"']",
     }
 
     for _, pattern in ipairs(patterns) do
       local key = line:match(pattern)
       if key and key ~= "" then
         -- Skip non-keymap patterns and config-like strings
-        if not key:match("^<[A-Z%-]+>$")
-           and not key:match("^mode$")
-           and not key:match("^desc$")
-           and not key:match("^group$")
-           and not key:match("^buffer$")
-           and key:len() > 1 then
+        if
+          not key:match("^<[A-Z%-]+>$")
+          and not key:match("^mode$")
+          and not key:match("^desc$")
+          and not key:match("^group$")
+          and not key:match("^buffer$")
+          and key:len() > 1
+        then
           table.insert(keymaps, {
             key = key,
             line = line_num,
@@ -146,7 +148,7 @@ function M.get_duplicate_details()
     local item = {
       key = key,
       count = #keymaps,
-      occurrences = {}
+      occurrences = {},
     }
 
     for _, keymap in ipairs(keymaps) do
