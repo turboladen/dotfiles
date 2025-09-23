@@ -32,7 +32,7 @@ require("lazy").setup({
   }, require("config.extras").get_enabled_extras()),
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
-  install = { colorscheme = { "sonokai" } },
+  install = { colorscheme = { "nightfox" } },
   -- automatically check for plugin updates
   checker = { enabled = false },
 })

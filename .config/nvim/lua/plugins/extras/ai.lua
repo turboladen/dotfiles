@@ -22,7 +22,8 @@ return {
         gitrebase = false,
         ["."] = false,
       },
-      copilot_model = "gpt-5",
+      -- copilot_model = "gpt-5",
+      copilot_model = "claude-sonnet-4",
     },
   },
 
@@ -62,11 +63,27 @@ return {
               },
             })
           end,
+          fuel_ix = function()
+            return require("codecompanion.adapters").extend("openai", {
+              name = "fuel_ix",
+              formatted_name = "Fuel IX",
+              url = "https://api.fuelix.ai/v1/chat/completions",
+              env = {
+                api_key = "cmd:op read 'op://Employee/Fuel iX Copilot Dev API Key/credential' --no-newline",
+              },
+              schema = {
+                model = {
+                  default = "claude-sonnet-4",
+                },
+              },
+            })
+          end,
         },
       },
       strategies = {
         chat = {
-          adapter = "copilot",
+          -- adapter = "copilot",
+          adapter = "fuel_ix",
         },
         inline = {
           adapter = "copilot",
