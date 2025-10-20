@@ -12,6 +12,7 @@ completions/tilt.fish
 conf.d/fnm.fish
 conf.d/fzf.fish
 conf.d/gitnow.fish
+conf.d/git.fish
 conf.d/mcfly.fish
 conf.d/starship.fish
 conf.d/uv.env.fish
