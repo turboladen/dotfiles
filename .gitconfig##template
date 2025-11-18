@@ -87,7 +87,7 @@
 [includeIf "gitdir:~/.local/share/yadm/repo.git"]
   path = .gitconfig-personal
 {% if yadm.class == "Work" %}
-[includeIf "gitdir:~/Development/agrian/"]
+[includeIf "gitdir:~/Development/tac/"]
   path = .gitconfig-work
 {% endif %}
 
