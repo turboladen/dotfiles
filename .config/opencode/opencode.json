@@ -1,0 +1,48 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "fuel-ix/claude-sonnet-4-5",
+  "instructions": [
+    "**/CLAUDE.md"
+  ],
+  "provider": {
+    "fuel-ix": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Fuel iX",
+      "options": {
+        "baseURL": "https://proxy.fuelix.ai/v1",
+        "apiKey": "{env:FUEL_IX_API_KEY}"
+      },
+      "models": {
+        "claude-sonnet-4-5": {
+          "name": "Claude Sonnet 4.5 (FI)"
+        }
+      }
+    }
+  },
+  "formatter": {
+    "dprint": {
+      "command": [
+        "dprint",
+        "fmt"
+      ],
+      "extensions": [
+        ".ts",
+        ".md",
+        ".y*ml",
+        ".json",
+        ".toml",
+        "Dockerfile",
+        ".py"
+      ]
+    },
+    "rustfmt": {
+      "command": [
+        "cargo",
+        "fmt"
+      ],
+      "extensions": [
+        ".rs"
+      ]
+    }
+  }
+}
