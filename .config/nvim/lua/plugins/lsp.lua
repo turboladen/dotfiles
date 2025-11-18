@@ -28,7 +28,7 @@ return {
           prefix = "●",
         },
         float = {
-          source = "always",
+          source = true,
           border = "rounded",
         },
         signs = true,
@@ -92,8 +92,12 @@ return {
           map("<leader>lf", vim.lsp.buf.format, "Format buffer")
 
           -- Diagnostics navigation
-          map("]g", vim.diagnostic.goto_next, "Next diagnostic")
-          map("[g", vim.diagnostic.goto_prev, "Prev diagnostic")
+          map("]g", function()
+            vim.diagnostic.jump({ count = 1, float = true })
+          end, "Next diagnostic")
+          map("[g", function()
+            vim.diagnostic.jump({ count = -1, float = true })
+          end, "Prev diagnostic")
 
           -- Workspace management
           map("<leader>lw", function()
