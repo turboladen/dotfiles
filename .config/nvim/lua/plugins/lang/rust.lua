@@ -1,0 +1,91 @@
+-- Dependencies to install:
+-- rustaceanvim handles rust-analyzer automatically
+-- rustfmt: comes with rust toolchain (rust-analyzer calls this internally)
+-- crates.nvim is installed via plugin manager
+--
+-- Note: No external formatter needed - rust-analyzer handles formatting via rustfmt
+
+return {
+  -- Treesitter Rust parser
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      ensure_installed = { "rust" },
+    },
+  },
+
+  -- Rust support via rustaceanvim
+  {
+    "mrcjkb/rustaceanvim",
+    version = "^6", -- Recommended to pin to major version
+    lazy = false, -- This plugin is already lazy by design
+    ft = { "rust" }, -- Only load for Rust files
+    config = function()
+      -- rustaceanvim configuration
+      vim.g.rustaceanvim = {
+        -- Plugin configuration
+        tools = {
+          -- Automatically set inlay hints
+          inlay_hints = {
+            auto = true,
+          },
+          -- Options for debugging
+          test_executor = "background", -- Run tests in background with diagnostics
+          -- Code action UI
+          code_actions = {
+            ui_select_fallback = true,
+          },
+        },
+        -- LSP configuration
+        server = {
+          -- Override default settings
+          default_settings = {
+            ["rust-analyzer"] = {
+              -- Enable all features for better IDE experience
+              cargo = {
+                features = "all",
+                loadOutDirsFromCheck = true,
+                buildScripts = {
+                  enable = true,
+                },
+                -- Better workspace discovery
+                autoreload = true,
+              },
+              -- Add clippy lints for extra help
+              checkOnSave = true,
+              procMacro = {
+                enable = true,
+                ignored = {
+                  -- ["async-trait"] = { "async_trait" },
+                  ["napi-derive"] = { "napi" },
+                  ["async-recursion"] = { "async_recursion" },
+                },
+              },
+              -- Workspace and project discovery
+              linkedProjects = {},
+              files = {
+                watcherExclude = {
+                  "**/.git/**",
+                  "**/target/**",
+                  "**/node_modules/**",
+                },
+              },
+              -- Diagnostics
+              diagnostics = {
+                enable = true,
+                experimental = {
+                  enable = true,
+                },
+              },
+            },
+          },
+        },
+        -- DAP configuration
+        dap = {
+          -- Auto-configure DAP settings
+          autoload_configurations = true,
+        },
+      }
+    end,
+  },
+}

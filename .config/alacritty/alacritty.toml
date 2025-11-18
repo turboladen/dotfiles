@@ -11,9 +11,10 @@
 [window]
 startup_mode = "Fullscreen"
 
-[window.dimensions]
-columns = 80
-lines = 24
+# [window.dimensions]
+# columns = 80
+# lines = 24
+# Note: Commented out to allow fullscreen mode to use full screen size
 
 [window.padding]
 x = 2
@@ -34,13 +35,19 @@ size = 13.0
 
 [font.normal]
 family = "MonoLisa"
+# Fallback fonts in case MonoLisa is not available
+# family = "JetBrains Mono"
+# family = "Fira Code"
+# family = "SF Mono"
+# family = "Monaco"
 
 # ╭──────╮
 # │ Bell │
 # ╰──────╯
 [bell]
 animation = "EaseOutExpo"
-duration = 0
+duration = 100
+# Set to 0 to disable bell entirely
 
 # ╭───────────╮
 # │ Selection │

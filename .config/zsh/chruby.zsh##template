@@ -4,8 +4,9 @@
 #
 # `brew install chruby ruby-install`
 #------------------------------------------------------------------------------
-source "${HOMEBREW_PREFIX}/opt/chruby/share/chruby/chruby.sh"
+homebrew_prefix="$(brew --prefix)"
+source "${homebrew_prefix}/opt/chruby/share/chruby/chruby.sh"
 
 # Switch to the most recent ruby
 chruby ruby
-source "${HOMEBREW_PREFIX}/opt/chruby/share/chruby/auto.sh"
+source "${homebrew_prefix}/opt/chruby/share/chruby/auto.sh"

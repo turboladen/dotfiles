@@ -2,39 +2,56 @@
 set --export --prepend PATH "/Users/steve.loveless/.rd/bin"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
 
+# ╭──────────────────╮
+# │ Tool Paths       │
+# ╰──────────────────╯
+# Rust/Cargo
+fish_add_path --path ~/.cargo/bin
+
+# LLVM from Homebrew (if you use it)
+fish_add_path --path /opt/homebrew/opt/llvm/bin
+
+# ╭─────────────────────╮
+# │ Login Configuration │
+# ╰─────────────────────╯
 if status is-login
-  set -gx EDITOR /opt/homebrew/bin/nvim
-  set -gx HOMEBREW_CASK_OPTS "--appdir=~/Applications"
+    set --global --export EDITOR /opt/homebrew/bin/nvim
+    # set -gx HOMEBREW_CASK_OPTS "--appdir=~/Applications"
 
-  # https://github.com/sharkdp/bat?tab=readme-ov-file#man
-  # set -gx MANPAGER="sh -c 'col -bx | bat -l man -p'"
-  set -gx MANPAGER sh\ -c\ \'col\ -bx\ \|\ bat\ -l\ man\ -p\'
+    # Use bat as manpager for syntax highlighting
+    set --global --export MANPAGER sh\ -c\ \'col\ -bx\ \|\ bat\ -l\ man\ -p\'
 
+    # FZF integration with bat for file previews
+    set --global --export FZF_DEFAULT_OPTS "--preview 'bat --style=numbers --color=always {}'"
+
+    # Add Postgres.app to PATH
+    fish_add_path ~/Applications/Postgres.app/Contents/Versions/latest/bin
+    fish_add_path ~/Applications/Postgres.app/Contents/Versions/latest/lib
 end
 
+# ╭───────────────────────────╮
+# │ Interactive Configuration │
+# ╰───────────────────────────╯
 if status is-interactive
-  # ╭────────────────────────╮
-  # │ Turn off fish greeting │
-  # ╰────────────────────────╯
-  set fish_greeting
+    # Disable fish greeting
+    set fish_greeting
 
-  # ╭─────────╮
-  # │ Aliases │
-  # ╰─────────╯
-  alias .. 'cd ..'
+    # Set up aliases
+    alias .. 'cd ..'
 
-  fish_vi_key_bindings
+    # Use vi key bindings
+    fish_vi_key_bindings
 
-  fastfetch
+    # tv init fish | source
+
+    # Show system info on startup
+    fastfetch
 end
 
-# pnpm
-set -gx PNPM_HOME "/Users/steve.loveless/Library/pnpm"
-if not string match -q -- $PNPM_HOME $PATH
-  set -gx PATH "$PNPM_HOME" $PATH
-end
-# pnpm end
+# Added by OrbStack: command-line tools and integration
+# This won't be added again if you remove it.
+source ~/.orbstack/shell/init2.fish 2>/dev/null || :
 
-# Postgres.app
-fish_add_path ~/Applications/Postgres.app/Contents/Versions/latest/bin
-fish_add_path ~/Applications/Postgres.app/Contents/Versions/latest/lib
+# bun
+set --export BUN_INSTALL "$HOME/.bun"
+set --export PATH $BUN_INSTALL/bin $PATH
