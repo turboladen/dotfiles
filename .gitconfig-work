@@ -1,3 +1,4 @@
+# vi:ft=gitconfig
 [user]
-  email = steve.loveless@agrian.com
-  signingkey = 3568685887E90C8B
+  email = steve.loveless@telusagcg.com
+  signingkey = DD81ED6C58FB98D0
