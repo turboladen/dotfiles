@@ -18,17 +18,14 @@ return {
       -- Configure ruff LSP (uses lspconfig defaults)
       vim.lsp.config("ruff", {})
 
-      -- Configure pyright with custom settings to work with ruff
-      vim.lsp.config("pyright", {
+      -- Configure basedpyright with custom settings to work with ruff
+      vim.lsp.config("basedpyright", {
         settings = {
-          pyright = {
+          basedpyright = {
             disableOrganizeImports = true, -- Let ruff handle imports
-          },
-          python = {
             analysis = {
               ignore = { "*" }, -- Disable pyright diagnostics, let ruff handle them
-              typeCheckingMode = "basic",
-              indexing = true, -- Ensure indexing is enabled for workspace symbols
+              typeCheckingMode = "standard",
               autoImportCompletions = true,
             },
           },
@@ -36,14 +33,15 @@ return {
         -- Ensure pyright supports workspace symbols
         on_attach = function(client, bufnr)
           -- Force enable workspace symbol support
-          if client.name == "pyright" then
+          if client.name == "basedpyright" then
             client.server_capabilities.workspaceSymbolProvider = true
           end
         end,
       })
 
       vim.lsp.enable("ruff")
-      vim.lsp.enable("pyright")
+      vim.lsp.enable("basedpyright")
+      -- vim.lsp.enable("ty")
     end,
   },
 
