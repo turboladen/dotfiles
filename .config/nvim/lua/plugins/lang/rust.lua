@@ -43,7 +43,7 @@ return {
             ["rust-analyzer"] = {
               -- Enable all features for better IDE experience
               cargo = {
-                allFeatures = true,
+                features = "all",
                 loadOutDirsFromCheck = true,
                 buildScripts = {
                   enable = true,
@@ -56,7 +56,7 @@ return {
               procMacro = {
                 enable = true,
                 ignored = {
-                  ["async-trait"] = { "async_trait" },
+                  -- ["async-trait"] = { "async_trait" },
                   ["napi-derive"] = { "napi" },
                   ["async-recursion"] = { "async_recursion" },
                 },
