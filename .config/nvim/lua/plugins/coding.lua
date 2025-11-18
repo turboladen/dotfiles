@@ -17,6 +17,7 @@ return {
         preset = "default", -- Use sensible defaults
         ["<C-k>"] = { "select_prev", "fallback" },
         ["<C-j>"] = { "select_next", "fallback" },
+        ["<CR>"] = { "fallback" },
         ["<Tab>"] = { "accept", "fallback" },
       },
 
