@@ -48,9 +48,6 @@ return {
 
         -- Languages for extras (when LSP isn't available)
         sh = { "shfmt" },
-        bash = { "shfmt" },
-        zsh = { "shfmt" },
-        sql = { "sqlfluff" },
 
         -- Note: These languages now use LSP formatting:
         -- - Rust: rust-analyzer calls rustfmt internally

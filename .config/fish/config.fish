@@ -52,6 +52,10 @@ end
 # This won't be added again if you remove it.
 source ~/.orbstack/shell/init2.fish 2>/dev/null || :
 
+# Postgres.app
+fish_add_path ~/Applications/Postgres.app/Contents/Versions/latest/bin
+fish_add_path ~/Applications/Postgres.app/Contents/Versions/latest/lib
+
 # bun
 set --export BUN_INSTALL "$HOME/.bun"
 set --export PATH $BUN_INSTALL/bin $PATH

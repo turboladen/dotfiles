@@ -2,6 +2,17 @@
   // ╭─────────────────────────────────────────────╮
   // │ Editor Settings                             │
   // ╰─────────────────────────────────────────────╯
+  "terminal": {
+    "font_family": "JetBrainsMono Nerd Font"
+  },
+  "auto_signature_help": false,
+  "confirm_quit": true,
+  "ssh_connections": [
+    {
+      "host": "github.com",
+      "projects": []
+    }
+  ],
   "preferred_line_length": 80,
   "show_wrap_guides": true,
   "wrap_guides": [
@@ -16,10 +27,19 @@
     "line_numbers": true,
     "min_line_number_digits": 2
   },
-  "icon_theme": "VSCode Icons (Light)",
-  "theme": "Dracula Solid",
+  "icon_theme": {
+    "mode": "system",
+    "light": "VSCode Icons (Light)",
+    "dark": "VSCode Icons (Light)"
+  },
+  "theme": {
+    "mode": "system",
+    "light": "Ayu Dark",
+    "dark": "One Dark"
+  },
   "toolbar": {
     "breadcrumbs": true,
+    "code_actions": true,
     "quick_actions": true,
     "selections_menu": true
   },
@@ -110,11 +130,11 @@
     "YAML": {
       "formatter": {
         "external": {
-          "command": "yamlfmt",
+          "command": "dprint",
           "arguments": [
-            "-formatter",
-            "retain_line_breaks=true",
-            "-"
+            "fmt",
+            "--stdin",
+            "{buffer_path}"
           ]
         }
       },
@@ -135,6 +155,12 @@
     },
     // Documentation
     "Markdown": {
+      "show_wrap_guides": true,
+      "soft_wrap": "editor_width",
+      "inlay_hints": {
+        "enabled": false
+      },
+      "preferred_line_length": 100,
       "formatter": {
         "external": {
           "command": "dprint",
@@ -204,7 +230,6 @@
       "settings": {
         "python.analysis": {
           "diagnosticMode": "workspace",
-          "typeCheckingMode": "strict"
         },
         "python": {
           "pythonPath": ".venv/bin/python"
@@ -266,7 +291,7 @@
       "settings": {
         "yaml": {
           "schemaStore": {
-            "enable": false,
+            "enable": true,
             "url": ""
           },
           "schemas": {}
@@ -276,6 +301,10 @@
     "taplo": {
       "settings": {
         "taplo": {
+          // Let dprint handle formatting
+          "formatting": {
+            "enabled": false
+          },
           "schema": {
             "enabled": true,
             "catalogs": [
@@ -322,6 +351,12 @@
       "model": "claude-sonnet-4"
     }
   },
+  "agent_servers": {
+    "OpenCode": {
+      "command": "opencode",
+      "args": ["acp"]
+    }
+  },
   // ╭─────────────────────────────────────────────╮
   // │ Language Models                             │
   // ╰─────────────────────────────────────────────╯
@@ -332,6 +367,21 @@
         {
           "name": "claude-4-sonnet",
           "display_name": "Claude 4 Sonnet (FI)",
+          "max_tokens": 128000
+        },
+        {
+          "name": "claude-haiku-4-5",
+          "display_name": "Claude Haiku 4.5 (FI)",
+          "max_tokens": 128000
+        },
+        {
+          "name": "gpt-5-2025-08-07",
+          "display_name": "GPT 5 (FI)",
+          "max_tokens": 128000
+        },
+        {
+          "name": "gpt-5-chat",
+          "display_name": "GPT 5 Chat (FI)",
           "max_tokens": 128000
         }
       ]
