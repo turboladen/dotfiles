@@ -119,7 +119,7 @@ return {
       return {
         options = {
           theme = "auto", -- Automatically adapts to colorscheme
-          globalstatus = false, -- Per-buffer statuslines (old style)
+          globalstatus = true, -- Per-buffer statuslines (old style)
           disabled_filetypes = {
             statusline = { "dashboard", "alpha", "starter" },
           },
