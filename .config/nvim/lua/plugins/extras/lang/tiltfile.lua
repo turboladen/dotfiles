@@ -9,6 +9,10 @@ return {
     opts = {
       ensure_installed = { "starlark" },
     },
+    init = function()
+      -- Map tiltfile filetype to starlark parser for syntax highlighting
+      vim.treesitter.language.register("starlark", "tiltfile")
+    end,
   },
 
   -- Tiltfile LSP configuration
