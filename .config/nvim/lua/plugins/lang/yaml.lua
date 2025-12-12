@@ -1,6 +1,7 @@
 -- Dependencies to install:
 -- yaml-language-server: npm install -g yaml-language-server
 -- yamllint: pip install yamllint or brew install yamllint
+-- dprint: curl -fsSL https://dprint.dev/install.sh | sh (with pretty_yaml plugin)
 
 return {
   -- Treesitter YAML parser

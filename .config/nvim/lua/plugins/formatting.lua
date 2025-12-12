@@ -6,12 +6,11 @@
 -- - Markdown: LSP only (dprint LSP > marksman formatting)
 -- - JSON: LSP only (dprint LSP > jsonls formatting)
 -- - JavaScript/TypeScript: LSP only (dprint LSP when available)
--- - YAML: Formatter only (yamlfmt, yamlls doesn't format)
+-- - YAML: Formatter only (dprint, yamlls doesn't format)
 -- - TOML: LSP only (taplo LSP includes excellent formatting)
 --
 -- Global config locations:
--- - yamlfmt: ~/.config/yamlfmt/.yamlfmt.yml
--- - dprint: dprint.json/dprint.jsonc in project root
+-- - dprint: ~/.dprint.jsonc (global) or dprint.json/dprint.jsonc (project root)
 -- - marksman: ~/.config/marksman/config.toml
 
 return {
@@ -42,8 +41,7 @@ return {
       formatters_by_ft = {
         -- Languages where external formatters are superior
         lua = { "stylua" }, -- stylua > lua_ls formatting
-        yaml = { "yamlfmt" }, -- yamlls doesn't provide formatting
-        yml = { "yamlfmt" },
+        -- YAML formatting is handled in lua/plugins/lang/yaml.lua via dprint
         fish = { "fish_indent" }, -- fish_indent > fish_lsp formatting
 
         -- Languages for extras (when LSP isn't available)

@@ -1,0 +1,58 @@
+---
+# yamllint configuration
+# See https://yamllint.readthedocs.io/en/stable/rules.html
+
+extends: default
+
+rules:
+  # Match dprint line width for consistency
+  line-length:
+    max: 100
+    allow-non-breakable-words: true
+    allow-non-breakable-inline-mappings: true
+
+  # Document markers are optional (common in config files)
+  document-start: disable
+  document-end: disable
+
+  # Enforce strict truthy values (only true/false, not yes/no/on/off)
+  truthy:
+    allowed-values: ['true', 'false']
+    check-keys: true
+
+  # Only quote strings when needed, but always quote Tera templates
+  # Note: extra-required only applies to values that are already parsed as strings.
+  # Unquoted {{TEMPLATE}} is parsed as a flow mapping by YAML, not a string, so
+  # yamllint can't enforce quoting on it. Best practice: always quote Tera templates.
+  quoted-strings:
+    quote-type: any
+    required: only-when-needed
+    extra-required:
+      - ".*{{.*}}.*"  # Enforce quotes on string values containing Tera templates
+    check-keys: false
+
+  # Standard 2-space indentation
+  indentation:
+    spaces: 2
+    indent-sequences: true
+    check-multi-line-strings: false
+
+  # Allow empty values (common in templates and configs)
+  empty-values:
+    forbid-in-block-mappings: true
+    forbid-in-flow-mappings: true
+    forbid-in-block-sequences: true
+
+  # Reasonable comment spacing
+  comments:
+    require-starting-space: true
+    ignore-shebangs: true
+    min-spaces-from-content: 2
+
+  # Standard brace/bracket spacing (no spaces inside)
+  braces:
+    min-spaces-inside: 0
+    max-spaces-inside: 0
+  brackets:
+    min-spaces-inside: 0
+    max-spaces-inside: 0

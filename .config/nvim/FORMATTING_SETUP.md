@@ -88,9 +88,8 @@ This setup avoids conflicts by design:
 
 ```bash
 # Core formatters
-curl -fsSL https://dprint.dev/install.sh | sh                    # markdown, json, js/ts
+curl -fsSL https://dprint.dev/install.sh | sh                    # markdown, json, yaml, js/ts
 cargo install stylua                                             # lua
-go install github.com/google/yamlfmt/cmd/yamlfmt@latest          # yaml
 go install mvdan.cc/sh/v3/cmd/shfmt@latest                       # shell scripts
 pip install ruff sqlfluff                                        # python, sql
 
