@@ -8,12 +8,14 @@ completions/{docker,kubectl,orbctl}.fish
 completions/chruby.fish
 completions/delta.fish
 completions/tilt.fish
+completions/rv.fish
 
 conf.d/fnm.fish
 conf.d/fzf.fish
 conf.d/gitnow.fish
 conf.d/git.fish
 conf.d/mcfly.fish
+conf.d/rv.fish
 conf.d/starship.fish
 conf.d/uv.env.fish
 conf.d/zoxide.fish
