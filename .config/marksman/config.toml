@@ -2,7 +2,18 @@
 # See: https://github.com/artempyanykh/marksman
 
 [core]
-markdown.file_extensions = ["md", "markdown", "mdown", "mkdn", "mkd", "mdwn", "mdtxt", "mdtext", "text", "Rmd"]
+markdown.file_extensions = [
+  "md",
+  "markdown",
+  "mdown",
+  "mkdn",
+  "mkd",
+  "mdwn",
+  "mdtxt",
+  "mdtext",
+  "text",
+  "Rmd",
+]
 text_sync = "incremental"
 
 [completion]
@@ -25,16 +36,16 @@ include_code_blocks = true
 [workspace]
 # Exclude patterns for workspace scanning
 exclude_globs = [
-    "node_modules/**",
-    ".git/**",
-    "target/**",
-    "build/**",
-    "dist/**",
-    ".next/**",        # Next.js
-    ".nuxt/**",        # Nuxt.js
-    "vendor/**",       # Composer/Go modules
-    ".venv/**",        # Python virtual environments
-    "__pycache__/**"   # Python cache
+  "node_modules/**",
+  ".git/**",
+  "target/**",
+  "build/**",
+  "dist/**",
+  ".next/**",        # Next.js
+  ".nuxt/**",        # Nuxt.js
+  "vendor/**",       # Composer/Go modules
+  ".venv/**",        # Python virtual environments
+  "__pycache__/**",  # Python cache
 ]
 
 [diagnostics]
