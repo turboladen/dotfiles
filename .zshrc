@@ -1,50 +1,18 @@
-homebrew_prefix=$(brew --prefix)
-
 # ╭──────────────────────────╮
-# │ Install plugins using zr │
+# │ Interactive Shell Config │
 # ╰──────────────────────────╯
-. <(zr \
-  ohmyzsh/ohmyzsh.git/plugins/colored-man-pages/colored-man-pages.plugin.zsh \
-  ohmyzsh/ohmyzsh.git/plugins/vi-mode/vi-mode.plugin.zsh \
-  djui/alias-tips.git/alias-tips.plugin.zsh
-)
-
-# ╭──────────────╮
-# │ Local config │
-# ╰──────────────╯
-eval "$(zoxide init --hook pwd zsh)"
-source "$HOME/.config/zsh/aliases.zsh"
-source "$HOME/.config/zsh/chruby.zsh"
-source "$HOME/.config/zsh/hgrep.plugin.zsh"
-source "$HOME/.config/zsh/myrails.plugin.zsh"
-source "$HOME/.config/zsh/ruby.zsh"
-source "$HOME/.config/zsh/rust.zsh"
-source "$HOME/.config/zsh/server.plugin.zsh"
-source "$HOME/.fzf.zsh"
-
-# ╭──────────────────────╮
-# │ https://starship.rs/ │
-# ╰──────────────────────╯
-eval "$(starship init zsh)"
-
-# ╭─────────────────────────╮
-# │ Aliases and completions │
-# ╰─────────────────────────╯
-alias tilt=/opt/homebrew/bin/tilt
-
-. <(zr zsh-users/zsh-syntax-highlighting.git/zsh-syntax-highlighting.plugin.zsh)
 
 # ╭─────────────────────╮
 # │ Shell configuration │
 # ╰─────────────────────╯
-setopt appendhistory        # Immediately append history instead of overwriting
-setopt auto_cd              # cd without `cd`
+setopt appendhistory           # Immediately append history instead of overwriting
+setopt auto_cd                 # cd without `cd`
 setopt auto_pushd
 setopt pushd_ignore_dups
 setopt pushdminus
-setopt histignorealldups    # If a new command is a duplicate, remove the older one
-setopt nobeep               # No beep
-setopt numericglobsort      # Sort filenames numerically when it makes sense
+setopt histignorealldups       # If a new command is a duplicate, remove the older one
+setopt nobeep                  # No beep
+setopt numericglobsort         # Sort filenames numerically when it makes sense
 setopt promptsubst
 setopt vi
 
@@ -54,29 +22,39 @@ setopt EXTENDED_HISTORY
 setopt HIST_FIND_NO_DUPS
 setopt HIST_IGNORE_ALL_DUPS
 
+HISTFILESIZE=1000000
+HISTSIZE=1000000
+SAVEHIST=10000
+
 # ╭──────────────────────────────────────────────────────────────────────╮
-# │ Completions; keep these towards the bottom in case other plugins add │
-# │ completions to zsh/functions/.                                       │
+# │ Initialize completions BEFORE loading plugins                        │
 # ╰──────────────────────────────────────────────────────────────────────╯
 if type brew &>/dev/null; then
-  FPATH="${homebrew_prefix}/share/zsh/site-functions:$FPATH"
+  FPATH="${HOMEBREW_PREFIX}/share/zsh/site-functions:$FPATH"
   autoload -Uz compinit
   compinit
 fi
 
-# Load additional completions
-. <(zr \
-  ohmyzsh/ohmyzsh.git/plugins/cargo/_cargo \
-  ohmyzsh/ohmyzsh.git/plugins/gem/_gem \
-  ohmyzsh/ohmyzsh.git/plugins/rust/_rust \
-  ohmyzsh/ohmyzsh.git/plugins/rustup/_rustup \
-  ohmyzsh/ohmyzsh.git/plugins/git/git.plugin.zsh \
-  ohmyzsh/ohmyzsh.git/plugins/docker-compose/docker-compose.plugin.zsh \
-  zsh-users/zsh-autosuggestions.git/zsh-autosuggestions.plugin.zsh \
-  zsh-users/zsh-completions.git/zsh-completions.plugin.zsh
-)
+# Automatically load bash completion functions
+autoload -U +X bashcompinit && bashcompinit
 
-eval "$(fnm completions --shell zsh)"
+# ╭────────────────────────────────╮
+# │ Auto-source tool configs       │
+# │ (fish-style conf.d pattern)    │
+# ╰────────────────────────────────╯
+if [[ -d "$HOME/.config/zsh/conf.d" ]]; then
+  for conf in "$HOME/.config/zsh/conf.d"/*.zsh; do
+    [[ -f "$conf" ]] && source "$conf"
+  done
+fi
+
+# ╭──────────────────────────╮
+# │ Install plugins using zr │
+# ╰──────────────────────────╯
+source "$HOME/.config/zsh/zr/interactive.zsh"
+
+# Load additional completions via zr
+source "$HOME/.config/zsh/zr/completions.zsh"
 
 # Completion styling
 zstyle ':completion:*' rehash true                              # automatically find new executables in path
@@ -93,63 +71,18 @@ zstyle ':completion:*' accept-exact '*(N)'
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.cache/zcache
 
-# automatically load bash completion functions
-autoload -U +X bashcompinit && bashcompinit
-
-# ╭─────────────────────╮
-# │ History and exports │
-# ╰─────────────────────╯
-HISTFILESIZE=1000000
-HISTSIZE=1000000
-SAVEHIST=10000
-
-export GPG_TTY=$(tty)
-export EDITOR=nvim
-export LC_CTYPE=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-
-# ╭─────────╮
-# │ vi-mode │
-# ╰─────────╯
-export VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
-export VI_MODE_SET_CURSOR=true
-
-# ╭────────╮
-# │ Docker │
-# ╰────────╯
-export COMPOSE_DOCKER_CLI_BUILD=1
-export DOCKER_BUILDKIT=1
-
-# ╭──────╮
-# │ pnpm │
-# ╰──────╯
-export PNPM_HOME="/Users/steve.loveless/Library/pnpm"
-export PATH="$PNPM_HOME:$PATH"
-
-# ╭─────────────────────────────────╮
-# │ Additional PATH modifications   │
-# ╰─────────────────────────────────╯
-export PATH="${homebrew_prefix}/opt/binutils/bin:/usr/local/bin:$PATH"
-
-### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
-export PATH="/Users/steve.loveless/.rd/bin:$PATH"
-### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
-
 # ╭───────────────╮
 # │ Tool setup    │
 # ╰───────────────╯
-unalias run-help
+unalias run-help 2>/dev/null
 autoload run-help
-export HELPDIR=$homebrew_prefix/share/zsh/help
+export HELPDIR="$HOMEBREW_PREFIX/share/zsh/help"
 
-# ╭────────────╮
-# │ Load Mcfly │
-# ╰────────────╯
-export MCFLY_FUZZY=true
-export MCFLY_RESULTS=20
-export MCFLY_INTERFACE_VIEW=BOTTOM
-export MCFLY_RESULTS_SORT=LAST_RUN
-export MCFLY_KEY_SCHEME=vim
-eval "$(mcfly init zsh)"
-
-. "$HOME/.local/bin/env"
+# ╭────────────────────╮
+# │ Custom Functions   │
+# ╰────────────────────╯
+if [[ -d "$HOME/.config/zsh/functions" ]]; then
+  for func in "$HOME/.config/zsh/functions"/*.zsh; do
+    [[ -f "$func" ]] && source "$func"
+  done
+fi
