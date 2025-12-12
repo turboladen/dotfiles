@@ -19,7 +19,6 @@
 # disable = ["system", "emacs"]
 disable = ["ruby_gems", "helm"]
 
-
 # Ignore failures for these steps
 # ignore_failures = ["powershell"]
 
@@ -89,7 +88,7 @@ cleanup = true
 
 # Custom commands
 [commands]
-#"Python Environment" = "~/dev/.env/bin/pip install -i https://pypi.python.org/simple -U --upgrade-strategy eager jupyter"
+# "Python Environment" = "~/dev/.env/bin/pip install -i https://pypi.python.org/simple -U --upgrade-strategy eager jupyter"
 "[steve] Update rubies" = "ruby-install --latest && ruby-install ruby 3 --no-reinstall --cleanup"
 "[steve] Install gems for latest Ruby" = "chruby 3 && gem update --system && gem update"
 "[steve] Update neovim" = "nvim --headless '+Lazy update'"
@@ -108,7 +107,7 @@ cleanup = true
 # poetry_force_self_update = true
 
 [composer]
-#self_update = true
+# self_update = true
 
 [brew]
 # For the BrewCask step
@@ -191,9 +190,9 @@ max_concurrency = 10
 
 # Additional git repositories to pull
 repos = [
-	#    "~/src/*/",
-	#    "~/.config/something"
-	"~/Development/projects/init.rs/",
+  #    "~/src/*/",
+  #    "~/.config/something"
+  "~/Development/projects/init.rs/",
 ]
 
 # Don't pull the predefined git repos
@@ -220,7 +219,7 @@ repos = [
 
 [firmware]
 # Offer to update firmware; if false just check for and display available updates
-#upgrade = true
+# upgrade = true
 
 [vagrant]
 # Vagrant directories
