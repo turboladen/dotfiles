@@ -23,13 +23,14 @@ return {
         ["."] = false,
       },
       -- copilot_model = "gpt-5",
-      copilot_model = "claude-sonnet-4",
+      copilot_model = "claude-sonnet-4-5",
     },
   },
 
   -- AI coding companion
   {
     "olimorris/codecompanion.nvim",
+    enabled = false,
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
@@ -58,7 +59,7 @@ return {
             return require("codecompanion.adapters").extend("copilot", {
               schema = {
                 model = {
-                  default = "claude-sonnet-4",
+                  default = "claude-sonnet-4-5",
                 },
               },
             })
