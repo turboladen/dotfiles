@@ -133,7 +133,6 @@ return {
       { "<leader>fm", "<cmd>FzfLua marks<cr>", desc = "Find: Marks" },
       { "<leader>fo", "<cmd>FzfLua oldfiles<cr>", desc = "Find: Recent files" },
       { "<leader>/", "<cmd>FzfLua live_grep<cr>", desc = "Find: Live grep" },
-      { "<leader>ss", "<cmd>FzfLua lsp_workspace_symbols<cr>", desc = "Find: LSP symbols" },
     },
     opts = {
       winopts = {

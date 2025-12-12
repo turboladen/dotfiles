@@ -66,7 +66,7 @@ return {
           map("gD", vim.lsp.buf.declaration, "Goto declaration")
           map("gi", vim.lsp.buf.implementation, "Goto implementation")
           map("gC", vim.lsp.buf.incoming_calls, "Incoming calls")
-          map("gR", "<cmd>Trouble lsp_references toggle focus=false<cr>", "References (Trouble)")
+          map("gR", vim.lsp.buf.references, "References (Quickfix)")
           map("gy", vim.lsp.buf.type_definition, "Type definition")
 
           -- Hover and signature help
@@ -74,6 +74,7 @@ return {
 
           -- Document/workspace symbols
           map("<leader>ds", vim.lsp.buf.document_symbol, "Doc symbols")
+          map("<leader>cs", "<cmd>Trouble symbols toggle focus=false<cr>", "Code symbols sidebar")
           map("<leader>ws", vim.lsp.buf.workspace_symbol, "Workspace symbols")
 
           -- Code actions and refactoring
