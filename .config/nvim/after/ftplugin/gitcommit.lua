@@ -5,7 +5,7 @@ local bufnr = vim.api.nvim_get_current_buf()
 
 -- Git commit specific buffer settings
 vim.bo.textwidth = 72
-vim.bo.colorcolumn = "50,72"
+vim.wo.colorcolumn = "50,72"
 vim.wo.spell = true
 vim.wo.wrap = true
 vim.wo.linebreak = true
