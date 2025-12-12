@@ -101,11 +101,13 @@ The plugin scans your entire Neovim configuration and detects:
 ## Architecture
 
 ### Core Module (`keymap-analyzer`)
+
 - **Display-agnostic** - Pure data analysis functions
 - **Extensible** - Easy to add new display methods
 - **Fast** - Efficient file scanning and pattern matching
 
 ### Display Modules (`keymap-analyzer.fzf`)
+
 - **Modular** - Separate display logic from analysis
 - **Pluggable** - Easy to create new display adapters
 - **Feature-rich** - Jump to definition, quickfix integration

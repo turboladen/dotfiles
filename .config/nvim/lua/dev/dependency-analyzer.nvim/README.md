@@ -78,11 +78,13 @@ builtin.show_full_report()
 ## Architecture
 
 ### Core Module (`dev.dependency-analyzer.nvim`)
+
 - **Display-agnostic** - Pure data analysis functions
 - **Extensible** - Easy to add new detection patterns
 - **Fast** - Efficient file scanning and tool checking
 
 ### Display Module (`dependency-analyzer.builtin`)
+
 - **Built-in UI** - Uses Neovim's native features (buffers, notifications)
 - **Multiple Views** - Summary, detailed, install script, full report
 - **Copy-friendly** - Install commands in executable format
