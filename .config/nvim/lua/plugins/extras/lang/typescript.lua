@@ -1,7 +1,7 @@
 -- Dependencies to install:
--- typescript-language-server: npm install -g typescript-language-server typescript
--- vscode-eslint-language-server: npm install -g vscode-langservers-extracted
--- eslint: npm install -g eslint
+-- typescript-language-server: bun add -g typescript-language-server typescript
+-- vscode-eslint-language-server: bun add -g vscode-langservers-extracted
+-- eslint: bun add -g eslint
 -- dprint: curl -fsSL https://dprint.dev/install.sh | sh
 
 return {

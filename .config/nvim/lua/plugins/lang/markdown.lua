@@ -1,7 +1,7 @@
 -- Dependencies to install:
 -- marksman: brew install marksman
 -- vale: brew install vale
--- alex: npm install -g alex
+-- alex: bun add -g alex
 -- dprint: curl -fsSL https://dprint.dev/install.sh | sh
 
 return {

@@ -1,5 +1,5 @@
 -- Dependencies to install:
--- sql-language-server: npm install -g sql-language-server
+-- sql-language-server: bun add -g sql-language-server
 -- sqlfluff: pip install sqlfluff
 
 return {

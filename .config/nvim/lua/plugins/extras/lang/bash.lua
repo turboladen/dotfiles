@@ -1,5 +1,5 @@
 -- Dependencies to install:
--- bash-language-server: npm install -g bash-language-server
+-- bash-language-server: bun add -g bash-language-server
 -- shfmt: go install mvdan.cc/sh/v3/cmd/shfmt@latest (or brew install shfmt)
 
 return {

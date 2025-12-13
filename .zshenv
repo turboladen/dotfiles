@@ -23,13 +23,10 @@ export PATH="/usr/local/bin:$PATH"
 # Cargo environment
 source "$HOME/.cargo/env"
 
-# chruby - load before fnm to ensure Ruby available everywhere
+# chruby - Ruby version manager
 source "${HOMEBREW_PREFIX}/opt/chruby/share/chruby/chruby.sh"
 source "${HOMEBREW_PREFIX}/opt/chruby/share/chruby/auto.sh"
 chruby 3
-
-# fnm - Fast Node Manager
-eval "$(fnm env --use-on-cd)"
 
 # ╭───────────────────────────────╮
 # │ Environment-specific configs  │

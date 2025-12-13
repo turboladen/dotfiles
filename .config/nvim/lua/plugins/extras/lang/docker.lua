@@ -1,5 +1,5 @@
 -- Dependencies to install:
--- docker-langserver: npm install -g dockerfile-language-server-nodejs
+-- docker-langserver: bun add -g dockerfile-language-server-nodejs
 
 return {
   -- Treesitter Dockerfile parser

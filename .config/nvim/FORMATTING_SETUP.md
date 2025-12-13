@@ -96,6 +96,6 @@ pip install ruff sqlfluff                                        # python, sql
 # LSP servers (for languages using LSP formatting)
 cargo install taplo-cli --locked --features lsp                  # toml
 gem install ruby-lsp                                             # ruby
-pip install ruff && npm install -g pyright                       # python
+pip install ruff && bun add -g pyright                           # python
 # rust-analyzer comes with rustaceanvim
 ```

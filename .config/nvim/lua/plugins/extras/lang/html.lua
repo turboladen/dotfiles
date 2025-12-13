@@ -1,6 +1,6 @@
 -- Dependencies to install:
--- vscode-html-language-server: npm install -g vscode-langservers-extracted
--- htmlhint: npm install -g htmlhint
+-- vscode-html-language-server: bun add -g vscode-langservers-extracted
+-- htmlhint: bun add -g htmlhint
 
 return {
   -- Treesitter HTML parser
