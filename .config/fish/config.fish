@@ -23,10 +23,6 @@ if status is-login
 
     # FZF integration with bat for file previews
     set --global --export FZF_DEFAULT_OPTS "--preview 'bat --style=numbers --color=always {}'"
-
-    # Add Postgres.app to PATH
-    fish_add_path ~/Applications/Postgres.app/Contents/Versions/latest/bin
-    fish_add_path ~/Applications/Postgres.app/Contents/Versions/latest/lib
 end
 
 # ╭───────────────────────────╮
@@ -47,14 +43,6 @@ if status is-interactive
     # Show system info on startup
     fastfetch
 end
-
-# Added by OrbStack: command-line tools and integration
-# This won't be added again if you remove it.
-source ~/.orbstack/shell/init2.fish 2>/dev/null || :
-
-# Postgres.app
-fish_add_path ~/Applications/Postgres.app/Contents/Versions/latest/bin
-fish_add_path ~/Applications/Postgres.app/Contents/Versions/latest/lib
 
 # bun
 set --export BUN_INSTALL "$HOME/.bun"
