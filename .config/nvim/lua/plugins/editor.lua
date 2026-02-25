@@ -330,15 +330,6 @@ return {
     event = { "BufReadPre", "BufNewFile" },
   },
 
-  -- Ripgrep integration
-  {
-    "jremmen/vim-ripgrep",
-    cmd = "Rg",
-    keys = {
-      { "<leader>.", ":Rg<space>", desc = "Rg: Search" },
-    },
-  },
-
   -- Find and list TODO, HACK, BUG, etc comments
   {
     "folke/todo-comments.nvim",
