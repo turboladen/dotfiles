@@ -17,7 +17,7 @@ return {
         preset = "default", -- Use sensible defaults
         ["<C-k>"] = { "select_prev", "fallback" },
         ["<C-j>"] = { "select_next", "fallback" },
-        ["<CR>"] = { "fallback" },
+        ["<CR>"] = { "accept", "fallback" },
         ["<Tab>"] = { "accept", "fallback" },
       },
 
@@ -97,14 +97,29 @@ return {
     },
   },
 
-  -- Rust-aware bracket/brace handling
+  -- Auto-pairs with proper dot-repeat support (uses <expr> mappings)
   {
-    "saghen/blink.pairs",
-    lazy = false,
-    version = "*",
-    -- download prebuilt binaries from github releases
-    dependencies = "saghen/blink.download",
+    "echasnovski/mini.pairs",
+    event = "InsertEnter",
     opts = {},
+  },
+
+  -- Rainbow bracket highlighting (treesitter-powered)
+  {
+    "HiPhish/rainbow-delimiters.nvim",
+    event = "VeryLazy",
+    config = function()
+      local rainbow = require("rainbow-delimiters")
+      vim.g.rainbow_delimiters = {
+        strategy = {
+          [""] = rainbow.strategy["global"],
+        },
+        query = {
+          [""] = "rainbow-delimiters",
+          lua = "rainbow-blocks",
+        },
+      }
+    end,
   },
 
   { "RRethy/nvim-treesitter-endwise" },
