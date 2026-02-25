@@ -1,3 +1,7 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 ## Your Role
 
 You are an expert in neovim and configuring it in lua, and an expert lua programmer. Your job is to
@@ -33,6 +37,71 @@ In no particular order:
 - LSP config gets gross really fast; I want to make sure config in this department is clear.
 - Lots of plugins have integrations with other plugins; when setting up a new plugin that integrates
   with others, check this project to see if any of those exist.
+
+## Architecture
+
+### Boot Sequence
+
+`init.lua` loads three modules in order:
+1. `config.options` - vim options (no plugins)
+2. `config.lazy` - bootstraps lazy.nvim, sets leaders (`<Space>` / `\`), loads plugin specs
+3. `config.keymaps` - general keymaps not tied to any plugin
+
+### Plugin Loading Strategy
+
+`config/lazy.lua` builds its spec list by combining:
+- `{ import = "plugins" }` - core plugin specs
+- `{ import = "plugins.lang" }` - always-on language modules
+- Output of `config.extras.get_enabled_extras()` - auto-discovered extras
+
+**Extras auto-discovery**: `config/extras.lua` recursively scans `lua/plugins/extras/` at startup
+and loads every `.lua` file it finds, unless explicitly disabled in `M.overrides`. To disable an
+extra, add `["name"] = false` to the overrides table (e.g. `["lang.python"] = false`). The debug
+function `require("config.extras").list_extras()` prints all available/enabled extras.
+
+### Language Module Pattern
+
+Each `lua/plugins/lang/*.lua` file is self-contained for its language, bundling:
+1. Treesitter `ensure_installed` (extends the shared treesitter opts)
+2. LSP server config via `vim.lsp.config()` + `vim.lsp.enable()`
+3. Formatter config (extends `conform.nvim` opts with `optional = true`)
+4. Linter config (extends `nvim-lint` opts)
+5. A header comment listing external dependencies to install
+
+Filetype-specific settings and keymaps go in `after/ftplugin/<ft>.lua`.
+
+### Formatting Dual-Strategy
+
+`plugins/formatting.lua` uses a split approach (documented fully in `FORMATTING_SETUP.md`):
+- **LSP formatting** (`lsp_format = "prefer"`) for: Rust, TOML, Python, Ruby, Markdown, JSON, JS/TS
+- **External formatters** (`lsp_format = "never"`) for: Lua (stylua), YAML (dprint), Fish
+  (fish_indent), Shell (shfmt)
+
+Format-on-save can be disabled per-buffer (`:FormatDisable`) or globally (`:FormatDisable!`), and
+re-enabled with `:FormatEnable`. The toggle uses `vim.b.disable_autoformat` / `vim.g.disable_autoformat`.
+
+### Shared Icons
+
+`config/icons.lua` exports icon tables (diagnostics, git, files, ui, lsp, debug, test) consumed by
+lualine, gitsigns, and other plugins. Always use these instead of hardcoding icons.
+
+### Dev Plugins
+
+`lua/dev/` contains two local plugins with standard plugin directory layout:
+- **keymap-analyzer.nvim** - Scans all config Lua files for keymap definitions, finds duplicates,
+  shows via fzf-lua. Commands: `KeymapDuplicates`, `KeymapAll`, `KeymapStats`.
+- **dependency-analyzer.nvim** - Detects external tools referenced in config (LSP servers,
+  formatters, linters), checks if they're installed. Commands: `DepsCheck`, `DepsMissing`,
+  `DepsInstall`, `DepsReport`.
+
+Both are registered in `plugins/util.lua` with `dev = true` and explicit `dir` paths.
+
+### Extending Shared Plugin Opts
+
+Lang files and extras extend shared plugin config (treesitter, conform, nvim-lint) by returning
+additional lazy.nvim specs for the same plugin with `opts` or `opts = function()`. For conform and
+nvim-lint, use `optional = true` on the spec. For treesitter, use `opts = { ensure_installed = {...} }`
+which lazy.nvim merges via `opts_extend`.
 
 ## Organization
 
@@ -117,5 +186,20 @@ issues. I do anticipate to follow some of these:
 - `lua/plugins/extras/test`
 - `lua/plugins/extras/ui`
 - `lua/plugins/extras/util`
+
+### Keymap Conventions
+
+- Plugin-specific keymaps are defined in the plugin's lazy.nvim `keys` table or in `config` function
+- LSP keymaps are defined centrally in `plugins/lsp.lua` via `LspAttach` autocmd, prefixed `LSP: `
+- Filetype-specific keymaps go in `after/ftplugin/<ft>.lua` (e.g. Rust maps under `<leader>r`)
+- Leader groups are documented in which-key spec in `plugins/editor.lua`
+- Use the keymap-analyzer dev plugin (`<leader>pk`) to check for duplicates
+
+### LSP Configuration Pattern
+
+This config uses neovim 0.11's native `vim.lsp.config()` + `vim.lsp.enable()` (not the older
+`lspconfig.server.setup()` pattern). Global LSP defaults (capabilities, blink.cmp integration) are
+set once in `plugins/lsp.lua` via `vim.lsp.config("*", ...)`. Individual server configs live in
+their respective `lang/*.lua` files.
 
 - `FORMATTING_SETUP.md` gives an overview of tools used for formatting code.
