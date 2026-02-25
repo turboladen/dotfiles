@@ -27,14 +27,6 @@ return {
         mode = { "n", "v" },
         desc = "Format buffer/selection",
       },
-      {
-        "<leader>cf",
-        function()
-          require("conform").format({ async = true })
-        end,
-        mode = { "n", "v" },
-        desc = "Format buffer/selection",
-      },
     },
     opts = {
       -- Define formatters by filetype (only where external formatter is better than LSP)
