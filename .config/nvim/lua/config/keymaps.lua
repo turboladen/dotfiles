@@ -22,15 +22,5 @@ map("n", "<c-l>", "<c-w>l", { desc = "Win: Right" })
 -- Search highlighting control
 map("n", "<leader>sl", "<cmd>noh<cr>", { desc = "Search: Clear highlight" })
 
--- Open URL/file under cursor
-map("n", "gx", function()
-  local word = vim.fn.expand("<cfile>")
-  if word:match("^https?://") then
-    vim.fn.system({ "open", word })
-  else
-    vim.cmd("normal! gF")
-  end
-end, { desc = "Open: Item under cursor" })
-
 -- Package management
 map("n", "<leader>pu", "<cmd>Lazy update<cr>", { desc = "Pkg: Lazy update" })

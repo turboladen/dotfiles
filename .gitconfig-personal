@@ -1,4 +1,5 @@
 # vi:ft=gitconfig
 [user]
   email = steve.loveless@gmail.com
-  signingkey = A65696D64778547A
+  ; signingkey = A65696D64778547A
+  signingkey = 36D74174225CA94A3A383DAE888199653E8B8E06

@@ -5,11 +5,11 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     keys = {
       {
-        "<leader>ll",
+        "<leader>cl",
         function()
           require("lint").try_lint()
         end,
-        desc = "Lint",
+        desc = "Code: Lint",
       },
     },
     config = function()
