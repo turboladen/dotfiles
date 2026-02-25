@@ -318,12 +318,6 @@ return {
     event = { "BufReadPre", "BufNewFile" },
   },
 
-  -- Bracket mappings for next/previous navigation
-  {
-    "tpope/vim-unimpaired",
-    event = { "BufReadPre", "BufNewFile" },
-  },
-
   -- Exchange two text regions
   {
     "tommcdo/vim-exchange",
