@@ -68,7 +68,10 @@ Each `lua/plugins/lang/*.lua` file is self-contained for its language, bundling:
 4. Linter config (extends `nvim-lint` opts)
 5. A header comment listing external dependencies to install
 
-Filetype-specific settings and keymaps go in `after/ftplugin/<ft>.lua`.
+Filetype-specific settings go in `after/ftplugin/<ft>.lua`. These should be **settings-only**
+(indent, textwidth, commentstring, foldmethod) — not snippet/template insertion keymaps. The only
+ftplugin keymaps should wrap actual plugin APIs (e.g. rustaceanvim in `rust.lua`, peek.nvim in
+`markdown.lua`).
 
 ### Formatting Dual-Strategy
 
@@ -191,9 +194,17 @@ issues. I do anticipate to follow some of these:
 
 - Plugin-specific keymaps are defined in the plugin's lazy.nvim `keys` table or in `config` function
 - LSP keymaps are defined centrally in `plugins/lsp.lua` via `LspAttach` autocmd, prefixed `LSP: `
-- Filetype-specific keymaps go in `after/ftplugin/<ft>.lua` (e.g. Rust maps under `<leader>r`)
+- Filetype-specific keymaps go in `after/ftplugin/<ft>.lua` — only for wrapping plugin APIs (e.g.
+  rustaceanvim in `rust.lua`, peek.nvim in `markdown.lua`). Do NOT add template/snippet insertion
+  keymaps to ftplugin files.
 - Leader groups are documented in which-key spec in `plugins/editor.lua`
 - Use the keymap-analyzer dev plugin (`<leader>pk`) to check for duplicates
+- `<leader>l` is reserved for LSP operations only — do not overload with other purposes
+- `<leader>r` is for Rust (rustaceanvim) operations
+- `<leader>=` is the sole format keymap (do not duplicate)
+- `<leader>cl` triggers manual linting
+- `<leader>.` opens `:Rg` for ripgrep-to-quickfix search
+- `]]`/`[[` are owned by treesitter textobjects (class navigation), not vim-illuminate
 
 ### LSP Configuration Pattern
 
@@ -203,3 +214,27 @@ set once in `plugins/lsp.lua` via `vim.lsp.config("*", ...)`. Individual server 
 their respective `lang/*.lua` files.
 
 - `FORMATTING_SETUP.md` gives an overview of tools used for formatting code.
+
+### Auto-Pairs
+
+Uses `mini.pairs` (not blink.pairs or nvim-autopairs). Chosen because it uses `<expr>` mappings
+that flow through Neovim's typeahead buffer, so Vim's `.` repeat correctly replays the full bracket
+pair. Binary/FFI-based auto-pair plugins (like blink.pairs) break `.` repeat because they insert
+the closing bracket via API calls outside the typeahead.
+
+Rainbow bracket highlighting is provided separately by `rainbow-delimiters.nvim`.
+
+### Ripgrep Integration
+
+`:Rg <pattern> [path ...]` is a custom user command in `config/keymaps.lua` that runs
+`rg --vimgrep` and populates the quickfix list directly (no fzf picker). Mirrors rg CLI usage.
+`<leader>.` opens the `:Rg` command prompt. fzf-lua's `<leader>/` (live grep) is still available
+for interactive searching.
+
+### Avoided Plugins
+
+- **mason.nvim** — external tools managed outside Neovim (see Key Concerns)
+- **vim-ripgrep** — replaced by custom `:Rg` command (simpler, no plugin dependency)
+- **vim-unimpaired** — all bracket mappings are provided by purpose-built plugins (gitsigns,
+  todo-comments, trouble.nvim, treesitter textobjects)
+- **blink.pairs** — replaced by mini.pairs for `.` repeat support (see Auto-Pairs above)
