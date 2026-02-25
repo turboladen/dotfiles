@@ -22,5 +22,30 @@ map("n", "<c-l>", "<c-w>l", { desc = "Win: Right" })
 -- Search highlighting control
 map("n", "<leader>sl", "<cmd>noh<cr>", { desc = "Search: Clear highlight" })
 
+-- Ripgrep to quickfix
+map("n", "<leader>.", ":Rg ", { desc = "Rg: Search to quickfix" })
+
+-- :Rg <pattern> [path ...] — ripgrep straight to quickfix (no picker)
+vim.api.nvim_create_user_command("Rg", function(opts)
+  local args = opts.fargs
+  if #args == 0 then
+    vim.notify("Usage: :Rg <pattern> [path ...]", vim.log.levels.WARN)
+    return
+  end
+
+  local cmd = { "rg", "--vimgrep", "--smart-case", unpack(args) }
+
+  vim.fn.setqflist({}, " ", {
+    title = ":Rg " .. table.concat(args, " "),
+    lines = vim.fn.systemlist(cmd),
+    efm = "%f:%l:%c:%m",
+  })
+  vim.cmd("copen")
+end, {
+  nargs = "+",
+  complete = "file",
+  desc = "Ripgrep to quickfix",
+})
+
 -- Package management
 map("n", "<leader>pu", "<cmd>Lazy update<cr>", { desc = "Pkg: Lazy update" })
