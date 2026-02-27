@@ -88,6 +88,13 @@ re-enabled with `:FormatEnable`. The toggle uses `vim.b.disable_autoformat` / `v
 `config/icons.lua` exports icon tables (diagnostics, git, files, ui, lsp, debug, test) consumed by
 lualine, gitsigns, and other plugins. Always use these instead of hardcoding icons.
 
+### Statusline & Winbar Layout
+
+Lualine uses `globalstatus = true` (single statusline at the bottom) + per-window `winbar` /
+`inactive_winbar` for file path display. The global statusline shows mode, branch, diff,
+diagnostics, and clock — but NOT the filename (the winbar handles that). `showtabline = 0` since
+no tabline plugin is used. Note: `inactive_sections` is dead config under `globalstatus = true`.
+
 ### Dev Plugins
 
 `lua/dev/` contains two local plugins with standard plugin directory layout:
