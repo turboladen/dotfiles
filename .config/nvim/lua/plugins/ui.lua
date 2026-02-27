@@ -119,9 +119,10 @@ return {
       return {
         options = {
           theme = "auto", -- Automatically adapts to colorscheme
-          globalstatus = true, -- Per-buffer statuslines (old style)
+          globalstatus = true, -- Single statusline; winbar handles per-window context
           disabled_filetypes = {
             statusline = { "dashboard", "alpha", "starter" },
+            winbar = { "dashboard", "alpha", "starter", "help", "quickfix", "Trouble", "trouble" },
           },
           component_separators = "󰇙",
           section_separators = get_separators(),
@@ -158,18 +159,7 @@ return {
               end,
             },
           },
-          lualine_c = {
-            {
-              "filename",
-              path = 1, -- Relative path
-              symbols = {
-                modified = icons.files.modified,
-                readonly = icons.files.readonly,
-                unnamed = icons.files.unnamed,
-                newfile = icons.files.newfile,
-              },
-            },
-          },
+          lualine_c = {},
           lualine_x = {
             {
               "filetype",
@@ -210,8 +200,23 @@ return {
             },
           },
         },
-        inactive_sections = {
-          lualine_a = {
+        inactive_sections = {},
+        winbar = {
+          lualine_c = {
+            {
+              "filename",
+              path = 1, -- Relative path
+              symbols = {
+                modified = icons.files.modified,
+                readonly = icons.files.readonly,
+                unnamed = icons.files.unnamed,
+                newfile = icons.files.newfile,
+              },
+            },
+          },
+        },
+        inactive_winbar = {
+          lualine_c = {
             {
               "filename",
               path = 1,
@@ -222,11 +227,6 @@ return {
               },
             },
           },
-          lualine_b = {},
-          lualine_c = {},
-          lualine_x = {},
-          lualine_y = {},
-          lualine_z = { "location" },
         },
         extensions = { "lazy", "trouble", "quickfix" },
       }

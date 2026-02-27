@@ -42,7 +42,7 @@ opt.splitright = true -- Open vertical splits to the right
 -- ╭─────────────────────────────────────────────╮
 -- │ 7. multiple tab pages                                                     │
 -- ╰─────────────────────────────────────────────╯
-opt.showtabline = 2
+opt.showtabline = 0 -- Hidden; winbar shows per-window file paths
 
 -- ╭─────────────────────────────────────────────╮
 -- │ 9. using the mouse                                                        │
