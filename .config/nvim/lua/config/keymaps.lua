@@ -47,5 +47,32 @@ end, {
   desc = "Ripgrep to quickfix",
 })
 
+-- Navigate to next/previous file in the same directory (alphabetically, wrapping)
+local function sibling_file(direction)
+  local path = vim.api.nvim_buf_get_name(0)
+  if path == "" then return end
+  local dir = vim.fs.dirname(path)
+  local current = vim.fs.basename(path)
+  local files = {}
+  local handle = vim.uv.fs_scandir(dir)
+  if not handle then return end
+  while true do
+    local name, typ = vim.uv.fs_scandir_next(handle)
+    if not name then break end
+    if typ == "file" then files[#files + 1] = name end
+  end
+  table.sort(files)
+  for i, name in ipairs(files) do
+    if name == current then
+      local target = files[((i - 1 + direction) % #files) + 1]
+      vim.cmd.edit(vim.fs.joinpath(dir, target))
+      return
+    end
+  end
+end
+
+map("n", "]f", function() sibling_file(1) end, { desc = "File: Next sibling" })
+map("n", "[f", function() sibling_file(-1) end, { desc = "File: Prev sibling" })
+
 -- Package management
 map("n", "<leader>pu", "<cmd>Lazy update<cr>", { desc = "Pkg: Lazy update" })
