@@ -69,7 +69,7 @@ opt.smartindent = true
 -- ╰─────────────────────────────────────────────╯
 opt.foldenable = true -- Enable folding
 opt.foldmethod = "expr" -- Use expression for folding (works with treesitter)
-opt.foldexpr = "nvim_treesitter#foldexpr()" -- Use treesitter for folding
+opt.foldexpr = "v:lua.vim.treesitter.foldexpr()" -- Use neovim's built-in treesitter folding
 opt.foldlevelstart = 99 -- Start with all folds open
 
 -- ╭─────────────────────────────────────────────╮

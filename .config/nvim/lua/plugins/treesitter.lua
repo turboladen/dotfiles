@@ -148,7 +148,7 @@ return {
         end
         opts.ensure_installed = deduped
       end
-      require("nvim-treesitter.configs").setup(opts)
+      require("nvim-treesitter").setup(opts)
     end,
   },
 
